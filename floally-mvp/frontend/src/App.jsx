@@ -11,20 +11,32 @@ function App() {
     profile: null
   });
 
+  // Debug info
+  console.log('FloAlly App loaded - Version 1.0.1 - Built:', new Date().toISOString());
+  console.log('API URL:', import.meta.env.VITE_API_URL || 'http://localhost:8000');
+
   useEffect(() => {
     checkAuthStatus();
   }, []);
 
   const checkAuthStatus = async () => {
     try {
+      console.log('Checking auth status...');
       const response = await auth.status();
+      console.log('Auth status response:', response.data);
       setAuthenticated(response.data.authenticated);
+      setError(null); // Clear any previous errors
 
       if (response.data.authenticated) {
         await loadDashboardData();
       }
     } catch (error) {
       console.error('Auth check failed:', error);
+      console.error('Error details:', {
+        message: error.message,
+        response: error.response,
+        config: error.config
+      });
       setError(`Auth check failed: ${error.message}`);
     } finally {
       setLoading(false);

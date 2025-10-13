@@ -12,18 +12,16 @@ app = FastAPI(
     version="0.1.0"
 )
 
-# CORS configuration for local development
+# CORS configuration - Allow all origins for development/production
+# In production, you may want to restrict this to specific domains
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "*").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "https://*.githubpreview.dev",
-        "https://*.app.github.dev",
-        "https://refactored-invention-6wpqr6wpqg42r747-5173.app.github.dev"
-    ],
-    allow_credentials=True,
+    allow_origins=["*"] if "*" in allowed_origins else allowed_origins,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 # Include routers
