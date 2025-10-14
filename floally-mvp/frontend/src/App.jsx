@@ -88,10 +88,10 @@ function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 to-cyan-50">
         <div className="text-center">
           <div className="text-4xl mb-4">🔄</div>
-          <div className="text-slate-600">Loading OpAlly…</div>
+          <div className="text-slate-700">Loading OpAlly…</div>
         </div>
       </div>
     );
@@ -99,13 +99,13 @@ function App() {
 
   if (!authenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-50 to-indigo-100">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 via-cyan-50 to-emerald-50">
         <div className="text-center max-w-md mx-auto p-8">
           <img src="/opally-logo.png" alt="OpAlly Logo" className="w-48 mx-auto mb-6" />
           <h1 className="text-4xl font-bold text-slate-900 mb-4">
             OpAlly
           </h1>
-          <p className="text-lg text-slate-600 mb-8">
+          <p className="text-lg text-slate-700 mb-8">
             Your AI-powered daily stand-up and operational partner for creative work.
           </p>
           {error && (
@@ -115,11 +115,11 @@ function App() {
           )}
           <button
             onClick={handleLogin}
-            className="px-8 py-4 bg-sky-600 text-white rounded-full font-semibold text-lg hover:bg-sky-700 transition-colors shadow-lg"
+            className="px-8 py-4 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-full font-semibold text-lg hover:from-teal-600 hover:to-emerald-600 transition-all shadow-lg hover:shadow-xl"
           >
             Connect Google Account
           </button>
-          <p className="mt-6 text-sm text-slate-500">
+          <p className="mt-6 text-sm text-slate-600">
             We'll access your Gmail and Calendar to help you focus on what matters.
           </p>
         </div>
@@ -128,17 +128,17 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-200 px-6 py-4">
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-slate-50">
+      <header className="bg-white/90 backdrop-blur-sm border-b border-teal-100 px-6 py-4 shadow-sm">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img src="/opally-logo.png" alt="OpAlly" className="h-8" />
-            <h1 className="text-2xl font-bold text-slate-900">OpAlly</h1>
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">OpAlly</h1>
             {data.profile && (
               <p className="text-sm text-slate-600 ml-2">{data.profile.email}</p>
             )}
           </div>
-          <div className="text-sm text-slate-500">
+          <div className="text-sm text-slate-600">
             Good morning 🌞
           </div>
         </div>
@@ -147,15 +147,15 @@ function App() {
       <main className="max-w-6xl mx-auto px-6 py-8">
         <div className="grid md:grid-cols-2 gap-6">
           {/* Messages Card */}
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <div className="bg-white/95 backdrop-blur rounded-2xl shadow-lg border border-teal-100 p-6">
             <h2 className="text-lg font-semibold text-slate-900 mb-4">
               📨 Recent Messages ({data.messages.length})
             </h2>
             <div className="space-y-3">
               {data.messages.slice(0, 5).map((msg) => (
-                <div key={msg.id} className="p-3 bg-slate-50 rounded-lg">
+                <div key={msg.id} className="p-3 bg-gradient-to-br from-teal-50 to-cyan-50 rounded-lg hover:shadow-md transition-shadow">
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-sky-100 flex items-center justify-center text-sm font-semibold text-sky-700">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-400 to-emerald-400 flex items-center justify-center text-sm font-semibold text-white shadow-sm">
                       {msg.from.charAt(0).toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -170,7 +170,7 @@ function App() {
                       </div>
                     </div>
                     {msg.unread && (
-                      <span className="px-2 py-1 bg-sky-100 text-sky-700 text-xs rounded-full">
+                      <span className="px-2 py-1 bg-gradient-to-r from-teal-500 to-emerald-500 text-white text-xs rounded-full shadow-sm">
                         New
                       </span>
                     )}
@@ -181,7 +181,7 @@ function App() {
           </div>
 
           {/* Calendar Card */}
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <div className="bg-white/95 backdrop-blur rounded-2xl shadow-lg border border-emerald-100 p-6">
             <h2 className="text-lg font-semibold text-slate-900 mb-4">
               📅 Today's Events ({data.events.length})
             </h2>
@@ -192,7 +192,7 @@ function App() {
                 </div>
               ) : (
                 data.events.map((event) => (
-                  <div key={event.id} className="p-3 bg-slate-50 rounded-lg">
+                  <div key={event.id} className="p-3 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-lg hover:shadow-md transition-shadow">
                     <div className="text-sm font-medium text-slate-900">
                       {event.summary}
                     </div>
@@ -220,13 +220,13 @@ function App() {
         </div>
 
         {/* Coming Soon Section */}
-        <div className="mt-8 bg-gradient-to-r from-sky-50 to-indigo-50 rounded-2xl p-8 text-center">
+        <div className="mt-8 bg-gradient-to-r from-teal-50 via-emerald-50 to-cyan-50 rounded-2xl p-8 text-center border border-teal-100 shadow-lg">
           <div className="text-4xl mb-4">🚧</div>
-          <h3 className="text-xl font-semibold text-slate-900 mb-2">
+          <h3 className="text-xl font-semibold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent mb-2">
             AI Stand-Up Coming Soon
           </h3>
-          <p className="text-slate-600">
-            FloAlly will soon analyze your messages and calendar to give you
+          <p className="text-slate-700">
+            OpAlly will soon analyze your messages and calendar to give you
             "The One Thing" to focus on, plus smart decisions and actions.
           </p>
         </div>
