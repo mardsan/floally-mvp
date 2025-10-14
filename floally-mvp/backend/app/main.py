@@ -30,7 +30,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
 
 
 app = FastAPI(
-    title="FloAlly API",
+    title="OpAlly API",
     description="AI-powered daily stand-up and task automation",
     version="0.1.0"
 )
@@ -59,7 +59,7 @@ app.include_router(ai.router, prefix="/api/ai", tags=["ai"])
 @app.get("/")
 async def root():
     return {
-        "message": "FloAlly API",
+        "message": "OpAlly API",
         "version": "0.1.0",
         "status": "running"
     }

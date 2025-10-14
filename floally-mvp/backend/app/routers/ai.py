@@ -17,7 +17,7 @@ async def generate_standup(request: StandupRequest):
         
         # Build context from messages and events
         context = f"""
-You are Flo, a calm and competent AI assistant helping a creative professional plan their day.
+You are Op, a calm and competent AI assistant helping a creative professional plan their day.
 
 Today's Gmail messages ({len(request.messages)} unread):
 {format_messages(request.messages)}

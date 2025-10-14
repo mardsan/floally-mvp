@@ -12,7 +12,7 @@ function App() {
   });
 
   // Debug info
-  console.log('FloAlly App loaded - Version 1.0.1 - Built:', new Date().toISOString());
+  console.log('OpAlly App loaded - Version 1.0.1 - Built:', new Date().toISOString());
   console.log('API URL:', import.meta.env.VITE_API_URL || 'http://localhost:8000');
 
   useEffect(() => {
@@ -91,7 +91,7 @@ function App() {
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="text-center">
           <div className="text-4xl mb-4">🔄</div>
-          <div className="text-slate-600">Loading FloAlly…</div>
+          <div className="text-slate-600">Loading OpAlly…</div>
         </div>
       </div>
     );
@@ -101,9 +101,9 @@ function App() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-50 to-indigo-100">
         <div className="text-center max-w-md mx-auto p-8">
-          <div className="text-6xl mb-6">🌊</div>
+          <img src="/opally-logo.png" alt="OpAlly Logo" className="w-48 mx-auto mb-6" />
           <h1 className="text-4xl font-bold text-slate-900 mb-4">
-            FloAlly
+            OpAlly
           </h1>
           <p className="text-lg text-slate-600 mb-8">
             Your AI-powered daily stand-up and operational partner for creative work.
@@ -131,10 +131,11 @@ function App() {
     <div className="min-h-screen bg-slate-50">
       <header className="bg-white border-b border-slate-200 px-6 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900">FloAlly</h1>
+          <div className="flex items-center gap-3">
+            <img src="/opally-logo.png" alt="OpAlly" className="h-8" />
+            <h1 className="text-2xl font-bold text-slate-900">OpAlly</h1>
             {data.profile && (
-              <p className="text-sm text-slate-600">{data.profile.email}</p>
+              <p className="text-sm text-slate-600 ml-2">{data.profile.email}</p>
             )}
           </div>
           <div className="text-sm text-slate-500">
