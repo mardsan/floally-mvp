@@ -64,9 +64,9 @@ async def callback(code: str, state: str):
         with open('user_credentials.json', 'w') as f:
             json.dump(creds_data, f)
         
-        # Redirect to frontend
+        # Redirect to frontend root with auth success param
         frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
-        return RedirectResponse(url=f"{frontend_url}/dashboard?auth=success")
+        return RedirectResponse(url=f"{frontend_url}/?auth=success")
     
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

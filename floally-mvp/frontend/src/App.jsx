@@ -16,6 +16,13 @@ function App() {
   console.log('API URL:', import.meta.env.VITE_API_URL || 'http://localhost:8000');
 
   useEffect(() => {
+    // Check if we just returned from OAuth
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('auth') === 'success') {
+      console.log('Auth callback detected, cleaning URL...');
+      // Clean the URL without reloading
+      window.history.replaceState({}, document.title, '/');
+    }
     checkAuthStatus();
   }, []);
 
