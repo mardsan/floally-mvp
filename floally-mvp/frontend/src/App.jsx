@@ -12,9 +12,11 @@ function App() {
   });
   const [standup, setStandup] = useState(null);
   const [generatingStandup, setGeneratingStandup] = useState(false);
+  const [expandedEmail, setExpandedEmail] = useState(null);
+  const [expandedEvent, setExpandedEvent] = useState(null);
 
   // Debug info
-  console.log('OpAlly App loaded - Version 1.0.1 - Built:', new Date().toISOString());
+  console.log('OpAlly App loaded - Version 1.0.2 - Built:', new Date().toISOString());
   console.log('API URL:', import.meta.env.VITE_API_URL || 'http://localhost:8000');
 
   useEffect(() => {
@@ -107,6 +109,32 @@ function App() {
     }
   };
 
+  const formatEventDate = (dateString) => {
+    const date = new Date(dateString);
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    // Reset hours for date comparison
+    today.setHours(0, 0, 0, 0);
+    tomorrow.setHours(0, 0, 0, 0);
+    const eventDate = new Date(date);
+    eventDate.setHours(0, 0, 0, 0);
+    
+    if (eventDate.getTime() === today.getTime()) {
+      return 'Today';
+    } else if (eventDate.getTime() === tomorrow.getTime()) {
+      return 'Tomorrow';
+    } else {
+      // Show day of week and date
+      return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    }
+  };
+
+  const toggleEmailExpand = (emailId) => {
+    setExpandedEmail(expandedEmail === emailId ? null : emailId);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #dafef4, #e8fef9)'}}>
@@ -166,82 +194,8 @@ function App() {
       </header>
 
       <main className="max-w-6xl mx-auto px-6 py-8">
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* Messages Card */}
-          <div className="bg-white/95 backdrop-blur rounded-2xl shadow-lg p-6" style={{borderWidth: '1px', borderColor: '#dafef4'}}>
-            <h2 className="text-lg font-semibold text-slate-900 mb-4">
-              📨 Recent Messages ({data.messages.length})
-            </h2>
-            <div className="space-y-3">
-              {data.messages.slice(0, 5).map((msg) => (
-                <div key={msg.id} className="p-3 rounded-lg hover:shadow-md transition-shadow" style={{background: 'linear-gradient(to bottom right, #dafef4, #e8fef9)'}}>
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-400 to-emerald-400 flex items-center justify-center text-sm font-semibold text-white shadow-sm">
-                      {msg.from.charAt(0).toUpperCase()}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-slate-900 truncate">
-                        {msg.subject}
-                      </div>
-                      <div className="text-xs text-slate-600 truncate">
-                        From: {msg.from.split('<')[0].trim()}
-                      </div>
-                      <div className="text-xs text-slate-500 mt-1">
-                        {msg.snippet}
-                      </div>
-                    </div>
-                    {msg.unread && (
-                      <span className="px-2 py-1 bg-gradient-to-r from-teal-500 to-emerald-500 text-white text-xs rounded-full shadow-sm">
-                        New
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Calendar Card */}
-          <div className="bg-white/95 backdrop-blur rounded-2xl shadow-lg p-6" style={{borderWidth: '1px', borderColor: '#dafef4'}}>
-            <h2 className="text-lg font-semibold text-slate-900 mb-4">
-              📅 Today's Events ({data.events.length})
-            </h2>
-            <div className="space-y-3">
-              {data.events.length === 0 ? (
-                <div className="text-center py-8 text-slate-500">
-                  No events scheduled today
-                </div>
-              ) : (
-                data.events.map((event) => (
-                  <div key={event.id} className="p-3 rounded-lg hover:shadow-md transition-shadow" style={{background: 'linear-gradient(to bottom right, #e0fef5, #dafef4)'}}>
-                    <div className="text-sm font-medium text-slate-900">
-                      {event.summary}
-                    </div>
-                    <div className="text-xs text-slate-600 mt-1">
-                      {new Date(event.start).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })}
-                      {event.attendees.length > 0 && (
-                        <span className="ml-2">
-                          · {event.attendees.length} attendee{event.attendees.length > 1 ? 's' : ''}
-                        </span>
-                      )}
-                    </div>
-                    {event.location && (
-                      <div className="text-xs text-slate-500 mt-1">
-                        📍 {event.location}
-                      </div>
-                    )}
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* AI Stand-Up Section */}
-        <div className="mt-8 rounded-2xl p-8 shadow-lg" style={{background: 'linear-gradient(to right, #dafef4, #e8fef9, #d0fdf2)', borderWidth: '1px', borderColor: '#b8f5e8'}}>
+        {/* AI Stand-Up Section - TOP PRIORITY */}
+        <div className="mb-8 rounded-2xl p-8 shadow-lg" style={{background: 'linear-gradient(to right, #dafef4, #e8fef9, #d0fdf2)', borderWidth: '1px', borderColor: '#b8f5e8'}}>
           <div className="text-center mb-6">
             <div className="text-4xl mb-4">🤖</div>
             <h3 className="text-xl font-semibold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent mb-2">
@@ -275,6 +229,156 @@ function App() {
               {error}
             </div>
           )}
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-6">
+          {/* Messages Card */}
+          <div className="bg-white/95 backdrop-blur rounded-2xl shadow-lg p-6" style={{borderWidth: '1px', borderColor: '#dafef4'}}>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-slate-900">
+                📨 Recent Messages ({data.messages.length})
+              </h2>
+              <a 
+                href="https://mail.google.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-xs text-teal-600 hover:text-teal-700 font-medium"
+              >
+                Open Gmail →
+              </a>
+            </div>
+            <div className="space-y-3">
+              {data.messages.slice(0, 8).map((msg) => (
+                <div key={msg.id} className="rounded-lg overflow-hidden transition-all" style={{background: 'linear-gradient(to bottom right, #dafef4, #e8fef9)'}}>
+                  <div 
+                    className="p-3 cursor-pointer hover:shadow-md transition-shadow"
+                    onClick={() => toggleEmailExpand(msg.id)}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-400 to-emerald-400 flex items-center justify-center text-sm font-semibold text-white shadow-sm flex-shrink-0">
+                        {msg.from.charAt(0).toUpperCase()}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="text-sm font-medium text-slate-900 truncate">
+                            {msg.subject}
+                          </div>
+                          {msg.unread && (
+                            <span className="px-2 py-1 bg-gradient-to-r from-teal-500 to-emerald-500 text-white text-xs rounded-full shadow-sm flex-shrink-0">
+                              New
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-xs text-slate-600 truncate">
+                          From: {msg.from.split('<')[0].trim()}
+                        </div>
+                        {!expandedEmail || expandedEmail !== msg.id ? (
+                          <div className="text-xs text-slate-500 mt-1 truncate">
+                            {msg.snippet}
+                          </div>
+                        ) : null}
+                      </div>
+                      <div className="flex-shrink-0 text-slate-400">
+                        {expandedEmail === msg.id ? '▼' : '▶'}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Expanded Email Content */}
+                  {expandedEmail === msg.id && (
+                    <div className="px-3 pb-3 border-t" style={{borderColor: '#b8f5e8'}}>
+                      <div className="mt-3 text-sm text-slate-700 bg-white/70 rounded-lg p-3 max-h-48 overflow-y-auto">
+                        {msg.snippet || 'No preview available'}
+                      </div>
+                      <div className="mt-3 flex gap-2">
+                        <a
+                          href={`https://mail.google.com/mail/u/0/#inbox/${msg.id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-3 py-1.5 bg-gradient-to-r from-teal-500 to-emerald-500 text-white text-xs rounded-lg hover:from-teal-600 hover:to-emerald-600 transition-all shadow-sm"
+                        >
+                          Open in Gmail
+                        </a>
+                        <button className="px-3 py-1.5 bg-white/80 text-slate-700 text-xs rounded-lg hover:bg-white transition-all border border-slate-200">
+                          Mark as Read
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Calendar Card */}
+          <div className="bg-white/95 backdrop-blur rounded-2xl shadow-lg p-6" style={{borderWidth: '1px', borderColor: '#dafef4'}}>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-slate-900">
+                📅 Upcoming Events ({data.events.length})
+              </h2>
+              <a 
+                href="https://calendar.google.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-xs text-teal-600 hover:text-teal-700 font-medium"
+              >
+                Open Calendar →
+              </a>
+            </div>
+            <div className="space-y-3">
+              {data.events.length === 0 ? (
+                <div className="text-center py-8 text-slate-500">
+                  No events scheduled
+                </div>
+              ) : (
+                data.events.map((event) => (
+                  <div key={event.id} className="p-3 rounded-lg hover:shadow-md transition-shadow cursor-pointer" style={{background: 'linear-gradient(to bottom right, #e0fef5, #dafef4)'}}>
+                    <div className="flex items-start gap-3">
+                      <div className="flex flex-col items-center justify-center bg-white/80 rounded-lg p-2 shadow-sm min-w-[60px]">
+                        <div className="text-xs font-semibold text-teal-600">
+                          {formatEventDate(event.start)}
+                        </div>
+                        <div className="text-lg font-bold text-slate-900">
+                          {new Date(event.start).toLocaleTimeString([], {
+                            hour: 'numeric',
+                            minute: '2-digit'
+                          })}
+                        </div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium text-slate-900">
+                          {event.summary}
+                        </div>
+                        <div className="text-xs text-slate-600 mt-1 flex items-center gap-2">
+                          <span>
+                            {new Date(event.start).toLocaleTimeString([], {
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                            {' - '}
+                            {new Date(event.end).toLocaleTimeString([], {
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </span>
+                          {event.attendees.length > 0 && (
+                            <span className="text-slate-500">
+                              · {event.attendees.length} attendee{event.attendees.length > 1 ? 's' : ''}
+                            </span>
+                          )}
+                        </div>
+                        {event.location && (
+                          <div className="text-xs text-slate-500 mt-1">
+                            📍 {event.location}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
         </div>
       </main>
     </div>
