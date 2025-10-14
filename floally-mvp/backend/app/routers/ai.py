@@ -20,6 +20,9 @@ async def generate_standup(request: StandupRequest):
         
         client = anthropic.Anthropic(api_key=api_key)
         
+        # Get model from environment or use default
+        model_name = os.getenv("MODEL_NAME", "claude-3-opus-20240229")
+        
         # Build context from messages and events
         context = f"""
 You are Op, a calm and competent AI assistant helping a creative professional plan their day.
@@ -41,7 +44,7 @@ Keep the response concise and actionable.
 """
         
         message = client.messages.create(
-            model="claude-3-opus-20240229",
+            model=model_name,
             max_tokens=2000,
             messages=[{"role": "user", "content": context}]
         )
