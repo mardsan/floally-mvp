@@ -44,7 +44,7 @@ Keep the response concise and actionable.
 """
         
         message = client.messages.create(
-            model=model_name,
+            model="claude-3-haiku-20240307",
             max_tokens=2000,
             messages=[{"role": "user", "content": context}]
         )
