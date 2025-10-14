@@ -5,4 +5,4 @@ nixPkgs = ["python312"]
 cmds = ["cd floally-mvp/backend && python -m pip install -r requirements.txt"]
 
 [start]
-cmd = "cd floally-mvp/backend && python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+cmd = "cd floally-mvp/backend && python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT --proxy-headers --log-level info"
