@@ -10,6 +10,8 @@ function App() {
     events: [],
     profile: null
   });
+  const [standup, setStandup] = useState(null);
+  const [generatingStandup, setGeneratingStandup] = useState(false);
 
   // Debug info
   console.log('OpAlly App loaded - Version 1.0.1 - Built:', new Date().toISOString());
@@ -83,6 +85,25 @@ function App() {
     } catch (error) {
       console.error('Login failed:', error);
       setError(`Login failed: ${error.message}`);
+    }
+  };
+
+  const handleGenerateStandup = async () => {
+    setGeneratingStandup(true);
+    setError(null);
+    try {
+      console.log('Generating AI stand-up...');
+      const response = await ai.generateStandup({
+        messages: data.messages,
+        events: data.events
+      });
+      console.log('Stand-up generated:', response.data);
+      setStandup(response.data.standup);
+    } catch (error) {
+      console.error('Failed to generate stand-up:', error);
+      setError(`Failed to generate stand-up: ${error.message}`);
+    } finally {
+      setGeneratingStandup(false);
     }
   };
 
@@ -219,16 +240,41 @@ function App() {
           </div>
         </div>
 
-        {/* Coming Soon Section */}
-        <div className="mt-8 bg-gradient-to-r from-teal-50 via-emerald-50 to-cyan-50 rounded-2xl p-8 text-center border border-teal-100 shadow-lg">
-          <div className="text-4xl mb-4">🚧</div>
-          <h3 className="text-xl font-semibold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent mb-2">
-            AI Stand-Up Coming Soon
-          </h3>
-          <p className="text-slate-700">
-            OpAlly will soon analyze your messages and calendar to give you
-            "The One Thing" to focus on, plus smart decisions and actions.
-          </p>
+        {/* AI Stand-Up Section */}
+        <div className="mt-8 bg-gradient-to-r from-teal-50 via-emerald-50 to-cyan-50 rounded-2xl p-8 border border-teal-100 shadow-lg">
+          <div className="text-center mb-6">
+            <div className="text-4xl mb-4">🤖</div>
+            <h3 className="text-xl font-semibold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent mb-2">
+              AI Daily Stand-Up
+            </h3>
+            <p className="text-slate-700 mb-6">
+              Let Op analyze your messages and calendar to give you "The One Thing" to focus on today.
+            </p>
+            <button
+              onClick={handleGenerateStandup}
+              disabled={generatingStandup}
+              className="px-8 py-4 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-full font-semibold text-lg hover:from-teal-600 hover:to-emerald-600 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {generatingStandup ? '✨ Generating...' : '🚀 Generate Stand-Up'}
+            </button>
+          </div>
+
+          {standup && (
+            <div className="mt-6 bg-white/95 backdrop-blur rounded-xl p-6 text-left shadow-md">
+              <h4 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                <span>🎯</span> Your Daily Brief
+              </h4>
+              <div className="prose prose-sm max-w-none text-slate-700 whitespace-pre-wrap">
+                {standup}
+              </div>
+            </div>
+          )}
+
+          {error && (
+            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+              {error}
+            </div>
+          )}
         </div>
       </main>
     </div>
