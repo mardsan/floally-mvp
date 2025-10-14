@@ -109,7 +109,7 @@ function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 to-cyan-50">
+      <div className="min-h-screen flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #dafef4, #e8fef9)'}}>
         <div className="text-center">
           <div className="text-4xl mb-4">🔄</div>
           <div className="text-slate-700">Loading OpAlly…</div>
@@ -120,7 +120,7 @@ function App() {
 
   if (!authenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 via-cyan-50 to-emerald-50">
+      <div className="min-h-screen flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #dafef4, #e8fef9, #d0fdf2)'}}>
         <div className="text-center max-w-md mx-auto p-8">
           <img src="/opally-logo.png" alt="OpAlly Logo" className="w-48 mx-auto mb-6" />
           <h1 className="text-4xl font-bold text-slate-900 mb-4">
@@ -149,8 +149,8 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-slate-50">
-      <header className="bg-white/90 backdrop-blur-sm border-b border-teal-100 px-6 py-4 shadow-sm">
+    <div className="min-h-screen" style={{background: 'linear-gradient(to bottom right, #dafef4, #e8fef9, #f0fefb)'}}>
+      <header className="bg-white/90 backdrop-blur-sm border-b px-6 py-4 shadow-sm" style={{borderColor: '#dafef4'}}>
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img src="/opally-logo.png" alt="OpAlly" className="h-8" />
@@ -168,13 +168,13 @@ function App() {
       <main className="max-w-6xl mx-auto px-6 py-8">
         <div className="grid md:grid-cols-2 gap-6">
           {/* Messages Card */}
-          <div className="bg-white/95 backdrop-blur rounded-2xl shadow-lg border border-teal-100 p-6">
+          <div className="bg-white/95 backdrop-blur rounded-2xl shadow-lg p-6" style={{borderWidth: '1px', borderColor: '#dafef4'}}>
             <h2 className="text-lg font-semibold text-slate-900 mb-4">
               📨 Recent Messages ({data.messages.length})
             </h2>
             <div className="space-y-3">
               {data.messages.slice(0, 5).map((msg) => (
-                <div key={msg.id} className="p-3 bg-gradient-to-br from-teal-50 to-cyan-50 rounded-lg hover:shadow-md transition-shadow">
+                <div key={msg.id} className="p-3 rounded-lg hover:shadow-md transition-shadow" style={{background: 'linear-gradient(to bottom right, #dafef4, #e8fef9)'}}>
                   <div className="flex items-start gap-3">
                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-400 to-emerald-400 flex items-center justify-center text-sm font-semibold text-white shadow-sm">
                       {msg.from.charAt(0).toUpperCase()}
@@ -202,7 +202,7 @@ function App() {
           </div>
 
           {/* Calendar Card */}
-          <div className="bg-white/95 backdrop-blur rounded-2xl shadow-lg border border-emerald-100 p-6">
+          <div className="bg-white/95 backdrop-blur rounded-2xl shadow-lg p-6" style={{borderWidth: '1px', borderColor: '#dafef4'}}>
             <h2 className="text-lg font-semibold text-slate-900 mb-4">
               📅 Today's Events ({data.events.length})
             </h2>
@@ -213,7 +213,7 @@ function App() {
                 </div>
               ) : (
                 data.events.map((event) => (
-                  <div key={event.id} className="p-3 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-lg hover:shadow-md transition-shadow">
+                  <div key={event.id} className="p-3 rounded-lg hover:shadow-md transition-shadow" style={{background: 'linear-gradient(to bottom right, #e0fef5, #dafef4)'}}>
                     <div className="text-sm font-medium text-slate-900">
                       {event.summary}
                     </div>
@@ -241,7 +241,7 @@ function App() {
         </div>
 
         {/* AI Stand-Up Section */}
-        <div className="mt-8 bg-gradient-to-r from-teal-50 via-emerald-50 to-cyan-50 rounded-2xl p-8 border border-teal-100 shadow-lg">
+        <div className="mt-8 rounded-2xl p-8 shadow-lg" style={{background: 'linear-gradient(to right, #dafef4, #e8fef9, #d0fdf2)', borderWidth: '1px', borderColor: '#b8f5e8'}}>
           <div className="text-center mb-6">
             <div className="text-4xl mb-4">🤖</div>
             <h3 className="text-xl font-semibold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent mb-2">
