@@ -37,17 +37,20 @@ Generate a concise daily stand-up with:
 4. Brief digest of what's already taken care of
 
 Be warm, competent, and protective of their creative flow.
-Respond in JSON format.
+Keep the response concise and actionable.
 """
         
         message = client.messages.create(
-            model="claude-sonnet-4-20250514",
+            model="claude-3-5-sonnet-20241022",
             max_tokens=2000,
             messages=[{"role": "user", "content": context}]
         )
         
+        # Extract text from response
+        standup_text = message.content[0].text if message.content else "No response generated"
+        
         return {
-            "standup": message.content[0].text,
+            "standup": standup_text,
             "usage": {
                 "input_tokens": message.usage.input_tokens,
                 "output_tokens": message.usage.output_tokens
