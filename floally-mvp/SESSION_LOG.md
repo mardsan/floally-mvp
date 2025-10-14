@@ -4,43 +4,69 @@
 
 ---
 
-## 🎯 Project Status
+## 🎯 Project Status - DEPLOYED TO PRODUCTION! 🚀
 
-### ✅ What's Complete
-1. **Backend (FastAPI + Python)** - Fully set up
-   - Location: `/workspaces/codespaces-react/floally-mvp/backend/`
-   - Virtual environment created with all dependencies
-   - API routes: Auth, Gmail, Calendar, AI (Claude)
-   - Environment variables configured (Google OAuth + Anthropic API)
+### ✅ Production Deployment Complete
+1. **GitHub Repository** - ✅ Published
+   - URL: https://github.com/mardsan/floally-mvp
+   - Branch: main
+   - All code pushed (removed venv directory from git)
 
-2. **Frontend (React + Vite + Tailwind)** - Fully set up
-   - Location: `/workspaces/codespaces-react/floally-mvp/frontend/`
-   - All dependencies installed
-   - Tailwind CSS via CDN (to avoid PostCSS issues)
-   - Production build created in `dist/` folder
+2. **Backend (Railway)** - ✅ Deployed
+   - URL: https://floally-mvp-production.up.railway.app
+   - Build: Successful (using nixpacks.toml with Python 3.12)
+   - Status: Checking runtime logs for startup confirmation
+   - Environment variables configured
 
-3. **Google OAuth Credentials** - Configured
-   - Client ID and Secret added to `.env`
-   - Redirect URI configured for Codespace URL
+3. **Frontend (Vercel)** - ✅ Deployed
+   - URL: https://floally-mvp-d548.vercel.app
+   - Build: Successful
+   - Root Directory: floally-mvp/frontend
+   - Environment: VITE_API_URL configured
 
-4. **Documentation**
-   - README.md, GETTING_STARTED.md, SETUP_CHECKLIST.md created
+4. **Google OAuth Credentials** - ⚠️ Needs Update
+   - Client ID and Secret configured in Railway
+   - Redirect URIs need Railway URL added
+   - Current: Codespace URL only
 
 ---
 
-## ⚠️ Current Issue: Port Forwarding
+## 📋 Deployment Configuration
 
-**Problem:** GitHub Codespaces port forwarding is not working properly from external browsers (Safari on iPad). Both servers run locally but public URLs return 404 errors.
+### Railway Backend Setup
+- **Build Method:** Nixpacks (custom nixpacks.toml at root)
+- **Start Command:** `cd floally-mvp/backend && python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+- **Install Command:** `cd floally-mvp/backend && python -m pip install -r requirements.txt`
+- **Python Version:** 3.12
+- **Key Fix:** Using `python -m pip` instead of `pip` to ensure module is found
 
-**Servers Running:**
-- Backend: `http://localhost:8000` ✅ (works locally)
-- Frontend: `http://localhost:5173` ✅ (works locally)
+### Vercel Frontend Setup
+- **Framework:** Vite
+- **Root Directory:** floally-mvp/frontend
+- **Build Command:** npm run build
+- **Output Directory:** dist
+- **Environment Variable:** VITE_API_URL=https://floally-mvp-production.up.railway.app
 
-**Public URLs (NOT working externally):**
-- Backend: `https://refactored-invention-6wpqr6wpqg42r747-8000.app.github.dev`
-- Frontend: `https://refactored-invention-6wpqr6wpqg42r747-5173.app.github.dev`
+---
 
-**Root Cause:** Codespaces tunnel infrastructure receiving requests but not forwarding to services.
+## ⚠️ Next Steps to Complete
+
+1. **Verify Backend Runtime** - Check Railway logs for:
+   - "Uvicorn running on http://0.0.0.0:PORT" message
+   - No import errors or missing dependencies
+   - Successful startup without crashes
+
+2. **Update Railway Environment Variables:**
+   - FRONTEND_URL=https://floally-mvp-d548.vercel.app
+
+3. **Update Google OAuth Redirect URIs:**
+   - Add: https://floally-mvp-production.up.railway.app/api/auth/callback
+
+4. **Test End-to-End Flow:**
+   - Frontend loads correctly ✅
+   - Backend health check responds
+   - OAuth flow completes successfully
+   - Gmail/Calendar data retrieval works
 
 ---
 
