@@ -13,13 +13,18 @@ class StandupRequest(BaseModel):
 async def generate_standup(request: StandupRequest):
     """Generate daily stand-up using Claude"""
     try:
-        client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+        # Check for API key
+        api_key = os.getenv("ANTHROPIC_API_KEY")
+        if not api_key:
+            raise HTTPException(status_code=500, detail="ANTHROPIC_API_KEY not configured")
+        
+        client = anthropic.Anthropic(api_key=api_key)
         
         # Build context from messages and events
         context = f"""
 You are Op, a calm and competent AI assistant helping a creative professional plan their day.
 
-Today's Gmail messages ({len(request.messages)} unread):
+Today's Gmail messages ({len(request.messages)} total):
 {format_messages(request.messages)}
 
 Today's Calendar events ({len(request.events)} scheduled):
@@ -49,7 +54,12 @@ Respond in JSON format.
             }
         }
     
+    except HTTPException:
+        raise
     except Exception as e:
+        import traceback
+        error_detail = f"{str(e)}\n{traceback.format_exc()}"
+        print(f"AI Standup Error: {error_detail}")
         raise HTTPException(status_code=500, detail=str(e))
 
 def format_messages(messages):
@@ -65,7 +75,9 @@ def format_events(events):
     """Format events for Claude"""
     if not events:
         return "No events today"
-    return "\n".join([
-        f"- {e['start']}: {e['summary']}"
-        for e in events[:10]
-    ])
+    formatted = []
+    for e in events[:10]:
+        start = e.get('start', 'Time unknown')
+        summary = e.get('summary', 'No title')
+        formatted.append(f"- {start}: {summary}")
+    return "\n".join(formatted)
