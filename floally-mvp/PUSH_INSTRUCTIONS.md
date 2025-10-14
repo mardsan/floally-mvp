@@ -4,7 +4,7 @@
 All changes are committed locally in the Codespace, but need to be pushed from your local machine due to permission constraints.
 
 ## Commits Ready to Push
-There are **6 commits** in your Codespace that need to be pushed to GitHub:
+There are **9 commits** in your Codespace that need to be pushed to GitHub:
 
 1. **94c1a68** - "Try Claude 3 Opus - Sonnet may not be enabled on this account"
 2. **0bfe877** - "Use MODEL_NAME env var for Claude model selection"  
@@ -12,6 +12,9 @@ There are **6 commits** in your Codespace that need to be pushed to GitHub:
 4. **1220781** - "Add push instructions for syncing Codespace commits"
 5. **1f55856** - "Improve UX: AI Stand-Up at top, expandable emails, calendar date labels"
 6. **5568964** - "Document UX improvements and design decisions"
+7. **d74239c** - "Update push instructions with UX improvement commits"
+8. **0daea3a** - "Update favicon to opally-icon.png and add PWA meta tags"
+9. **63af12b** - "Add PWA manifest.json for mobile install support"
 
 ## How to Push from Local Machine
 
@@ -37,6 +40,8 @@ git push origin main
 - AI Stand-Up is now the first thing users see (primary value prop)
 - Emails are now readable and actionable within OpAlly
 - Calendar shows actual dates (Today/Tomorrow/specific days)
+- **NEW:** OpAlly icon as favicon for better branding
+- **NEW:** PWA manifest allows users to "install" OpAlly on mobile devices
 
 ---
 
