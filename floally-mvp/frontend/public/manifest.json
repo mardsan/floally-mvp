@@ -1,0 +1,18 @@
+{
+  "name": "OpAlly - AI Daily Stand-Up Partner",
+  "short_name": "OpAlly",
+  "description": "Your AI-powered daily stand-up and operational partner for creative work",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#dafef4",
+  "theme_color": "#dafef4",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/opally-icon.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
