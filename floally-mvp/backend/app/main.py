@@ -6,6 +6,29 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+import logging
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request
+
+
+logger = logging.getLogger("uvicorn.error")
+logging.basicConfig(level=logging.INFO)
+
+
+class RequestLoggingMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        # Log basic request info
+        logger.info(f"--> Incoming {request.method} {request.url.path}")
+        try:
+            response = await call_next(request)
+            logger.info(f"<-- Response {response.status_code} for {request.method} {request.url.path}")
+            return response
+        except Exception as e:
+            # Log exception with stack trace
+            logger.exception(f"Exception handling {request.method} {request.url.path}: {e}")
+            raise
+
+
 app = FastAPI(
     title="FloAlly API",
     description="AI-powered daily stand-up and task automation",
@@ -23,6 +46,9 @@ app.add_middleware(
     allow_headers=["*"],
     expose_headers=["*"],
 )
+
+# Add request/response logging middleware (helps debug runtime 502s on Railway)
+app.add_middleware(RequestLoggingMiddleware)
 
 # Include routers
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
