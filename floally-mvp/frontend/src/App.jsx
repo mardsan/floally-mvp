@@ -3,6 +3,7 @@ import { auth, gmail, calendar, ai, userProfile } from './services/api';
 import OnboardingFlow from './components/OnboardingFlow';
 import AllySettings from './components/AllySettings';
 import EmailActions from './components/EmailActions';
+import Profile from './pages/Profile';
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -26,6 +27,7 @@ function App() {
   // New v1.2.0 state
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
   const [profile, setProfile] = useState(null);
   const [allyInsights, setAllyInsights] = useState(null);
 
@@ -330,14 +332,24 @@ function App() {
           </div>
           <div className="flex items-center gap-4">
             {profile && profile.onboarding_completed && (
-              <button
-                onClick={handleOpenSettings}
-                className="flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
-                title="Settings"
-              >
-                <span className="text-xl">⚙️</span>
-                <span className="text-sm font-medium">Settings</span>
-              </button>
+              <>
+                <button
+                  onClick={() => setShowProfile(true)}
+                  className="flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
+                  title="Profile"
+                >
+                  <span className="text-xl">👤</span>
+                  <span className="text-sm font-medium">Profile</span>
+                </button>
+                <button
+                  onClick={handleOpenSettings}
+                  className="flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
+                  title="Settings"
+                >
+                  <span className="text-xl">⚙️</span>
+                  <span className="text-sm font-medium">Settings</span>
+                </button>
+              </>
             )}
             <div className="text-sm text-slate-600">
               Good morning 🌞
@@ -740,6 +752,15 @@ function App() {
           allyInsights={allyInsights}
           onEdit={handleEditProfile}
           onClose={handleCloseSettings}
+        />
+      )}
+
+      {/* Profile Modal */}
+      {showProfile && data.profile && (
+        <Profile
+          userEmail={data.profile.email}
+          onClose={() => setShowProfile(false)}
+          onRefresh={fetchData}
         />
       )}
     </div>
