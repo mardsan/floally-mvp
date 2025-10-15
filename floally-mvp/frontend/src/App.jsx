@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { auth, gmail, calendar, ai, userProfile } from './services/api';
 import OnboardingFlow from './components/OnboardingFlow';
 import AllySettings from './components/AllySettings';
+import EmailActions from './components/EmailActions';
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -240,6 +241,42 @@ function App() {
     } finally {
       setGeneratingResponse(false);
     }
+  };
+
+  const handleEmailAction = async (action, emailId) => {
+    console.log(`Email action: ${action} on ${emailId}`);
+    
+    // Refresh email list after action
+    if (action === 'archive' || action === 'trash') {
+      // Remove from current view optimistically
+      setData(prevData => ({
+        ...prevData,
+        messages: prevData.messages.filter(msg => msg.id !== emailId)
+      }));
+      
+      // Also update analysis if present
+      if (emailAnalysis) {
+        setEmailAnalysis(prevAnalysis => ({
+          ...prevAnalysis,
+          analysis: prevAnalysis.analysis.filter(item => {
+            const email = data.messages[item.emailIndex];
+            return email && email.id !== emailId;
+          })
+        }));
+      }
+    }
+    
+    // Show success feedback
+    const actionMessages = {
+      important: '⭐ Marked as important!',
+      unimportant: '❌ Marked as not interested',
+      archive: '📥 Email archived',
+      trash: '🗑️ Moved to trash',
+      unsubscribe: '🚫 Unsubscribe link opened'
+    };
+    
+    // You could add a toast notification here
+    console.log(actionMessages[action] || 'Action completed');
   };
 
   if (loading) {
@@ -486,6 +523,14 @@ function App() {
                           </div>
                         </div>
                       )}
+
+                      {/* Email Action Buttons */}
+                      <EmailActions
+                        email={email}
+                        userEmail={data.profile?.email}
+                        onActionComplete={handleEmailAction}
+                        onRespond={() => handleGenerateResponse(email)}
+                      />
                     </div>
                   );
                 })}

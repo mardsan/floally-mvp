@@ -15,6 +15,11 @@ export const auth = {
 export const gmail = {
   getMessages: (maxResults = 10) => api.get(`/api/gmail/messages?max_results=${maxResults}`),
   getProfile: () => api.get('/api/gmail/profile'),
+  markImportant: (emailId) => api.post(`/api/gmail/mark-important?email_id=${emailId}`),
+  markUnimportant: (emailId) => api.post(`/api/gmail/mark-unimportant?email_id=${emailId}`),
+  archive: (emailId) => api.post(`/api/gmail/archive?email_id=${emailId}`),
+  trash: (emailId) => api.post(`/api/gmail/trash?email_id=${emailId}`),
+  getUnsubscribeLink: (emailId) => api.get(`/api/gmail/unsubscribe-link?email_id=${emailId}`),
 };
 
 export const calendar = {
@@ -33,6 +38,17 @@ export const userProfile = {
   completeOnboarding: (userEmail, answers) => api.post(`/api/user/profile/onboarding?user_email=${encodeURIComponent(userEmail)}`, answers),
   updateProfile: (userEmail, updates) => api.put(`/api/user/profile?user_email=${encodeURIComponent(userEmail)}`, updates),
   getInsights: (userEmail) => api.get(`/api/user/profile/insights?user_email=${encodeURIComponent(userEmail)}`),
+};
+
+export const behavior = {
+  logAction: (actionData) => api.post('/api/behavior/log-action', actionData),
+  getSenderStats: (userEmail, senderEmail = null) => {
+    const params = new URLSearchParams({ user_email: userEmail });
+    if (senderEmail) params.append('sender_email', senderEmail);
+    return api.get(`/api/behavior/sender-stats?${params}`);
+  },
+  getBehaviorLog: (userEmail, limit = 100) => api.get(`/api/behavior/behavior-log?user_email=${userEmail}&limit=${limit}`),
+  getInsights: (userEmail) => api.get(`/api/behavior/insights?user_email=${userEmail}`),
 };
 
 export default api;

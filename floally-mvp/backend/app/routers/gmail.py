@@ -114,3 +114,130 @@ async def get_profile():
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/mark-important")
+async def mark_important(email_id: str):
+    """Mark email as important (add IMPORTANT and STARRED labels)"""
+    try:
+        service = get_gmail_service()
+        service.users().messages().modify(
+            userId='me',
+            id=email_id,
+            body={
+                'addLabelIds': ['IMPORTANT', 'STARRED']
+            }
+        ).execute()
+        
+        return {
+            "success": True,
+            "message": "Email marked as important",
+            "email_id": email_id
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to mark important: {str(e)}")
+
+@router.post("/mark-unimportant")
+async def mark_unimportant(email_id: str):
+    """Mark email as unimportant (remove IMPORTANT label, add custom NOT_INTERESTED label)"""
+    try:
+        service = get_gmail_service()
+        
+        # Remove IMPORTANT label if present
+        service.users().messages().modify(
+            userId='me',
+            id=email_id,
+            body={
+                'removeLabelIds': ['IMPORTANT']
+            }
+        ).execute()
+        
+        return {
+            "success": True,
+            "message": "Email marked as unimportant",
+            "email_id": email_id
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to mark unimportant: {str(e)}")
+
+@router.post("/archive")
+async def archive_email(email_id: str):
+    """Archive email (remove INBOX label)"""
+    try:
+        service = get_gmail_service()
+        service.users().messages().modify(
+            userId='me',
+            id=email_id,
+            body={
+                'removeLabelIds': ['INBOX']
+            }
+        ).execute()
+        
+        return {
+            "success": True,
+            "message": "Email archived",
+            "email_id": email_id
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to archive: {str(e)}")
+
+@router.post("/trash")
+async def trash_email(email_id: str):
+    """Move email to trash"""
+    try:
+        service = get_gmail_service()
+        service.users().messages().trash(
+            userId='me',
+            id=email_id
+        ).execute()
+        
+        return {
+            "success": True,
+            "message": "Email moved to trash",
+            "email_id": email_id
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to trash: {str(e)}")
+
+@router.get("/unsubscribe-link")
+async def get_unsubscribe_link(email_id: str):
+    """Extract unsubscribe link from email headers"""
+    try:
+        service = get_gmail_service()
+        message = service.users().messages().get(
+            userId='me',
+            id=email_id,
+            format='full'
+        ).execute()
+        
+        headers = {h['name']: h['value'] for h in message['payload']['headers']}
+        
+        # Check for List-Unsubscribe header
+        unsubscribe_header = headers.get('List-Unsubscribe', '')
+        
+        if not unsubscribe_header:
+            return {
+                "success": False,
+                "message": "No unsubscribe link found",
+                "has_unsubscribe": False
+            }
+        
+        # Extract URL from header (format: <mailto:...>, <http://...>)
+        import re
+        urls = re.findall(r'<(https?://[^>]+)>', unsubscribe_header)
+        
+        if urls:
+            return {
+                "success": True,
+                "unsubscribe_url": urls[0],
+                "has_unsubscribe": True,
+                "message": "Unsubscribe link found"
+            }
+        else:
+            return {
+                "success": False,
+                "message": "Unsubscribe link not in supported format",
+                "has_unsubscribe": False
+            }
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get unsubscribe link: {str(e)}")
