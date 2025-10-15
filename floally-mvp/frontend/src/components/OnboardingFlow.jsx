@@ -15,7 +15,7 @@ const OnboardingFlow = ({ userEmail, onComplete }) => {
   const totalSteps = 6;
 
   const handleNext = () => {
-    if (step < totalSteps) {
+    if (step < totalSteps - 1) {
       setStep(step + 1);
     } else {
       onComplete(answers);
