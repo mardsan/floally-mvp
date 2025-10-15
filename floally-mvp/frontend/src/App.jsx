@@ -3,6 +3,7 @@ import { auth, gmail, calendar, ai, userProfile } from './services/api';
 import OnboardingFlow from './components/OnboardingFlow';
 import AllySettings from './components/AllySettings';
 import EmailActions from './components/EmailActions';
+import EmailFeedback from './components/EmailFeedback';
 import Profile from './pages/Profile';
 
 function App() {
@@ -749,6 +750,17 @@ function App() {
                         <button className="px-3 py-1.5 bg-white/80 text-slate-700 text-xs rounded-lg hover:bg-white transition-all border border-slate-200">
                           Mark as Read
                         </button>
+                      </div>
+                      
+                      {/* Ally Learning Feedback */}
+                      <div className="mt-3">
+                        <EmailFeedback
+                          email={msg}
+                          userEmail={data.profile?.email}
+                          onFeedbackComplete={(type) => {
+                            console.log(`User feedback: ${type} for email ${msg.id}`);
+                          }}
+                        />
                       </div>
                     </div>
                   )}
