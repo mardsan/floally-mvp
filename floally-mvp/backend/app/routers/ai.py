@@ -101,18 +101,31 @@ async def analyze_emails(request: EmailAnalysisRequest):
         
         # Build context for email analysis
         emails_list = "\n\n".join([
-            f"Email {i+1} (ID: {m.get('id', 'unknown')}):\nFrom: {m.get('from', 'Unknown')}\nSubject: {m.get('subject', 'No subject')}\nSnippet: {m.get('snippet', 'No preview')}\nUnread: {m.get('unread', False)}"
+            f"Email {i+1} (ID: {m.get('id', 'unknown')}):\n"
+            f"From: {m.get('from', 'Unknown')}\n"
+            f"Subject: {m.get('subject', 'No subject')}\n"
+            f"Snippet: {m.get('snippet', 'No preview')}\n"
+            f"Unread: {m.get('unread', False)}\n"
+            f"Already Starred: {m.get('isStarred', False)}\n"
+            f"Gmail Important: {m.get('isImportant', False)}\n"
+            f"Category: {'Primary (from contact)' if m.get('isPrimary', False) else 'Promotional' if m.get('isPromotional', False) else 'Social' if m.get('isSocial', False) else 'Other'}"
             for i, m in enumerate(request.messages)
         ])
         
         context = f"""
 You are Ally, an intelligent email assistant. Analyze these emails and identify which ones are IMPORTANT and require action or response.
 
+**PRIORITIZATION RULES:**
+1. ALWAYS mark emails as important if they have "Already Starred: True" or "Gmail Important: True" - these are user-designated priorities
+2. ALWAYS prioritize "Primary (from contact)" emails over promotional/social - these are from real people
+3. Emails from individuals (not companies/brands) are typically more important
+4. Promotional emails, newsletters, automated notifications are usually NOT important unless specifically work-related
+
 Emails to analyze:
 {emails_list}
 
 For each email, determine:
-1. Is it important? (spam, promotional, automated notifications = NOT important)
+1. Is it important? (Starred/Gmail Important emails = YES, Real people = likely YES, Promotions = usually NO)
 2. Does it require a response or action?
 3. Priority level (High, Medium, Low)
 4. Reason for importance
@@ -133,7 +146,6 @@ Return your analysis as a JSON array with this structure:
 ]
 
 IMPORTANT: Include the emailId field with the exact ID shown in parentheses for each email.
-Only include emails that are actually important. Skip spam, promotions, automated notifications, newsletters unless they're specifically relevant to work.
 """
         
         message = client.messages.create(

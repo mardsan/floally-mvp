@@ -125,11 +125,15 @@ const EmailActions = ({ email, userEmail, onActionComplete, onRespond }) => {
       <div className="flex items-center gap-2 mt-3 pt-3 border-t" style={{borderColor: '#dafef4'}}>
         <button
           onClick={handleMarkImportant}
-          disabled={loading !== null}
-          className="flex items-center gap-1 px-3 py-1.5 bg-teal-50 text-teal-700 rounded-lg text-sm font-medium hover:bg-teal-100 transition-all disabled:opacity-50"
-          title="Mark as Important & Star"
+          disabled={loading !== null || email.isStarred}
+          className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-all disabled:opacity-50 ${
+            email.isStarred 
+              ? 'bg-amber-100 text-amber-700 border border-amber-300'
+              : 'bg-teal-50 text-teal-700 hover:bg-teal-100'
+          }`}
+          title={email.isStarred ? "Already starred in Gmail" : "Mark as Important & Star in Gmail"}
         >
-          {loading === 'important' ? '...' : '⭐'} Focus
+          {loading === 'important' ? '...' : email.isStarred ? '⭐' : '☆'} {email.isStarred ? 'Starred' : 'Focus'}
         </button>
         
         <button

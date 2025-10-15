@@ -463,6 +463,21 @@ function App() {
                                 {actionIcons[item.actionType]} {item.actionType}
                               </span>
                             )}
+                            {email.isStarred && (
+                              <span className="px-2 py-1 text-xs font-semibold bg-amber-100 text-amber-700 border border-amber-200 rounded">
+                                ⭐ Gmail Starred
+                              </span>
+                            )}
+                            {email.isImportant && !email.isStarred && (
+                              <span className="px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-700 border border-blue-200 rounded">
+                                Gmail Important
+                              </span>
+                            )}
+                            {email.isPrimary && (
+                              <span className="px-2 py-1 text-xs bg-teal-100 text-teal-700 rounded">
+                                👤 Contact
+                              </span>
+                            )}
                           </div>
                           <div className="font-medium text-slate-900 mb-1">
                             {email.subject}
