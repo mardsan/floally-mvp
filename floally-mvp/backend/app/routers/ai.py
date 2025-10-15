@@ -101,7 +101,7 @@ async def analyze_emails(request: EmailAnalysisRequest):
         
         # Build context for email analysis
         emails_list = "\n\n".join([
-            f"Email {i+1}:\nFrom: {m.get('from', 'Unknown')}\nSubject: {m.get('subject', 'No subject')}\nSnippet: {m.get('snippet', 'No preview')}\nUnread: {m.get('unread', False)}"
+            f"Email {i+1} (ID: {m.get('id', 'unknown')}):\nFrom: {m.get('from', 'Unknown')}\nSubject: {m.get('subject', 'No subject')}\nSnippet: {m.get('snippet', 'No preview')}\nUnread: {m.get('unread', False)}"
             for i, m in enumerate(request.messages)
         ])
         
@@ -121,6 +121,7 @@ For each email, determine:
 Return your analysis as a JSON array with this structure:
 [
   {{
+    "emailId": "the email ID from above",
     "emailIndex": 0,
     "important": true/false,
     "priority": "High/Medium/Low",
@@ -131,6 +132,7 @@ Return your analysis as a JSON array with this structure:
   }}
 ]
 
+IMPORTANT: Include the emailId field with the exact ID shown in parentheses for each email.
 Only include emails that are actually important. Skip spam, promotions, automated notifications, newsletters unless they're specifically relevant to work.
 """
         

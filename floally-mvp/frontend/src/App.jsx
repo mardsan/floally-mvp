@@ -261,8 +261,8 @@ function App() {
         setEmailAnalysis(prevAnalysis => ({
           ...prevAnalysis,
           analysis: prevAnalysis.analysis.filter(item => {
-            const email = data.messages[item.emailIndex];
-            return email && email.id !== emailId;
+            // Match by emailId first, fallback to index
+            return item.emailId !== emailId;
           })
         }));
       }
@@ -421,7 +421,8 @@ function App() {
               {emailAnalysis.analysis
                 .filter(item => item.important)
                 .map((item) => {
-                  const email = data.messages[item.emailIndex];
+                  // Find email by ID instead of index for accuracy
+                  const email = data.messages.find(msg => msg.id === item.emailId) || data.messages[item.emailIndex];
                   if (!email) return null;
                   
                   const priorityColors = {
