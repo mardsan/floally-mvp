@@ -296,7 +296,7 @@ function App() {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #dafef4, #e8fef9, #d0fdf2)'}}>
         <div className="text-center max-w-md mx-auto p-8">
-          <img src="/opally-vectorlogo-v2_01.png" alt="OpAlly Logo" className="w-48 mx-auto mb-8" />
+          <img src="/opally-vectorlogo-v2_01.png" alt="OpAlly Logo" className="w-48 mx-auto mb-8" onError={(e) => {console.error('Logo failed to load:', e.target.src); e.target.src = '/opally_logo_vector.png';}} />
           <p className="text-lg text-slate-700 mb-8">
             Your AI-powered daily stand-up and operational partner for creative work.
           </p>
