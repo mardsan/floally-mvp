@@ -51,4 +51,15 @@ export const behavior = {
   getInsights: (userEmail) => api.get(`/api/behavior/insights?user_email=${userEmail}`),
 };
 
+export const profile = {
+  getOverview: (userEmail) => api.get(`/api/profile/overview?user_email=${encodeURIComponent(userEmail)}`),
+  getBehavioralInsights: (userEmail) => api.get(`/api/profile/behavioral-insights?user_email=${encodeURIComponent(userEmail)}`),
+  getGoals: (userEmail) => api.get(`/api/user/profile/goals?user_email=${encodeURIComponent(userEmail)}`),
+  addGoal: (userEmail, goal) => api.post(`/api/user/profile/goals?user_email=${encodeURIComponent(userEmail)}`, goal),
+  updateGoal: (userEmail, goalIndex, updates) => api.put(`/api/user/profile/goals/${goalIndex}?user_email=${encodeURIComponent(userEmail)}`, updates),
+  getSettings: (userEmail) => api.get(`/api/user/settings?user_email=${encodeURIComponent(userEmail)}`),
+  updateSettings: (userEmail, settings) => api.put(`/api/user/settings?user_email=${encodeURIComponent(userEmail)}`, settings),
+  getIntegrations: (userEmail) => api.get(`/api/user/integrations?user_email=${encodeURIComponent(userEmail)}`),
+};
+
 export default api;
