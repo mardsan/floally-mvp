@@ -18,7 +18,7 @@ def get_gmail_service():
 
 @router.get("/messages")
 async def list_messages(max_results: int = 10):
-    """Get recent Gmail messages"""
+    """Get recent Gmail messages with importance indicators"""
     try:
         service = get_gmail_service()
         results = service.users().messages().list(
@@ -40,6 +40,15 @@ async def list_messages(max_results: int = 10):
             
             # Extract relevant fields
             headers = {h['name']: h['value'] for h in message['payload']['headers']}
+            label_ids = message.get('labelIds', [])
+            
+            # Determine if email is likely spam/promotional
+            is_spam = 'SPAM' in label_ids
+            is_important = 'IMPORTANT' in label_ids
+            is_starred = 'STARRED' in label_ids
+            is_promotional = 'CATEGORY_PROMOTIONS' in label_ids
+            is_social = 'CATEGORY_SOCIAL' in label_ids
+            is_updates = 'CATEGORY_UPDATES' in label_ids
             
             detailed_messages.append({
                 'id': message['id'],
@@ -48,7 +57,14 @@ async def list_messages(max_results: int = 10):
                 'subject': headers.get('Subject', 'No Subject'),
                 'date': headers.get('Date', ''),
                 'snippet': message.get('snippet', ''),
-                'unread': 'UNREAD' in message.get('labelIds', [])
+                'unread': 'UNREAD' in label_ids,
+                'isSpam': is_spam,
+                'isImportant': is_important,
+                'isStarred': is_starred,
+                'isPromotional': is_promotional,
+                'isSocial': is_social,
+                'isUpdates': is_updates,
+                'labels': label_ids
             })
         
         return {

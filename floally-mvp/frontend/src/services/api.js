@@ -24,6 +24,8 @@ export const calendar = {
 
 export const ai = {
   generateStandup: (data) => api.post('/api/ai/standup', data),
+  analyzeEmails: (messages) => api.post('/api/ai/analyze-emails', { messages }),
+  generateResponse: (email, userContext = "") => api.post('/api/ai/generate-response', { email, user_context: userContext }),
 };
 
 export default api;

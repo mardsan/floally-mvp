@@ -14,9 +14,14 @@ function App() {
   const [generatingStandup, setGeneratingStandup] = useState(false);
   const [expandedEmail, setExpandedEmail] = useState(null);
   const [expandedEvent, setExpandedEvent] = useState(null);
+  const [emailAnalysis, setEmailAnalysis] = useState(null);
+  const [analyzingEmails, setAnalyzingEmails] = useState(false);
+  const [draftResponse, setDraftResponse] = useState(null);
+  const [generatingResponse, setGeneratingResponse] = useState(false);
+  const [selectedEmailForResponse, setSelectedEmailForResponse] = useState(null);
 
   // Debug info
-  console.log('OpAlly App loaded - Version 1.0.2 - Built:', new Date().toISOString());
+  console.log('OpAlly App loaded - Version 1.1.0 - Built:', new Date().toISOString());
   console.log('API URL:', import.meta.env.VITE_API_URL || 'http://localhost:8000');
 
   useEffect(() => {
@@ -135,6 +140,39 @@ function App() {
     setExpandedEmail(expandedEmail === emailId ? null : emailId);
   };
 
+  const handleAnalyzeEmails = async () => {
+    setAnalyzingEmails(true);
+    setError(null);
+    try {
+      console.log('Analyzing emails with Ally...');
+      const response = await ai.analyzeEmails(data.messages);
+      console.log('Email analysis complete:', response.data);
+      setEmailAnalysis(response.data);
+    } catch (error) {
+      console.error('Failed to analyze emails:', error);
+      setError(`Failed to analyze emails: ${error.message}`);
+    } finally {
+      setAnalyzingEmails(false);
+    }
+  };
+
+  const handleGenerateResponse = async (email) => {
+    setGeneratingResponse(true);
+    setSelectedEmailForResponse(email.id);
+    setError(null);
+    try {
+      console.log('Generating response for email...', email);
+      const response = await ai.generateResponse(email);
+      console.log('Response generated:', response.data);
+      setDraftResponse(response.data);
+    } catch (error) {
+      console.error('Failed to generate response:', error);
+      setError(`Failed to generate response: ${error.message}`);
+    } finally {
+      setGeneratingResponse(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #dafef4, #e8fef9)'}}>
@@ -196,10 +234,10 @@ function App() {
           <div className="text-center mb-6">
             <div className="text-4xl mb-4">🤖</div>
             <h3 className="text-xl font-semibold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent mb-2">
-              AI Daily Stand-Up
+              Daily Stand-Up with Ally
             </h3>
             <p className="text-slate-700 mb-6">
-              Let Op analyze your messages and calendar to give you "The One Thing" to focus on today.
+              Let Ally analyze your messages and calendar to give you "The One Thing" to focus on today.
             </p>
             <button
               onClick={handleGenerateStandup}
@@ -228,6 +266,165 @@ function App() {
           )}
         </div>
 
+        {/* Important Emails Section - Ally's Analysis */}
+        <div className="mb-8 rounded-2xl p-8 shadow-lg bg-white/95 backdrop-blur" style={{borderWidth: '1px', borderColor: '#dafef4'}}>
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="text-xl font-semibold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent mb-2">
+                ⭐ Important Emails
+              </h3>
+              <p className="text-sm text-slate-600">
+                Let Ally identify emails that need your attention and action
+              </p>
+            </div>
+            <button
+              onClick={handleAnalyzeEmails}
+              disabled={analyzingEmails || data.messages.length === 0}
+              className="px-6 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-full font-semibold hover:from-teal-600 hover:to-emerald-600 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {analyzingEmails ? '🔍 Analyzing...' : '🔍 Analyze Emails'}
+            </button>
+          </div>
+
+          {emailAnalysis && emailAnalysis.analysis && emailAnalysis.analysis.length > 0 && (
+            <div className="space-y-4">
+              {emailAnalysis.analysis
+                .filter(item => item.important)
+                .map((item) => {
+                  const email = data.messages[item.emailIndex];
+                  if (!email) return null;
+                  
+                  const priorityColors = {
+                    'High': 'bg-red-100 text-red-700 border-red-200',
+                    'Medium': 'bg-yellow-100 text-yellow-700 border-yellow-200',
+                    'Low': 'bg-blue-100 text-blue-700 border-blue-200'
+                  };
+                  
+                  const urgencyIcons = {
+                    'Today': '🔥',
+                    'This Week': '⏰',
+                    'When Possible': '📌'
+                  };
+                  
+                  const actionIcons = {
+                    'Reply': '💬',
+                    'Review': '👀',
+                    'Schedule': '📅',
+                    'Archive': '📦'
+                  };
+
+                  return (
+                    <div key={email.id} className="border rounded-lg p-4" style={{borderColor: '#dafef4', background: 'linear-gradient(to right, #fafffe, #f0fefb)'}}>
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className={`px-2 py-1 text-xs font-semibold rounded border ${priorityColors[item.priority] || priorityColors.Low}`}>
+                              {item.priority} Priority
+                            </span>
+                            {item.urgency && (
+                              <span className="text-xs text-slate-600">
+                                {urgencyIcons[item.urgency]} {item.urgency}
+                              </span>
+                            )}
+                            {item.actionType && (
+                              <span className="text-xs text-slate-600">
+                                {actionIcons[item.actionType]} {item.actionType}
+                              </span>
+                            )}
+                          </div>
+                          <div className="font-medium text-slate-900 mb-1">
+                            {email.subject}
+                          </div>
+                          <div className="text-sm text-slate-600 mb-2">
+                            From: {email.from.split('<')[0].trim()}
+                          </div>
+                          {item.reason && (
+                            <div className="text-sm text-slate-700 bg-white/70 rounded p-2 mb-3">
+                              <span className="font-medium">Ally's insight:</span> {item.reason}
+                            </div>
+                          )}
+                          {item.actionType === 'Reply' && (
+                            <button
+                              onClick={() => handleGenerateResponse(email)}
+                              disabled={generatingResponse && selectedEmailForResponse === email.id}
+                              className="px-4 py-2 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-lg text-sm font-medium hover:from-teal-600 hover:to-emerald-600 transition-all shadow-sm hover:shadow-md disabled:opacity-50"
+                            >
+                              {generatingResponse && selectedEmailForResponse === email.id ? '✨ Generating...' : '✍️ Generate Response'}
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Draft Response Modal */}
+                      {draftResponse && selectedEmailForResponse === email.id && (
+                        <div className="mt-4 border-t pt-4" style={{borderColor: '#dafef4'}}>
+                          <div className="bg-white rounded-lg p-4 shadow-sm">
+                            <div className="flex items-center justify-between mb-3">
+                              <h4 className="font-semibold text-slate-900">📝 Draft Response from Ally</h4>
+                              <button
+                                onClick={() => {
+                                  setDraftResponse(null);
+                                  setSelectedEmailForResponse(null);
+                                }}
+                                className="text-slate-400 hover:text-slate-600"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                            <div className="mb-3">
+                              <div className="text-xs text-slate-500 mb-1">Subject:</div>
+                              <div className="text-sm font-medium text-slate-700">{draftResponse.subject}</div>
+                            </div>
+                            <textarea
+                              className="w-full p-3 border rounded-lg text-sm font-mono resize-y min-h-[150px] focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                              style={{borderColor: '#dafef4'}}
+                              defaultValue={draftResponse.draftResponse}
+                              id={`draft-${email.id}`}
+                            />
+                            <div className="flex gap-2 mt-3">
+                              <button
+                                onClick={() => {
+                                  const textarea = document.getElementById(`draft-${email.id}`);
+                                  navigator.clipboard.writeText(textarea.value);
+                                  alert('Draft copied to clipboard! You can paste it in Gmail.');
+                                }}
+                                className="px-4 py-2 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-lg text-sm font-medium hover:from-teal-600 hover:to-emerald-600 transition-all shadow-sm"
+                              >
+                                ✅ Copy to Clipboard
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setDraftResponse(null);
+                                  setSelectedEmailForResponse(null);
+                                }}
+                                className="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-200 transition-all"
+                              >
+                                ❌ Decline
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              {emailAnalysis.analysis.filter(item => item.important).length === 0 && (
+                <div className="text-center py-8 text-slate-500">
+                  <div className="text-4xl mb-2">🎉</div>
+                  <div>No urgent emails found! You're all caught up.</div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {!emailAnalysis && (
+            <div className="text-center py-8 text-slate-500">
+              <div className="text-4xl mb-2">📧</div>
+              <div>Click "Analyze Emails" to let Ally find what's important</div>
+            </div>
+          )}
+        </div>
+
         <div className="grid md:grid-cols-2 gap-6">
           {/* Messages Card */}
           <div className="bg-white/95 backdrop-blur rounded-2xl shadow-lg p-6" style={{borderWidth: '1px', borderColor: '#dafef4'}}>
@@ -245,22 +442,44 @@ function App() {
               </a>
             </div>
             <div className="space-y-3">
-              {data.messages.slice(0, 8).map((msg) => (
-                <div key={msg.id} className="rounded-lg overflow-hidden transition-all" style={{background: 'linear-gradient(to bottom right, #dafef4, #e8fef9)'}}>
-                  <div 
-                    className="p-3 cursor-pointer hover:shadow-md transition-shadow"
-                    onClick={() => toggleEmailExpand(msg.id)}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-400 to-emerald-400 flex items-center justify-center text-sm font-semibold text-white shadow-sm flex-shrink-0">
-                        {msg.from.charAt(0).toUpperCase()}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between gap-2">
-                          <div className="text-sm font-medium text-slate-900 truncate">
-                            {msg.subject}
-                          </div>
-                          {msg.unread && (
+              {data.messages.slice(0, 8).map((msg) => {
+                // Determine if email should be grayed out (spam/promotional)
+                const isLowPriority = msg.isSpam || msg.isPromotional;
+                const emailBg = isLowPriority 
+                  ? 'linear-gradient(to bottom right, #f1f5f9, #e2e8f0)' 
+                  : 'linear-gradient(to bottom right, #dafef4, #e8fef9)';
+                
+                return (
+                  <div key={msg.id} className="rounded-lg overflow-hidden transition-all" style={{background: emailBg, opacity: isLowPriority ? 0.7 : 1}}>
+                    <div 
+                      className="p-3 cursor-pointer hover:shadow-md transition-shadow"
+                      onClick={() => toggleEmailExpand(msg.id)}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-400 to-emerald-400 flex items-center justify-center text-sm font-semibold text-white shadow-sm flex-shrink-0">
+                          {msg.from.charAt(0).toUpperCase()}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1 flex-wrap">
+                            <div className="text-sm font-medium text-slate-900 truncate flex-1">
+                              {msg.subject}
+                            </div>
+                            {msg.isStarred && (
+                              <span className="text-xs">⭐</span>
+                            )}
+                            {msg.isImportant && (
+                              <span className="text-xs">‼️</span>
+                            )}
+                            {msg.isSpam && (
+                              <span className="px-1.5 py-0.5 bg-red-100 text-red-600 text-xs rounded">SPAM</span>
+                            )}
+                            {msg.isPromotional && (
+                              <span className="px-1.5 py-0.5 bg-purple-100 text-purple-600 text-xs rounded">Promo</span>
+                            )}
+                            {msg.isSocial && (
+                              <span className="px-1.5 py-0.5 bg-blue-100 text-blue-600 text-xs rounded">Social</span>
+                            )}
+                            {msg.unread && (
                             <span className="px-2 py-1 bg-gradient-to-r from-teal-500 to-emerald-500 text-white text-xs rounded-full shadow-sm flex-shrink-0">
                               New
                             </span>
@@ -303,7 +522,8 @@ function App() {
                     </div>
                   )}
                 </div>
-              ))}
+              );
+            })}
             </div>
           </div>
 
