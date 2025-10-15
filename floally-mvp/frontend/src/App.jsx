@@ -24,6 +24,7 @@ function App() {
   const [generatingResponse, setGeneratingResponse] = useState(false);
   const [selectedEmailForResponse, setSelectedEmailForResponse] = useState(null);
   const [expandedAnalysisEmail, setExpandedAnalysisEmail] = useState(null);
+  const [displayedMessagesCount, setDisplayedMessagesCount] = useState(8);
   
   // New v1.2.0 state
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -74,7 +75,7 @@ function App() {
   const loadDashboardData = async () => {
     try {
       const [messagesRes, eventsRes, profileRes] = await Promise.all([
-        gmail.getMessages(10),
+        gmail.getMessages(30), // Increased from 10 to 30 for better pagination
         calendar.getEvents(1),
         gmail.getProfile()
       ]);
@@ -211,6 +212,38 @@ function App() {
 
   const toggleEmailExpand = (emailId) => {
     setExpandedEmail(expandedEmail === emailId ? null : emailId);
+  };
+
+  // Calculate email importance score for sorting
+  const getEmailImportanceScore = (email) => {
+    let score = 0;
+    
+    // Highest priority: Starred emails
+    if (email.isStarred) score += 1000;
+    
+    // High priority: Gmail Important
+    if (email.isImportant) score += 500;
+    
+    // High priority: Primary (from contacts/real people)
+    if (email.isPrimary) score += 300;
+    
+    // Medium priority: Unread
+    if (email.unread) score += 100;
+    
+    // Low priority penalties
+    if (email.isPromotional) score -= 200;
+    if (email.isSocial) score -= 150;
+    if (email.isUpdates) score -= 100;
+    if (email.isSpam) score -= 1000;
+    
+    return score;
+  };
+
+  // Sort and filter messages by importance
+  const getSortedMessages = () => {
+    return [...data.messages].sort((a, b) => {
+      return getEmailImportanceScore(b) - getEmailImportanceScore(a);
+    });
   };
 
   const handleAnalyzeEmails = async () => {
@@ -617,9 +650,14 @@ function App() {
           {/* Messages Card */}
           <div className="bg-white/95 backdrop-blur rounded-2xl shadow-lg p-6" style={{borderWidth: '1px', borderColor: '#dafef4'}}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-slate-900">
-                📨 Recent Messages ({data.messages.length})
-              </h2>
+              <div>
+                <h2 className="text-lg font-semibold text-slate-900">
+                  📨 Important Messages
+                </h2>
+                <p className="text-xs text-slate-500 mt-1">
+                  Sorted by priority: Starred, Important, Contacts first
+                </p>
+              </div>
               <a 
                 href="https://mail.google.com" 
                 target="_blank" 
@@ -630,12 +668,14 @@ function App() {
               </a>
             </div>
             <div className="space-y-3">
-              {data.messages.slice(0, 8).map((msg) => {
+              {getSortedMessages().slice(0, displayedMessagesCount).map((msg) => {
                 // Determine if email should be grayed out (spam/promotional)
                 const isLowPriority = msg.isSpam || msg.isPromotional;
                 const emailBg = isLowPriority 
                   ? 'linear-gradient(to bottom right, #f1f5f9, #e2e8f0)' 
                   : 'linear-gradient(to bottom right, #dafef4, #e8fef9)';
+                
+                const importanceScore = getEmailImportanceScore(msg);
                 
                 return (
                   <div key={msg.id} className="rounded-lg overflow-hidden transition-all" style={{background: emailBg, opacity: isLowPriority ? 0.7 : 1}}>
@@ -657,6 +697,9 @@ function App() {
                             )}
                             {msg.isImportant && (
                               <span className="text-xs">‼️</span>
+                            )}
+                            {msg.isPrimary && (
+                              <span className="px-1.5 py-0.5 bg-teal-100 text-teal-700 text-xs rounded">👤</span>
                             )}
                             {msg.isSpam && (
                               <span className="px-1.5 py-0.5 bg-red-100 text-red-600 text-xs rounded">SPAM</span>
@@ -712,6 +755,36 @@ function App() {
                 </div>
               );
             })}
+            </div>
+            
+            {/* Load More Button */}
+            {displayedMessagesCount < data.messages.length && (
+              <div className="mt-4 text-center">
+                <button
+                  onClick={() => setDisplayedMessagesCount(prev => Math.min(prev + 8, data.messages.length))}
+                  className="px-6 py-2 bg-white border-2 border-teal-500 text-teal-700 rounded-lg text-sm font-medium hover:bg-teal-50 transition-all shadow-sm"
+                >
+                  📬 Load More ({data.messages.length - displayedMessagesCount} remaining)
+                </button>
+              </div>
+            )}
+            
+            {/* Stats Summary */}
+            <div className="mt-4 pt-4 border-t" style={{borderColor: '#dafef4'}}>
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div className="text-slate-600">
+                  <span className="font-medium">⭐ Starred:</span> {data.messages.filter(m => m.isStarred).length}
+                </div>
+                <div className="text-slate-600">
+                  <span className="font-medium">‼️ Important:</span> {data.messages.filter(m => m.isImportant).length}
+                </div>
+                <div className="text-slate-600">
+                  <span className="font-medium">👤 Contacts:</span> {data.messages.filter(m => m.isPrimary).length}
+                </div>
+                <div className="text-slate-600">
+                  <span className="font-medium">📧 Promo:</span> {data.messages.filter(m => m.isPromotional).length}
+                </div>
+              </div>
             </div>
           </div>
 
