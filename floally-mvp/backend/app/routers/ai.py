@@ -8,6 +8,7 @@ router = APIRouter()
 class StandupRequest(BaseModel):
     messages: list
     events: list
+    userContext: dict = None  # New: user profile context
 
 class EmailAnalysisRequest(BaseModel):
     messages: list
@@ -27,9 +28,24 @@ async def generate_standup(request: StandupRequest):
         
         client = anthropic.Anthropic(api_key=api_key)
         
+        # Build user context if available
+        user_context_text = ""
+        if request.userContext:
+            role = request.userContext.get('role', '')
+            priorities = request.userContext.get('priorities', [])
+            comm_style = request.userContext.get('communicationStyle', '')
+            
+            user_context_text = f"""
+User Profile:
+- Role: {role}
+- Top Priorities: {', '.join(priorities) if priorities else 'Not specified'}
+- Communication Preference: {format_comm_style(comm_style)}
+"""
+        
         # Build context from messages and events
         context = f"""
 You are Ally, a calm and competent AI assistant helping a creative professional plan their day.
+{user_context_text}
 
 Today's Gmail messages ({len(request.messages)} total):
 {format_messages(request.messages)}
@@ -38,12 +54,13 @@ Today's Calendar events ({len(request.events)} scheduled):
 {format_events(request.events)}
 
 Generate a concise daily stand-up with:
-1. "The One Thing" - most important focus for today
+1. "The One Thing" - most important focus for today (prioritize based on user's top priorities if known)
 2. 3-5 key decisions/approvals needed (with confidence scores)
 3. What you'll handle autonomously
 4. Brief digest of what's already taken care of
 
 Be warm, competent, and protective of their creative flow.
+{f"Match your tone to their preference: {format_comm_style(request.userContext.get('communicationStyle', ''))}." if request.userContext and request.userContext.get('communicationStyle') else ""}
 Keep the response concise and actionable.
 """
         
@@ -215,3 +232,13 @@ def format_events(events):
         summary = e.get('summary', 'No title')
         formatted.append(f"- {start}: {summary}")
     return "\n".join(formatted)
+
+def format_comm_style(style):
+    """Format communication style preference"""
+    styles = {
+        'concise_direct': 'concise and direct',
+        'warm_friendly': 'warm and friendly',
+        'formal_professional': 'formal and professional',
+        'casual_conversational': 'casual and conversational'
+    }
+    return styles.get(style, 'natural and professional')

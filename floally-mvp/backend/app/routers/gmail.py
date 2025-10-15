@@ -42,13 +42,34 @@ async def list_messages(max_results: int = 10):
             headers = {h['name']: h['value'] for h in message['payload']['headers']}
             label_ids = message.get('labelIds', [])
             
-            # Determine if email is likely spam/promotional
+            # Determine email categories using Gmail's native labels
             is_spam = 'SPAM' in label_ids
             is_important = 'IMPORTANT' in label_ids
             is_starred = 'STARRED' in label_ids
             is_promotional = 'CATEGORY_PROMOTIONS' in label_ids
             is_social = 'CATEGORY_SOCIAL' in label_ids
             is_updates = 'CATEGORY_UPDATES' in label_ids
+            is_forums = 'CATEGORY_FORUMS' in label_ids
+            
+            # Primary is anything in INBOX without a CATEGORY_ label (or explicitly CATEGORY_PERSONAL)
+            is_primary = ('INBOX' in label_ids and 
+                         not any(label.startswith('CATEGORY_') for label in label_ids if label != 'CATEGORY_PERSONAL'))
+            
+            # Check for unsubscribe link in headers
+            has_unsubscribe = 'List-Unsubscribe' in headers or 'List-Unsubscribe-Post' in headers
+            
+            # Extract domain from sender
+            from_email = headers.get('From', 'Unknown')
+            domain = None
+            if '<' in from_email and '>' in from_email:
+                email_part = from_email.split('<')[1].split('>')[0]
+                if '@' in email_part:
+                    domain = email_part.split('@')[1]
+            elif '@' in from_email:
+                domain = from_email.split('@')[1].split()[0]
+            
+            # Detect if it's a newsletter (has unsubscribe + promotional/updates category)
+            is_newsletter = has_unsubscribe and (is_promotional or is_updates)
             
             detailed_messages.append({
                 'id': message['id'],
@@ -61,9 +82,14 @@ async def list_messages(max_results: int = 10):
                 'isSpam': is_spam,
                 'isImportant': is_important,
                 'isStarred': is_starred,
+                'isPrimary': is_primary,
                 'isPromotional': is_promotional,
                 'isSocial': is_social,
                 'isUpdates': is_updates,
+                'isForums': is_forums,
+                'isNewsletter': is_newsletter,
+                'hasUnsubscribeLink': has_unsubscribe,
+                'domain': domain,
                 'labels': label_ids
             })
         

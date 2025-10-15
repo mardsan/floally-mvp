@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { auth, gmail, calendar, ai } from './services/api';
+import { auth, gmail, calendar, ai, userProfile } from './services/api';
+import OnboardingFlow from './components/OnboardingFlow';
+import AllySettings from './components/AllySettings';
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -19,9 +21,15 @@ function App() {
   const [draftResponse, setDraftResponse] = useState(null);
   const [generatingResponse, setGeneratingResponse] = useState(false);
   const [selectedEmailForResponse, setSelectedEmailForResponse] = useState(null);
+  
+  // New v1.2.0 state
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [profile, setProfile] = useState(null);
+  const [allyInsights, setAllyInsights] = useState(null);
 
   // Debug info
-  console.log('OpAlly App loaded - Version 1.1.0 - Built:', new Date().toISOString());
+  console.log('OpAlly App loaded - Version 1.2.0 - Built:', new Date().toISOString());
   console.log('API URL:', import.meta.env.VITE_API_URL || 'http://localhost:8000');
 
   useEffect(() => {
@@ -72,6 +80,21 @@ function App() {
         events: eventsRes.data.events,
         profile: profileRes.data
       });
+
+      // Load user profile and check onboarding status
+      if (profileRes.data.email) {
+        const userProfileRes = await userProfile.getProfile(profileRes.data.email);
+        setProfile(userProfileRes.data);
+        
+        // Show onboarding if not completed
+        if (!userProfileRes.data.onboarding_completed) {
+          setShowOnboarding(true);
+        }
+
+        // Load Ally's insights
+        const insightsRes = await userProfile.getInsights(profileRes.data.email);
+        setAllyInsights(insightsRes.data);
+      }
     } catch (error) {
       console.error('Failed to load dashboard data:', error);
       setError(`Failed to load data: ${error.message}`);
@@ -100,10 +123,22 @@ function App() {
     setError(null);
     try {
       console.log('Generating AI stand-up...');
-      const response = await ai.generateStandup({
+      
+      // Include user profile context if available
+      const context = {
         messages: data.messages,
         events: data.events
-      });
+      };
+      
+      if (profile && profile.onboarding_completed) {
+        context.userContext = {
+          role: profile.role,
+          priorities: profile.priorities,
+          communicationStyle: profile.communication_style
+        };
+      }
+      
+      const response = await ai.generateStandup(context);
       console.log('Stand-up generated:', response.data);
       setStandup(response.data.standup);
     } catch (error) {
@@ -112,6 +147,40 @@ function App() {
     } finally {
       setGeneratingStandup(false);
     }
+  };
+
+  const handleOnboardingComplete = async (answers) => {
+    try {
+      console.log('Onboarding completed:', answers);
+      await userProfile.completeOnboarding(data.profile.email, answers);
+      
+      // Reload profile and insights
+      const [profileRes, insightsRes] = await Promise.all([
+        userProfile.getProfile(data.profile.email),
+        userProfile.getInsights(data.profile.email)
+      ]);
+      
+      setProfile(profileRes.data);
+      setAllyInsights(insightsRes.data);
+      setShowOnboarding(false);
+    } catch (error) {
+      console.error('Failed to save onboarding:', error);
+      setError(`Failed to save onboarding: ${error.message}`);
+    }
+  };
+
+  const handleOpenSettings = () => {
+    setShowSettings(true);
+  };
+
+  const handleCloseSettings = () => {
+    setShowSettings(false);
+  };
+
+  const handleEditProfile = () => {
+    // Re-open onboarding flow to edit
+    setShowSettings(false);
+    setShowOnboarding(true);
   };
 
   const formatEventDate = (dateString) => {
@@ -222,8 +291,20 @@ function App() {
               <p className="text-sm text-slate-600 ml-2">{data.profile.email}</p>
             )}
           </div>
-          <div className="text-sm text-slate-600">
-            Good morning 🌞
+          <div className="flex items-center gap-4">
+            {profile && profile.onboarding_completed && (
+              <button
+                onClick={handleOpenSettings}
+                className="flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
+                title="Settings"
+              >
+                <span className="text-xl">⚙️</span>
+                <span className="text-sm font-medium">Settings</span>
+              </button>
+            )}
+            <div className="text-sm text-slate-600">
+              Good morning 🌞
+            </div>
           </div>
         </div>
       </header>
@@ -598,6 +679,24 @@ function App() {
           </div>
         </div>
       </main>
+
+      {/* Onboarding Modal */}
+      {showOnboarding && data.profile && (
+        <OnboardingFlow
+          userEmail={data.profile.email}
+          onComplete={handleOnboardingComplete}
+        />
+      )}
+
+      {/* Settings Modal */}
+      {showSettings && (
+        <AllySettings
+          userProfile={profile}
+          allyInsights={allyInsights}
+          onEdit={handleEditProfile}
+          onClose={handleCloseSettings}
+        />
+      )}
     </div>
   );
 }

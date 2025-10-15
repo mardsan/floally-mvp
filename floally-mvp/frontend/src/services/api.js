@@ -28,4 +28,11 @@ export const ai = {
   generateResponse: (email, userContext = "") => api.post('/api/ai/generate-response', { email, user_context: userContext }),
 };
 
+export const userProfile = {
+  getProfile: (userEmail) => api.get(`/api/user/profile?user_email=${encodeURIComponent(userEmail)}`),
+  completeOnboarding: (userEmail, answers) => api.post(`/api/user/profile/onboarding?user_email=${encodeURIComponent(userEmail)}`, answers),
+  updateProfile: (userEmail, updates) => api.put(`/api/user/profile?user_email=${encodeURIComponent(userEmail)}`, updates),
+  getInsights: (userEmail) => api.get(`/api/user/profile/insights?user_email=${encodeURIComponent(userEmail)}`),
+};
+
 export default api;
