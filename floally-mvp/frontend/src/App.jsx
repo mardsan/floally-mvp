@@ -23,6 +23,7 @@ function App() {
   const [draftResponse, setDraftResponse] = useState(null);
   const [generatingResponse, setGeneratingResponse] = useState(false);
   const [selectedEmailForResponse, setSelectedEmailForResponse] = useState(null);
+  const [expandedAnalysisEmail, setExpandedAnalysisEmail] = useState(null);
   
   // New v1.2.0 state
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -474,14 +475,55 @@ function App() {
                               <span className="font-medium">Ally's insight:</span> {item.reason}
                             </div>
                           )}
-                          {item.actionType === 'Reply' && (
-                            <button
-                              onClick={() => handleGenerateResponse(email)}
-                              disabled={generatingResponse && selectedEmailForResponse === email.id}
-                              className="px-4 py-2 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-lg text-sm font-medium hover:from-teal-600 hover:to-emerald-600 transition-all shadow-sm hover:shadow-md disabled:opacity-50"
-                            >
-                              {generatingResponse && selectedEmailForResponse === email.id ? '✨ Generating...' : '✍️ Generate Response'}
-                            </button>
+                          
+                          {/* Expand/Collapse Toggle */}
+                          <button
+                            onClick={() => setExpandedAnalysisEmail(expandedAnalysisEmail === email.id ? null : email.id)}
+                            className="text-sm text-teal-600 hover:text-teal-700 font-medium mb-3 flex items-center gap-1"
+                          >
+                            {expandedAnalysisEmail === email.id ? '▼' : '▶'} 
+                            {expandedAnalysisEmail === email.id ? 'Hide full email' : 'View full email'}
+                          </button>
+
+                          {/* Expanded Email Content */}
+                          {expandedAnalysisEmail === email.id && (
+                            <div className="mb-3 border-t pt-3" style={{borderColor: '#dafef4'}}>
+                              <div className="bg-white/70 rounded-lg p-3 mb-3 max-h-64 overflow-y-auto">
+                                <div className="text-xs text-slate-500 mb-2">Email Preview:</div>
+                                <div className="text-sm text-slate-700 whitespace-pre-wrap">
+                                  {email.snippet || 'No preview available'}
+                                </div>
+                              </div>
+                              
+                              {/* Direct Actions */}
+                              <div className="flex gap-2 mb-3">
+                                <a
+                                  href={`https://mail.google.com/mail/u/0/#inbox/${email.id}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="px-4 py-2 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-lg text-sm font-medium hover:from-teal-600 hover:to-emerald-600 transition-all shadow-sm"
+                                >
+                                  📧 Open in Gmail
+                                </a>
+                                {item.actionType === 'Reply' && (
+                                  <button
+                                    onClick={() => handleGenerateResponse(email)}
+                                    disabled={generatingResponse && selectedEmailForResponse === email.id}
+                                    className="px-4 py-2 bg-white border-2 border-teal-500 text-teal-700 rounded-lg text-sm font-medium hover:bg-teal-50 transition-all disabled:opacity-50"
+                                  >
+                                    {generatingResponse && selectedEmailForResponse === email.id ? '✨ Generating...' : '✍️ Generate Response'}
+                                  </button>
+                                )}
+                              </div>
+
+                              {/* Email Action Buttons */}
+                              <EmailActions
+                                email={email}
+                                userEmail={data.profile?.email}
+                                onActionComplete={handleEmailAction}
+                                onRespond={() => handleGenerateResponse(email)}
+                              />
+                            </div>
                           )}
                         </div>
                       </div>
@@ -536,14 +578,6 @@ function App() {
                           </div>
                         </div>
                       )}
-
-                      {/* Email Action Buttons */}
-                      <EmailActions
-                        email={email}
-                        userEmail={data.profile?.email}
-                        onActionComplete={handleEmailAction}
-                        onRespond={() => handleGenerateResponse(email)}
-                      />
                     </div>
                   );
                 })}
