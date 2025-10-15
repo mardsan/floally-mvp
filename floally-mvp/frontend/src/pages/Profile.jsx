@@ -158,7 +158,10 @@ const Profile = ({ userEmail, onClose }) => {
                 <SettingsPanel 
                   settings={settings}
                   userEmail={userEmail}
-                  onUpdate={loadProfileData}
+                  onSave={async (updatedSettings) => {
+                    await profile.updateSettings(userEmail, updatedSettings);
+                    await loadProfileData();
+                  }}
                 />
               )}
             </>

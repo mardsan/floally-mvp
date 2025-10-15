@@ -352,7 +352,7 @@ function App() {
               </>
             )}
             <div className="text-sm text-slate-600">
-              Good morning 🌞
+              Good morning{profile?.display_name ? `, ${profile.display_name}` : ''} 🌞
             </div>
           </div>
         </div>
@@ -760,7 +760,7 @@ function App() {
         <Profile
           userEmail={data.profile.email}
           onClose={() => setShowProfile(false)}
-          onRefresh={fetchData}
+          onRefresh={loadDashboardData}
         />
       )}
     </div>

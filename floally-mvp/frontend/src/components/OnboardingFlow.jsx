@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 
 const OnboardingFlow = ({ userEmail, onComplete }) => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState({
+    display_name: '',
     role: '',
     priorities: [],
     decision_style: '',
@@ -11,7 +12,7 @@ const OnboardingFlow = ({ userEmail, onComplete }) => {
     work_hours: { start: '09:00', end: '18:00' }
   });
 
-  const totalSteps = 5;
+  const totalSteps = 6;
 
   const handleNext = () => {
     if (step < totalSteps) {
@@ -22,7 +23,7 @@ const OnboardingFlow = ({ userEmail, onComplete }) => {
   };
 
   const handleBack = () => {
-    if (step > 1) setStep(step - 1);
+    if (step > 0) setStep(step - 1);
   };
 
   const updateAnswer = (key, value) => {
@@ -40,6 +41,7 @@ const OnboardingFlow = ({ userEmail, onComplete }) => {
 
   const canProceed = () => {
     switch(step) {
+      case 0: return answers.display_name && answers.display_name.length > 1;
       case 1: return answers.role && answers.role.length > 2;
       case 2: return answers.priorities.length > 0;
       case 3: return answers.decision_style;
@@ -69,19 +71,42 @@ const OnboardingFlow = ({ userEmail, onComplete }) => {
           
           {/* Progress */}
           <div className="flex gap-2">
-            {[1,2,3,4,5].map(i => (
+            {[0,1,2,3,4,5].map(i => (
               <div key={i} className={`h-2 flex-1 rounded-full transition-all ${i <= step ? 'bg-gradient-to-r from-teal-500 to-emerald-500' : 'bg-slate-200'}`} />
             ))}
           </div>
-          <p className="text-xs text-slate-500 mt-2">Step {step} of {totalSteps}</p>
+          <p className="text-xs text-slate-500 mt-2">Step {step + 1} of {totalSteps}</p>
         </div>
 
         {/* Content */}
         <div className="p-8">
+          {step === 0 && (
+            <div className="space-y-4">
+              <h3 className="text-xl font-semibold text-slate-900 mb-2">
+                👋 Hi there! What should I call you?
+              </h3>
+              <p className="text-sm text-slate-600 mb-4">
+                This helps me personalize our interactions and make our conversations feel more natural.
+              </p>
+              <input
+                type="text"
+                placeholder="e.g., Alex, Dr. Smith, Sarah..."
+                value={answers.display_name}
+                onChange={(e) => updateAnswer('display_name', e.target.value)}
+                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-lg"
+                style={{borderColor: '#dafef4'}}
+                autoFocus
+              />
+              <p className="text-xs text-slate-500 mt-2">
+                💡 You can use your first name, full name, nickname, or whatever you prefer!
+              </p>
+            </div>
+          )}
+
           {step === 1 && (
             <div className="space-y-4">
               <h3 className="text-xl font-semibold text-slate-900 mb-2">
-                👋 Nice to meet you! What do you do?
+                👋 Nice to meet you{answers.display_name ? `, ${answers.display_name}` : ''}! What do you do?
               </h3>
               <p className="text-sm text-slate-600 mb-4">
                 Help me understand your role so I can prioritize what matters to you.
@@ -244,7 +269,7 @@ const OnboardingFlow = ({ userEmail, onComplete }) => {
         <div className="p-8 border-t flex justify-between" style={{borderColor: '#dafef4'}}>
           <button
             onClick={handleBack}
-            disabled={step === 1}
+            disabled={step === 0}
             className="px-6 py-3 text-slate-600 hover:text-slate-900 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
           >
             ← Back
@@ -254,7 +279,7 @@ const OnboardingFlow = ({ userEmail, onComplete }) => {
             disabled={!canProceed()}
             className="px-8 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-full font-semibold hover:from-teal-600 hover:to-emerald-600 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {step === totalSteps ? '✨ Complete Setup' : 'Next →'}
+            {step === totalSteps - 1 ? '✨ Complete Setup' : 'Next →'}
           </button>
         </div>
       </div>

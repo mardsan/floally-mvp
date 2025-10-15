@@ -109,6 +109,7 @@ async def complete_onboarding(user_email: str, answers: OnboardingAnswers):
     try:
         profile = {
             "user_id": user_email,
+            "display_name": answers.display_name,
             "role": answers.role,
             "priorities": answers.priorities,
             "decision_style": answers.decision_style,
