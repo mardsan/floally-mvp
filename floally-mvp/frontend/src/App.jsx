@@ -288,6 +288,56 @@ function App() {
     }
   };
 
+  const handleTrashEmail = async (emailId) => {
+    try {
+      await gmail.trash(emailId);
+      
+      // Remove from current view optimistically
+      setData(prevData => ({
+        ...prevData,
+        messages: prevData.messages.filter(msg => msg.id !== emailId)
+      }));
+      
+      // Also update analysis if present
+      if (emailAnalysis) {
+        setEmailAnalysis(prevAnalysis => ({
+          ...prevAnalysis,
+          analysis: prevAnalysis.analysis.filter(item => item.emailId !== emailId)
+        }));
+      }
+      
+      alert('🗑️ Email moved to trash');
+    } catch (error) {
+      console.error('Failed to trash email:', error);
+      alert('Failed to delete email. Please try again.');
+    }
+  };
+
+  const handleArchiveEmail = async (emailId) => {
+    try {
+      await gmail.archive(emailId);
+      
+      // Remove from current view optimistically
+      setData(prevData => ({
+        ...prevData,
+        messages: prevData.messages.filter(msg => msg.id !== emailId)
+      }));
+      
+      // Also update analysis if present
+      if (emailAnalysis) {
+        setEmailAnalysis(prevAnalysis => ({
+          ...prevAnalysis,
+          analysis: prevAnalysis.analysis.filter(item => item.emailId !== emailId)
+        }));
+      }
+      
+      alert('📦 Email archived');
+    } catch (error) {
+      console.error('Failed to archive email:', error);
+      alert('Failed to archive email. Please try again.');
+    }
+  };
+
   const handleEmailAction = async (action, emailId) => {
     console.log(`Email action: ${action} on ${emailId}`);
     
@@ -746,7 +796,7 @@ function App() {
                       <div className="mt-3 text-sm text-slate-700 bg-white/70 rounded-lg p-3 max-h-48 overflow-y-auto">
                         {msg.snippet || 'No preview available'}
                       </div>
-                      <div className="mt-3 flex gap-2">
+                      <div className="mt-3 flex gap-2 flex-wrap">
                         <a
                           href={`https://mail.google.com/mail/u/0/#inbox/${msg.id}`}
                           target="_blank"
@@ -757,6 +807,18 @@ function App() {
                         </a>
                         <button className="px-3 py-1.5 bg-white/80 text-slate-700 text-xs rounded-lg hover:bg-white transition-all border border-slate-200">
                           Mark as Read
+                        </button>
+                        <button
+                          onClick={() => handleTrashEmail(msg.id)}
+                          className="px-3 py-1.5 bg-red-50 text-red-600 text-xs rounded-lg hover:bg-red-100 transition-all border border-red-200"
+                        >
+                          🗑️ Delete
+                        </button>
+                        <button
+                          onClick={() => handleArchiveEmail(msg.id)}
+                          className="px-3 py-1.5 bg-slate-50 text-slate-600 text-xs rounded-lg hover:bg-slate-100 transition-all border border-slate-200"
+                        >
+                          📦 Archive
                         </button>
                       </div>
                       
