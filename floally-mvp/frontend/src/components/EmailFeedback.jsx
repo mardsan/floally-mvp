@@ -9,13 +9,20 @@ const EmailFeedback = ({ email, userEmail, onFeedbackComplete }) => {
   const handleFeedback = async (type, reason = null) => {
     setSubmitting(true);
     try {
+      // Map feedback type to action type
+      const actionTypeMap = {
+        'important': 'mark_important_feedback',
+        'interesting': 'mark_interesting_feedback',
+        'unimportant': 'mark_unimportant_feedback'
+      };
+
       // Log feedback as a behavioral action
       await behavior.logAction({
         user_email: userEmail,
         email_id: email.id,
         sender_email: email.from,
         sender_domain: email.domain || email.from.split('@')[1]?.split('>')[0],
-        action_type: type === 'important' ? 'mark_important_feedback' : 'mark_unimportant_feedback',
+        action_type: actionTypeMap[type],
         email_category: email.isPromotional ? 'promotional' :
                        email.isSocial ? 'social' :
                        email.isUpdates ? 'updates' :
@@ -62,25 +69,32 @@ const EmailFeedback = ({ email, userEmail, onFeedbackComplete }) => {
   return (
     <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
       <div className="text-sm font-medium text-amber-900 mb-2">
-        🤔 Is this email important to you?
+        🤔 How would you categorize this email?
       </div>
       <div className="text-xs text-amber-700 mb-3">
         Your feedback helps Ally learn which emails matter most to you.
       </div>
-      <div className="flex gap-2">
+      <div className="flex flex-col gap-2">
         <button
           onClick={() => handleFeedback('important')}
           disabled={submitting}
-          className="flex-1 px-3 py-2 bg-teal-500 text-white rounded-lg text-sm font-medium hover:bg-teal-600 transition-all disabled:opacity-50"
+          className="px-3 py-2 bg-teal-500 text-white rounded-lg text-sm font-medium hover:bg-teal-600 transition-all disabled:opacity-50 text-left"
         >
-          ⭐ Yes, important
+          ⭐ Important - Needs action or immediate attention
+        </button>
+        <button
+          onClick={() => handleFeedback('interesting')}
+          disabled={submitting}
+          className="px-3 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-all disabled:opacity-50 text-left"
+        >
+          📖 Interesting - Worth reading, but not urgent
         </button>
         <button
           onClick={() => handleFeedback('unimportant')}
           disabled={submitting}
-          className="flex-1 px-3 py-2 bg-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-300 transition-all disabled:opacity-50"
+          className="px-3 py-2 bg-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-300 transition-all disabled:opacity-50 text-left"
         >
-          ❌ Not important
+          ❌ Uninteresting - Not relevant to me
         </button>
       </div>
       <button

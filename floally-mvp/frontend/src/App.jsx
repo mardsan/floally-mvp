@@ -76,7 +76,7 @@ function App() {
   const loadDashboardData = async () => {
     try {
       const [messagesRes, eventsRes, profileRes] = await Promise.all([
-        gmail.getMessages(30), // Increased from 10 to 30 for better pagination
+        gmail.getMessages(30, 'primary'), // Use Gmail's AI to fetch only Primary category (contacts/real people)
         calendar.getEvents(1),
         gmail.getProfile()
       ]);
@@ -254,10 +254,18 @@ function App() {
       console.log('Analyzing emails with Ally...');
       const response = await ai.analyzeEmails(data.messages);
       console.log('Email analysis complete:', response.data);
+      
+      // Validate response structure
+      if (!response.data || !response.data.analysis) {
+        throw new Error('Invalid analysis response structure');
+      }
+      
       setEmailAnalysis(response.data);
     } catch (error) {
       console.error('Failed to analyze emails:', error);
-      setError(`Failed to analyze emails: ${error.message}`);
+      console.error('Error response:', error.response);
+      setError(`Failed to analyze emails: ${error.response?.data?.detail || error.message}`);
+      setEmailAnalysis(null); // Reset on error
     } finally {
       setAnalyzingEmails(false);
     }

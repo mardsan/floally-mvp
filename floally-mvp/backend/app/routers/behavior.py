@@ -12,20 +12,22 @@ class BehaviorAction(BaseModel):
     email_id: str
     sender_email: str
     sender_domain: str
-    action_type: str  # important, unimportant, archive, trash, respond, unsubscribe
+    action_type: str  # important, interesting, unimportant, archive, trash, respond, unsubscribe
     email_category: str  # primary, promotional, social, updates, forums, newsletter
     has_unsubscribe: bool = False
     confidence_score: float = 0.0  # From AI analysis (0-1)
+    metadata: dict = None  # Optional metadata for additional context
 
 class SenderStats(BaseModel):
     sender_email: str
     sender_domain: str
     total_emails: int = 0
     marked_important: int = 0
+    marked_interesting: int = 0
     marked_unimportant: int = 0
     archived: int = 0
     responded: int = 0
-    importance_score: float = 0.0  # Calculated: important / (important + unimportant + archived)
+    importance_score: float = 0.0  # Calculated: important / (important + interesting + unimportant + archived)
 
 # File-based storage for MVP (migrate to DB in Phase 2)
 BEHAVIOR_DIR = Path("behavior_data")
@@ -82,6 +84,7 @@ def update_sender_stats(user_email: str, action: BehaviorAction):
             "sender_domain": action.sender_domain,
             "total_emails": 0,
             "marked_important": 0,
+            "marked_interesting": 0,
             "marked_unimportant": 0,
             "archived": 0,
             "responded": 0,
@@ -93,9 +96,11 @@ def update_sender_stats(user_email: str, action: BehaviorAction):
     # Increment counters
     stats[sender_key]["total_emails"] += 1
     
-    if action.action_type == "important":
+    if action.action_type in ["important", "mark_important_feedback"]:
         stats[sender_key]["marked_important"] += 1
-    elif action.action_type == "unimportant":
+    elif action.action_type in ["interesting", "mark_interesting_feedback"]:
+        stats[sender_key]["marked_interesting"] += 1
+    elif action.action_type in ["unimportant", "mark_unimportant_feedback"]:
         stats[sender_key]["marked_unimportant"] += 1
     elif action.action_type == "archive":
         stats[sender_key]["archived"] += 1
@@ -107,18 +112,20 @@ def update_sender_stats(user_email: str, action: BehaviorAction):
         stats[sender_key]["unsubscribed"] += 1
     
     # Calculate importance score
-    # Formula: (important * 2 + respond * 1.5) / (important + unimportant + archive + trash + respond)
+    # Formula: (important * 2 + interesting * 1 + respond * 1.5) / (important + interesting + unimportant + archive + trash + respond)
+    # This gives: important=highest value, interesting=medium value, unimportant/trash=negative signal
     important = stats[sender_key]["marked_important"]
+    interesting = stats[sender_key]["marked_interesting"]
     unimportant = stats[sender_key]["marked_unimportant"]
     archived = stats[sender_key]["archived"]
     trashed = stats[sender_key]["trashed"]
     responded = stats[sender_key]["responded"]
     
-    total_actions = important + unimportant + archived + trashed + responded
+    total_actions = important + interesting + unimportant + archived + trashed + responded
     
     if total_actions > 0:
-        importance_score = (important * 2.0 + responded * 1.5) / total_actions
-        # Normalize to 0-1 range
+        importance_score = (important * 2.0 + interesting * 1.0 + responded * 1.5) / total_actions
+        # Normalize to 0-1 range (max possible is 2.0 from important only)
         stats[sender_key]["importance_score"] = min(1.0, importance_score / 2.0)
     else:
         stats[sender_key]["importance_score"] = 0.5  # Neutral

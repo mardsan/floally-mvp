@@ -13,7 +13,7 @@ export const auth = {
 };
 
 export const gmail = {
-  getMessages: (maxResults = 10) => api.get(`/api/gmail/messages?max_results=${maxResults}`),
+  getMessages: (maxResults = 10, category = 'primary') => api.get(`/api/gmail/messages?max_results=${maxResults}&category=${category}`),
   getProfile: () => api.get('/api/gmail/profile'),
   markImportant: (emailId) => api.post(`/api/gmail/mark-important?email_id=${emailId}`),
   markUnimportant: (emailId) => api.post(`/api/gmail/mark-unimportant?email_id=${emailId}`),

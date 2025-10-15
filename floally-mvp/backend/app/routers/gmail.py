@@ -17,14 +17,31 @@ def get_gmail_service():
         raise HTTPException(status_code=401, detail="Not authenticated")
 
 @router.get("/messages")
-async def list_messages(max_results: int = 10):
-    """Get recent Gmail messages with importance indicators"""
+async def list_messages(max_results: int = 10, category: str = "primary"):
+    """Get recent Gmail messages with importance indicators
+    
+    Args:
+        max_results: Number of messages to fetch (default: 10)
+        category: Filter by category - 'primary', 'all', 'starred', 'important' (default: 'primary')
+    """
     try:
         service = get_gmail_service()
+        
+        # Build query based on category filter
+        # Leverage Gmail's native categorization system
+        query_map = {
+            'primary': 'category:primary',  # Only real people/contacts - Gmail's AI filtering
+            'important': 'is:important OR is:starred',  # Gmail-marked important or user-starred
+            'starred': 'is:starred',  # User-starred emails only
+            'all': 'in:inbox'  # All inbox emails (includes promotions, etc.)
+        }
+        
+        query = query_map.get(category.lower(), 'category:primary')
+        
         results = service.users().messages().list(
             userId='me',
             maxResults=max_results,
-            q='is:unread OR in:inbox'
+            q=query  # Use Gmail's native query system
         ).execute()
         
         messages = results.get('messages', [])
