@@ -122,11 +122,8 @@ function App() {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #dafef4, #e8fef9, #d0fdf2)'}}>
         <div className="text-center max-w-md mx-auto p-8">
-          <img src="/opally_logo_vector.png" alt="OpAlly Logo" className="w-48 mx-auto mb-6" />
-          <h1 className="text-4xl font-bold text-slate-900 mb-4">
-            OpAlly
-          </h1>
-          <p className="text-lg text-slate-700 mb-8">
+         <img src="/opally_logo_vector.png" alt="OpAlly Logo" className="w-48 mx-auto mb-8" />
+         <p className="text-lg text-slate-700 mb-8">
             Your AI-powered daily stand-up and operational partner for creative work.
           </p>
           {error && (
