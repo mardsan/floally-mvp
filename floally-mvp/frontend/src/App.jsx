@@ -455,7 +455,19 @@ function App() {
         {/* AI Stand-Up Section - TOP PRIORITY */}
         <div className="mb-8 rounded-2xl p-8 shadow-lg" style={{background: 'linear-gradient(to right, #dafef4, #e8fef9, #d0fdf2)', borderWidth: '1px', borderColor: '#b8f5e8'}}>
           <div className="text-center mb-6">
-            <div className="text-4xl mb-4">🤖</div>
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 rounded-full overflow-hidden shadow-lg ring-2 ring-teal-100">
+                <img 
+                  src="/OpAime-pfp-01.png" 
+                  alt="Aime" 
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.parentElement.innerHTML = '<div class="w-full h-full bg-gradient-to-br from-teal-400 to-emerald-400 flex items-center justify-center text-white text-2xl font-bold">A</div>';
+                  }}
+                />
+              </div>
+            </div>
             <h3 className="text-xl font-semibold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent mb-2">
               Daily Stand-Up with Aime
             </h3>
