@@ -8,8 +8,8 @@
 
 Create a **central hub** where users can:
 1. **View their profile** - Role, preferences, goals, working style
-2. **See Alli's understanding** - How Alli perceives them (from onboarding + behavior)
-3. **Track behavioral insights** - What patterns Alli has learned
+2. **See Aime's understanding** - How Aime perceives them (from onboarding + behavior)
+3. **Track behavioral insights** - What patterns Aime has learned
 4. **Manage integrations** - Gmail, Microsoft, Slack, Discord, etc.
 5. **Configure settings** - Notifications, AI preferences, privacy controls
 6. **View activity log** - Recent actions, email stats, usage metrics
@@ -55,7 +55,7 @@ Create a **central hub** where users can:
 ```
 
 ### 2. Behavioral Insights
-**What:** What Alli has learned from user actions
+**What:** What Aime has learned from user actions
 
 ```javascript
 {
@@ -133,7 +133,7 @@ Create a **central hub** where users can:
       "service": "slack",
       "status": "not_connected",
       "available": true,
-      "description": "Get Alli notifications in Slack"
+      "description": "Get Aime notifications in Slack"
     },
     {
       "service": "discord",
@@ -232,7 +232,7 @@ Your Profile
 │  └─ 🔄 Never miss client emails (89% accuracy)
 │  └─ 🔄 Unsubscribe from 20+ newsletters (12/20 done)
 │
-└─ Alli's Understanding (Natural Language Summary)
+└─ Aime's Understanding (Natural Language Summary)
    "You're a creative director who values client work and team 
     collaboration. You prefer warm, friendly interactions and like 
     to see options with context when making decisions. You work 
@@ -241,7 +241,7 @@ Your Profile
 
 ### Tab 2: Behavioral Insights
 ```
-What Alli Has Learned About You
+What Aime Has Learned About You
 
 Learning Status
 ├─ 156 actions tracked
@@ -289,7 +289,7 @@ Connected Services
    └─ [Connect Outlook]
 
    💬 Slack
-   └─ Get Alli notifications and summaries in Slack
+   └─ Get Aime notifications and summaries in Slack
    └─ [Connect Slack]
 
    🎮 Discord (Coming Soon)
@@ -394,7 +394,7 @@ GET  /api/integrations/status
 - Set goals (e.g., "Inbox Zero daily", "Response time < 2 hours")
 - Track progress automatically
 - Visual progress indicators
-- Alli suggestions to achieve goals
+- Aime suggestions to achieve goals
 
 ## Database Schema (When Migrating from Files)
 
@@ -472,7 +472,7 @@ CREATE TABLE user_settings (
 
 ### 3. Goal Tracking
 - **Progress bars** for each goal
-- **Alli suggestions** to achieve goals
+- **Aime suggestions** to achieve goals
 - **Milestone celebrations** when goals achieved
 - **Adjustable targets** based on learning
 
@@ -480,7 +480,7 @@ CREATE TABLE user_settings (
 - **Data export** (JSON download of all data)
 - **Data deletion** (remove all behavioral data)
 - **Learning toggle** (disable behavioral tracking)
-- **Transparency** (see exactly what Alli knows)
+- **Transparency** (see exactly what Aime knows)
 
 ## Success Metrics
 

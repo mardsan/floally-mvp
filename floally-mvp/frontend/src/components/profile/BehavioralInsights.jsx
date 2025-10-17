@@ -7,10 +7,10 @@ const BehavioralInsights = ({ insights, profileData, userEmail }) => {
         <div className="text-4xl mb-4">📊</div>
         <p className="text-slate-600 mb-2">Not enough data yet</p>
         <p className="text-sm text-slate-500">
-          Keep using Alli's quick actions to build behavioral insights!
+          Keep using Aime's quick actions to build behavioral insights!
         </p>
         <p className="text-xs text-slate-400 mt-2">
-          Alli needs at least 50 actions to start detecting patterns
+          Aime needs at least 50 actions to start detecting patterns
         </p>
       </div>
     );
@@ -57,7 +57,7 @@ const BehavioralInsights = ({ insights, profileData, userEmail }) => {
 
       {/* Insights Cards */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-slate-900">What Alli Has Learned</h3>
+        <h3 className="text-lg font-semibold text-slate-900">What Aime Has Learned</h3>
         
         {insightsList.map((insight, idx) => (
           <div
@@ -108,7 +108,7 @@ const BehavioralInsights = ({ insights, profileData, userEmail }) => {
       {/* Recommendations */}
       {recommendations && recommendations.length > 0 && (
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-slate-900">💡 Alli's Recommendations</h3>
+          <h3 className="text-lg font-semibold text-slate-900">💡 Aime's Recommendations</h3>
           
           {recommendations.map((rec, idx) => (
             <div

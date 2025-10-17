@@ -228,7 +228,7 @@ async def get_behavioral_insights(user_email: str):
         
         if not log:
             return {
-                "message": "Not enough data yet. Keep using Alli to build insights!",
+                "message": "Not enough data yet. Keep using Aime to build insights!",
                 "total_actions": 0
             }
         

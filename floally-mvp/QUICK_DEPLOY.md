@@ -1,4 +1,4 @@
-tly in VS # Quick Deploy Guide - Remove "OpsAlli" Heading
+tly in VS # Quick Deploy Guide - Remove "OpAime" Heading
 
 Since we can't push from Codespace, here's the fastest way to deploy using GitHub's web editor:
 
@@ -8,21 +8,21 @@ Since we can't push from Codespace, here's the fastest way to deploy using GitHu
 
 2. Find lines 153-156 (around line 150-160) that look like:
 ```jsx
-<img src="/opally_logo_vector.png" alt="OpsAlli Logo" className="w-48 mx-auto mb-6" />
+<img src="/opally_logo_vector.png" alt="OpAime Logo" className="w-48 mx-auto mb-6" />
 <h1 className="text-4xl font-bold text-slate-900 mb-4">
-  OpsAlli
+  OpAime
 </h1>
 <p className="text-lg text-slate-700 mb-8">
 ```
 
 3. Change to (remove the h1 heading and adjust spacing):
 ```jsx
-<img src="/opally_logo_vector.png" alt="OpsAlli Logo" className="w-48 mx-auto mb-8" />
+<img src="/opally_logo_vector.png" alt="OpAime Logo" className="w-48 mx-auto mb-8" />
 <p className="text-lg text-slate-700 mb-8">
 ```
 
 4. Scroll down and click "Commit changes"
-5. Add commit message: "Remove redundant OpsAlli heading from welcome page"
+5. Add commit message: "Remove redundant OpAime heading from welcome page"
 6. Click "Commit changes"
 
 Vercel will auto-deploy in 1-2 minutes!
@@ -51,8 +51,8 @@ Visit: https://floally-mvp-d548.vercel.app
 Hard refresh: Ctrl+Shift+R (or Cmd+Shift+R on Mac)
 
 You should see just:
-1. OpsAlli logo
+1. OpAime logo
 2. Tagline
 3. Connect button
 
-No redundant "OpsAlli" text heading!
+No redundant "OpAime" text heading!

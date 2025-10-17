@@ -33,7 +33,7 @@ curl "https://floally-mvp-production.up.railway.app/api/user/profile?user_email=
 
 1. **Click Settings (⚙️) in header**
 2. **Expected:** Settings modal opens
-3. **Check "Alli's Understanding" section**
+3. **Check "Aime's Understanding" section**
    - Should show natural language summary like:
      > "You're a Product Manager who values client work, strategic planning, and learning & growth. You like warm, friendly interactions. When making decisions, you like to see options with detailed context."
 4. **Check "Your Profile" section**
@@ -137,7 +137,7 @@ curl http://localhost:8000/api/user/profile/insights?user_email=test@example.com
 - [ ] Profile saves successfully
 - [ ] Settings button appears after onboarding
 - [ ] Settings page displays profile accurately
-- [ ] "Alli's Understanding" shows natural language summary
+- [ ] "Aime's Understanding" shows natural language summary
 - [ ] Edit button reopens onboarding
 - [ ] AI stand-up tone matches communication preference
 - [ ] AI stand-up priorities align with user selection

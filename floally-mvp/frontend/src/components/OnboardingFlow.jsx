@@ -63,7 +63,7 @@ const OnboardingFlow = ({ userEmail, onComplete }) => {
             </div>
             <div>
               <h2 className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">
-                Meet Alli
+                Meet Aime
               </h2>
               <p className="text-sm text-slate-600">Your AI operational partner</p>
             </div>

@@ -1,7 +1,7 @@
-# Email Management Features in OpsAlli
+# Email Management Features in OpAime
 
 ## Overview
-OpsAlli now includes powerful email management features that allow you to manage your inbox directly from the application interface, making email triage faster and more efficient.
+OpAime now includes powerful email management features that allow you to manage your inbox directly from the application interface, making email triage faster and more efficient.
 
 ## Features
 
@@ -15,7 +15,7 @@ OpsAlli now includes powerful email management features that allow you to manage
   - Shows confirmation: "🗑️ Email moved to trash"
   - Email can be recovered from Gmail's trash within 30 days
 
-**Use Case**: Quickly remove junk emails, spam, or irrelevant messages without leaving OpsAlli
+**Use Case**: Quickly remove junk emails, spam, or irrelevant messages without leaving OpAime
 
 ### 2. Archive Email
 - **Button**: 📦 Archive
@@ -80,7 +80,7 @@ gmail: {
 
 ## User Experience Flow
 
-1. **View Emails**: User browses emails in OpsAlli dashboard
+1. **View Emails**: User browses emails in OpAime dashboard
 2. **Expand Email**: Click on an email to see full details
 3. **Choose Action**: 
    - Click "🗑️ Delete" for junk/spam emails
@@ -103,7 +103,7 @@ gmail: {
 
 ### Integration with Learning
 - Delete/Archive actions can be tracked for behavioral learning
-- Alli learns which types of emails you typically delete/archive
+- Aime learns which types of emails you typically delete/archive
 - Future enhancement: Auto-suggest delete/archive based on patterns
 
 ## Future Enhancements
@@ -111,7 +111,7 @@ gmail: {
 ### Potential Features
 1. **Bulk Actions**: Select multiple emails and delete/archive at once
 2. **Undo Action**: 5-second window to undo delete/archive
-3. **Smart Suggestions**: Alli suggests emails to delete/archive based on patterns
+3. **Smart Suggestions**: Aime suggests emails to delete/archive based on patterns
 4. **Auto-Archive**: Automatically archive emails older than X days
 5. **Custom Rules**: Create rules like "Auto-archive newsletters after reading"
 6. **Keyboard Shortcuts**: Press 'D' to delete, 'E' to archive
@@ -134,7 +134,7 @@ await behavior.logAction({
 });
 ```
 
-This would help Alli learn:
+This would help Aime learn:
 - Which senders you typically delete
 - Which email categories you find irrelevant
 - Patterns in emails you delete vs. engage with

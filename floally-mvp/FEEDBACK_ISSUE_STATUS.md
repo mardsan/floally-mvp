@@ -1,7 +1,7 @@
 # Email Feedback Issue - Status & Solution
 
 ## Current Issue
-User is seeing "Failed to submit feedback. Please try again." error when trying to use the "Help Alli learn" feature on production (https://floally-mvp-d548.vercel.app).
+User is seeing "Failed to submit feedback. Please try again." error when trying to use the "Help Aime learn" feature on production (https://floally-mvp-d548.vercel.app).
 
 ## Root Cause
 The **production backend on Railway** may not have the latest rebranding changes deployed yet, OR there's a connectivity issue between Vercel frontend and Railway backend.
@@ -61,9 +61,9 @@ Once redeployed, test the feedback feature:
 2. Login with Google
 3. Click "Analyze Emails"
 4. Expand an email
-5. Click "💡 Help Alli learn"
+5. Click "💡 Help Aime learn"
 6. Select "Important", "Interesting", or "Uninteresting"
-7. Should see: "✅ Thanks! Alli is learning your preferences."
+7. Should see: "✅ Thanks! Aime is learning your preferences."
 
 ## Backend Endpoint Details
 

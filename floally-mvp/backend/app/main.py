@@ -30,7 +30,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
 
 
 app = FastAPI(
-    title="OpsAlli API",
+    title="OpAime API",
     description="AI-powered daily stand-up and task automation",
     version="0.1.0"
 )
@@ -62,7 +62,7 @@ app.include_router(profile.router, prefix="/api/profile", tags=["profile"])
 @app.get("/")
 async def root():
     return {
-        "message": "OpsAlli API",
+        "message": "OpAime API",
         "version": "0.1.0",
         "status": "running"
     }
