@@ -58,8 +58,16 @@ const OnboardingFlow = ({ userEmail, onComplete }) => {
         {/* Header */}
         <div className="p-8 border-b" style={{borderColor: '#dafef4'}}>
           <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-teal-400 to-emerald-400 flex items-center justify-center text-3xl shadow-lg">
-              🤖
+            <div className="w-16 h-16 rounded-full overflow-hidden shadow-lg ring-2 ring-teal-100">
+              <img 
+                src="/OpAime-pfp-01.png" 
+                alt="Aime" 
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.parentElement.innerHTML = '<div class="w-full h-full bg-gradient-to-br from-teal-400 to-emerald-400 flex items-center justify-center text-3xl">🤖</div>';
+                }}
+              />
             </div>
             <div>
               <h2 className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">

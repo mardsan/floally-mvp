@@ -126,7 +126,14 @@ const ProfileOverview = ({ profileData, userEmail, onRefresh }) => {
       {/* Aime's Understanding */}
       <div className="bg-gradient-to-br from-teal-50 to-emerald-50 rounded-xl p-6 border" style={{borderColor: '#dafef4'}}>
         <div className="flex items-start gap-3">
-          <span className="text-3xl">💡</span>
+          <div className="w-12 h-12 rounded-full overflow-hidden shadow-sm ring-2 ring-white flex-shrink-0">
+            <img 
+              src="/OpAime-pfp-01.png" 
+              alt="Aime" 
+              className="w-full h-full object-cover"
+              onError={(e) => e.target.style.display = 'none'}
+            />
+          </div>
           <div className="flex-1">
             <h3 className="font-semibold text-slate-900 mb-2">Aime's Understanding</h3>
             <p className="text-sm text-slate-700 leading-relaxed">

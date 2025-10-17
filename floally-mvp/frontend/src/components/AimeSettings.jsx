@@ -34,8 +34,16 @@ const AlliSettings = ({ userProfile, aimeInsights, onEdit, onClose }) => {
         <div className="p-8 border-b" style={{borderColor: '#dafef4', background: 'linear-gradient(to right, #dafef4, #e8fef9)'}}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-400 to-emerald-400 flex items-center justify-center text-2xl shadow-md">
-                ⚙️
+              <div className="w-12 h-12 rounded-full overflow-hidden shadow-md ring-2 ring-teal-100">
+                <img 
+                  src="/OpAime-pfp-01.png" 
+                  alt="Aime" 
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.parentElement.innerHTML = '<div class="w-full h-full bg-gradient-to-br from-teal-400 to-emerald-400 flex items-center justify-center text-2xl">⚙️</div>';
+                  }}
+                />
               </div>
               <div>
                 <h2 className="text-2xl font-bold text-slate-900">Aime Settings</h2>
@@ -57,7 +65,14 @@ const AlliSettings = ({ userProfile, aimeInsights, onEdit, onClose }) => {
           {/* Aime's Understanding */}
           <div className="bg-gradient-to-br from-teal-50 to-emerald-50 rounded-xl p-6 border" style={{borderColor: '#dafef4'}}>
             <div className="flex items-start gap-3 mb-3">
-              <span className="text-2xl">💡</span>
+              <div className="w-10 h-10 rounded-full overflow-hidden shadow-sm ring-2 ring-white flex-shrink-0">
+                <img 
+                  src="/OpAime-pfp-01.png" 
+                  alt="Aime" 
+                  className="w-full h-full object-cover"
+                  onError={(e) => e.target.style.display = 'none'}
+                />
+              </div>
               <div className="flex-1">
                 <h3 className="font-semibold text-slate-900 mb-2">Aime's Understanding</h3>
                 <p className="text-sm text-slate-700 leading-relaxed">
