@@ -1,0 +1,12 @@
+[
+  {
+    "timestamp": "2025-10-17T00:55:06.095713",
+    "email_id": "test123",
+    "sender_email": "sender@example.com",
+    "sender_domain": "example.com",
+    "action_type": "mark_interesting_feedback",
+    "email_category": "primary",
+    "has_unsubscribe": false,
+    "confidence_score": 1.0
+  }
+]

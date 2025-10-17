@@ -1,0 +1,15 @@
+{
+  "sender@example.com": {
+    "sender_email": "sender@example.com",
+    "sender_domain": "example.com",
+    "total_emails": 1,
+    "marked_important": 0,
+    "marked_interesting": 1,
+    "marked_unimportant": 0,
+    "archived": 0,
+    "responded": 0,
+    "trashed": 0,
+    "unsubscribed": 0,
+    "importance_score": 0.5
+  }
+}

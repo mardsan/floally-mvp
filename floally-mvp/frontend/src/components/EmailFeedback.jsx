@@ -16,12 +16,26 @@ const EmailFeedback = ({ email, userEmail, onFeedbackComplete }) => {
         'unimportant': 'mark_unimportant_feedback'
       };
 
+      // Extract sender domain safely
+      let senderDomain = email.domain || 'unknown.com';
+      if (!email.domain && email.from) {
+        try {
+          // Try to extract from email address
+          const emailMatch = email.from.match(/<?([^@<>]+@([^>]+))>?/);
+          if (emailMatch && emailMatch[2]) {
+            senderDomain = emailMatch[2].trim();
+          }
+        } catch (e) {
+          console.error('Error extracting domain:', e);
+        }
+      }
+
       // Log feedback as a behavioral action
       await behavior.logAction({
         user_email: userEmail,
         email_id: email.id,
         sender_email: email.from,
-        sender_domain: email.domain || email.from.split('@')[1]?.split('>')[0],
+        sender_domain: senderDomain,
         action_type: actionTypeMap[type],
         email_category: email.isPromotional ? 'promotional' :
                        email.isSocial ? 'social' :
@@ -40,7 +54,10 @@ const EmailFeedback = ({ email, userEmail, onFeedbackComplete }) => {
       }, 1500);
     } catch (error) {
       console.error('Failed to submit feedback:', error);
-      alert('Failed to submit feedback. Please try again.');
+      console.error('Error details:', error.response?.data || error.message);
+      console.error('Email object:', email);
+      console.error('User email:', userEmail);
+      alert(`Failed to submit feedback. ${error.response?.data?.detail || error.message || 'Please try again.'}`);
     } finally {
       setSubmitting(false);
     }
