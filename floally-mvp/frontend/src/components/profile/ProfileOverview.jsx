@@ -123,12 +123,12 @@ const ProfileOverview = ({ profileData, userEmail, onRefresh }) => {
         </div>
       </div>
 
-      {/* Ally's Understanding */}
+      {/* Alli's Understanding */}
       <div className="bg-gradient-to-br from-teal-50 to-emerald-50 rounded-xl p-6 border" style={{borderColor: '#dafef4'}}>
         <div className="flex items-start gap-3">
           <span className="text-3xl">💡</span>
           <div className="flex-1">
-            <h3 className="font-semibold text-slate-900 mb-2">Ally's Understanding</h3>
+            <h3 className="font-semibold text-slate-900 mb-2">Alli's Understanding</h3>
             <p className="text-sm text-slate-700 leading-relaxed">
               {profile.role ? (
                 <>
@@ -153,7 +153,7 @@ const ProfileOverview = ({ profileData, userEmail, onRefresh }) => {
                   )}
                 </>
               ) : (
-                "Complete your onboarding to help Ally understand your preferences and working style."
+                "Complete your onboarding to help Alli understand your preferences and working style."
               )}
             </p>
             {learning_status && (
@@ -207,7 +207,7 @@ const ProfileOverview = ({ profileData, userEmail, onRefresh }) => {
         <div className="bg-slate-50 rounded-xl p-6 text-center">
           <div className="text-3xl mb-2">🎯</div>
           <p className="text-slate-600 text-sm">
-            Set goals to track your progress with Ally
+            Set goals to track your progress with Alli
           </p>
           <button className="mt-3 px-4 py-2 bg-teal-500 text-white rounded-lg text-sm font-medium hover:bg-teal-600 transition-all">
             + Add Goal

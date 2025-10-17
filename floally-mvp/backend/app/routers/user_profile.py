@@ -125,7 +125,7 @@ async def complete_onboarding(user_email: str, answers: OnboardingAnswers):
         
         return {
             "success": True,
-            "message": "Onboarding completed! Ally now understands you better.",
+            "message": "Onboarding completed! Alli now understands you better.",
             "profile": profile
         }
     except Exception as e:
@@ -164,7 +164,7 @@ async def update_user_profile(user_email: str, updates: Dict):
 
 @router.get("/profile/insights")
 async def get_ally_insights(user_email: str):
-    """Get Ally's understanding of the user in natural language"""
+    """Get Alli's understanding of the user in natural language"""
     try:
         profile_path = get_profile_path(user_email)
         
@@ -378,14 +378,14 @@ async def get_integrations(user_email: str):
                     "service": "slack",
                     "status": "not_connected",
                     "available": True,
-                    "description": "Get Ally notifications in Slack"
+                    "description": "Get Alli notifications in Slack"
                 },
                 "discord": {
                     "service": "discord",
                     "status": "not_connected",
                     "available": False,
                     "coming_soon": True,
-                    "description": "Get Ally updates in Discord (Coming Soon)"
+                    "description": "Get Alli updates in Discord (Coming Soon)"
                 }
             }
             

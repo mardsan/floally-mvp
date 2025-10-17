@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { auth, gmail, calendar, ai, userProfile } from './services/api';
 import OnboardingFlow from './components/OnboardingFlow';
-import AllySettings from './components/AllySettings';
+import AlliSettings from './components/AlliSettings';
 import EmailActions from './components/EmailActions';
 import EmailFeedback from './components/EmailFeedback';
 import Profile from './pages/Profile';
@@ -32,10 +32,10 @@ function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [profile, setProfile] = useState(null);
-  const [allyInsights, setAllyInsights] = useState(null);
+  const [alliInsights, setAllyInsights] = useState(null);
 
   // Debug info
-  console.log('OpAlly App loaded - Version 1.2.0 - Built:', new Date().toISOString());
+  console.log('OpsAlli App loaded - Version 1.2.0 - Built:', new Date().toISOString());
   console.log('API URL:', import.meta.env.VITE_API_URL || 'http://localhost:8000');
 
   useEffect(() => {
@@ -97,7 +97,7 @@ function App() {
           setShowOnboarding(true);
         }
 
-        // Load Ally's insights
+        // Load Alli's insights
         const insightsRes = await userProfile.getInsights(profileRes.data.email);
         setAllyInsights(insightsRes.data);
       }
@@ -251,7 +251,7 @@ function App() {
     setAnalyzingEmails(true);
     setError(null);
     try {
-      console.log('Analyzing emails with Ally...');
+      console.log('Analyzing emails with Alli...');
       const response = await ai.analyzeEmails(data.messages);
       console.log('Email analysis complete:', response.data);
       
@@ -379,7 +379,7 @@ function App() {
       <div className="min-h-screen flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #dafef4, #e8fef9)'}}>
         <div className="text-center">
           <div className="text-4xl mb-4">🔄</div>
-          <div className="text-slate-700">Loading OpAlly…</div>
+          <div className="text-slate-700">Loading OpsAlli…</div>
         </div>
       </div>
     );
@@ -389,7 +389,7 @@ function App() {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #dafef4, #e8fef9, #d0fdf2)'}}>
         <div className="text-center max-w-md mx-auto p-8">
-          <img src="/opally-vectorlogo-v2_01.png" alt="OpAlly Logo" className="w-48 mx-auto mb-8" onError={(e) => {console.error('Logo failed to load:', e.target.src); e.target.src = '/opally_logo_vector.png';}} />
+          <img src="/opsallivectorlogo01.png" alt="OpsAlli Logo" className="w-48 mx-auto mb-8" onError={(e) => {console.error('Logo failed to load:', e.target.src); e.target.src = '/opally_logo_vector.png';}} />
           <p className="text-lg text-slate-700 mb-8">
             Your AI-powered daily stand-up and operational partner for creative work.
           </p>
@@ -417,8 +417,8 @@ function App() {
       <header className="bg-white/90 backdrop-blur-sm border-b px-6 py-4 shadow-sm" style={{borderColor: '#dafef4'}}>
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src="/opally-vectorlogo-v2_01.png" alt="OpAlly" className="h-8" />
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">OpAlly</h1>
+            <img src="/opsallivectorlogo01.png" alt="OpsAlli" className="h-8" />
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">OpsAlli</h1>
             {data.profile && (
               <p className="text-sm text-slate-600 ml-2">{data.profile.email}</p>
             )}
@@ -457,10 +457,10 @@ function App() {
           <div className="text-center mb-6">
             <div className="text-4xl mb-4">🤖</div>
             <h3 className="text-xl font-semibold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent mb-2">
-              Daily Stand-Up with Ally
+              Daily Stand-Up with Alli
             </h3>
             <p className="text-slate-700 mb-6">
-              Let Ally analyze your messages and calendar to give you "The One Thing" to focus on today.
+              Let Alli analyze your messages and calendar to give you "The One Thing" to focus on today.
             </p>
             <button
               onClick={handleGenerateStandup}
@@ -489,7 +489,7 @@ function App() {
           )}
         </div>
 
-        {/* Important Emails Section - Ally's Analysis */}
+        {/* Important Emails Section - Alli's Analysis */}
         <div className="mb-8 rounded-2xl p-8 shadow-lg bg-white/95 backdrop-blur" style={{borderWidth: '1px', borderColor: '#dafef4'}}>
           <div className="flex items-center justify-between mb-6">
             <div>
@@ -497,7 +497,7 @@ function App() {
                 ⭐ Important Emails
               </h3>
               <p className="text-sm text-slate-600">
-                Let Ally identify emails that need your attention and action
+                Let Alli identify emails that need your attention and action
               </p>
             </div>
             <button
@@ -579,7 +579,7 @@ function App() {
                           </div>
                           {item.reason && (
                             <div className="text-sm text-slate-700 bg-white/70 rounded p-2 mb-3">
-                              <span className="font-medium">Ally's insight:</span> {item.reason}
+                              <span className="font-medium">Alli's insight:</span> {item.reason}
                             </div>
                           )}
                           
@@ -640,7 +640,7 @@ function App() {
                         <div className="mt-4 border-t pt-4" style={{borderColor: '#dafef4'}}>
                           <div className="bg-white rounded-lg p-4 shadow-sm">
                             <div className="flex items-center justify-between mb-3">
-                              <h4 className="font-semibold text-slate-900">📝 Draft Response from Ally</h4>
+                              <h4 className="font-semibold text-slate-900">📝 Draft Response from Alli</h4>
                               <button
                                 onClick={() => {
                                   setDraftResponse(null);
@@ -700,7 +700,7 @@ function App() {
           {!emailAnalysis && (
             <div className="text-center py-8 text-slate-500">
               <div className="text-4xl mb-2">📧</div>
-              <div>Click "Analyze Emails" to let Ally find what's important</div>
+              <div>Click "Analyze Emails" to let Alli find what's important</div>
             </div>
           )}
         </div>
@@ -822,7 +822,7 @@ function App() {
                         </button>
                       </div>
                       
-                      {/* Ally Learning Feedback */}
+                      {/* Alli Learning Feedback */}
                       <div className="mt-3">
                         <EmailFeedback
                           email={msg}
@@ -954,7 +954,7 @@ function App() {
       {showSettings && (
         <AllySettings
           userProfile={profile}
-          allyInsights={allyInsights}
+          alliInsights={alliInsights}
           onEdit={handleEditProfile}
           onClose={handleCloseSettings}
         />

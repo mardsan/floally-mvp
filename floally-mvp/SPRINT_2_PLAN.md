@@ -6,7 +6,7 @@
 
 ## Vision
 
-Transform Ally from **reactive assistant** to **proactive agent** that:
+Transform Alli from **reactive assistant** to **proactive agent** that:
 1. Learns from your email actions (mark important, delete, respond, unsubscribe)
 2. Predicts your likely responses to new emails
 3. Queues up suggested actions for bulk approval
@@ -14,18 +14,18 @@ Transform Ally from **reactive assistant** to **proactive agent** that:
 
 ## User Story
 
-> "After Ally analyzes my important emails, I want **action buttons** to quickly:
+> "After Alli analyzes my important emails, I want **action buttons** to quickly:
 > - Mark as Important/Focus or Unimportant/Not Interested
 > - Respond (with AI-drafted reply)
 > - Delete/Archive
 > - Unsubscribe from newsletters
 > 
-> Over time, Ally should **learn my patterns** and start suggesting:
+> Over time, Alli should **learn my patterns** and start suggesting:
 > - 'You usually mark emails from this sender as Important'
 > - 'You haven't opened newsletters from this domain in 30 days - unsubscribe?'
 > - 'Based on similar emails, you might want to archive this'
 > 
-> Eventually, I want **bulk approval mode** where Ally queues up actions and I just approve/reject in batches."
+> Eventually, I want **bulk approval mode** where Alli queues up actions and I just approve/reject in batches."
 
 ## Sprint 2 Features
 
@@ -72,11 +72,11 @@ BehaviorEvent:
 **Storage:** PostgreSQL/SQLite for behavioral events (time-series data)
 
 ### Phase 3: Predictive Suggestions
-**Goal:** Ally predicts your likely action
+**Goal:** Alli predicts your likely action
 
 **AI-Enhanced Analysis:**
 ```python
-# For each email, Ally calculates:
+# For each email, Alli calculates:
 {
   "predicted_action": "archive",  # or important, respond, unsubscribe
   "confidence": 0.85,
@@ -96,7 +96,7 @@ BehaviorEvent:
 **Goal:** Queue up actions for batch processing
 
 **UI Flow:**
-1. Ally analyzes all emails
+1. Alli analyzes all emails
 2. Groups emails by suggested action:
    - "Archive (12 emails)" 
    - "Mark Important (3 emails)"
@@ -174,7 +174,7 @@ POST /api/behavior/log-action
 
 ### ⏳ Phase 4: Bulk Approval UI (FUTURE)
 **Dashboard Section:**
-- "Ally's Suggestions" widget
+- "Alli's Suggestions" widget
 - Grouped action queues
 - Approve/reject interface
 - Action history log
@@ -269,6 +269,6 @@ Generate predictions → Display in UI → User feedback → Refine model
 7. ✅ Test action flow end-to-end
 
 **Expected Outcome:**
-User can click ⭐ Focus, 🗑️ Archive, 📧 Respond, 🚫 Unsubscribe on any important email, and Ally logs the action for future learning.
+User can click ⭐ Focus, 🗑️ Archive, 📧 Respond, 🚫 Unsubscribe on any important email, and Alli logs the action for future learning.
 
 Let's build! 🚀

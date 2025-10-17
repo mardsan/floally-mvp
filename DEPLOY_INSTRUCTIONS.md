@@ -29,7 +29,7 @@ git format-patch origin/main --stdout > ~/email-intelligence-v1.1.0.patch
 cd /path/to/floally-mvp
 git apply ~/Downloads/email-intelligence-v1.1.0.patch
 git add -A
-git commit -m "Add Ally email intelligence v1.1.0"
+git commit -m "Add Alli email intelligence v1.1.0"
 git push origin main
 ```
 
@@ -55,7 +55,7 @@ https://github.com/mardsan/floally-mvp/edit/main/floally-mvp/frontend/src/servic
 - 🤖 `/api/ai/analyze-emails` - Analyzes email importance with Claude
 - ✍️ `/api/ai/generate-response` - Generates draft email responses
 - 📧 Enhanced `/api/gmail/messages` - Gmail label intelligence
-- 🔄 Ally branding throughout
+- 🔄 Alli branding throughout
 
 ### Frontend (Vercel):
 - ⭐ Important Emails section with priority badges
@@ -82,7 +82,7 @@ commit db8221f
 Author: Your Name <you@example.com>
 Date: Oct 15, 2025
 
-Add Ally email intelligence: analyze emails, generate responses, Gmail label detection (v1.1.0)
+Add Alli email intelligence: analyze emails, generate responses, Gmail label detection (v1.1.0)
 
 - backend/app/routers/ai.py: +158 lines (2 new endpoints)
 - backend/app/routers/gmail.py: +28 lines (label extraction)

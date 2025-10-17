@@ -132,21 +132,21 @@ File-based behavioral data (MVP approach):
 
 ### Before (v1.2.0):
 1. User logs in
-2. Ally analyzes emails
+2. Alli analyzes emails
 3. User sees which are important
 4. **User manually goes to Gmail to take action** ❌
 
 ### After (v1.3.0):
 1. User logs in
-2. Ally analyzes emails  
+2. Alli analyzes emails  
 3. User sees which are important
-4. **User clicks action buttons directly in OpAlly** ✅
-5. **Ally learns from every action** 🧠
-6. **Future: Ally predicts actions before you take them** 🚀
+4. **User clicks action buttons directly in OpsAlli** ✅
+5. **Alli learns from every action** 🧠
+6. **Future: Alli predicts actions before you take them** 🚀
 
 ## Behavioral Learning
 
-### What Ally Learns:
+### What Alli Learns:
 - **Sender Importance:** Which senders you mark as important vs archive
 - **Response Patterns:** Who you respond to vs ignore
 - **Newsletter Engagement:** Which newsletters you read vs unsubscribe from
@@ -163,7 +163,7 @@ Behavior API saves: {action: "important", sender: "alice@company.com", ...}
 Sender stats updated: alice@company.com importance_score += 0.2
   ↓
 Next time email from alice@company.com arrives:
-  → Ally checks sender stats
+  → Alli checks sender stats
   → Sees high importance score
   → Predicts you'll want to mark as important
   → (Future feature) Pre-suggests: "Mark as important? You usually do with emails from Alice."
@@ -232,7 +232,7 @@ importance_score = min(1.0, score / 2.0)
    - Queue system for batch processing
 
 4. **Enhanced Insights Dashboard**
-   - "Ally's Learning" section in Settings
+   - "Alli's Learning" section in Settings
    - Top senders by importance
    - Action breakdown chart
    - Newsletter engagement stats
@@ -242,7 +242,7 @@ importance_score = min(1.0, score / 2.0)
 - **Smart Rules:** "Always archive emails from {sender}"
 - **Auto-Actions:** High confidence (>90%) actions execute automatically
 - **Digest Mode:** Batch newsletters for weekly summary
-- **Response Patterns:** Ally drafts responses matching your past style
+- **Response Patterns:** Alli drafts responses matching your past style
 - **Anomaly Detection:** "You usually respond to Jane within 1 hour - this is overdue"
 
 ## Privacy & Control
@@ -274,7 +274,7 @@ importance_score = min(1.0, score / 2.0)
 
 **Efficiency:**
 - Time saved vs manual Gmail
-- Actions completed in OpAlly vs Gmail
+- Actions completed in OpsAlli vs Gmail
 - User satisfaction with quick actions
 
 ## Known Limitations
@@ -346,4 +346,4 @@ prediction = model.predict(email_features)
 **Phase:** Sprint 2, Phase 1 Complete  
 **Next:** Phase 2 - Database + Predictions  
 
-**Impact:** Every action you take teaches Ally about your preferences. Over time, Ally will anticipate your needs and suggest actions before you even think of them. This is the foundation of true AI assistance. 🧠✨
+**Impact:** Every action you take teaches Alli about your preferences. Over time, Alli will anticipate your needs and suggest actions before you even think of them. This is the foundation of true AI assistance. 🧠✨

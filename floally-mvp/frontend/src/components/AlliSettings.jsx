@@ -1,6 +1,6 @@
 import React from 'react';
 
-const AllySettings = ({ userProfile, allyInsights, onEdit, onClose }) => {
+const AlliSettings = ({ userProfile, alliInsights, onEdit, onClose }) => {
   if (!userProfile) return null;
 
   const priorityLabels = {
@@ -38,8 +38,8 @@ const AllySettings = ({ userProfile, allyInsights, onEdit, onClose }) => {
                 ⚙️
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-slate-900">Ally Settings</h2>
-                <p className="text-sm text-slate-600">How Ally understands you</p>
+                <h2 className="text-2xl font-bold text-slate-900">Alli Settings</h2>
+                <p className="text-sm text-slate-600">How Alli understands you</p>
               </div>
             </div>
             <button
@@ -54,14 +54,14 @@ const AllySettings = ({ userProfile, allyInsights, onEdit, onClose }) => {
         {/* Content */}
         <div className="p-8 space-y-6">
           
-          {/* Ally's Understanding */}
+          {/* Alli's Understanding */}
           <div className="bg-gradient-to-br from-teal-50 to-emerald-50 rounded-xl p-6 border" style={{borderColor: '#dafef4'}}>
             <div className="flex items-start gap-3 mb-3">
               <span className="text-2xl">💡</span>
               <div className="flex-1">
-                <h3 className="font-semibold text-slate-900 mb-2">Ally's Understanding</h3>
+                <h3 className="font-semibold text-slate-900 mb-2">Alli's Understanding</h3>
                 <p className="text-sm text-slate-700 leading-relaxed">
-                  {allyInsights?.insight || "Loading..."}
+                  {alliInsights?.insight || "Loading..."}
                 </p>
               </div>
             </div>
@@ -136,7 +136,7 @@ const AllySettings = ({ userProfile, allyInsights, onEdit, onClose }) => {
           <div className="border-t pt-6" style={{borderColor: '#dafef4'}}>
             <h3 className="text-lg font-semibold text-slate-900 mb-3">Data & Privacy</h3>
             <p className="text-sm text-slate-600 mb-4">
-              Your profile and preferences are stored locally and used only to personalize Ally's assistance. 
+              Your profile and preferences are stored locally and used only to personalize Alli's assistance. 
               You can delete your data anytime.
             </p>
             <button className="text-sm text-red-600 hover:text-red-700 font-medium">
@@ -159,4 +159,4 @@ const AllySettings = ({ userProfile, allyInsights, onEdit, onClose }) => {
   );
 };
 
-export default AllySettings;
+export default AlliSettings;

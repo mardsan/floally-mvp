@@ -65,7 +65,7 @@ git push origin main
 **Vercel (Frontend)** will auto-deploy:
 - https://floally-mvp-d548.vercel.app (or your main domain)
 - Complete email intelligence UI (v1.1.0)
-- Important Emails section with Ally's analysis
+- Important Emails section with Alli's analysis
 
 ---
 

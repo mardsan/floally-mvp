@@ -1,7 +1,7 @@
 # Three-Tier Email Feedback System
 
 ## Overview
-Enhanced the "Help Ally Learn" feature with a three-tier categorization system to better train Ally on user preferences.
+Enhanced the "Help Alli Learn" feature with a three-tier categorization system to better train Alli on user preferences.
 
 ## User Feedback Categories
 
@@ -14,7 +14,7 @@ Enhanced the "Help Ally Learn" feature with a three-tier categorization system t
 - **Purpose**: Content worth reading and absorbing, but not urgent
 - **Weight in scoring**: 1.0x (medium)
 - **Use cases**: Industry newsletters, thought leadership, educational content, non-urgent updates
-- **NEW**: This middle tier helps Ally differentiate between actionable and informational content
+- **NEW**: This middle tier helps Alli differentiate between actionable and informational content
 
 ### 3. ❌ Uninteresting
 - **Purpose**: Not relevant or useful to the user
@@ -56,21 +56,21 @@ Where:
 ## Benefits
 
 1. **Better Content Differentiation**: Users can now distinguish between actionable and informational emails
-2. **Improved Learning**: Ally can learn what content is valuable to read vs. what requires action
+2. **Improved Learning**: Alli can learn what content is valuable to read vs. what requires action
 3. **Reduced Noise**: "Unimportant" remains focused on truly irrelevant content
 4. **Nuanced Scoring**: Senders of interesting content get positive (but not urgent) scoring
 
 ## User Experience
 
-When a user clicks "💡 Help Ally learn":
+When a user clicks "💡 Help Alli learn":
 1. Three clearly labeled options appear
 2. Each option explains its purpose
 3. Feedback is logged immediately
-4. Confirmation message appears: "✅ Thanks! Ally is learning your preferences."
+4. Confirmation message appears: "✅ Thanks! Alli is learning your preferences."
 
 ## Future Enhancements
 
 - Use interesting feedback to populate a "Reading List" or "Later" inbox
 - Create digest emails of interesting content for weekend reading
 - Use interesting vs. important ratio to suggest optimal email check times
-- Train Ally to auto-categorize based on content similarity
+- Train Alli to auto-categorize based on content similarity

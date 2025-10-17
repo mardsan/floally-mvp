@@ -156,7 +156,7 @@ const SettingsPanel = ({ settings, userEmail, onSave }) => {
               <span>Safer</span>
             </div>
             <p className="text-xs text-slate-500 mt-1">
-              Ally will only auto-perform actions when confidence is above this level
+              Alli will only auto-perform actions when confidence is above this level
             </p>
           </div>
         </div>
@@ -177,7 +177,7 @@ const SettingsPanel = ({ settings, userEmail, onSave }) => {
                 Daily Email Digest
               </label>
               <p className="text-xs text-slate-500">
-                Receive a summary of Ally's actions and insights
+                Receive a summary of Alli's actions and insights
               </p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
@@ -250,7 +250,7 @@ const SettingsPanel = ({ settings, userEmail, onSave }) => {
                 Behavioral Learning
               </label>
               <p className="text-xs text-slate-500">
-                Allow Ally to learn from your email actions
+                Allow Alli to learn from your email actions
               </p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
@@ -292,7 +292,7 @@ const SettingsPanel = ({ settings, userEmail, onSave }) => {
                 Anonymous Usage Statistics
               </label>
               <p className="text-xs text-slate-500">
-                Help improve Ally by sharing anonymous usage data
+                Help improve Alli by sharing anonymous usage data
               </p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
@@ -352,7 +352,7 @@ const SettingsPanel = ({ settings, userEmail, onSave }) => {
               <option value="never">Never suggest</option>
             </select>
             <p className="text-xs text-slate-500 mt-1">
-              How Ally should handle newsletter unsubscriptions
+              How Alli should handle newsletter unsubscriptions
             </p>
           </div>
 

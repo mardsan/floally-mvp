@@ -72,7 +72,7 @@ const IntegrationsManager = ({ integrations, userEmail, onRefresh }) => {
               {integrations.total_connected} {integrations.total_connected === 1 ? 'Integration' : 'Integrations'} Connected
             </h3>
             <p className="text-sm text-slate-600">
-              Connect more services to enhance Ally's capabilities
+              Connect more services to enhance Alli's capabilities
             </p>
           </div>
         </div>
@@ -215,7 +215,7 @@ const IntegrationsManager = ({ integrations, userEmail, onRefresh }) => {
           <div className="flex-1">
             <h4 className="font-semibold text-slate-900 mb-2">Integration Tips</h4>
             <ul className="text-sm text-slate-700 space-y-1">
-              <li>• Connect Slack to get Ally notifications in your workspace</li>
+              <li>• Connect Slack to get Alli notifications in your workspace</li>
               <li>• Microsoft Outlook integration supports both email and calendar</li>
               <li>• All integrations respect your privacy settings</li>
               <li>• You can disconnect any service at any time</li>

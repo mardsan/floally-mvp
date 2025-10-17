@@ -80,7 +80,7 @@ async def get_profile_overview(user_email: str):
             confidence_message = f"{150 - total_actions} more actions until high confidence"
         else:
             confidence_level = "high"
-            confidence_message = "Ally has strong understanding of your patterns"
+            confidence_message = "Alli has strong understanding of your patterns"
         
         # Calculate days active
         if behavior_log:
@@ -167,7 +167,7 @@ async def get_detailed_behavioral_insights(user_email: str):
         
         if not behavior_log:
             return {
-                "message": "Not enough data yet. Keep using Ally to build insights!",
+                "message": "Not enough data yet. Keep using Alli to build insights!",
                 "recommendations": []
             }
         
@@ -180,7 +180,7 @@ async def get_detailed_behavioral_insights(user_email: str):
         if len(respond_actions) >= 5:
             insights.append({
                 "category": "Response Patterns",
-                "insight": f"You've drafted {len(respond_actions)} responses through Ally",
+                "insight": f"You've drafted {len(respond_actions)} responses through Alli",
                 "metric_value": len(respond_actions),
                 "icon": "📧"
             })
@@ -238,7 +238,7 @@ async def get_detailed_behavioral_insights(user_email: str):
         estimated_time_saved = total_actions * 1.5  # Assume 1.5 min saved per action
         insights.append({
             "category": "Time Saved",
-            "insight": f"Estimated {int(estimated_time_saved)} minutes saved using Ally's quick actions",
+            "insight": f"Estimated {int(estimated_time_saved)} minutes saved using Alli's quick actions",
             "metric_value": int(estimated_time_saved),
             "unit": "minutes",
             "icon": "⏱️"

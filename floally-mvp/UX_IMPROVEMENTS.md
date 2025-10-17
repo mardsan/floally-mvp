@@ -1,4 +1,4 @@
-# OpAlly UX Improvements - October 14, 2025
+# OpsAlli UX Improvements - October 14, 2025
 
 ## Summary of Changes
 
@@ -51,7 +51,7 @@ Added direct links to:
 - Google Calendar (top-right of Calendar card)
 - Individual email threads (in expanded email view)
 
-All links open in new tabs to preserve OpAlly dashboard state.
+All links open in new tabs to preserve OpsAlli dashboard state.
 
 ## Technical Implementation
 
@@ -77,7 +77,7 @@ const formatEventDate = (dateString) => {
 ## User Flow
 
 ### Primary Use Case (Daily Check-in):
-1. User opens OpAlly
+1. User opens OpsAlli
 2. **First thing seen:** AI Stand-Up generator
 3. User clicks "Generate Stand-Up"
 4. Reads Op's analysis and "The One Thing"
@@ -86,7 +86,7 @@ const formatEventDate = (dateString) => {
 7. Takes action via "Open in Gmail" if needed
 
 ### Secondary Use Case (Quick Email Check):
-1. User opens OpAlly
+1. User opens OpsAlli
 2. Scrolls past AI Stand-Up
 3. Scans email subjects
 4. Clicks interesting email to expand
@@ -108,7 +108,7 @@ const formatEventDate = (dateString) => {
 - [ ] "Add to calendar" quick action
 
 ### Medium-term:
-- [ ] Email compose/reply directly in OpAlly
+- [ ] Email compose/reply directly in OpsAlli
 - [ ] Calendar event creation
 - [ ] Smart notifications for important emails
 - [ ] Integration with task management
