@@ -455,20 +455,20 @@ function App() {
         {/* AI Stand-Up Section - TOP PRIORITY */}
         <div className="mb-8 rounded-2xl p-8 shadow-lg" style={{background: 'linear-gradient(to right, #dafef4, #e8fef9, #d0fdf2)', borderWidth: '1px', borderColor: '#b8f5e8'}}>
           <div className="text-center mb-6">
-            <div className="flex justify-center mb-6">
-              <div className="w-32 h-32 rounded-full overflow-hidden shadow-2xl ring-4 ring-teal-200 ring-offset-4 ring-offset-white/50 hover:ring-teal-300 transition-all duration-300">
+            <div className="flex justify-center mb-8">
+              <div className="w-64 h-64 rounded-full overflow-hidden shadow-2xl ring-8 ring-teal-200/70 ring-offset-8 ring-offset-white/80 hover:ring-teal-300/80 hover:scale-105 transition-all duration-500">
                 <img 
                   src="/OpAime-pfp-01.png" 
                   alt="Aime" 
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     e.target.style.display = 'none';
-                    e.target.parentElement.innerHTML = '<div class="w-full h-full bg-gradient-to-br from-teal-400 to-emerald-400 flex items-center justify-center text-white text-5xl font-bold">A</div>';
+                    e.target.parentElement.innerHTML = '<div class="w-full h-full bg-gradient-to-br from-teal-400 to-emerald-400 flex items-center justify-center text-white text-8xl font-bold">A</div>';
                   }}
                 />
               </div>
             </div>
-            <h3 className="text-2xl font-semibold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent mb-2">
+            <h3 className="text-3xl font-semibold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent mb-3">
               Daily Stand-Up with Aime
             </h3>
             <p className="text-slate-700 mb-6">
