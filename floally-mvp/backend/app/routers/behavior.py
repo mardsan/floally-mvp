@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from datetime import datetime
+from typing import Optional, Dict, Any
 import json
 import os
 from pathlib import Path
@@ -16,7 +17,7 @@ class BehaviorAction(BaseModel):
     email_category: str  # primary, promotional, social, updates, forums, newsletter
     has_unsubscribe: bool = False
     confidence_score: float = 0.0  # From AI analysis (0-1)
-    metadata: dict = None  # Optional metadata for additional context
+    metadata: Optional[Dict[str, Any]] = None  # Optional metadata for additional context
 
 class SenderStats(BaseModel):
     sender_email: str
