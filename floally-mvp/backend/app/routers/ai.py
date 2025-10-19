@@ -19,7 +19,7 @@ class EmailResponseRequest(BaseModel):
 
 @router.post("/standup")
 async def generate_standup(request: StandupRequest):
-    """Generate daily stand-up using Claude (Aime)"""
+    """Generate daily stand-up using Claude (Aimy)"""
     try:
         # Check for API key
         api_key = os.getenv("ANTHROPIC_API_KEY")
@@ -44,7 +44,7 @@ User Profile:
         
         # Build context from messages and events
         context = f"""
-You are Aime, a calm and competent AI assistant helping a creative professional plan their day.
+You are Aimy, a calm and competent AI assistant helping a creative professional plan their day.
 {user_context_text}
 
 Today's Gmail messages ({len(request.messages)} total):
@@ -113,7 +113,7 @@ async def analyze_emails(request: EmailAnalysisRequest):
         ])
         
         context = f"""
-You are Aime, an intelligent email assistant. Analyze these emails and identify which ones are IMPORTANT and require action or response.
+You are Aimy, an intelligent email assistant. Analyze these emails and identify which ones are IMPORTANT and require action or response.
 
 **PRIORITIZATION RULES:**
 1. ALWAYS mark emails as important if they have "Already Starred: True" or "Gmail Important: True" - these are user-designated priorities
@@ -189,7 +189,7 @@ async def generate_email_response(request: EmailResponseRequest):
         
         email = request.email
         context = f"""
-You are Aime, helping draft a professional email response.
+You are Aimy, helping draft a professional email response.
 
 Original Email:
 From: {email.get('from', 'Unknown')}

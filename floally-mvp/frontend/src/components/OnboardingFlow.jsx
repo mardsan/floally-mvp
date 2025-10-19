@@ -60,8 +60,8 @@ const OnboardingFlow = ({ userEmail, onComplete }) => {
           <div className="flex items-center gap-4 mb-4">
             <div className="w-16 h-16 rounded-full overflow-hidden shadow-lg ring-2 ring-teal-100">
               <img 
-                src="/OpAime-pfp-01.png" 
-                alt="Aime" 
+                src="/okaimy-logo-01-avatar.png" 
+                alt="Aimy" 
                 className="w-full h-full object-cover"
                 onError={(e) => {
                   e.target.style.display = 'none';
@@ -71,7 +71,7 @@ const OnboardingFlow = ({ userEmail, onComplete }) => {
             </div>
             <div>
               <h2 className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">
-                Meet Aime
+                Meet Aimy
               </h2>
               <p className="text-sm text-slate-600">Your AI operational partner</p>
             </div>

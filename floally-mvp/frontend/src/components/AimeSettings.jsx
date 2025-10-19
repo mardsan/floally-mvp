@@ -1,6 +1,6 @@
 import React from 'react';
 
-const AlliSettings = ({ userProfile, aimeInsights, onEdit, onClose }) => {
+const AimySettings = ({ userProfile, aimeInsights, onEdit, onClose }) => {
   if (!userProfile) return null;
 
   const priorityLabels = {
@@ -36,8 +36,8 @@ const AlliSettings = ({ userProfile, aimeInsights, onEdit, onClose }) => {
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full overflow-hidden shadow-md ring-2 ring-teal-100">
                 <img 
-                  src="/OpAime-pfp-01.png" 
-                  alt="Aime" 
+                  src="/okaimy-logo-01-avatar.png" 
+                  alt="Aimy" 
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     e.target.style.display = 'none';
@@ -46,8 +46,8 @@ const AlliSettings = ({ userProfile, aimeInsights, onEdit, onClose }) => {
                 />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-slate-900">Aime Settings</h2>
-                <p className="text-sm text-slate-600">How Aime understands you</p>
+                <h2 className="text-2xl font-bold text-slate-900">Aimy Settings</h2>
+                <p className="text-sm text-slate-600">How Aimy understands you</p>
               </div>
             </div>
             <button
@@ -62,19 +62,19 @@ const AlliSettings = ({ userProfile, aimeInsights, onEdit, onClose }) => {
         {/* Content */}
         <div className="p-8 space-y-6">
           
-          {/* Aime's Understanding */}
+          {/* Aimy's Understanding */}
           <div className="bg-gradient-to-br from-teal-50 to-emerald-50 rounded-xl p-6 border" style={{borderColor: '#dafef4'}}>
             <div className="flex items-start gap-3 mb-3">
               <div className="w-10 h-10 rounded-full overflow-hidden shadow-sm ring-2 ring-white flex-shrink-0">
                 <img 
-                  src="/OpAime-pfp-01.png" 
-                  alt="Aime" 
+                  src="/okaimy-logo-01-avatar.png" 
+                  alt="Aimy" 
                   className="w-full h-full object-cover"
                   onError={(e) => e.target.style.display = 'none'}
                 />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold text-slate-900 mb-2">Aime's Understanding</h3>
+                <h3 className="font-semibold text-slate-900 mb-2">Aimy's Understanding</h3>
                 <p className="text-sm text-slate-700 leading-relaxed">
                   {aimeInsights?.insight || "Loading..."}
                 </p>
@@ -151,7 +151,7 @@ const AlliSettings = ({ userProfile, aimeInsights, onEdit, onClose }) => {
           <div className="border-t pt-6" style={{borderColor: '#dafef4'}}>
             <h3 className="text-lg font-semibold text-slate-900 mb-3">Data & Privacy</h3>
             <p className="text-sm text-slate-600 mb-4">
-              Your profile and preferences are stored locally and used only to personalize Aime's assistance. 
+              Your profile and preferences are stored locally and used only to personalize Aimy's assistance. 
               You can delete your data anytime.
             </p>
             <button className="text-sm text-red-600 hover:text-red-700 font-medium">
@@ -174,4 +174,4 @@ const AlliSettings = ({ userProfile, aimeInsights, onEdit, onClose }) => {
   );
 };
 
-export default AlliSettings;
+export default AimySettings;

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import auth, gmail, calendar, ai, user_profile, behavior, profile
+from app.routers import auth, gmail, calendar, ai, user_profile, behavior, profile, insights
 import os
 from dotenv import load_dotenv
 
@@ -30,9 +30,9 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
 
 
 app = FastAPI(
-    title="OpAime API",
-    description="AI-powered daily stand-up and task automation",
-    version="0.1.0"
+    title="OkAimy API",
+    description="AI-powered strategic and operational partner",
+    version="1.3.0"
 )
 
 # CORS configuration - Allow all origins for development/production
@@ -58,12 +58,13 @@ app.include_router(ai.router, prefix="/api/ai", tags=["ai"])
 app.include_router(user_profile.router, prefix="/api/user", tags=["user-profile"])
 app.include_router(behavior.router, prefix="/api/behavior", tags=["behavior"])
 app.include_router(profile.router, prefix="/api/profile", tags=["profile"])
+app.include_router(insights.router, prefix="/api/insights", tags=["insights"])
 
 @app.get("/")
 async def root():
     return {
-        "message": "OpAime API",
-        "version": "0.1.0",
+        "message": "OkAimy API",
+        "version": "1.3.0",
         "status": "running"
     }
 

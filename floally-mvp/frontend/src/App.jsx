@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { auth, gmail, calendar, ai, userProfile } from './services/api';
 import OnboardingFlow from './components/OnboardingFlow';
-import AimeSettings from './components/AimeSettings';
+import AimySettings from './components/AimeSettings';
 import EmailActions from './components/EmailActions';
 import EmailFeedback from './components/EmailFeedback';
 import Profile from './pages/Profile';
@@ -32,10 +32,10 @@ function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [profile, setProfile] = useState(null);
-  const [aimeInsights, setAllyInsights] = useState(null);
+  const [aimeInsights, setAimyInsights] = useState(null);
 
   // Debug info
-  console.log('OpAime App loaded - Version 1.2.0 - Built:', new Date().toISOString());
+  console.log('OkAimy App loaded - Version 1.3.0 - Built:', new Date().toISOString());
   console.log('API URL:', import.meta.env.VITE_API_URL || 'http://localhost:8000');
 
   useEffect(() => {
@@ -97,9 +97,9 @@ function App() {
           setShowOnboarding(true);
         }
 
-        // Load Aime's insights
+        // Load Aimy's insights
         const insightsRes = await userProfile.getInsights(profileRes.data.email);
-        setAllyInsights(insightsRes.data);
+        setAimyInsights(insightsRes.data);
       }
     } catch (error) {
       console.error('Failed to load dashboard data:', error);
@@ -167,7 +167,7 @@ function App() {
       ]);
       
       setProfile(profileRes.data);
-      setAllyInsights(insightsRes.data);
+      setAimyInsights(insightsRes.data);
       setShowOnboarding(false);
     } catch (error) {
       console.error('Failed to save onboarding:', error);
@@ -251,7 +251,7 @@ function App() {
     setAnalyzingEmails(true);
     setError(null);
     try {
-      console.log('Analyzing emails with Aime...');
+      console.log('Analyzing emails with Aimy...');
       const response = await ai.analyzeEmails(data.messages);
       console.log('Email analysis complete:', response.data);
       
@@ -379,7 +379,7 @@ function App() {
       <div className="min-h-screen flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #dafef4, #e8fef9)'}}>
         <div className="text-center">
           <div className="text-4xl mb-4">🔄</div>
-          <div className="text-slate-700">Loading OpAime…</div>
+          <div className="text-slate-700">Loading OkAimy…</div>
         </div>
       </div>
     );
@@ -389,9 +389,9 @@ function App() {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #dafef4, #e8fef9, #d0fdf2)'}}>
         <div className="text-center max-w-md mx-auto p-8">
-          <img src="/opaime-logo01.png" alt="OpAime Logo" className="w-48 mx-auto mb-8" onError={(e) => {console.error('Logo failed to load:', e.target.src); e.target.src = '/opally_logo_vector.png';}} />
+          <img src="/okaimy-logo-01.png" alt="OkAimy Logo" className="w-48 mx-auto mb-8" onError={(e) => {console.error('Logo failed to load:', e.target.src);}} />
           <p className="text-lg text-slate-700 mb-8">
-            Your AI-powered daily stand-up and operational partner for creative work.
+            Your AI-powered strategic and operational partner for creative work.
           </p>
           {error && (
             <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
@@ -417,8 +417,8 @@ function App() {
       <header className="bg-white/90 backdrop-blur-sm border-b px-6 py-4 shadow-sm" style={{borderColor: '#dafef4'}}>
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src="/opaime-logo01.png" alt="OpAime" className="h-8" />
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">OpAime</h1>
+            <img src="/okaimy-logo-01.png" alt="OkAimy" className="h-8" />
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">OkAimy</h1>
             {data.profile && (
               <p className="text-sm text-slate-600 ml-2">{data.profile.email}</p>
             )}
@@ -458,8 +458,8 @@ function App() {
             <div className="flex justify-center mb-8">
               <div className="w-64 h-64 rounded-full overflow-hidden shadow-2xl ring-8 ring-teal-200/70 ring-offset-8 ring-offset-white/80 hover:ring-teal-300/80 hover:scale-105 transition-all duration-500">
                 <img 
-                  src="/OpAime-pfp-01.png" 
-                  alt="Aime" 
+                  src="/okaimy-logo-01-avatar.png" 
+                  alt="Aimy" 
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     e.target.style.display = 'none';
@@ -469,10 +469,10 @@ function App() {
               </div>
             </div>
             <h3 className="text-3xl font-semibold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent mb-3">
-              Daily Stand-Up with Aime
+              Daily Stand-Up with Aimy
             </h3>
             <p className="text-slate-700 mb-6">
-              Let Aime analyze your messages and calendar to give you "The One Thing" to focus on today.
+              Let Aimy analyze your messages and calendar to give you "The One Thing" to focus on today.
             </p>
             <button
               onClick={handleGenerateStandup}
@@ -501,7 +501,7 @@ function App() {
           )}
         </div>
 
-        {/* Important Emails Section - Aime's Analysis */}
+        {/* Important Emails Section - Aimy's Analysis */}
         <div className="mb-8 rounded-2xl p-8 shadow-lg bg-white/95 backdrop-blur" style={{borderWidth: '1px', borderColor: '#dafef4'}}>
           <div className="flex items-center justify-between mb-6">
             <div>
@@ -509,7 +509,7 @@ function App() {
                 ⭐ Important Emails
               </h3>
               <p className="text-sm text-slate-600">
-                Let Aime identify emails that need your attention and action
+                Let Aimy identify emails that need your attention and action
               </p>
             </div>
             <button
@@ -591,7 +591,7 @@ function App() {
                           </div>
                           {item.reason && (
                             <div className="text-sm text-slate-700 bg-white/70 rounded p-2 mb-3">
-                              <span className="font-medium">Aime's insight:</span> {item.reason}
+                              <span className="font-medium">Aimy's insight:</span> {item.reason}
                             </div>
                           )}
                           
@@ -652,7 +652,7 @@ function App() {
                         <div className="mt-4 border-t pt-4" style={{borderColor: '#dafef4'}}>
                           <div className="bg-white rounded-lg p-4 shadow-sm">
                             <div className="flex items-center justify-between mb-3">
-                              <h4 className="font-semibold text-slate-900">📝 Draft Response from Aime</h4>
+                              <h4 className="font-semibold text-slate-900">📝 Draft Response from Aimy</h4>
                               <button
                                 onClick={() => {
                                   setDraftResponse(null);
@@ -712,7 +712,7 @@ function App() {
           {!emailAnalysis && (
             <div className="text-center py-8 text-slate-500">
               <div className="text-4xl mb-2">📧</div>
-              <div>Click "Analyze Emails" to let Aime find what's important</div>
+              <div>Click "Analyze Emails" to let Aimy find what's important</div>
             </div>
           )}
         </div>
@@ -964,7 +964,7 @@ function App() {
 
       {/* Settings Modal */}
       {showSettings && (
-        <AllySettings
+        <AimySettings
           userProfile={profile}
           aimeInsights={aimeInsights}
           onEdit={handleEditProfile}
