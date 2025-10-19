@@ -60,7 +60,7 @@ const OnboardingFlow = ({ userEmail, onComplete }) => {
           <div className="flex items-center gap-4 mb-4">
             <div className="w-16 h-16 rounded-full overflow-hidden shadow-lg ring-2 ring-teal-100">
               <img 
-                src="/okaimy-logo-01-avatar.png" 
+                src="/okaimy-pfp-01.png" 
                 alt="Aimy" 
                 className="w-full h-full object-cover"
                 onError={(e) => {

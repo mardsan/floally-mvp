@@ -458,7 +458,7 @@ function App() {
             <div className="flex justify-center mb-8">
               <div className="w-64 h-64 rounded-full overflow-hidden shadow-2xl ring-8 ring-teal-200/70 ring-offset-8 ring-offset-white/80 hover:ring-teal-300/80 hover:scale-105 transition-all duration-500">
                 <img 
-                  src="/okaimy-logo-01-avatar.png" 
+                  src="/okaimy-pfp-01.png" 
                   alt="Aimy" 
                   className="w-full h-full object-cover"
                   onError={(e) => {

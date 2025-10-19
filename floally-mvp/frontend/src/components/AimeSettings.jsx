@@ -36,7 +36,7 @@ const AimySettings = ({ userProfile, aimeInsights, onEdit, onClose }) => {
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full overflow-hidden shadow-md ring-2 ring-teal-100">
                 <img 
-                  src="/okaimy-logo-01-avatar.png" 
+                  src="/okaimy-pfp-01.png" 
                   alt="Aimy" 
                   className="w-full h-full object-cover"
                   onError={(e) => {
@@ -67,7 +67,7 @@ const AimySettings = ({ userProfile, aimeInsights, onEdit, onClose }) => {
             <div className="flex items-start gap-3 mb-3">
               <div className="w-10 h-10 rounded-full overflow-hidden shadow-sm ring-2 ring-white flex-shrink-0">
                 <img 
-                  src="/okaimy-logo-01-avatar.png" 
+                  src="/okaimy-pfp-01.png" 
                   alt="Aimy" 
                   className="w-full h-full object-cover"
                   onError={(e) => e.target.style.display = 'none'}
