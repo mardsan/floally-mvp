@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "==================================="
-echo "OpAime Vercel Deployment Script"
+echo "OkAimy Vercel Deployment Script"
 echo "==================================="
 echo ""
 echo "This script will:"
@@ -59,6 +59,6 @@ echo ""
 echo "Next steps:"
 echo "1. Visit your site and hard refresh (Ctrl+Shift+R)"
 echo "2. Check browser console - should show Railway URL"
-echo "3. Test features: Generate Stand-Up, Analyze Emails, Help Aime Learn"
+echo "3. Test features: Generate Stand-Up, Analyze Emails, Help Aimy Learn"
 echo "4. Complete onboarding to set your name!"
 echo ""
