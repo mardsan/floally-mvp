@@ -389,19 +389,17 @@ function App() {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #dafef4, #e8fef9, #d0fdf2)'}}>
         <div className="text-center max-w-md mx-auto p-8">
-          {/* Aimy's Avatar */}
-          <div className="flex justify-center mb-6">
-            <div className="w-32 h-32 rounded-full overflow-hidden shadow-2xl ring-4 ring-teal-200/70 ring-offset-4 ring-offset-white/80">
-              <img 
-                src="/okaimy-pfp-01.png" 
-                alt="Aimy" 
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                  e.target.parentElement.innerHTML = '<div class="w-full h-full bg-gradient-to-br from-teal-400 to-emerald-400 flex items-center justify-center text-white text-6xl font-bold">A</div>';
-                }}
-              />
-            </div>
+          {/* Aimy's Avatar - Full Image */}
+          <div className="flex justify-center mb-8">
+            <img 
+              src="/okaimy-pfp-01.png" 
+              alt="Aimy - Your AI Assistant" 
+              className="w-64 h-auto drop-shadow-2xl"
+              onError={(e) => {
+                console.error('Aimy avatar failed to load:', e.target.src);
+                e.target.style.display = 'none';
+              }}
+            />
           </div>
           
           {/* Logo */}
