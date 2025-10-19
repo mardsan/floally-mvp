@@ -389,7 +389,25 @@ function App() {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #dafef4, #e8fef9, #d0fdf2)'}}>
         <div className="text-center max-w-md mx-auto p-8">
-          <img src="/okaimy-logo-01.png" alt="OkAimy Logo" className="w-48 mx-auto mb-8" onError={(e) => {console.error('Logo failed to load:', e.target.src);}} />
+          {/* Aimy's Avatar */}
+          <div className="flex justify-center mb-6">
+            <div className="w-32 h-32 rounded-full overflow-hidden shadow-2xl ring-4 ring-teal-200/70 ring-offset-4 ring-offset-white/80">
+              <img 
+                src="/okaimy-pfp-01.png" 
+                alt="Aimy" 
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.parentElement.innerHTML = '<div class="w-full h-full bg-gradient-to-br from-teal-400 to-emerald-400 flex items-center justify-center text-white text-6xl font-bold">A</div>';
+                }}
+              />
+            </div>
+          </div>
+          
+          {/* Logo */}
+          <img src="/okaimy-logo-01.png" alt="OkAimy Logo" className="w-48 mx-auto mb-4" onError={(e) => {console.error('Logo failed to load:', e.target.src);}} />
+          
+          {/* Tagline */}
           <p className="text-lg text-slate-700 mb-8">
             Your AI-powered strategic and operational partner for creative work.
           </p>
