@@ -31,6 +31,10 @@ async def list_messages(max_results: int = 10, category: str = "primary"):
         # Leverage Gmail's native categorization system
         query_map = {
             'primary': 'category:primary',  # Only real people/contacts - Gmail's AI filtering
+            'social': 'category:social',  # Social networks
+            'promotions': 'category:promotions',  # Deals, offers, marketing
+            'updates': 'category:updates',  # Confirmations, receipts, bills
+            'forums': 'category:forums',  # Mailing lists, group discussions
             'important': 'is:important OR is:starred',  # Gmail-marked important or user-starred
             'starred': 'is:starred',  # User-starred emails only
             'all': 'in:inbox'  # All inbox emails (includes promotions, etc.)

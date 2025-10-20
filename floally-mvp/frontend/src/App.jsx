@@ -33,6 +33,9 @@ function App() {
   const [showProfileHub, setShowProfileHub] = useState(false);
   const [profile, setProfile] = useState(null);
   const [aimeInsights, setAimyInsights] = useState(null);
+  
+  // Gmail category filter
+  const [activeCategory, setActiveCategory] = useState('primary');
 
   // Debug info
   console.log('OkAimy App loaded - Version 1.3.0 - Built:', new Date().toISOString());
@@ -73,10 +76,11 @@ function App() {
     }
   };
 
-  const loadDashboardData = async () => {
+  const loadDashboardData = async (category = null) => {
     try {
+      const categoryToLoad = category || activeCategory;
       const [messagesRes, eventsRes, profileRes] = await Promise.all([
-        gmail.getMessages(30, 'primary'), // Use Gmail's AI to fetch only Primary category (contacts/real people)
+        gmail.getMessages(50, categoryToLoad), // Use Gmail's native category filtering
         calendar.getEvents(1),
         gmail.getProfile()
       ]);
@@ -762,13 +766,48 @@ function App() {
         <div className="grid md:grid-cols-2 gap-6">
           {/* Messages Card */}
           <div className="bg-white/95 backdrop-blur rounded-2xl shadow-lg p-6" style={{borderWidth: '1px', borderColor: '#dafef4'}}>
+            {/* Gmail Category Tabs */}
+            <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-2 border-b" style={{borderColor: '#dafef4'}}>
+              {[
+                { id: 'primary', label: '📧 Primary', icon: '👤' },
+                { id: 'social', label: '👥 Social', icon: '💬' },
+                { id: 'promotions', label: '🏷️ Promotions', icon: '📢' },
+                { id: 'updates', label: '📬 Updates', icon: '🔔' },
+                { id: 'forums', label: '💬 Forums', icon: '🗨️' }
+              ].map(cat => (
+                <button
+                  key={cat.id}
+                  onClick={async () => {
+                    setActiveCategory(cat.id);
+                    setLoading(true);
+                    try {
+                      const messagesRes = await gmail.getMessages(50, cat.id);
+                      setData(prev => ({ ...prev, messages: messagesRes.data.messages }));
+                    } catch (error) {
+                      console.error('Failed to load category:', error);
+                      setError(`Failed to load ${cat.label}`);
+                    } finally {
+                      setLoading(false);
+                    }
+                  }}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all whitespace-nowrap ${
+                    activeCategory === cat.id
+                      ? 'bg-teal-500 text-white shadow-md'
+                      : 'text-slate-600 hover:bg-teal-50'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-lg font-semibold text-slate-900">
-                  📨 Inbox ({data.messages.length})
+                  📨 {activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)} ({data.messages.length})
                 </h2>
                 <p className="text-xs text-slate-500 mt-1">
-                  Sorted by importance, then by date (newest first)
+                  Gmail's smart categorization • Sorted by importance, then date
                 </p>
               </div>
               <div className="flex items-center gap-2">
