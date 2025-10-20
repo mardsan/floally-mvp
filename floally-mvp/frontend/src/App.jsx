@@ -254,7 +254,12 @@ function App() {
     setError(null);
     try {
       console.log('Analyzing emails with Aimy...');
-      const response = await ai.analyzeEmails(data.messages);
+      
+      // Limit to first 10 emails to avoid timeouts
+      const emailsToAnalyze = data.messages.slice(0, 10);
+      console.log(`Analyzing ${emailsToAnalyze.length} most recent emails...`);
+      
+      const response = await ai.analyzeEmails(emailsToAnalyze);
       console.log('Email analysis complete:', response.data);
       
       // Validate response structure
@@ -266,7 +271,18 @@ function App() {
     } catch (error) {
       console.error('Failed to analyze emails:', error);
       console.error('Error response:', error.response);
-      setError(`Failed to analyze emails: ${error.response?.data?.detail || error.message}`);
+      
+      // Better error message
+      let errorMessage = 'Failed to analyze emails';
+      if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+        errorMessage = 'Analysis timed out. Try again with fewer emails.';
+      } else if (error.response?.data?.detail) {
+        errorMessage = error.response.data.detail;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      setError(errorMessage);
       setEmailAnalysis(null); // Reset on error
     } finally {
       setAnalyzingEmails(false);
@@ -535,7 +551,7 @@ function App() {
                 ⭐ Important Emails
               </h3>
               <p className="text-sm text-slate-600">
-                Let Aimy identify emails that need your attention and action
+                Let Aimy identify emails that need your attention and action (analyzes your 10 most recent emails)
               </p>
             </div>
             <button
@@ -543,7 +559,7 @@ function App() {
               disabled={analyzingEmails || data.messages.length === 0}
               className="px-6 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-full font-semibold hover:from-teal-600 hover:to-emerald-600 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {analyzingEmails ? '🔍 Analyzing...' : '🔍 Analyze Emails'}
+              {analyzingEmails ? '🔍 Analyzing...' : '🔍 Analyze Emails (10)'}
             </button>
           </div>
 
