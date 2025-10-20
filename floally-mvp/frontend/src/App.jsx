@@ -242,10 +242,20 @@ function App() {
     return score;
   };
 
-  // Sort and filter messages by importance
+  // Sort and filter messages by importance AND recency
   const getSortedMessages = () => {
     return [...data.messages].sort((a, b) => {
-      return getEmailImportanceScore(b) - getEmailImportanceScore(a);
+      // First sort by importance score
+      const scoreDiff = getEmailImportanceScore(b) - getEmailImportanceScore(a);
+      
+      // If importance is the same, sort by date (newest first)
+      if (scoreDiff === 0) {
+        const dateA = new Date(a.date || 0).getTime();
+        const dateB = new Date(b.date || 0).getTime();
+        return dateB - dateA;
+      }
+      
+      return scoreDiff;
     });
   };
 
@@ -765,20 +775,29 @@ function App() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-lg font-semibold text-slate-900">
-                  📨 Important Messages
+                  📨 Inbox ({data.messages.length})
                 </h2>
                 <p className="text-xs text-slate-500 mt-1">
-                  Sorted by priority: Starred, Important, Contacts first
+                  Sorted by importance, then by date (newest first)
                 </p>
               </div>
-              <a 
-                href="https://mail.google.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-xs text-teal-600 hover:text-teal-700 font-medium"
-              >
-                Open Gmail →
-              </a>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={loadDashboardData}
+                  className="px-3 py-1.5 text-xs text-teal-600 hover:bg-teal-50 rounded-lg transition-colors font-medium"
+                  title="Refresh emails"
+                >
+                  🔄 Refresh
+                </button>
+                <a 
+                  href="https://mail.google.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-xs text-teal-600 hover:text-teal-700 font-medium"
+                >
+                  Open Gmail →
+                </a>
+              </div>
             </div>
             <div className="space-y-3">
               {getSortedMessages().slice(0, displayedMessagesCount).map((msg) => {
