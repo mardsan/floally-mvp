@@ -62,4 +62,9 @@ export const profile = {
   getIntegrations: (userEmail) => api.get(`/api/user/integrations?user_email=${encodeURIComponent(userEmail)}`),
 };
 
+export const insights = {
+  getBehavioral: (userEmail) => api.get(`/api/insights/behavioral?user_email=${encodeURIComponent(userEmail)}`),
+  getOverview: (userEmail) => api.get(`/api/insights/overview?user_email=${encodeURIComponent(userEmail)}`),
+};
+
 export default api;

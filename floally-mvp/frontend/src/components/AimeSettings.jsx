@@ -1,6 +1,6 @@
 import React from 'react';
 
-const AimySettings = ({ userProfile, aimeInsights, onEdit, onClose }) => {
+const AimySettings = ({ userProfile, aimeInsights, onEdit, onClose, standalone = false }) => {
   if (!userProfile) return null;
 
   const priorityLabels = {
@@ -26,9 +26,8 @@ const AimySettings = ({ userProfile, aimeInsights, onEdit, onClose }) => {
     'casual_conversational': '💭 Casual'
   };
 
-  return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+  const content = (
+    <div className={standalone ? "" : "bg-white rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto"}>
         
         {/* Header */}
         <div className="p-8 border-b" style={{borderColor: '#dafef4', background: 'linear-gradient(to right, #dafef4, #e8fef9)'}}>
@@ -161,15 +160,26 @@ const AimySettings = ({ userProfile, aimeInsights, onEdit, onClose }) => {
         </div>
 
         {/* Footer */}
-        <div className="p-8 border-t" style={{borderColor: '#dafef4'}}>
-          <button
-            onClick={onClose}
-            className="w-full px-6 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-full font-semibold hover:from-teal-600 hover:to-emerald-600 transition-all shadow-md"
-          >
-            Done
-          </button>
-        </div>
+        {!standalone && (
+          <div className="p-8 border-t" style={{borderColor: '#dafef4'}}>
+            <button
+              onClick={onClose}
+              className="w-full px-6 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-full font-semibold hover:from-teal-600 hover:to-emerald-600 transition-all shadow-md"
+            >
+              Done
+            </button>
+          </div>
+        )}
       </div>
+  );
+
+  if (standalone) {
+    return content;
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      {content}
     </div>
   );
 };

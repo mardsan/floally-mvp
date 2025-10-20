@@ -5,6 +5,7 @@ import AimySettings from './components/AimeSettings';
 import EmailActions from './components/EmailActions';
 import EmailFeedback from './components/EmailFeedback';
 import Profile from './pages/Profile';
+import ProfileHub from './components/ProfileHub';
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -31,6 +32,7 @@ function App() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [showProfileHub, setShowProfileHub] = useState(false);
   const [profile, setProfile] = useState(null);
   const [aimeInsights, setAimyInsights] = useState(null);
 
@@ -449,6 +451,14 @@ function App() {
                 >
                   <span className="text-xl">👤</span>
                   <span className="text-sm font-medium">Profile</span>
+                </button>
+                <button
+                  onClick={() => setShowProfileHub(true)}
+                  className="flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
+                  title="Profile Hub"
+                >
+                  <span className="text-xl">🏠</span>
+                  <span className="text-sm font-medium">Hub</span>
                 </button>
                 <button
                   onClick={handleOpenSettings}
@@ -995,6 +1005,22 @@ function App() {
           onClose={() => setShowProfile(false)}
           onRefresh={loadDashboardData}
         />
+      )}
+
+      {/* Profile Hub - Full Screen */}
+      {showProfileHub && data.profile && (
+        <div className="fixed inset-0 z-50 bg-white">
+          <div className="absolute top-4 right-4">
+            <button
+              onClick={() => setShowProfileHub(false)}
+              className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg transition-colors flex items-center gap-2"
+            >
+              <span>✕</span>
+              <span>Close</span>
+            </button>
+          </div>
+          <ProfileHub userEmail={data.profile.email} />
+        </div>
       )}
     </div>
   );
