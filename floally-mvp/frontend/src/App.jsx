@@ -5,6 +5,7 @@ import AimySettings from './components/AimeSettings';
 import EmailActions from './components/EmailActions';
 import EmailFeedback from './components/EmailFeedback';
 import ProfileHub from './components/ProfileHub';
+import Standup from './components/Standup';
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -31,6 +32,7 @@ function App() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showProfileHub, setShowProfileHub] = useState(false);
+  const [showStandup, setShowStandup] = useState(false);
   const [profile, setProfile] = useState(null);
   const [aimeInsights, setAimyInsights] = useState(null);
   
@@ -472,6 +474,14 @@ function App() {
           <div className="flex items-center gap-4">
             {profile && profile.onboarding_completed && (
               <>
+                <button
+                  onClick={() => setShowStandup(true)}
+                  className="flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
+                  title="Daily Standup - Your command center"
+                >
+                  <span className="text-xl">🌅</span>
+                  <span className="text-sm font-medium">Standup</span>
+                </button>
                 <button
                   onClick={() => setShowProfileHub(true)}
                   className="flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
@@ -1059,6 +1069,14 @@ function App() {
           aimeInsights={aimeInsights}
           onEdit={handleEditProfile}
           onClose={handleCloseSettings}
+        />
+      )}
+
+      {/* Standup - Full Screen Daily Command Center */}
+      {showStandup && data.profile && (
+        <Standup
+          user={data.profile}
+          onClose={() => setShowStandup(false)}
         />
       )}
 
