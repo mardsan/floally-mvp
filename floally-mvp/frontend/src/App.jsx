@@ -4,7 +4,6 @@ import OnboardingFlow from './components/OnboardingFlow';
 import AimySettings from './components/AimeSettings';
 import EmailActions from './components/EmailActions';
 import EmailFeedback from './components/EmailFeedback';
-import Profile from './pages/Profile';
 import ProfileHub from './components/ProfileHub';
 
 function App() {
@@ -31,7 +30,6 @@ function App() {
   // New v1.2.0 state
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [showProfile, setShowProfile] = useState(false);
   const [showProfileHub, setShowProfileHub] = useState(false);
   const [profile, setProfile] = useState(null);
   const [aimeInsights, setAimyInsights] = useState(null);
@@ -471,20 +469,12 @@ function App() {
             {profile && profile.onboarding_completed && (
               <>
                 <button
-                  onClick={() => setShowProfile(true)}
+                  onClick={() => setShowProfileHub(true)}
                   className="flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
-                  title="Profile"
+                  title="Profile Hub - Your dashboard"
                 >
                   <span className="text-xl">👤</span>
                   <span className="text-sm font-medium">Profile</span>
-                </button>
-                <button
-                  onClick={() => setShowProfileHub(true)}
-                  className="flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
-                  title="Profile Hub"
-                >
-                  <span className="text-xl">🏠</span>
-                  <span className="text-sm font-medium">Hub</span>
                 </button>
                 <button
                   onClick={handleOpenSettings}
@@ -1033,16 +1023,7 @@ function App() {
         />
       )}
 
-      {/* Profile Modal */}
-      {showProfile && data.profile && (
-        <Profile
-          userEmail={data.profile.email}
-          onClose={() => setShowProfile(false)}
-          onRefresh={loadDashboardData}
-        />
-      )}
-
-      {/* Profile Hub - Full Screen */}
+      {/* Profile Hub - Full Screen (replaces old Profile modal) */}
       {showProfileHub && data.profile && (
         <div className="fixed inset-0 z-50 bg-white">
           <div className="absolute top-4 right-4">
