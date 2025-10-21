@@ -445,7 +445,7 @@ function App() {
                     e.target.parentNode.replaceChild(img, e.target);
                   }}
                 >
-                  <source src="/opaimy-video-loop-01.mp4" type="video/mp4" />
+                  <source src="/opaimy-video-loop-720-01.mp4" type="video/mp4" />
                   {/* Fallback for browsers that don't support video */}
                   <img 
                     src="/okaimy-static-01.png" 
