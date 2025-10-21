@@ -6,6 +6,7 @@ import EmailActions from './components/EmailActions';
 import EmailFeedback from './components/EmailFeedback';
 import ProfileHub from './components/ProfileHub';
 import Standup from './components/Standup';
+import StandupDashboard from './components/StandupDashboard';
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -32,7 +33,6 @@ function App() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showProfileHub, setShowProfileHub] = useState(false);
-  const [showStandup, setShowStandup] = useState(false);
   const [profile, setProfile] = useState(null);
   const [aimeInsights, setAimyInsights] = useState(null);
   
@@ -485,8 +485,8 @@ function App() {
 
   return (
     <div className="min-h-screen" style={{background: 'linear-gradient(to bottom right, #dafef4, #e8fef9, #f0fefb)'}}>
-      <header className="bg-white/90 backdrop-blur-sm border-b px-6 py-4 shadow-sm" style={{borderColor: '#dafef4'}}>
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
+      <header className="bg-white/90 backdrop-blur-sm border-b px-6 py-4 shadow-sm sticky top-0 z-40" style={{borderColor: '#dafef4'}}>
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img src="/okaimy-logo-01.png" alt="OkAimy" className="h-8" />
             <h1 className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">OkAimy</h1>
@@ -497,14 +497,6 @@ function App() {
           <div className="flex items-center gap-4">
             {profile && profile.onboarding_completed && (
               <>
-                <button
-                  onClick={() => setShowStandup(true)}
-                  className="flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
-                  title="Daily Standup - Your command center"
-                >
-                  <span className="text-xl">🌅</span>
-                  <span className="text-sm font-medium">Standup</span>
-                </button>
                 <button
                   onClick={() => setShowProfileHub(true)}
                   className="flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
@@ -530,8 +522,20 @@ function App() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-6 py-8">
-        {/* AI Stand-Up Section - TOP PRIORITY */}
+      <main className="max-w-7xl mx-auto px-6 py-8">
+        {/* MAIN DASHBOARD: Standup Split-View - Always Visible */}
+        <div className="mb-8">
+          <StandupDashboard 
+            user={data.profile} 
+            userAvatar={profile?.avatar_url}
+            userName={profile?.display_name || data.profile?.email}
+          />
+        </div>
+
+        {/* OLD SECTIONS BELOW - Will be accessible via dashboard links */}
+        {/* For now, hiding until we add proper routing/tabs */}
+        <div className="hidden">
+        {/* AI Stand-Up Section - OLD TEXT-BASED VERSION (replaced by visual dashboard above) */}
         <div className="mb-8 rounded-2xl p-8 shadow-lg" style={{background: 'linear-gradient(to right, #dafef4, #e8fef9, #d0fdf2)', borderWidth: '1px', borderColor: '#b8f5e8'}}>
           <div className="text-center mb-6">
             <div className="flex justify-center mb-8">
@@ -1075,6 +1079,7 @@ function App() {
             </div>
           </div>
         </div>
+        </div> {/* End hidden section */}
       </main>
 
       {/* Onboarding Modal */}
@@ -1092,14 +1097,6 @@ function App() {
           aimeInsights={aimeInsights}
           onEdit={handleEditProfile}
           onClose={handleCloseSettings}
-        />
-      )}
-
-      {/* Standup - Full Screen Daily Command Center */}
-      {showStandup && data.profile && (
-        <Standup
-          user={data.profile}
-          onClose={() => setShowStandup(false)}
         />
       )}
 
