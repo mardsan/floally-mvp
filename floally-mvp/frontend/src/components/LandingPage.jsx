@@ -98,9 +98,25 @@ function LandingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-emerald-50">
+      {/* Header with Logo */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+        <div className="flex justify-center">
+          <img 
+            src="/okaimy-logo-01.png" 
+            alt="OkAimy" 
+            className="h-12 md:h-16 w-auto"
+          />
+        </div>
+      </div>
+
       {/* Hero Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-16">
         <div className="text-center mb-16">
+          {/* Meet Aimy Header */}
+          <h2 className="text-2xl md:text-3xl text-gray-600 mb-6 font-light">
+            Meet Aimy
+          </h2>
+
           {/* Animated Aimy - Larger size for emotional impact */}
           <div className="mb-8 flex justify-center">
             <div className="relative">
@@ -123,21 +139,22 @@ function LandingPage() {
                 alt="Aimy"
                 className="hidden w-64 h-64 md:w-72 md:h-72 rounded-full object-cover shadow-2xl"
               />
+```
             </div>
           </div>
 
-          {/* Headline */}
+          {/* Headline - Aimy speaking */}
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
             Stay in flow.
             <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-emerald-600">
-              Let Aimy handle the rest.
+              Let me handle the rest.
             </span>
           </h1>
 
           {/* Subheadline */}
           <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto">
-            Your AI partner for focusing on what matters while keeping everything else running smoothly.
+            I'm your AI partner for focusing on what matters while keeping everything else running smoothly.
           </p>
 
           {/* CTA */}
