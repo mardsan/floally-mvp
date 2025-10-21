@@ -429,16 +429,30 @@ function App() {
               
               {/* Avatar container */}
               <div className="relative w-64 h-64 rounded-full overflow-hidden shadow-2xl ring-4 ring-teal-300 ring-opacity-60 bg-white">
-                <img 
-                  src="/okaimy-loop-medium-01.gif" 
-                  alt="Aimy - Your AI Assistant" 
+                <video 
+                  autoPlay 
+                  loop 
+                  muted 
+                  playsInline
                   className="w-full h-full object-cover"
-                  loading="eager"
                   onError={(e) => {
-                    console.error('Medium GIF failed to load, trying static fallback:', e.target.src);
-                    e.target.src = '/okaimy-static-01.png';
+                    console.error('Video failed to load, switching to static fallback');
+                    // Replace video with image fallback
+                    const img = document.createElement('img');
+                    img.src = '/okaimy-static-01.png';
+                    img.alt = 'Aimy - Your AI Assistant';
+                    img.className = 'w-full h-full object-cover';
+                    e.target.parentNode.replaceChild(img, e.target);
                   }}
-                />
+                >
+                  <source src="/opaimy-video-loop-01.mp4" type="video/mp4" />
+                  {/* Fallback for browsers that don't support video */}
+                  <img 
+                    src="/okaimy-static-01.png" 
+                    alt="Aimy - Your AI Assistant" 
+                    className="w-full h-full object-cover"
+                  />
+                </video>
               </div>
             </div>
           </div>
