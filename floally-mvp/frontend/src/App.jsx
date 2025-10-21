@@ -7,8 +7,19 @@ import EmailFeedback from './components/EmailFeedback';
 import ProfileHub from './components/ProfileHub';
 import Standup from './components/Standup';
 import StandupDashboard from './components/StandupDashboard';
+import LandingPage from './components/LandingPage';
 
 function App() {
+  // Check if we should show landing page (for waitlist mode)
+  const showLandingPage = window.location.pathname === '/waitlist' || 
+                          window.location.hostname === 'okaimy.com' ||
+                          window.location.hostname === 'www.okaimy.com';
+  
+  // If landing page mode, render that and exit early
+  if (showLandingPage) {
+    return <LandingPage />;
+  }
+  
   const [authenticated, setAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
