@@ -14,8 +14,10 @@ function LandingPage() {
     setError('');
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app';
-      const response = await fetch(`${apiUrl}/api/waitlist/signup`, {
+      // Try Vercel serverless function first (always available)
+      const vercelEndpoint = '/api/waitlist';
+      
+      const response = await fetch(vercelEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
