@@ -1,5 +1,7 @@
 // Vercel Serverless Function for Waitlist Signups
-// This bypasses Railway backend which is currently unstable
+// Uses Vercel KV (Redis) for permanent storage
+
+import { kv } from '@vercel/kv';
 
 export default async function handler(req, res) {
   // CORS headers for okaimy.com
@@ -33,48 +35,76 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Invalid email format' });
     }
     
-    // For now, we'll use Vercel's edge config or KV storage
-    // As a simple fallback, we can log to Vercel logs and send to a webhook
-    
-    // Log signup for Vercel logs (you can view these in Vercel dashboard)
-    console.log('WAITLIST_SIGNUP:', JSON.stringify({
+    // Create signup object with metadata
+    const signupData = {
       email,
       name,
       struggle,
       timestamp: timestamp || new Date().toISOString(),
-      source: 'vercel_serverless',
+      source: 'okaimy.com',
       ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
-      userAgent: req.headers['user-agent']
-    }));
+      userAgent: req.headers['user-agent'],
+      signupId: `signup_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+    };
     
-    // Send to Google Sheets (if configured)
-    // To enable: Set GOOGLE_SHEET_URL env var in Vercel dashboard
-    // Instructions: https://github.com/jamiewilson/form-to-google-sheets
-    const sheetUrl = process.env.GOOGLE_SHEET_URL;
-    if (sheetUrl) {
-      try {
-        const formData = new URLSearchParams({
-          Email: email,
-          Name: name,
-          Struggle: struggle,
-          Timestamp: timestamp || new Date().toISOString()
-        });
-        
-        await fetch(sheetUrl, {
-          method: 'POST',
-          body: formData,
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        });
-        
-        console.log('✅ Sent to Google Sheets');
-      } catch (sheetError) {
-        console.error('Google Sheets error:', sheetError);
-        // Don't fail the signup if sheets fails
+    // Store in Vercel KV (Redis)
+    try {
+      // Add to waitlist set with email as score (for uniqueness)
+      await kv.zadd('waitlist:signups', {
+        score: Date.now(),
+        member: signupData.signupId
+      });
+      
+      // Store full signup data
+      await kv.hset(`waitlist:signup:${signupData.signupId}`, signupData);
+      
+      // Keep email index for duplicate checking
+      await kv.set(`waitlist:email:${email.toLowerCase()}`, signupData.signupId);
+      
+      // Increment total count
+      const totalSignups = await kv.incr('waitlist:total');
+      
+      console.log(`✅ Stored signup ${signupData.signupId} (Total: ${totalSignups})`);
+      
+      // Also send to Google Sheets if configured (as backup)
+      const sheetUrl = process.env.GOOGLE_SHEET_URL;
+      if (sheetUrl) {
+        try {
+          const formData = new URLSearchParams({
+            Email: email,
+            Name: name,
+            Struggle: struggle,
+            Timestamp: signupData.timestamp
+          });
+          
+          await fetch(sheetUrl, {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }
+          });
+          
+          console.log('✅ Backup sent to Google Sheets');
+        } catch (sheetError) {
+          console.error('Google Sheets backup error:', sheetError);
+        }
       }
-    } else {
-      console.log('ℹ️ Google Sheets not configured (set GOOGLE_SHEET_URL env var)');
+      
+    } catch (kvError) {
+      console.error('Vercel KV storage error:', kvError);
+      // Log to console as fallback
+      console.log('WAITLIST_SIGNUP_FALLBACK:', JSON.stringify(signupData));
+      // Don't fail the request - still return success to user
+    }
+    
+    // Get total signups for position
+    let position = 'tracked';
+    try {
+      const total = await kv.get('waitlist:total');
+      position = total || 1;
+    } catch (e) {
+      console.error('Error getting position:', e);
     }
     
     // Return success
@@ -82,8 +112,8 @@ export default async function handler(req, res) {
       success: true,
       message: `Welcome to the waitlist, ${name}!`,
       email: email,
-      position: 'tracked',
-      note: 'Signup recorded! You can view in Vercel logs or set up email notifications.'
+      position: position,
+      note: `You're signup #${position} for early access to OkAimy!`
     });
     
   } catch (error) {
