@@ -461,8 +461,11 @@ function App() {
           <img src="/okaimy-logo-01.png" alt="OkAimy Logo" className="w-48 mx-auto mb-4" onError={(e) => {console.error('Logo failed to load:', e.target.src);}} />
           
           {/* Tagline */}
-          <p className="text-lg text-slate-700 mb-8">
-            Your AI-powered strategic and operational partner for creative work.
+          <p className="text-xl text-slate-700 mb-2 font-semibold">
+            Stay in flow. Never drop the ball.
+          </p>
+          <p className="text-base text-slate-600 mb-8">
+            Your AI partner for focusing on what matters while keeping everything else running smoothly.
           </p>
           {error && (
             <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
