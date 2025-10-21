@@ -14,7 +14,8 @@ function LandingPage() {
     setError('');
 
     try {
-      const response = await fetch('/api/waitlist/signup', {
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app';
+      const response = await fetch(`${apiUrl}/api/waitlist/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
