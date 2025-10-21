@@ -421,17 +421,26 @@ function App() {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #dafef4, #e8fef9, #d0fdf2)'}}>
         <div className="text-center max-w-md mx-auto p-8">
-          {/* Aimy's Avatar - Full Image */}
+          {/* Aimy's Animated Avatar - Circular Frame with Glow */}
           <div className="flex justify-center mb-8">
-            <img 
-              src="/okaimy-pfp-01.png" 
-              alt="Aimy - Your AI Assistant" 
-              className="w-64 h-auto drop-shadow-2xl"
-              onError={(e) => {
-                console.error('Aimy avatar failed to load:', e.target.src);
-                e.target.style.display = 'none';
-              }}
-            />
+            <div className="relative">
+              {/* Animated glow ring */}
+              <div className="absolute inset-0 w-64 h-64 rounded-full bg-gradient-to-r from-teal-300 to-emerald-300 opacity-30 blur-xl animate-pulse"></div>
+              
+              {/* Avatar container */}
+              <div className="relative w-64 h-64 rounded-full overflow-hidden shadow-2xl ring-4 ring-teal-300 ring-opacity-60 bg-white">
+                <img 
+                  src="/okaimy-loop-medium-01.gif" 
+                  alt="Aimy - Your AI Assistant" 
+                  className="w-full h-full object-cover"
+                  loading="eager"
+                  onError={(e) => {
+                    console.error('Medium GIF failed to load, trying static fallback:', e.target.src);
+                    e.target.src = '/okaimy-static-01.png';
+                  }}
+                />
+              </div>
+            </div>
           </div>
           
           {/* Logo */}
