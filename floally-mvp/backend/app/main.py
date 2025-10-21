@@ -35,14 +35,20 @@ app = FastAPI(
     version="1.3.0"
 )
 
-# CORS configuration - Allow all origins for development/production
-# In production, you may want to restrict this to specific domains
-allowed_origins = os.getenv("ALLOWED_ORIGINS", "*").split(",")
+# CORS configuration - Explicitly allow landing page domains
+# Allow all origins for now to ensure waitlist works
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"] if "*" in allowed_origins else allowed_origins,
-    allow_credentials=False,
-    allow_methods=["*"],
+    allow_origins=[
+        "https://okaimy.com",
+        "https://www.okaimy.com",
+        "https://floally-mvp.vercel.app",
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "*"  # Fallback to allow all
+    ],
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
     expose_headers=["*"],
 )

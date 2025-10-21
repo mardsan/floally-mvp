@@ -101,12 +101,12 @@ function LandingPage() {
       {/* Hero Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
         <div className="text-center mb-16">
-          {/* Animated Aimy */}
+          {/* Animated Aimy - Larger size for emotional impact */}
           <div className="mb-8 flex justify-center">
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-teal-400 to-emerald-400 rounded-full opacity-20 animate-pulse blur-xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-teal-400 to-emerald-400 rounded-full opacity-20 animate-pulse blur-2xl"></div>
               <video
-                className="relative w-32 h-32 rounded-full object-cover shadow-2xl"
+                className="relative w-64 h-64 md:w-72 md:h-72 rounded-full object-cover shadow-2xl"
                 autoPlay
                 loop
                 muted
@@ -121,7 +121,7 @@ function LandingPage() {
               <img
                 src="/okaimy-static-01.png"
                 alt="Aimy"
-                className="hidden w-32 h-32 rounded-full object-cover shadow-2xl"
+                className="hidden w-64 h-64 md:w-72 md:h-72 rounded-full object-cover shadow-2xl"
               />
             </div>
           </div>
