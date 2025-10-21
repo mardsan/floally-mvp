@@ -131,7 +131,7 @@ function LandingPage() {
             Stay in flow.
             <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-emerald-600">
-              Never drop the ball.
+              Let Aimy handle the rest.
             </span>
           </h1>
 
@@ -177,12 +177,12 @@ function LandingPage() {
                   required
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent text-gray-700"
                 >
-                  <option value="">What do you struggle with most?</option>
-                  <option value="too_many_emails">Too many emails to manage</option>
-                  <option value="losing_track">Losing track of projects</option>
-                  <option value="context_switching">Constant context switching</option>
-                  <option value="priorities">Unclear priorities</option>
-                  <option value="follow_up">Forgetting to follow up</option>
+                  <option value="">How can Aimy help you most?</option>
+                  <option value="too_many_emails">Managing my inbox</option>
+                  <option value="losing_track">Keeping track of projects</option>
+                  <option value="context_switching">Reducing context switching</option>
+                  <option value="priorities">Clarifying priorities</option>
+                  <option value="follow_up">Remembering to follow up</option>
                   <option value="other">Something else</option>
                 </select>
               </div>
