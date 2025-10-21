@@ -47,12 +47,35 @@ export default async function handler(req, res) {
       userAgent: req.headers['user-agent']
     }));
     
-    // TODO: Send to a spreadsheet, Airtable, or email service
-    // For production, integrate with:
-    // - Vercel KV: await kv.lpush('waitlist', { email, name, struggle, timestamp })
-    // - EmailOctopus API
-    // - Google Sheets API
-    // - Airtable API
+    // Send to Google Sheets (if configured)
+    // To enable: Set GOOGLE_SHEET_URL env var in Vercel dashboard
+    // Instructions: https://github.com/jamiewilson/form-to-google-sheets
+    const sheetUrl = process.env.GOOGLE_SHEET_URL;
+    if (sheetUrl) {
+      try {
+        const formData = new URLSearchParams({
+          Email: email,
+          Name: name,
+          Struggle: struggle,
+          Timestamp: timestamp || new Date().toISOString()
+        });
+        
+        await fetch(sheetUrl, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        });
+        
+        console.log('✅ Sent to Google Sheets');
+      } catch (sheetError) {
+        console.error('Google Sheets error:', sheetError);
+        // Don't fail the signup if sheets fails
+      }
+    } else {
+      console.log('ℹ️ Google Sheets not configured (set GOOGLE_SHEET_URL env var)');
+    }
     
     // Return success
     return res.status(200).json({
@@ -60,7 +83,7 @@ export default async function handler(req, res) {
       message: `Welcome to the waitlist, ${name}!`,
       email: email,
       position: 'tracked',
-      note: 'Check Vercel deployment logs to see signups'
+      note: 'Signup recorded! You can view in Vercel logs or set up email notifications.'
     });
     
   } catch (error) {
