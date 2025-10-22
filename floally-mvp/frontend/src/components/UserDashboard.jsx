@@ -207,107 +207,142 @@ function UserDashboard({ user, onLogout }) {
           </div>
         )}
 
-        {/* Coming Soon Banner */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-8 text-center">
-          <div className="text-6xl mb-4">🚧</div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Dashboard Coming Soon!
-          </h2>
-          <p className="text-gray-600 mb-6">
-            We're building something amazing for you. Soon you'll be able to:
-          </p>
-          <div className="grid md:grid-cols-3 gap-6 text-left max-w-4xl mx-auto">
-            <div className="bg-gradient-to-br from-teal-50 to-emerald-50 rounded-lg p-6">
-              <div className="text-3xl mb-3">📧</div>
-              <h3 className="font-semibold text-gray-900 mb-2">Smart Email Management</h3>
-              <p className="text-sm text-gray-600">
-                Connect your Gmail and let Aimy prioritize what matters most
-              </p>
-            </div>
-            <div className="bg-gradient-to-br from-teal-50 to-emerald-50 rounded-lg p-6">
-              <div className="text-3xl mb-3">🎯</div>
-              <h3 className="font-semibold text-gray-900 mb-2">Daily Standup</h3>
-              <p className="text-sm text-gray-600">
-                Get "The One Thing" to focus on each day from AI analysis
-              </p>
-            </div>
-            <div className="bg-gradient-to-br from-teal-50 to-emerald-50 rounded-lg p-6">
-              <div className="text-3xl mb-3">📊</div>
-              <h3 className="font-semibold text-gray-900 mb-2">Project Tracking</h3>
-              <p className="text-sm text-gray-600">
-                Organize work by projects and never miss a deadline
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Simple Projects Demo */}
+        {/* Projects Section */}
         <div className="bg-white rounded-lg shadow-lg p-8">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-xl font-semibold text-gray-900">Your Projects</h3>
+              <h3 className="text-2xl font-semibold text-gray-900">Your Projects</h3>
               <p className="text-sm text-gray-500 mt-1">
-                Demo: Create projects (stored locally for now)
+                Define projects so Aimy can organize your work and provide contextual assistance
               </p>
             </div>
             <button
-              onClick={() => setShowAddProject(true)}
-              className="px-4 py-2 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-lg hover:from-teal-600 hover:to-emerald-600 transition-all shadow-md"
+              onClick={handleCreateProject}
+              className="px-6 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-lg hover:from-teal-600 hover:to-emerald-600 transition-all shadow-md font-semibold"
             >
               + New Project
             </button>
           </div>
 
-          {showAddProject && (
-            <div className="mb-6 bg-gray-50 rounded-lg p-4">
-              <div className="flex gap-3">
-                <input
-                  type="text"
-                  value={newProjectName}
-                  onChange={(e) => setNewProjectName(e.target.value)}
-                  placeholder="Project name..."
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                  autoFocus
-                  onKeyPress={(e) => e.key === 'Enter' && handleAddProject()}
-                />
-                <button
-                  onClick={handleAddProject}
-                  className="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
-                >
-                  Add
-                </button>
-                <button
-                  onClick={() => {
-                    setShowAddProject(false);
-                    setNewProjectName('');
-                  }}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          )}
-
-          {projects.length === 0 ? (
+          {projectsLoading ? (
             <div className="text-center py-12 text-gray-500">
-              <div className="text-4xl mb-3">📁</div>
-              <p>No projects yet. Create your first one!</p>
+              <div className="animate-spin text-4xl mb-3">⚙️</div>
+              <p>Loading projects...</p>
+            </div>
+          ) : projects.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="text-6xl mb-4">🚀</div>
+              <h4 className="text-xl font-semibold text-gray-900 mb-2">
+                Create your first project
+              </h4>
+              <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                Projects help Aimy understand your work and provide smarter assistance by
+                categorizing emails, meetings, and tasks.
+              </p>
+              <button
+                onClick={handleCreateProject}
+                className="px-8 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-lg hover:from-teal-600 hover:to-emerald-600 transition-all shadow-md font-semibold"
+              >
+                Get Started →
+              </button>
             </div>
           ) : (
             <div className="grid md:grid-cols-2 gap-4">
               {projects.map(project => (
-                <div key={project.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                  <h4 className="font-semibold text-gray-900 mb-2">{project.name}</h4>
-                  <p className="text-xs text-gray-500">
-                    Created {new Date(project.createdAt).toLocaleDateString()}
-                  </p>
+                <div
+                  key={project.id}
+                  className="border-2 border-gray-200 rounded-lg p-6 hover:border-teal-300 hover:shadow-md transition-all"
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <h4 className="font-bold text-lg text-gray-900">{project.name}</h4>
+                        {project.priority === 'critical' && <span className="text-red-500">🔴</span>}
+                        {project.priority === 'high' && <span className="text-orange-500">🟠</span>}
+                        {project.priority === 'medium' && <span className="text-yellow-500">🟡</span>}
+                        {project.priority === 'low' && <span className="text-green-500">🟢</span>}
+                      </div>
+                      {project.description && (
+                        <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+                          {project.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {project.deadline && (
+                    <div className="text-sm text-gray-600 mb-3">
+                      📅 Due: {new Date(project.deadline).toLocaleDateString()}
+                    </div>
+                  )}
+
+                  {project.goals && project.goals.length > 0 && (
+                    <div className="mb-3">
+                      <div className="text-xs font-semibold text-gray-500 uppercase mb-2">Goals</div>
+                      <ul className="space-y-1">
+                        {project.goals.slice(0, 2).map((goal, idx) => (
+                          <li key={idx} className="text-sm text-gray-700 flex items-start gap-2">
+                            <span>•</span>
+                            <span className="line-clamp-1">{goal}</span>
+                          </li>
+                        ))}
+                        {project.goals.length > 2 && (
+                          <li className="text-xs text-gray-500">
+                            +{project.goals.length - 2} more
+                          </li>
+                        )}
+                      </ul>
+                    </div>
+                  )}
+
+                  {project.keywords && project.keywords.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {project.keywords.slice(0, 3).map((keyword, idx) => (
+                        <span
+                          key={idx}
+                          className="text-xs px-2 py-1 bg-teal-50 text-teal-700 rounded-full"
+                        >
+                          {keyword}
+                        </span>
+                      ))}
+                      {project.keywords.length > 3 && (
+                        <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">
+                          +{project.keywords.length - 3}
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="flex gap-2 pt-4 border-t">
+                    <button
+                      onClick={() => handleEditProject(project)}
+                      className="flex-1 px-4 py-2 text-sm text-teal-600 hover:bg-teal-50 rounded-lg transition-colors font-medium"
+                    >
+                      ✏️ Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteProject(project.id)}
+                      className="flex-1 px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium"
+                    >
+                      🗑️ Delete
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
           )}
         </div>
       </main>
+
+      {/* Project Creation Modal */}
+      {showProjectModal && (
+        <ProjectCreationModal
+          user={user}
+          existingProject={editingProject}
+          onClose={() => setShowProjectModal(false)}
+          onProjectCreated={handleProjectCreated}
+        />
+      )}
     </div>
   );
 }
