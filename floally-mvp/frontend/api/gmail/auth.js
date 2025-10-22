@@ -15,7 +15,14 @@ export default async function handler(req, res) {
   
   // Google OAuth configuration
   const clientId = process.env.GOOGLE_CLIENT_ID;
-  const redirectUri = `${process.env.VERCEL_URL || 'https://okaimy.com'}/api/gmail/callback`;
+  
+  // Build redirect URI - handle VERCEL_URL which doesn't include protocol
+  let redirectUri;
+  if (process.env.VERCEL_URL) {
+    redirectUri = `https://${process.env.VERCEL_URL}/api/gmail/callback`;
+  } else {
+    redirectUri = 'https://okaimy.com/api/gmail/callback';
+  }
   
   if (!clientId) {
     return res.status(500).json({ 
