@@ -44,6 +44,31 @@ function WaitlistAdmin() {
     window.location.href = '/api/waitlist-export?secret=okaimy_export_2024_secure&format=csv';
   };
 
+  const handleDelete = async (signupId, email) => {
+    if (!window.confirm(`Are you sure you want to delete ${email} from the waitlist?`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/waitlist-delete?secret=okaimy_export_2024_secure&signupId=${signupId}`, {
+        method: 'DELETE'
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Remove from local state
+        setSignups(signups.filter(s => s.signupId !== signupId));
+        setTotal(total - 1);
+        alert('✅ Signup deleted successfully!');
+      } else {
+        alert('❌ Failed to delete: ' + (data.message || 'Unknown error'));
+      }
+    } catch (err) {
+      alert('❌ Error deleting signup: ' + err.message);
+    }
+  };
+
   const formatDate = (timestamp) => {
     return new Date(timestamp).toLocaleString('en-US', {
       month: 'short',
@@ -152,12 +177,13 @@ function WaitlistAdmin() {
                     <th className="text-left py-3 px-4 font-semibold text-gray-700">Email</th>
                     <th className="text-left py-3 px-4 font-semibold text-gray-700">Main Struggle</th>
                     <th className="text-left py-3 px-4 font-semibold text-gray-700">Signed Up</th>
+                    <th className="text-right py-3 px-4 font-semibold text-gray-700">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {signups.length === 0 ? (
                     <tr>
-                      <td colSpan="5" className="text-center py-8 text-gray-500">
+                      <td colSpan="6" className="text-center py-8 text-gray-500">
                         No signups yet
                       </td>
                     </tr>
@@ -180,6 +206,15 @@ function WaitlistAdmin() {
                         </td>
                         <td className="py-3 px-4 text-gray-600 text-sm">
                           {formatDate(signup.timestamp)}
+                        </td>
+                        <td className="py-3 px-4 text-right">
+                          <button
+                            onClick={() => handleDelete(signup.signupId, signup.email)}
+                            className="px-3 py-1 bg-red-50 text-red-600 text-sm rounded-lg hover:bg-red-100 transition-colors border border-red-200"
+                            title="Delete this signup"
+                          >
+                            🗑️ Delete
+                          </button>
                         </td>
                       </tr>
                     ))
