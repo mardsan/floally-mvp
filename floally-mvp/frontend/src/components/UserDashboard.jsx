@@ -1,13 +1,23 @@
 import { useState, useEffect } from 'react';
+import OnboardingFlow from './OnboardingFlow';
+import ProjectCreationModal from './ProjectCreationModal';
 
 function UserDashboard({ user, onLogout }) {
   const [projects, setProjects] = useState([]);
-  const [showAddProject, setShowAddProject] = useState(false);
-  const [newProjectName, setNewProjectName] = useState('');
   const [googleConnected, setGoogleConnected] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(true);
   const [hasGmail, setHasGmail] = useState(false);
   const [hasCalendar, setHasCalendar] = useState(false);
+  
+  // Onboarding state
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [profileCompleted, setProfileCompleted] = useState(false);
+  const [profileLoading, setProfileLoading] = useState(true);
+  
+  // Project modal state
+  const [showProjectModal, setShowProjectModal] = useState(false);
+  const [editingProject, setEditingProject] = useState(null);
+  const [projectsLoading, setProjectsLoading] = useState(true);
 
   useEffect(() => {
     // Check Google services connection status
@@ -25,7 +35,38 @@ function UserDashboard({ user, onLogout }) {
       }
     };
 
+    // Check if profile/onboarding is completed
+    const checkProfile = async () => {
+      try {
+        const response = await fetch(`/api/profile/onboarding?userId=${user.userId}`);
+        const data = await response.json();
+        setProfileCompleted(data.exists);
+        if (!data.exists) {
+          setShowOnboarding(true);
+        }
+      } catch (error) {
+        console.error('Failed to check profile:', error);
+      } finally {
+        setProfileLoading(false);
+      }
+    };
+
+    // Load user's projects
+    const loadProjects = async () => {
+      try {
+        const response = await fetch(`/api/projects/manage?userId=${user.userId}`);
+        const data = await response.json();
+        setProjects(data.projects || []);
+      } catch (error) {
+        console.error('Failed to load projects:', error);
+      } finally {
+        setProjectsLoading(false);
+      }
+    };
+
     checkGoogleStatus();
+    checkProfile();
+    loadProjects();
 
     // Check for OAuth callback
     const params = new URLSearchParams(window.location.search);
@@ -39,26 +80,57 @@ function UserDashboard({ user, onLogout }) {
     }
   }, [user.userId]);
 
-  const handleAddProject = () => {
-    if (newProjectName.trim()) {
-      setProjects([...projects, {
-        id: Date.now(),
-        name: newProjectName,
-        createdAt: new Date().toISOString(),
-        tasks: []
-      }]);
-      setNewProjectName('');
-      setShowAddProject(false);
-    }
-  };
-
-  const handleConnectGmail = () => {
-    window.location.href = `/api/gmail/auth?userId=${user.userId}`;
+  const handleOnboardingComplete = async (profile) => {
+    setShowOnboarding(false);
+    setProfileCompleted(true);
   };
 
   const handleConnectGoogle = () => {
     window.location.href = `/api/gmail/auth?userId=${user.userId}`;
   };
+
+  const handleCreateProject = () => {
+    setEditingProject(null);
+    setShowProjectModal(true);
+  };
+
+  const handleEditProject = (project) => {
+    setEditingProject(project);
+    setShowProjectModal(true);
+  };
+
+  const handleProjectCreated = (project) => {
+    if (editingProject) {
+      // Update existing project
+      setProjects(projects.map(p => p.id === editingProject.id ? { ...editingProject, ...project } : p));
+    } else {
+      // Add new project
+      setProjects([project, ...projects]);
+    }
+  };
+
+  const handleDeleteProject = async (projectId) => {
+    if (!confirm('Are you sure you want to delete this project?')) return;
+
+    try {
+      const response = await fetch(`/api/projects/manage?userId=${user.userId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectId })
+      });
+
+      if (response.ok) {
+        setProjects(projects.filter(p => p.id !== projectId));
+      }
+    } catch (error) {
+      console.error('Failed to delete project:', error);
+    }
+  };
+
+  // Show onboarding if not completed
+  if (showOnboarding && !profileLoading) {
+    return <OnboardingFlow userEmail={user.email} onComplete={handleOnboardingComplete} />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-emerald-50">
