@@ -7,6 +7,8 @@ function LandingPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const [signupPosition, setSignupPosition] = useState(null);
+  const [signupNote, setSignupNote] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,6 +36,9 @@ function LandingPage() {
         throw new Error('Failed to join waitlist');
       }
 
+      const data = await response.json();
+      setSignupPosition(data.position);
+      setSignupNote(data.note || '');
       setSubmitted(true);
       // Track conversion
       if (window.gtag) {
@@ -62,6 +67,11 @@ function LandingPage() {
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             You're on the list!
           </h1>
+          {signupNote && (
+            <p className="text-2xl font-semibold text-teal-600 mb-4">
+              {signupNote}
+            </p>
+          )}
           <p className="text-xl text-gray-600 mb-8">
             Thanks {name}! We'll email you at <strong>{email}</strong> when early access opens.
           </p>

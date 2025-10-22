@@ -8,8 +8,14 @@ import ProfileHub from './components/ProfileHub';
 import Standup from './components/Standup';
 import StandupDashboard from './components/StandupDashboard';
 import LandingPage from './components/LandingPage';
+import WaitlistAdmin from './components/WaitlistAdmin';
 
 function App() {
+  // Check if we should show admin page
+  if (window.location.pathname === '/admin' || window.location.pathname === '/waitlist-admin') {
+    return <WaitlistAdmin />;
+  }
+  
   // Check if we should show landing page (for waitlist mode)
   const showLandingPage = window.location.pathname === '/waitlist' || 
                           window.location.hostname === 'okaimy.com' ||
