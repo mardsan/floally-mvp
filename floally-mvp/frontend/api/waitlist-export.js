@@ -1,14 +1,30 @@
 /**
  * Vercel Serverless Function - Waitlist Export
  * 
- * Exports all waitlist signups from Vercel KV storage
+ * Exports all waitlist signups from Redis storage
  * Protected by secret token in query parameter
  * 
  * Usage: /api/waitlist-export?secret=YOUR_SECRET
  * Set EXPORT_SECRET env var in Vercel dashboard
  */
 
-import { kv } from '@vercel/kv';
+import { createClient } from 'redis';
+
+// Create Redis client (reuse connection across invocations)
+let redisClient = null;
+
+async function getRedisClient() {
+  if (!redisClient) {
+    const redisUrl = process.env.KV_URL || process.env.REDIS_URL;
+    if (!redisUrl) {
+      throw new Error('Redis URL not configured');
+    }
+    
+    redisClient = createClient({ url: redisUrl });
+    await redisClient.connect();
+  }
+  return redisClient;
+}
 
 export default async function handler(req, res) {
   // CORS
@@ -36,17 +52,20 @@ export default async function handler(req, res) {
   }
   
   try {
+    const redis = await getRedisClient();
+    
     // Get total count
-    const total = await kv.get('waitlist:total') || 0;
+    const total = await redis.get('waitlist:total');
+    const totalCount = parseInt(total) || 0;
     
     // Get all signup IDs (sorted by timestamp)
-    const signupIds = await kv.zrange('waitlist:signups', 0, -1);
+    const signupIds = await redis.zRange('waitlist:signups', 0, -1);
     
     // Fetch all signup data
     const signups = [];
     for (const signupId of signupIds) {
-      const data = await kv.hgetall(`waitlist:signup:${signupId}`);
-      if (data) {
+      const data = await redis.hGetAll(`waitlist:signup:${signupId}`);
+      if (data && Object.keys(data).length > 0) {
         signups.push(data);
       }
     }
@@ -59,10 +78,10 @@ export default async function handler(req, res) {
       // Generate CSV
       const headers = ['Email', 'Name', 'Struggle', 'Timestamp', 'Source', 'IP'];
       const rows = signups.map(s => [
-        s.email,
-        s.name,
-        s.struggle,
-        s.timestamp,
+        s.email || '',
+        s.name || '',
+        s.struggle || '',
+        s.timestamp || '',
         s.source || '',
         s.ip || ''
       ]);
@@ -80,7 +99,7 @@ export default async function handler(req, res) {
     // Default: JSON format
     return res.status(200).json({
       success: true,
-      total: total,
+      total: totalCount,
       signups: signups,
       exported_at: new Date().toISOString(),
       note: 'Add ?format=csv to download as CSV file'

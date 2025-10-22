@@ -1,7 +1,23 @@
 // Vercel Serverless Function for Waitlist Signups
-// Uses Vercel KV (Redis) for permanent storage
+// Uses Redis for permanent storage
 
-import { kv } from '@vercel/kv';
+import { createClient } from 'redis';
+
+// Create Redis client (reuse connection across invocations)
+let redisClient = null;
+
+async function getRedisClient() {
+  if (!redisClient) {
+    const redisUrl = process.env.KV_URL || process.env.REDIS_URL;
+    if (!redisUrl) {
+      throw new Error('Redis URL not configured');
+    }
+    
+    redisClient = createClient({ url: redisUrl });
+    await redisClient.connect();
+  }
+  return redisClient;
+}
 
 export default async function handler(req, res) {
   // CORS headers for okaimy.com
@@ -47,74 +63,50 @@ export default async function handler(req, res) {
       signupId: `signup_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
     };
     
-    // Store in Vercel KV (Redis)
+    // Store in Redis
     try {
-      // Add to waitlist set with email as score (for uniqueness)
-      await kv.zadd('waitlist:signups', {
+      const redis = await getRedisClient();
+      
+      // Add to waitlist sorted set with timestamp as score
+      await redis.zAdd('waitlist:signups', {
         score: Date.now(),
-        member: signupData.signupId
+        value: signupData.signupId
       });
       
-      // Store full signup data
-      await kv.hset(`waitlist:signup:${signupData.signupId}`, signupData);
+      // Store full signup data as hash
+      await redis.hSet(`waitlist:signup:${signupData.signupId}`, signupData);
       
       // Keep email index for duplicate checking
-      await kv.set(`waitlist:email:${email.toLowerCase()}`, signupData.signupId);
+      await redis.set(`waitlist:email:${email.toLowerCase()}`, signupData.signupId);
       
       // Increment total count
-      const totalSignups = await kv.incr('waitlist:total');
+      const totalSignups = await redis.incr('waitlist:total');
       
       console.log(`✅ Stored signup ${signupData.signupId} (Total: ${totalSignups})`);
       
-      // Also send to Google Sheets if configured (as backup)
-      const sheetUrl = process.env.GOOGLE_SHEET_URL;
-      if (sheetUrl) {
-        try {
-          const formData = new URLSearchParams({
-            Email: email,
-            Name: name,
-            Struggle: struggle,
-            Timestamp: signupData.timestamp
-          });
-          
-          await fetch(sheetUrl, {
-            method: 'POST',
-            body: formData,
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-            }
-          });
-          
-          console.log('✅ Backup sent to Google Sheets');
-        } catch (sheetError) {
-          console.error('Google Sheets backup error:', sheetError);
-        }
-      }
+      // Return success with position
+      return res.status(200).json({
+        success: true,
+        message: `Welcome to the waitlist, ${name}!`,
+        email: email,
+        position: totalSignups,
+        note: `You're signup #${totalSignups} for early access to OkAimy!`
+      });
       
     } catch (kvError) {
-      console.error('Vercel KV storage error:', kvError);
+      console.error('Redis storage error:', kvError);
       // Log to console as fallback
       console.log('WAITLIST_SIGNUP_FALLBACK:', JSON.stringify(signupData));
-      // Don't fail the request - still return success to user
+      
+      // Still return success to user even if storage fails
+      return res.status(200).json({
+        success: true,
+        message: `Welcome to the waitlist, ${name}!`,
+        email: email,
+        position: 'tracked',
+        note: 'Signup recorded! Check back soon.'
+      });
     }
-    
-    // Get total signups for position
-    let position = 'tracked';
-    try {
-      const total = await kv.get('waitlist:total');
-      position = total || 1;
-    } catch (e) {
-      console.error('Error getting position:', e);
-    }
-    
-    // Return success
-    return res.status(200).json({
-      success: true,
-      message: `Welcome to the waitlist, ${name}!`,
-      email: email,
-      position: position,
-      note: `You're signup #${position} for early access to OkAimy!`
-    });
     
   } catch (error) {
     console.error('Waitlist signup error:', error);
