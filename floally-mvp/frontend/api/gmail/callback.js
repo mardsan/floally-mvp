@@ -76,20 +76,21 @@ export default async function handler(req, res) {
     // Store tokens in Redis
     const redis = await getRedisClient();
     
-    // Check if scopes include calendar
+    // Check if scopes include calendar and gmail
     const hasCalendar = tokens.scope.includes('calendar');
+    const hasGmail = tokens.scope.includes('gmail');
     
     const tokenData = {
       accessToken: tokens.access_token,
       refreshToken: tokens.refresh_token,
-      expiresAt: Date.now() + (tokens.expires_in * 1000),
+      expiresAt: String(Date.now() + (tokens.expires_in * 1000)),
       scope: tokens.scope,
       gmailEmail: userInfo.email,
       gmailName: userInfo.name,
-      gmailPicture: userInfo.picture,
+      gmailPicture: userInfo.picture || '',
       connectedAt: new Date().toISOString(),
-      hasGmail: tokens.scope.includes('gmail'),
-      hasCalendar: hasCalendar
+      hasGmail: hasGmail ? 'true' : 'false',
+      hasCalendar: hasCalendar ? 'true' : 'false'
     };
     
     await redis.hSet(`user:${userId}:gmail`, tokenData);
@@ -102,7 +103,7 @@ export default async function handler(req, res) {
     });
     
     console.log(`✅ Google services connected for user ${userId} (${userInfo.email})`);
-    console.log(`   - Gmail: ${tokenData.hasGmail}`);
+    console.log(`   - Gmail: ${hasGmail}`);
     console.log(`   - Calendar: ${hasCalendar}`);
     
     // Redirect back to app
