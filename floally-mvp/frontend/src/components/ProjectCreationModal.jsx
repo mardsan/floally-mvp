@@ -17,6 +17,9 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [step, setStep] = useState(1);
+  const [aiGenerating, setAiGenerating] = useState(false);
+  const [aiSuggestions, setAiSuggestions] = useState(null);
+  const [showAiSuggestions, setShowAiSuggestions] = useState(false);
 
   const addField = (field) => {
     setFormData(prev => ({
@@ -75,6 +78,65 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
       setError(err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const generateWithAimy = async () => {
+    if (!formData.description.trim() || formData.description.trim().length < 10) {
+      setError('Please provide a more detailed project description for Aimy to analyze');
+      return;
+    }
+
+    setAiGenerating(true);
+    setError('');
+
+    try {
+      const response = await fetch('/api/projects/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.userId,
+          projectName: formData.name,
+          projectDescription: formData.description,
+          existingData: {
+            goals: formData.goals.filter(g => g.trim()),
+            keywords: formData.keywords.filter(k => k.trim()),
+            stakeholders: formData.stakeholders.filter(s => s.trim())
+          }
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to generate suggestions');
+      }
+
+      const data = await response.json();
+      setAiSuggestions(data.suggestions);
+      setShowAiSuggestions(true);
+      
+      // Auto-fill with suggestions (user can edit)
+      setFormData(prev => ({
+        ...prev,
+        goals: data.suggestions.goals || prev.goals,
+        keywords: data.suggestions.keywords || prev.keywords,
+        stakeholders: data.suggestions.stakeholders || prev.stakeholders,
+        successCriteria: data.suggestions.successMetrics?.join('\n') || prev.successCriteria
+      }));
+
+      // Add tasks as additional goals if provided
+      if (data.suggestions.tasks && data.suggestions.tasks.length > 0) {
+        setFormData(prev => ({
+          ...prev,
+          goals: [...(data.suggestions.goals || []), ...data.suggestions.tasks]
+        }));
+      }
+
+    } catch (err) {
+      console.error('AI generation error:', err);
+      setError(err.message);
+    } finally {
+      setAiGenerating(false);
     }
   };
 
@@ -152,6 +214,31 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                   rows={4}
                 />
+                <div className="mt-3">
+                  <button
+                    type="button"
+                    onClick={generateWithAimy}
+                    disabled={aiGenerating || !formData.description.trim() || formData.description.trim().length < 10}
+                    className="w-full px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+                  >
+                    {aiGenerating ? (
+                      <>
+                        <span className="animate-spin">⚙️</span>
+                        Aimy is thinking...
+                      </>
+                    ) : (
+                      <>
+                        ✨ Generate Goals & Context with Aimy
+                      </>
+                    )}
+                  </button>
+                  <p className="text-xs text-gray-500 mt-2 text-center">
+                    {formData.description.trim().length < 10 
+                      ? 'Add at least 10 characters to your description to use Aimy'
+                      : 'Aimy will suggest goals, tasks, keywords, and success metrics based on your description'
+                    }
+                  </p>
+                </div>
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
@@ -189,6 +276,28 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
           {/* Step 2: Goals */}
           {step === 2 && (
             <div className="space-y-6">
+              {showAiSuggestions && aiSuggestions && (
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-4">
+                  <div className="flex items-start gap-3">
+                    <div className="text-2xl">✨</div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-purple-900 mb-1">
+                        Aimy's Suggestions Applied!
+                      </h4>
+                      <p className="text-sm text-purple-700">
+                        Review and edit the goals below. You can add, remove, or modify any suggestion.
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setShowAiSuggestions(false)}
+                      className="text-purple-400 hover:text-purple-600"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </div>
+              )}
+              
               <div>
                 <label className="block text-sm font-semibold text-gray-900 mb-2">
                   Project Goals *
@@ -244,6 +353,28 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
           {/* Step 3: Context for Aimy */}
           {step === 3 && (
             <div className="space-y-6">
+              {showAiSuggestions && aiSuggestions && (
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-4">
+                  <div className="flex items-start gap-3">
+                    <div className="text-2xl">✨</div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-purple-900 mb-1">
+                        Aimy Added Context!
+                      </h4>
+                      <p className="text-sm text-purple-700">
+                        Keywords and stakeholders have been pre-filled. Feel free to customize them.
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setShowAiSuggestions(false)}
+                      className="text-purple-400 hover:text-purple-600"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </div>
+              )}
+              
               <div className="bg-teal-50 border border-teal-200 rounded-lg p-4 mb-6">
                 <div className="flex gap-3">
                   <div className="text-2xl">💡</div>
