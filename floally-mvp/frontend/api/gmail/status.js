@@ -1,7 +1,7 @@
 /**
- * Vercel Serverless Function - Gmail Connection Status
+ * Vercel Serverless Function - Google Services Connection Status
  * 
- * Checks if user has connected their Gmail account
+ * Checks if user has connected Gmail and/or Calendar
  */
 
 import { createClient } from 'redis';
@@ -31,23 +31,29 @@ export default async function handler(req, res) {
   try {
     const redis = await getRedisClient();
     
-    // Check if Gmail tokens exist
-    const gmailData = await redis.hGetAll(`user:${userId}:gmail`);
+    // Check if Google tokens exist
+    const googleData = await redis.hGetAll(`user:${userId}:gmail`);
     
-    const connected = gmailData && gmailData.accessToken;
+    const connected = googleData && googleData.accessToken;
     
     if (connected) {
       return res.json({
         connected: true,
-        email: gmailData.gmailEmail,
-        connectedAt: gmailData.connectedAt
+        email: googleData.gmailEmail,
+        connectedAt: googleData.connectedAt,
+        hasGmail: googleData.hasGmail === 'true' || googleData.scope?.includes('gmail'),
+        hasCalendar: googleData.hasCalendar === 'true' || googleData.scope?.includes('calendar')
       });
     }
     
-    return res.json({ connected: false });
+    return res.json({ 
+      connected: false,
+      hasGmail: false,
+      hasCalendar: false
+    });
     
   } catch (error) {
-    console.error('Error checking Gmail status:', error);
-    res.status(500).json({ error: 'Failed to check Gmail status' });
+    console.error('Error checking Google services status:', error);
+    res.status(500).json({ error: 'Failed to check connection status' });
   }
 }

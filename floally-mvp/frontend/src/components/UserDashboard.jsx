@@ -4,33 +4,37 @@ function UserDashboard({ user, onLogout }) {
   const [projects, setProjects] = useState([]);
   const [showAddProject, setShowAddProject] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
-  const [gmailConnected, setGmailConnected] = useState(false);
-  const [gmailLoading, setGmailLoading] = useState(true);
+  const [googleConnected, setGoogleConnected] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(true);
+  const [hasGmail, setHasGmail] = useState(false);
+  const [hasCalendar, setHasCalendar] = useState(false);
 
   useEffect(() => {
-    // Check Gmail connection status
-    const checkGmailStatus = async () => {
+    // Check Google services connection status
+    const checkGoogleStatus = async () => {
       try {
         const response = await fetch(`/api/gmail/status?userId=${user.userId}`);
         const data = await response.json();
-        setGmailConnected(data.connected);
+        setGoogleConnected(data.connected);
+        setHasGmail(data.hasGmail);
+        setHasCalendar(data.hasCalendar);
       } catch (error) {
-        console.error('Failed to check Gmail status:', error);
+        console.error('Failed to check Google services status:', error);
       } finally {
-        setGmailLoading(false);
+        setGoogleLoading(false);
       }
     };
 
-    checkGmailStatus();
+    checkGoogleStatus();
 
     // Check for OAuth callback
     const params = new URLSearchParams(window.location.search);
-    if (params.get('gmail') === 'connected') {
-      setGmailConnected(true);
+    if (params.get('google') === 'connected' || params.get('gmail') === 'connected') {
+      setGoogleConnected(true);
       window.history.replaceState({}, '', '/app');
     }
     if (params.get('error')) {
-      alert(`Gmail connection error: ${params.get('error')}`);
+      alert(`Google connection error: ${params.get('error')}`);
       window.history.replaceState({}, '', '/app');
     }
   }, [user.userId]);
@@ -49,6 +53,10 @@ function UserDashboard({ user, onLogout }) {
   };
 
   const handleConnectGmail = () => {
+    window.location.href = `/api/gmail/auth?userId=${user.userId}`;
+  };
+
+  const handleConnectGoogle = () => {
     window.location.href = `/api/gmail/auth?userId=${user.userId}`;
   };
 
@@ -79,36 +87,49 @@ function UserDashboard({ user, onLogout }) {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-8">
-        {/* Gmail Connection Banner */}
-        {!gmailLoading && !gmailConnected && (
+        {/* Google Services Connection Banner */}
+        {!googleLoading && !googleConnected && (
           <div className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg shadow-lg p-6 mb-8">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="text-4xl">📧</div>
+                <div className="text-4xl">�</div>
                 <div>
-                  <h3 className="text-xl font-semibold mb-1">Connect Your Gmail</h3>
+                  <h3 className="text-xl font-semibold mb-1">Connect Gmail & Calendar</h3>
                   <p className="text-blue-100">
-                    Get started by connecting your Gmail account to enable smart email management
+                    Get started by connecting your Google account to enable smart email & calendar management
                   </p>
                 </div>
               </div>
               <button
-                onClick={handleConnectGmail}
+                onClick={handleConnectGoogle}
                 className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-all shadow-lg"
               >
-                Connect Gmail
+                Connect Google
               </button>
             </div>
           </div>
         )}
 
-        {gmailConnected && (
+        {googleConnected && (
           <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg shadow-lg p-6 mb-8">
-            <div className="flex items-center gap-3">
-              <div className="text-3xl">✅</div>
-              <div>
-                <h3 className="text-lg font-semibold">Gmail Connected!</h3>
-                <p className="text-green-100">Your email management features are now active</p>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="text-3xl">✅</div>
+                <div>
+                  <h3 className="text-lg font-semibold">Google Services Connected!</h3>
+                  <div className="flex gap-4 mt-1">
+                    {hasGmail && (
+                      <span className="text-green-100 flex items-center gap-1">
+                        📧 Gmail
+                      </span>
+                    )}
+                    {hasCalendar && (
+                      <span className="text-green-100 flex items-center gap-1">
+                        📅 Calendar
+                      </span>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>

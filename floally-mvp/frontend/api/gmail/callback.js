@@ -1,9 +1,9 @@
 /**
- * Vercel Serverless Function - Gmail OAuth Callback
+ * Vercel Serverless Function - Google OAuth Callback
  * 
  * Handles the OAuth callback from Google
  * Exchanges auth code for access token
- * Stores tokens in Redis
+ * Stores tokens in Redis for Gmail + Calendar access
  */
 
 import { createClient } from 'redis';
@@ -73,6 +73,9 @@ export default async function handler(req, res) {
     // Store tokens in Redis
     const redis = await getRedisClient();
     
+    // Check if scopes include calendar
+    const hasCalendar = tokens.scope.includes('calendar');
+    
     const tokenData = {
       accessToken: tokens.access_token,
       refreshToken: tokens.refresh_token,
@@ -81,7 +84,9 @@ export default async function handler(req, res) {
       gmailEmail: userInfo.email,
       gmailName: userInfo.name,
       gmailPicture: userInfo.picture,
-      connectedAt: new Date().toISOString()
+      connectedAt: new Date().toISOString(),
+      hasGmail: tokens.scope.includes('gmail'),
+      hasCalendar: hasCalendar
     };
     
     await redis.hSet(`user:${userId}:gmail`, tokenData);
@@ -89,13 +94,16 @@ export default async function handler(req, res) {
     // Update user record
     await redis.hSet(`user:${userId}`, {
       gmailConnected: 'true',
-      gmailEmail: userInfo.email
+      gmailEmail: userInfo.email,
+      calendarConnected: hasCalendar ? 'true' : 'false'
     });
     
-    console.log(`✅ Gmail connected for user ${userId} (${userInfo.email})`);
+    console.log(`✅ Google services connected for user ${userId} (${userInfo.email})`);
+    console.log(`   - Gmail: ${tokenData.hasGmail}`);
+    console.log(`   - Calendar: ${hasCalendar}`);
     
     // Redirect back to app
-    res.redirect('/app?gmail=connected');
+    res.redirect('/app?google=connected');
     
   } catch (error) {
     console.error('OAuth callback error:', error);

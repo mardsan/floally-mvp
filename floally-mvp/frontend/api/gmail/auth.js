@@ -1,7 +1,7 @@
 /**
- * Vercel Serverless Function - Gmail OAuth Initiation
+ * Vercel Serverless Function - Google OAuth Initiation
  * 
- * Starts the Google OAuth flow for Gmail access
+ * Starts the Google OAuth flow for Gmail + Calendar access
  * User will be redirected to Google's consent screen
  */
 
@@ -24,10 +24,15 @@ export default async function handler(req, res) {
     });
   }
   
-  // OAuth scopes for Gmail
+  // OAuth scopes for Gmail + Calendar
   const scopes = [
+    // Gmail permissions
     'https://www.googleapis.com/auth/gmail.readonly',
     'https://www.googleapis.com/auth/gmail.modify',
+    // Calendar permissions
+    'https://www.googleapis.com/auth/calendar.readonly',
+    'https://www.googleapis.com/auth/calendar.events',
+    // User info
     'https://www.googleapis.com/auth/userinfo.email',
     'https://www.googleapis.com/auth/userinfo.profile'
   ];
