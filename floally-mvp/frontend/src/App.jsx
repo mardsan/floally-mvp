@@ -9,11 +9,65 @@ import Standup from './components/Standup';
 import StandupDashboard from './components/StandupDashboard';
 import LandingPage from './components/LandingPage';
 import WaitlistAdmin from './components/WaitlistAdmin';
+import AuthPage from './components/AuthPage';
+import UserDashboard from './components/UserDashboard';
 
 function App() {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    // Check if user is already logged in
+    const token = localStorage.getItem('okaimy_token');
+    const userStr = localStorage.getItem('okaimy_user');
+    
+    if (token && userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        setCurrentUser(user);
+      } catch (e) {
+        console.error('Invalid stored user data');
+        localStorage.removeItem('okaimy_token');
+        localStorage.removeItem('okaimy_user');
+      }
+    }
+    
+    setCheckingAuth(false);
+  }, []);
+
+  const handleAuthSuccess = (user) => {
+    setCurrentUser(user);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('okaimy_token');
+    localStorage.removeItem('okaimy_user');
+    setCurrentUser(null);
+  };
+  
   // Check if we should show admin page
   if (window.location.pathname === '/admin' || window.location.pathname === '/waitlist-admin') {
     return <WaitlistAdmin />;
+  }
+  
+  // Check if we should show app (for logged-in users)
+  if (window.location.pathname === '/app' || window.location.pathname === '/dashboard') {
+    if (checkingAuth) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 via-white to-emerald-50">
+          <div className="text-center">
+            <div className="text-4xl mb-4">🔄</div>
+            <div className="text-slate-700">Loading...</div>
+          </div>
+        </div>
+      );
+    }
+    
+    if (!currentUser) {
+      return <AuthPage onAuthSuccess={handleAuthSuccess} />;
+    }
+    
+    return <UserDashboard user={currentUser} onLogout={handleLogout} />;
   }
   
   // Check if we should show landing page (for waitlist mode)

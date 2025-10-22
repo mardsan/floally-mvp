@@ -352,12 +352,20 @@ function LandingPage() {
           <p className="text-xl mb-8 opacity-90">
             Join the waitlist for early access and founding member pricing
           </p>
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="bg-white text-teal-600 font-semibold px-8 py-4 rounded-lg hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg"
-          >
-            Join Early Access →
-          </button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="bg-white text-teal-600 font-semibold px-8 py-4 rounded-lg hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg"
+            >
+              Join Early Access →
+            </button>
+            <a
+              href="/app"
+              className="bg-teal-700 text-white font-semibold px-8 py-4 rounded-lg hover:bg-teal-800 transition-all transform hover:scale-105 shadow-lg text-center"
+            >
+              Try Demo (No Login) →
+            </a>
+          </div>
         </div>
 
         {/* Footer */}
