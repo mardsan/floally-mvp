@@ -19,6 +19,7 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
   const [error, setError] = useState('');
   const [enhancing, setEnhancing] = useState(false);
   const [aiEnhanced, setAiEnhanced] = useState(false);
+  const [timeframeInfo, setTimeframeInfo] = useState(null);
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -85,6 +86,13 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
 
       const data = await response.json();
       const enhancement = data.enhancement;
+      
+      // Save timeframe info for display
+      setTimeframeInfo({
+        estimatedDuration: enhancement.estimatedDuration,
+        recommendedTimeline: enhancement.recommendedTimeline,
+        complexity: enhancement.complexity
+      });
       
       // Update form with all of Aimy's suggestions
       setFormData(prev => ({
@@ -272,6 +280,36 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
                     </button>
                   )}
                 </div>
+
+                {/* Aimy's Timeframe Recommendation */}
+                {timeframeInfo && aiEnhanced && (
+                  <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200 rounded-xl p-4">
+                    <div className="flex items-start gap-3">
+                      <span className="text-2xl">⏱️</span>
+                      <div className="flex-1">
+                        <h4 className="font-bold text-purple-900 mb-2">Aimy's Timeframe Recommendation</h4>
+                        <div className="space-y-2 text-sm">
+                          <div className="flex items-center gap-2">
+                            <span className="font-semibold text-purple-800">Estimated Duration:</span>
+                            <span className="text-purple-900">{timeframeInfo.estimatedDuration}</span>
+                          </div>
+                          {timeframeInfo.recommendedTimeline && (
+                            <div className="flex items-start gap-2">
+                              <span className="font-semibold text-purple-800 whitespace-nowrap">Timeline:</span>
+                              <span className="text-purple-900">{timeframeInfo.recommendedTimeline}</span>
+                            </div>
+                          )}
+                          <div className="flex items-center gap-2">
+                            <span className="font-semibold text-purple-800">Complexity:</span>
+                            <span className="px-2 py-0.5 bg-purple-200 text-purple-900 rounded-full text-xs font-medium capitalize">
+                              {timeframeInfo.complexity?.replace('-', ' ')}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 <div className="grid md:grid-cols-3 gap-4">
                   <div>
