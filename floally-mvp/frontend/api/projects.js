@@ -298,7 +298,15 @@ async function handleEnhance(req, res) {
     const { userId, projectDescription, projectName } = req.body;
 
     if (!userId || !projectDescription) {
-      return res.status(400).json({ error: 'Missing required fields' });
+      return res.status(400).json({ error: 'Missing required fields', userId: !!userId, hasDescription: !!projectDescription });
+    }
+
+    console.log('Enhancing description for user:', userId);
+
+    // Check if API key is available
+    if (!process.env.ANTHROPIC_API_KEY) {
+      console.error('ANTHROPIC_API_KEY not configured');
+      return res.status(500).json({ error: 'AI service not configured', details: 'ANTHROPIC_API_KEY missing' });
     }
 
     const redis = await getRedisClient();
@@ -314,6 +322,8 @@ async function handleEnhance(req, res) {
 - Top Priorities: ${profile.priorities?.join(', ') || 'Not specified'}
 `;
     }
+
+    console.log('Calling Claude API for enhancement...');
 
     const anthropic = new Anthropic({
       apiKey: process.env.ANTHROPIC_API_KEY,
@@ -357,6 +367,8 @@ Please analyze this project description and provide an enhanced version with cle
       messages: [{ role: 'user', content: userMessage }]
     });
 
+    console.log('Claude API response received');
+
     const textContent = message.content.find(block => block.type === 'text');
     if (!textContent) {
       throw new Error('No text content in Claude response');
@@ -364,14 +376,18 @@ Please analyze this project description and provide an enhanced version with cle
 
     const jsonMatch = textContent.text.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
+      console.error('Claude response text:', textContent.text);
       throw new Error('No JSON found in response');
     }
 
     const result = JSON.parse(jsonMatch[0]);
 
     if (!result.enhancedDescription || !result.estimatedDuration) {
+      console.error('Invalid response structure:', result);
       throw new Error('Missing required fields in Claude response');
     }
+
+    console.log('Enhancement successful');
 
     res.status(200).json({
       success: true,
@@ -382,7 +398,8 @@ Please analyze this project description and provide an enhanced version with cle
     console.error('Error enhancing description:', error);
     res.status(500).json({ 
       error: 'Failed to enhance description',
-      details: error.message 
+      details: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 }
