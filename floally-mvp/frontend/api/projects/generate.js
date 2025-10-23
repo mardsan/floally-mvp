@@ -100,8 +100,12 @@ Please analyze this project and help me structure it with goals, tasks, keywords
 
     console.log('Calling Claude API for project generation...');
 
+    // Use environment variable for model, fallback to Haiku
+    const model = process.env.ANTHROPIC_MODEL || 'claude-3-haiku-20240307';
+    console.log(`Using Claude model: ${model}`);
+
     const response = await anthropic.messages.create({
-      model: 'claude-3-haiku-20240307',
+      model: model,
       max_tokens: 2000,
       temperature: 0.7,
       system: systemPrompt,
