@@ -139,9 +139,9 @@ function UserDashboard({ user, onLogout }) {
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img src="/okaimy-logo-01.png" alt="OkAimy" className="h-8" />
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">
-              OkAimy
-            </h1>
+            <span className="text-sm text-gray-500">
+              Your AI-Powered Productivity Assistant
+            </span>
           </div>
           <div className="flex items-center gap-4">
             <div className="text-sm text-gray-600">

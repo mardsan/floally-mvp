@@ -257,7 +257,7 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     placeholder="Brief description of what you want to build or achieve..."
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                    rows={3}
+                    rows={8}
                   />
                   
                   {!aiEnhanced && formData.description.trim().length >= 10 && (
@@ -510,7 +510,7 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
                 onChange={(e) => setFormData({ ...formData, successCriteria: e.target.value })}
                 placeholder="How will you measure success? What does 'done' look like?"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                rows={3}
+                rows={4}
               />
             </div>
 
