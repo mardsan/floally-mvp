@@ -326,19 +326,66 @@ function UserDashboard({ user, onLogout }) {
                           <span>Ongoing</span>
                         </div>
                       )}
+                      
+                      {/* Project Status */}
+                      <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold bg-gray-50 text-gray-700 border-gray-200">
+                        {project.status === 'planning' && '📝 Planning'}
+                        {project.status === 'active' && '🚀 Active'}
+                        {project.status === 'on-hold' && '⏸️ On Hold'}
+                        {project.status === 'completed' && '✅ Completed'}
+                        {project.status === 'archived' && '📦 Archived'}
+                        {!project.status && '📝 Planning'}
+                      </div>
                     </div>
                   </div>
+
+                  {/* Progress Bar */}
+                  {project.goals && project.goals.length > 0 && (() => {
+                    // Check if goals have status property (new format)
+                    const hasStatus = project.goals[0]?.status !== undefined;
+                    let completionPercentage = 0;
+                    let completedCount = 0;
+                    
+                    if (hasStatus) {
+                      completedCount = project.goals.filter(g => g.status === 'completed').length;
+                      completionPercentage = Math.round((completedCount / project.goals.length) * 100);
+                    }
+                    
+                    return hasStatus ? (
+                      <div className="mb-4">
+                        <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
+                          <span>Progress</span>
+                          <span className="font-semibold">{completionPercentage}% ({completedCount}/{project.goals.length} tasks)</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2.5">
+                          <div 
+                            className="bg-gradient-to-r from-teal-500 to-emerald-500 h-2.5 rounded-full transition-all duration-300"
+                            style={{ width: `${completionPercentage}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    ) : null;
+                  })()}
 
                   {project.goals && project.goals.length > 0 && (
                     <div className="mb-3">
                       <div className="text-xs font-semibold text-gray-500 uppercase mb-2">Goals</div>
                       <ul className="space-y-1">
-                        {project.goals.slice(0, 2).map((goal, idx) => (
-                          <li key={idx} className="text-sm text-gray-700 flex items-start gap-2">
-                            <span>•</span>
-                            <span className="line-clamp-1">{goal}</span>
-                          </li>
-                        ))}
+                        {project.goals.slice(0, 2).map((goal, idx) => {
+                          // Handle both old format (string) and new format (object with status)
+                          const goalText = typeof goal === 'string' ? goal : goal.text;
+                          const goalStatus = typeof goal === 'object' ? goal.status : null;
+                          
+                          return (
+                            <li key={idx} className="text-sm text-gray-700 flex items-start gap-2">
+                              {goalStatus === 'completed' && <span>✅</span>}
+                              {goalStatus === 'in-progress' && <span>🔵</span>}
+                              {goalStatus === 'not-started' && <span>⭕</span>}
+                              {!goalStatus && <span>•</span>}
+                              <span className="line-clamp-1">{goalText}</span>
+                            </li>
+                          );
+                        })}
                         {project.goals.length > 2 && (
                           <li className="text-xs text-gray-500">
                             +{project.goals.length - 2} more

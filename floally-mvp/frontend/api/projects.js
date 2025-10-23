@@ -331,23 +331,20 @@ async function handleEnhance(req, res) {
 
     const modelName = process.env.ANTHROPIC_MODEL || 'claude-3-haiku-20240307';
 
-    const systemPrompt = `You are Aimy, an AI project planning assistant. Your role is to help users clarify and enhance their project descriptions by:
-
-1. **Clarifying scope and objectives** - What exactly are they trying to build/achieve?
-2. **Assessing scale and ambition** - Is this a weekend prototype, a 3-month MVP, or a year-long enterprise project?
-3. **Identifying key components** - What are the major features or phases?
-4. **Providing realistic timeline** - Based on the scope, what's a reasonable completion timeframe?
-5. **Highlighting potential challenges** - What might be complex or time-consuming?
+    const systemPrompt = `You are Aimy, an AI project planning assistant. Analyze the project description and provide comprehensive planning information.
 
 ${profileContext}
 
 Provide your response in this exact JSON structure:
 {
   "enhancedDescription": "Clear, detailed project description with specific scope and components",
-  "reasoning": "Brief explanation of your assessment",
   "estimatedDuration": "e.g., '2-3 months', '6 weeks', '3-4 months'",
   "complexity": "simple|moderate|complex|very-complex",
   "recommendedTimeline": "Specific suggestion like 'Start with 3-month MVP, then iterate'",
+  "goals": ["Specific measurable goal 1", "Specific measurable goal 2", "Specific measurable goal 3"],
+  "keywords": ["keyword1", "keyword2", "keyword3"],
+  "stakeholders": ["stakeholder1", "stakeholder2"],
+  "successMetrics": ["metric1", "metric2", "metric3"],
   "keyComponents": ["Component 1", "Component 2", "Component 3"],
   "potentialChallenges": ["Challenge 1", "Challenge 2"]
 }`;
