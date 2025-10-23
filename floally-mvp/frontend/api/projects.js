@@ -379,16 +379,30 @@ Please analyze this project description and provide an enhanced version with cle
 
     const result = JSON.parse(jsonMatch[0]);
 
-    if (!result.enhancedDescription || !result.estimatedDuration) {
+    if (!result.enhancedDescription) {
       console.error('Invalid response structure:', result);
-      throw new Error('Missing required fields in Claude response');
+      throw new Error('Missing enhancedDescription in Claude response');
     }
 
-    console.log('Enhancement successful');
+    // Ensure all fields have defaults
+    const enhancement = {
+      enhancedDescription: result.enhancedDescription,
+      estimatedDuration: result.estimatedDuration || '2-3 months',
+      complexity: result.complexity || 'moderate',
+      recommendedTimeline: result.recommendedTimeline || 'Plan in phases',
+      goals: result.goals || [],
+      keywords: result.keywords || [],
+      stakeholders: result.stakeholders || [],
+      successMetrics: result.successMetrics || [],
+      keyComponents: result.keyComponents || [],
+      potentialChallenges: result.potentialChallenges || []
+    };
+
+    console.log('Enhancement successful:', enhancement);
 
     res.status(200).json({
       success: true,
-      enhancement: result
+      enhancement
     });
 
   } catch (error) {
