@@ -111,16 +111,19 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to enhance description');
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        console.error('Enhancement API error:', errorData);
+        throw new Error(errorData.details || errorData.error || 'Failed to enhance description');
       }
 
       const data = await response.json();
+      console.log('Enhancement response:', data);
       setEnhancement(data.enhancement);
       setShowEnhancement(true);
       
     } catch (err) {
-      setError(err.message);
+      console.error('Enhancement error:', err);
+      setError(`Failed to enhance: ${err.message}`);
     } finally {
       setEnhancing(false);
     }
