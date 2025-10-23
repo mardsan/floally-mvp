@@ -309,18 +309,29 @@ async function handleEnhance(req, res) {
       return res.status(500).json({ error: 'AI service not configured', details: 'ANTHROPIC_API_KEY missing' });
     }
 
-    const redis = await getRedisClient();
-    const userProfileKey = `user:${userId}:profile`;
-    const userProfile = await redis.get(userProfileKey);
+    let redis;
+    let userProfile = null;
+    
+    try {
+      redis = await getRedisClient();
+      const userProfileKey = `user:${userId}:profile`;
+      userProfile = await redis.get(userProfileKey);
+    } catch (redisError) {
+      console.warn('Redis connection failed, continuing without profile:', redisError.message);
+    }
     
     let profileContext = '';
     if (userProfile) {
-      const profile = JSON.parse(userProfile);
-      profileContext = `User Context:
+      try {
+        const profile = JSON.parse(userProfile);
+        profileContext = `User Context:
 - Role: ${profile.role || 'Not specified'}
 - Work Style: ${profile.workStyle || 'Not specified'}
 - Top Priorities: ${profile.priorities?.join(', ') || 'Not specified'}
 `;
+      } catch (parseError) {
+        console.warn('Failed to parse user profile:', parseError.message);
+      }
     }
 
     console.log('Calling Claude API for enhancement...');
@@ -377,7 +388,14 @@ Please analyze this project description and provide an enhanced version with cle
       throw new Error('No JSON found in response');
     }
 
-    const result = JSON.parse(jsonMatch[0]);
+    let result;
+    try {
+      result = JSON.parse(jsonMatch[0]);
+    } catch (jsonError) {
+      console.error('JSON parse error:', jsonError.message);
+      console.error('JSON string:', jsonMatch[0]);
+      throw new Error('Failed to parse Claude JSON response');
+    }
 
     if (!result.enhancedDescription) {
       console.error('Invalid response structure:', result);
@@ -407,9 +425,11 @@ Please analyze this project description and provide an enhanced version with cle
 
   } catch (error) {
     console.error('Error enhancing description:', error);
+    console.error('Error stack:', error.stack);
     res.status(500).json({ 
       error: 'Failed to enhance description',
       details: error.message,
+      type: error.constructor.name,
       stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
