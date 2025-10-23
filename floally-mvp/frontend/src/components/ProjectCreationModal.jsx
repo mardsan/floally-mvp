@@ -63,7 +63,7 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
         stakeholders: formData.stakeholders.filter(s => s.trim())
       };
 
-      const endpoint = '/api/projects/manage';
+      const endpoint = '/api/projects';
       const method = isEditing ? 'PUT' : 'POST';
       const body = isEditing 
         ? { projectId: existingProject.id, updates: cleanData }
@@ -100,7 +100,7 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
     setOriginalDescription(formData.description); // Save original
 
     try {
-      const response = await fetch('/api/projects/enhance-description', {
+      const response = await fetch('/api/projects?action=enhance', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -190,7 +190,7 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
     setError('');
 
     try {
-      const response = await fetch('/api/projects/generate', {
+      const response = await fetch('/api/projects?action=generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -54,7 +54,7 @@ function UserDashboard({ user, onLogout }) {
     // Load user's projects
     const loadProjects = async () => {
       try {
-        const response = await fetch(`/api/projects/manage?userId=${user.userId}`);
+        const response = await fetch(`/api/projects?userId=${user.userId}`);
         const data = await response.json();
         setProjects(data.projects || []);
       } catch (error) {
@@ -113,7 +113,7 @@ function UserDashboard({ user, onLogout }) {
     if (!confirm('Are you sure you want to delete this project?')) return;
 
     try {
-      const response = await fetch(`/api/projects/manage?userId=${user.userId}`, {
+      const response = await fetch(`/api/projects?userId=${user.userId}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ projectId })
