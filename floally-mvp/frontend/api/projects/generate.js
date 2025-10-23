@@ -101,7 +101,7 @@ Please analyze this project and help me structure it with goals, tasks, keywords
     console.log('Calling Claude API for project generation...');
 
     const response = await anthropic.messages.create({
-      model: 'claude-3-sonnet-20240229',
+      model: 'claude-3-haiku-20240307',
       max_tokens: 2000,
       temperature: 0.7,
       system: systemPrompt,
