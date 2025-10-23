@@ -20,6 +20,8 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
   const [aiGenerating, setAiGenerating] = useState(false);
   const [aiSuggestions, setAiSuggestions] = useState(null);
   const [showAiSuggestions, setShowAiSuggestions] = useState(false);
+  const [goalsGenerated, setGoalsGenerated] = useState(false);
+  const [contextGenerated, setContextGenerated] = useState(false);
 
   const addField = (field) => {
     setFormData(prev => ({
@@ -81,7 +83,7 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
     }
   };
 
-  const generateWithAimy = async () => {
+  const generateGoalsWithAimy = async () => {
     if (!formData.description.trim() || formData.description.trim().length < 10) {
       setError('Please provide a more detailed project description for Aimy to analyze');
       return;
@@ -113,23 +115,26 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
 
       const data = await response.json();
       setAiSuggestions(data.suggestions);
-      setShowAiSuggestions(true);
       
-      // Auto-fill with suggestions (user can edit)
-      setFormData(prev => ({
-        ...prev,
-        goals: data.suggestions.goals || prev.goals,
-        keywords: data.suggestions.keywords || prev.keywords,
-        stakeholders: data.suggestions.stakeholders || prev.stakeholders,
-        successCriteria: data.suggestions.successMetrics?.join('\n') || prev.successCriteria
-      }));
-
-      // Add tasks as additional goals if provided
-      if (data.suggestions.tasks && data.suggestions.tasks.length > 0) {
+      // For Step 2: Fill in goals only
+      if (step === 2) {
+        const allGoals = [...(data.suggestions.goals || []), ...(data.suggestions.tasks || [])];
         setFormData(prev => ({
           ...prev,
-          goals: [...(data.suggestions.goals || []), ...data.suggestions.tasks]
+          goals: allGoals.length > 0 ? allGoals : prev.goals,
+          successCriteria: data.suggestions.successMetrics?.join('\n') || prev.successCriteria
         }));
+        setGoalsGenerated(true);
+      }
+      
+      // For Step 3: Fill in context only
+      if (step === 3) {
+        setFormData(prev => ({
+          ...prev,
+          keywords: data.suggestions.keywords || prev.keywords,
+          stakeholders: data.suggestions.stakeholders || prev.stakeholders
+        }));
+        setContextGenerated(true);
       }
 
     } catch (err) {
@@ -214,31 +219,9 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                   rows={4}
                 />
-                <div className="mt-3">
-                  <button
-                    type="button"
-                    onClick={generateWithAimy}
-                    disabled={aiGenerating || !formData.description.trim() || formData.description.trim().length < 10}
-                    className="w-full px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
-                  >
-                    {aiGenerating ? (
-                      <>
-                        <span className="animate-spin">⚙️</span>
-                        Aimy is thinking...
-                      </>
-                    ) : (
-                      <>
-                        ✨ Generate Goals & Context with Aimy
-                      </>
-                    )}
-                  </button>
-                  <p className="text-xs text-gray-500 mt-2 text-center">
-                    {formData.description.trim().length < 10 
-                      ? 'Add at least 10 characters to your description to use Aimy'
-                      : 'Aimy will suggest goals, tasks, keywords, and success metrics based on your description'
-                    }
-                  </p>
-                </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  💡 Aimy will help you generate goals and context in the next steps based on this description
+                </p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
@@ -276,8 +259,42 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
           {/* Step 2: Goals */}
           {step === 2 && (
             <div className="space-y-6">
-              {showAiSuggestions && aiSuggestions && (
-                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-4">
+              {/* AI Generation Button */}
+              {!goalsGenerated && formData.description.trim().length >= 10 && (
+                <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-4">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="text-2xl">✨</div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-purple-900 mb-1">
+                        Let Aimy Help!
+                      </h4>
+                      <p className="text-sm text-gray-700">
+                        Based on your description: "<em>{formData.description.substring(0, 100)}{formData.description.length > 100 ? '...' : ''}</em>"
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={generateGoalsWithAimy}
+                    disabled={aiGenerating}
+                    className="w-full px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+                  >
+                    {aiGenerating ? (
+                      <>
+                        <span className="animate-spin">⚙️</span>
+                        Aimy is generating goals...
+                      </>
+                    ) : (
+                      <>
+                        ✨ Generate Goals with Aimy
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+
+              {goalsGenerated && (
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
                   <div className="flex items-start gap-3">
                     <div className="text-2xl">✨</div>
                     <div className="flex-1">
@@ -288,12 +305,6 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
                         Review and edit the goals below. You can add, remove, or modify any suggestion.
                       </p>
                     </div>
-                    <button
-                      onClick={() => setShowAiSuggestions(false)}
-                      className="text-purple-400 hover:text-purple-600"
-                    >
-                      ✕
-                    </button>
                   </div>
                 </div>
               )}
@@ -353,8 +364,42 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
           {/* Step 3: Context for Aimy */}
           {step === 3 && (
             <div className="space-y-6">
-              {showAiSuggestions && aiSuggestions && (
-                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-4">
+              {/* AI Generation Button */}
+              {!contextGenerated && formData.description.trim().length >= 10 && (
+                <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-4">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="text-2xl">✨</div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-purple-900 mb-1">
+                        Let Aimy Suggest Keywords & Stakeholders
+                      </h4>
+                      <p className="text-sm text-gray-700">
+                        Aimy can identify relevant keywords and stakeholders based on your project description and goals
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={generateGoalsWithAimy}
+                    disabled={aiGenerating}
+                    className="w-full px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+                  >
+                    {aiGenerating ? (
+                      <>
+                        <span className="animate-spin">⚙️</span>
+                        Aimy is analyzing...
+                      </>
+                    ) : (
+                      <>
+                        ✨ Generate Context with Aimy
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+
+              {contextGenerated && (
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
                   <div className="flex items-start gap-3">
                     <div className="text-2xl">✨</div>
                     <div className="flex-1">
@@ -365,12 +410,6 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
                         Keywords and stakeholders have been pre-filled. Feel free to customize them.
                       </p>
                     </div>
-                    <button
-                      onClick={() => setShowAiSuggestions(false)}
-                      className="text-purple-400 hover:text-purple-600"
-                    >
-                      ✕
-                    </button>
                   </div>
                 </div>
               )}
