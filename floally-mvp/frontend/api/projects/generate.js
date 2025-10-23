@@ -4,16 +4,26 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
-import { createClient } from '@vercel/kv';
+import { createClient } from 'redis';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
-const redis = createClient({
-  url: process.env.KV_REST_API_URL,
-  token: process.env.KV_REST_API_TOKEN,
-});
+let redisClient = null;
+
+async function getRedisClient() {
+  if (!redisClient) {
+    const redisUrl = process.env.KV_URL || process.env.REDIS_URL;
+    if (!redisUrl) {
+      throw new Error('Redis URL not configured');
+    }
+    
+    redisClient = createClient({ url: redisUrl });
+    await redisClient.connect();
+  }
+  return redisClient;
+}
 
 export default async function handler(req, res) {
   // Enable CORS
@@ -44,7 +54,8 @@ export default async function handler(req, res) {
     }
 
     // Fetch user profile for context
-    const userProfile = await redis.hgetall(`user:${userId}:profile`);
+    const redis = await getRedisClient();
+    const userProfile = await redis.hGetAll(`user:${userId}:profile`);
     
     // Build context-aware prompt
     const systemPrompt = `You are Aimy, an AI assistant helping a user structure their project. Your role is to help them think through their goals, tasks, and success metrics in a thoughtful, collaborative way.
