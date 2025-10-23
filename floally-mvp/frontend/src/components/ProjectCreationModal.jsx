@@ -22,6 +22,12 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
   const [showAiSuggestions, setShowAiSuggestions] = useState(false);
   const [goalsGenerated, setGoalsGenerated] = useState(false);
   const [contextGenerated, setContextGenerated] = useState(false);
+  
+  // New state for description enhancement
+  const [enhancing, setEnhancing] = useState(false);
+  const [enhancement, setEnhancement] = useState(null);
+  const [showEnhancement, setShowEnhancement] = useState(false);
+  const [originalDescription, setOriginalDescription] = useState('');
 
   const addField = (field) => {
     setFormData(prev => ({
@@ -81,6 +87,97 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
     } finally {
       setLoading(false);
     }
+  };
+
+  const enhanceDescriptionWithAimy = async () => {
+    if (!formData.description.trim() || formData.description.trim().length < 10) {
+      setError('Please provide a basic description for Aimy to enhance');
+      return;
+    }
+
+    setEnhancing(true);
+    setError('');
+    setOriginalDescription(formData.description); // Save original
+
+    try {
+      const response = await fetch('/api/projects/enhance-description', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.userId,
+          projectName: formData.name,
+          projectDescription: formData.description
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to enhance description');
+      }
+
+      const data = await response.json();
+      setEnhancement(data.enhancement);
+      setShowEnhancement(true);
+      
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setEnhancing(false);
+    }
+  };
+
+  const acceptEnhancement = () => {
+    setFormData(prev => ({
+      ...prev,
+      description: enhancement.enhancedDescription
+    }));
+    
+    // Pre-fill deadline if we have a recommended timeline
+    if (enhancement.estimatedDuration && !formData.deadline) {
+      // Try to extract months from estimatedDuration (e.g., "2-3 months" -> 3)
+      const monthsMatch = enhancement.estimatedDuration.match(/(\d+)[-–]?(\d+)?\s*months?/i);
+      const weeksMatch = enhancement.estimatedDuration.match(/(\d+)[-–]?(\d+)?\s*weeks?/i);
+      
+      if (monthsMatch) {
+        const months = parseInt(monthsMatch[2] || monthsMatch[1]);
+        const deadlineDate = new Date();
+        deadlineDate.setMonth(deadlineDate.getMonth() + months);
+        setFormData(prev => ({
+          ...prev,
+          deadline: deadlineDate.toISOString().split('T')[0]
+        }));
+      } else if (weeksMatch) {
+        const weeks = parseInt(weeksMatch[2] || weeksMatch[1]);
+        const deadlineDate = new Date();
+        deadlineDate.setDate(deadlineDate.getDate() + (weeks * 7));
+        setFormData(prev => ({
+          ...prev,
+          deadline: deadlineDate.toISOString().split('T')[0]
+        }));
+      }
+    }
+    
+    setShowEnhancement(false);
+  };
+
+  const rejectEnhancement = () => {
+    setFormData(prev => ({
+      ...prev,
+      description: originalDescription
+    }));
+    setShowEnhancement(false);
+    setEnhancement(null);
+  };
+
+  const regenerateEnhancement = () => {
+    setFormData(prev => ({
+      ...prev,
+      description: originalDescription
+    }));
+    setEnhancement(null);
+    setShowEnhancement(false);
+    // Call enhance again
+    setTimeout(() => enhanceDescriptionWithAimy(), 100);
   };
 
   const generateGoalsWithAimy = async () => {
@@ -220,10 +317,139 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
                   placeholder="What is this project about? What are you trying to achieve?"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                   rows={4}
+                  disabled={showEnhancement}
                 />
-                <p className="text-xs text-gray-500 mt-2">
-                  💡 Aimy will help you generate goals and context in the next steps based on this description
-                </p>
+                
+                {/* Enhance with Aimy Button */}
+                {!showEnhancement && formData.description.trim().length >= 10 && (
+                  <button
+                    type="button"
+                    onClick={enhanceDescriptionWithAimy}
+                    disabled={enhancing}
+                    className="mt-3 flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all disabled:opacity-50 text-sm font-medium"
+                  >
+                    {enhancing ? (
+                      <>
+                        <span className="animate-spin">🔄</span>
+                        Aimy is analyzing...
+                      </>
+                    ) : (
+                      <>
+                        ✨ Enhance with Aimy
+                      </>
+                    )}
+                  </button>
+                )}
+
+                {/* Enhancement Results */}
+                {showEnhancement && enhancement && (
+                  <div className="mt-4 p-4 bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200 rounded-xl">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl">✨</span>
+                        <div>
+                          <h4 className="font-bold text-purple-900">Aimy's Enhanced Description</h4>
+                          <p className="text-xs text-purple-700">Based on scope analysis and complexity assessment</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Enhanced Description */}
+                    <div className="bg-white p-4 rounded-lg mb-3 border border-purple-100">
+                      <p className="text-gray-800 whitespace-pre-wrap">{enhancement.enhancedDescription}</p>
+                    </div>
+
+                    {/* Metadata Grid */}
+                    <div className="grid grid-cols-2 gap-3 mb-3">
+                      <div className="bg-white p-3 rounded-lg border border-purple-100">
+                        <p className="text-xs font-semibold text-purple-900 mb-1">⏱️ Estimated Duration</p>
+                        <p className="text-sm text-gray-800 font-medium">{enhancement.estimatedDuration}</p>
+                      </div>
+                      <div className="bg-white p-3 rounded-lg border border-purple-100">
+                        <p className="text-xs font-semibold text-purple-900 mb-1">📊 Complexity</p>
+                        <p className="text-sm text-gray-800 font-medium capitalize">{enhancement.complexity.replace('-', ' ')}</p>
+                      </div>
+                    </div>
+
+                    {/* Timeline Recommendation */}
+                    {enhancement.recommendedTimeline && (
+                      <div className="bg-white p-3 rounded-lg mb-3 border border-purple-100">
+                        <p className="text-xs font-semibold text-purple-900 mb-1">📅 Recommended Timeline</p>
+                        <p className="text-sm text-gray-800">{enhancement.recommendedTimeline}</p>
+                      </div>
+                    )}
+
+                    {/* Key Components */}
+                    {enhancement.keyComponents && enhancement.keyComponents.length > 0 && (
+                      <div className="bg-white p-3 rounded-lg mb-3 border border-purple-100">
+                        <p className="text-xs font-semibold text-purple-900 mb-2">🔑 Key Components</p>
+                        <ul className="text-sm text-gray-800 space-y-1">
+                          {enhancement.keyComponents.map((component, idx) => (
+                            <li key={idx} className="flex items-start gap-2">
+                              <span className="text-purple-600 mt-0.5">•</span>
+                              <span>{component}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* Potential Challenges */}
+                    {enhancement.potentialChallenges && enhancement.potentialChallenges.length > 0 && (
+                      <div className="bg-white p-3 rounded-lg mb-3 border border-purple-100">
+                        <p className="text-xs font-semibold text-purple-900 mb-2">⚠️ Potential Challenges</p>
+                        <ul className="text-sm text-gray-800 space-y-1">
+                          {enhancement.potentialChallenges.map((challenge, idx) => (
+                            <li key={idx} className="flex items-start gap-2">
+                              <span className="text-orange-600 mt-0.5">•</span>
+                              <span>{challenge}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* Aimy's Reasoning */}
+                    {enhancement.reasoning && (
+                      <div className="bg-purple-100 p-3 rounded-lg mb-3 border border-purple-200">
+                        <p className="text-xs font-semibold text-purple-900 mb-1">💭 Aimy's Reasoning</p>
+                        <p className="text-sm text-purple-800 italic">{enhancement.reasoning}</p>
+                      </div>
+                    )}
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={acceptEnhancement}
+                        className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all font-medium text-sm"
+                      >
+                        ✓ Accept Enhancement
+                      </button>
+                      <button
+                        type="button"
+                        onClick={regenerateEnhancement}
+                        disabled={enhancing}
+                        className="px-4 py-2 bg-white text-purple-700 border-2 border-purple-300 rounded-lg hover:bg-purple-50 transition-all font-medium text-sm disabled:opacity-50"
+                      >
+                        🔄 Regenerate
+                      </button>
+                      <button
+                        type="button"
+                        onClick={rejectEnhancement}
+                        className="px-4 py-2 bg-white text-gray-700 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-all font-medium text-sm"
+                      >
+                        ✗ Keep Original
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {!showEnhancement && (
+                  <p className="text-xs text-gray-500 mt-2">
+                    💡 Let Aimy enhance your description with scope clarification and timeline recommendations
+                  </p>
+                )}
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">

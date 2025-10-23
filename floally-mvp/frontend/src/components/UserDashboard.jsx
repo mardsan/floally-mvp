@@ -267,14 +267,67 @@ function UserDashboard({ user, onLogout }) {
                           {project.description}
                         </p>
                       )}
+                      
+                      {/* Timeline Display */}
+                      {project.deadline && (() => {
+                        const deadline = new Date(project.deadline);
+                        const today = new Date();
+                        const daysUntil = Math.ceil((deadline - today) / (1000 * 60 * 60 * 24));
+                        const monthsUntil = Math.floor(daysUntil / 30);
+                        
+                        let timelineText = '';
+                        let timelineColor = '';
+                        let timelineIcon = '';
+                        
+                        if (daysUntil < 0) {
+                          timelineText = 'Overdue';
+                          timelineColor = 'bg-red-100 text-red-800 border-red-200';
+                          timelineIcon = '⚠️';
+                        } else if (daysUntil === 0) {
+                          timelineText = 'Due Today';
+                          timelineColor = 'bg-red-100 text-red-800 border-red-200';
+                          timelineIcon = '🎯';
+                        } else if (daysUntil === 1) {
+                          timelineText = 'Due Tomorrow';
+                          timelineColor = 'bg-orange-100 text-orange-800 border-orange-200';
+                          timelineIcon = '⏰';
+                        } else if (daysUntil <= 7) {
+                          timelineText = `${daysUntil} days`;
+                          timelineColor = 'bg-orange-100 text-orange-800 border-orange-200';
+                          timelineIcon = '⏰';
+                        } else if (daysUntil <= 30) {
+                          timelineText = `${daysUntil} days`;
+                          timelineColor = 'bg-yellow-100 text-yellow-800 border-yellow-200';
+                          timelineIcon = '📅';
+                        } else if (monthsUntil < 12) {
+                          timelineText = monthsUntil === 1 ? '1 month' : `${monthsUntil} months`;
+                          timelineColor = 'bg-blue-100 text-blue-800 border-blue-200';
+                          timelineIcon = '📅';
+                        } else {
+                          const years = Math.floor(monthsUntil / 12);
+                          timelineText = years === 1 ? '1 year' : `${years} years`;
+                          timelineColor = 'bg-gray-100 text-gray-800 border-gray-200';
+                          timelineIcon = '📅';
+                        }
+                        
+                        return (
+                          <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold ${timelineColor}`}>
+                            <span>{timelineIcon}</span>
+                            <span>{timelineText}</span>
+                            <span className="text-gray-400">•</span>
+                            <span className="font-normal">{deadline.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                          </div>
+                        );
+                      })()}
+                      
+                      {!project.deadline && (
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold bg-gray-50 text-gray-600 border-gray-200">
+                          <span>⏳</span>
+                          <span>Ongoing</span>
+                        </div>
+                      )}
                     </div>
                   </div>
-
-                  {project.deadline && (
-                    <div className="text-sm text-gray-600 mb-3">
-                      📅 Due: {new Date(project.deadline).toLocaleDateString()}
-                    </div>
-                  )}
 
                   {project.goals && project.goals.length > 0 && (
                     <div className="mb-3">
