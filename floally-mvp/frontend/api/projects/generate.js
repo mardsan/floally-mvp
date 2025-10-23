@@ -41,7 +41,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { userId, projectDescription, projectName, existingData } = req.body;
+    const { userId, projectDescription, projectName, deadline, priority, existingData } = req.body;
 
     if (!userId) {
       return res.status(400).json({ error: 'User ID is required' });
@@ -57,26 +57,43 @@ export default async function handler(req, res) {
     const redis = await getRedisClient();
     const userProfile = await redis.hGetAll(`user:${userId}:profile`);
     
+    // Calculate time context
+    let timeContext = '';
+    if (deadline) {
+      const deadlineDate = new Date(deadline);
+      const now = new Date();
+      const daysUntilDeadline = Math.ceil((deadlineDate - now) / (1000 * 60 * 60 * 24));
+      
+      if (daysUntilDeadline > 0) {
+        timeContext = `\n- Deadline: ${deadline} (${daysUntilDeadline} days from now)`;
+      } else {
+        timeContext = `\n- Deadline: ${deadline} (OVERDUE by ${Math.abs(daysUntilDeadline)} days)`;
+      }
+    }
+    
     // Build context-aware prompt
     const systemPrompt = `You are Aimy, an AI assistant helping a user structure their project. Your role is to help them think through their goals, tasks, and success metrics in a thoughtful, collaborative way.
 
 User Context:
 - Role: ${userProfile?.role || 'Not specified'}
 - Work Style: ${userProfile?.workStyle || 'Not specified'}
-- Priorities: ${userProfile?.priorities || 'Not specified'}
+- Priorities: ${userProfile?.priorities || 'Not specified'}${timeContext}
+- Priority Level: ${priority || 'medium'}
 
 Your task is to analyze the project description and generate:
-1. **Goals** (3-5 concrete, achievable objectives)
-2. **Tasks** (5-8 specific action items to accomplish the goals)
+1. **Goals** (3-5 concrete, achievable objectives - ${deadline ? 'adjusted for the deadline' : 'with realistic timing'})
+2. **Tasks** (5-8 specific action items to accomplish the goals - ${deadline ? 'prioritized for the timeframe' : 'in logical order'})
 3. **Keywords** (5-10 relevant terms for filtering emails/meetings)
 4. **Stakeholders** (3-6 people/roles who should be involved)
 5. **Success Metrics** (3-4 ways to measure project success)
+6. **Recommended Timeline** (if no deadline provided, suggest realistic start date and duration)
 
 Important:
 - Be specific and actionable
 - Match the user's work style and priorities
 - Use industry-appropriate language
-- Focus on what's realistic and achievable
+- ${deadline ? `Focus on what's realistic for ${Math.ceil((new Date(deadline) - new Date()) / (1000 * 60 * 60 * 24))} days` : 'Suggest a realistic timeline'}
+- ${deadline && Math.ceil((new Date(deadline) - new Date()) / (1000 * 60 * 60 * 24)) < 30 ? 'WARN if timeline is too ambitious' : ''}
 - Make it easy for the user to edit and refine
 
 Return ONLY a valid JSON object with this exact structure:
@@ -85,18 +102,21 @@ Return ONLY a valid JSON object with this exact structure:
   "tasks": ["task1", "task2", ...],
   "keywords": ["keyword1", "keyword2", ...],
   "stakeholders": ["stakeholder1", "stakeholder2", ...],
-  "successMetrics": ["metric1", "metric2", ...]
+  "successMetrics": ["metric1", "metric2", ...],
+  "recommendedTimeline": "suggested timeline or warning about deadline" 
 }`;
 
     const userMessage = `Project Name: ${projectName || 'Untitled Project'}
 
 Project Description:
 ${projectDescription}
+${deadline ? `\nDeadline: ${deadline}` : '\nNo deadline set yet'}
+${priority ? `\nPriority: ${priority}` : ''}
 
 ${existingData ? `\nExisting Data (user has already added some information):
 ${JSON.stringify(existingData, null, 2)}` : ''}
 
-Please analyze this project and help me structure it with goals, tasks, keywords, stakeholders, and success metrics.`;
+Please analyze this project and help me structure it with goals, tasks, keywords, stakeholders, success metrics, and timeline recommendations.`;
 
     console.log('Calling Claude API for project generation...');
 

@@ -100,6 +100,8 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
           userId: user.userId,
           projectName: formData.name,
           projectDescription: formData.description,
+          deadline: formData.deadline, // Include deadline for time-aware suggestions
+          priority: formData.priority,
           existingData: {
             goals: formData.goals.filter(g => g.trim()),
             keywords: formData.keywords.filter(k => k.trim()),
@@ -304,6 +306,12 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
                       <p className="text-sm text-purple-700">
                         Review and edit the goals below. You can add, remove, or modify any suggestion.
                       </p>
+                      {aiSuggestions?.recommendedTimeline && (
+                        <div className="mt-3 pt-3 border-t border-purple-200">
+                          <p className="text-sm font-semibold text-purple-900 mb-1">📅 Aimy's Timeline Recommendation:</p>
+                          <p className="text-sm text-purple-800">{aiSuggestions.recommendedTimeline}</p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
