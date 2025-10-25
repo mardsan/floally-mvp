@@ -145,20 +145,23 @@ function App() {
           
           // Update state
           setCurrentUser(user);
-          setAuthenticated(true);
+          setCheckingAuth(false);
           
-          // Load dashboard data
-          loadDashboardData();
+          // Clean the URL and redirect to dashboard
+          window.history.replaceState({}, document.title, '/dashboard');
+          // Redirect will cause re-render and show dashboard
+          window.location.href = '/dashboard';
         } catch (e) {
           console.error('Failed to parse user data from OAuth:', e);
+          setCheckingAuth(false);
         }
+      } else {
+        // No user data, just clean URL
+        window.history.replaceState({}, document.title, '/');
+        setCheckingAuth(false);
       }
-      
-      // Clean the URL without reloading
-      window.history.replaceState({}, document.title, '/');
     } else {
-      // Normal auth check
-      checkAuthStatus();
+      setCheckingAuth(false);
     }
   }, []);
 
