@@ -1,9 +1,15 @@
 import { useState, useEffect } from 'react';
+import AvatarSelector from './AvatarSelector';
+import DeleteProfileModal from './DeleteProfileModal';
 
 function ProfileSettings({ user, onClose }) {
   const [activeTab, setActiveTab] = useState('profile');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  
+  // Modal states
+  const [showAvatarSelector, setShowAvatarSelector] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   
   // Profile data
   const [profileData, setProfileData] = useState({
@@ -93,6 +99,7 @@ function ProfileSettings({ user, onClose }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           display_name: profileData.display_name,
+          avatar_url: profileData.avatar_url,
           company: profileData.company,
           role: profileData.role,
           priorities: profileData.priorities,
@@ -114,6 +121,51 @@ function ProfileSettings({ user, onClose }) {
       alert('❌ Failed to update profile. Please try again.');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleAvatarSelect = async (avatarUrl) => {
+    setProfileData({ ...profileData, avatar_url: avatarUrl });
+    
+    // Save immediately
+    try {
+      const response = await fetch(`https://floally-mvp-production.up.railway.app/api/user/profile?user_email=${encodeURIComponent(user.email)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ avatar_url: avatarUrl })
+      });
+      
+      if (response.ok) {
+        // Update user object in localStorage
+        const storedUser = JSON.parse(localStorage.getItem('okaimy_user') || '{}');
+        storedUser.avatar_url = avatarUrl;
+        localStorage.setItem('okaimy_user', JSON.stringify(storedUser));
+      }
+    } catch (error) {
+      console.error('Failed to save avatar:', error);
+    }
+  };
+
+  const handleDeleteProfile = async () => {
+    try {
+      const response = await fetch(`https://floally-mvp-production.up.railway.app/api/user/profile?user_email=${encodeURIComponent(user.email)}`, {
+        method: 'DELETE'
+      });
+      
+      if (response.ok) {
+        // Clear localStorage
+        localStorage.removeItem('okaimy_token');
+        localStorage.removeItem('okaimy_user');
+        
+        // Redirect to landing page
+        alert('Your account has been deleted. We\'re sorry to see you go!');
+        window.location.href = '/';
+      } else {
+        throw new Error('Failed to delete profile');
+      }
+    } catch (error) {
+      console.error('Failed to delete profile:', error);
+      throw error;
     }
   };
 
@@ -188,7 +240,10 @@ function ProfileSettings({ user, onClose }) {
                     alt="Profile"
                     className="w-24 h-24 rounded-full object-cover ring-4 ring-teal-100"
                   />
-                  <button className="absolute bottom-0 right-0 bg-teal-500 text-white rounded-full p-2 hover:bg-teal-600 shadow-lg">
+                  <button 
+                    onClick={() => setShowAvatarSelector(true)}
+                    className="absolute bottom-0 right-0 bg-teal-500 text-white rounded-full p-2 hover:bg-teal-600 shadow-lg transition-colors"
+                  >
                     📷
                   </button>
                 </div>
@@ -281,6 +336,27 @@ function ProfileSettings({ user, onClose }) {
                     <option value="collaborative">Collaborative</option>
                     <option value="decisive">Decisive</option>
                   </select>
+                </div>
+              </div>
+
+              {/* Danger Zone */}
+              <div className="border-t border-gray-200 pt-6 mt-8">
+                <h3 className="text-lg font-semibold text-red-900 mb-4">⚠️ Danger Zone</h3>
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h4 className="font-semibold text-red-900">Delete Account</h4>
+                      <p className="text-sm text-red-700 mt-1">
+                        Permanently delete your account and all associated data. This action cannot be undone.
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setShowDeleteModal(true)}
+                      className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors whitespace-nowrap ml-4"
+                    >
+                      Delete Account
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -438,6 +514,24 @@ function ProfileSettings({ user, onClose }) {
           </div>
         )}
       </div>
+
+      {/* Avatar Selector Modal */}
+      {showAvatarSelector && (
+        <AvatarSelector
+          currentAvatar={profileData.avatar_url}
+          onSelect={handleAvatarSelect}
+          onClose={() => setShowAvatarSelector(false)}
+        />
+      )}
+
+      {/* Delete Profile Modal */}
+      {showDeleteModal && (
+        <DeleteProfileModal
+          user={user}
+          onClose={() => setShowDeleteModal(false)}
+          onDelete={handleDeleteProfile}
+        />
+      )}
     </div>
   );
 }

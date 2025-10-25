@@ -363,3 +363,48 @@ async def get_user_settings(user_email: str, db: Session = Depends(get_db)):
     except Exception as e:
         print(f"❌ Error loading settings: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.delete("/profile")
+async def delete_user_profile(user_email: str, db: Session = Depends(get_db)):
+    """Delete user profile and all associated data"""
+    try:
+        user = db.query(User).filter(User.email == user_email).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        print(f"🗑️ Deleting user account: {user_email}")
+        
+        # SQLAlchemy will cascade delete all related records:
+        # - UserProfile
+        # - ConnectedAccount
+        # - BehaviorAction
+        # - UserSettings
+        # - SenderStats
+        db.delete(user)
+        db.commit()
+        
+        print(f"✅ User account deleted: {user_email}")
+        return {"success": True, "message": "Account deleted successfully"}
+    except Exception as e:
+        db.rollback()
+        print(f"❌ Error deleting user: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/delete-feedback")
+async def save_delete_feedback(feedback: Dict, db: Session = Depends(get_db)):
+    """Save user feedback when deleting account"""
+    try:
+        # Log feedback for analysis
+        import json
+        print(f"📋 Delete feedback from {feedback.get('user_email')}:")
+        print(f"   Reason: {feedback.get('reason')}")
+        print(f"   Details: {feedback.get('details')}")
+        print(f"   Would recommend: {feedback.get('would_recommend')}")
+        
+        # TODO: Store in a feedback table for analysis
+        # For now, just log it
+        
+        return {"success": True, "message": "Feedback received"}
+    except Exception as e:
+        print(f"❌ Error saving feedback: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
