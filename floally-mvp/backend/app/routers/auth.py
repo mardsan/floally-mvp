@@ -67,16 +67,21 @@ async def login():
 async def callback(code: str, state: str, db: Session = Depends(get_db)):
     """Handle OAuth callback"""
     try:
+        print(f"🔐 OAuth callback received - code: {code[:20]}..., state: {state}")
+        
         flow = get_flow()
+        print(f"📋 Fetching token...")
         flow.fetch_token(code=code)
         credentials = flow.credentials
+        print(f"✅ Token received")
         
         # Get user info from Google using requests
-        import requests
+        print(f"👤 Fetching user info from Google...")
         headers = {'Authorization': f'Bearer {credentials.token}'}
         response = requests.get('https://www.googleapis.com/oauth2/v2/userinfo', headers=headers)
         response.raise_for_status()
         user_info = response.json()
+        print(f"✅ User info received: {user_info.get('email')}")
         
         email = user_info.get('email')
         display_name = user_info.get('name', email.split('@')[0] if email else 'User')
@@ -146,9 +151,14 @@ async def callback(code: str, state: str, db: Session = Depends(get_db)):
         
         # Redirect to frontend root with auth success param
         frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
+        print(f"✅ Redirecting to: {frontend_url}/?auth=success")
         return RedirectResponse(url=f"{frontend_url}/?auth=success")
     
     except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"❌ OAuth callback error: {str(e)}")
+        print(f"📋 Error details:\n{error_details}")
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/status")
