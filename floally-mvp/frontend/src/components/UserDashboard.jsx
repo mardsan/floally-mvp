@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import OnboardingFlow from './OnboardingFlow';
 import ProjectCreationModal from './ProjectCreationModal';
+import ProfileSettings from './ProfileSettings';
 
 function UserDashboard({ user, onLogout }) {
   const [projects, setProjects] = useState([]);
@@ -13,6 +14,9 @@ function UserDashboard({ user, onLogout }) {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [profileCompleted, setProfileCompleted] = useState(false);
   const [profileLoading, setProfileLoading] = useState(true);
+  
+  // Profile settings state
+  const [showProfileSettings, setShowProfileSettings] = useState(false);
   
   // Project modal state
   const [showProjectModal, setShowProjectModal] = useState(false);
@@ -171,8 +175,15 @@ function UserDashboard({ user, onLogout }) {
           </div>
           <div className="flex items-center gap-4">
             <div className="text-sm text-gray-600">
-              👋 Welcome, <span className="font-medium">{user.name}</span>
+              👋 Welcome, <span className="font-medium">{user.display_name || user.email}</span>
             </div>
+            <button
+              onClick={() => setShowProfileSettings(true)}
+              className="px-4 py-2 text-sm text-gray-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-colors flex items-center gap-2"
+            >
+              <span>⚙️</span>
+              <span>Settings</span>
+            </button>
             <button
               onClick={onLogout}
               className="px-4 py-2 text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
@@ -459,6 +470,22 @@ function UserDashboard({ user, onLogout }) {
           )}
         </div>
       </main>
+
+      {/* Onboarding Modal */}
+      {showOnboarding && (
+        <OnboardingFlow 
+          userEmail={user.email} 
+          onComplete={handleOnboardingComplete} 
+        />
+      )}
+
+      {/* Profile Settings Modal */}
+      {showProfileSettings && (
+        <ProfileSettings
+          user={user}
+          onClose={() => setShowProfileSettings(false)}
+        />
+      )}
 
       {/* Project Creation Modal */}
       {showProjectModal && (

@@ -7,6 +7,7 @@ from typing import List, Optional, Dict, Any
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import User, UserProfile, UserSettings
+from app.models.user import ConnectedAccount
 import os
 
 router = APIRouter()
@@ -273,3 +274,92 @@ def get_user_profile_fallback(user_email: str):
         "unsubscribe_preference": None,
         "work_hours": None
     }
+
+@router.get("/connected-accounts")
+async def get_connected_accounts(user_email: str, db: Session = Depends(get_db)):
+    """Get all connected accounts for a user"""
+    try:
+        user = db.query(User).filter(User.email == user_email).first()
+        if not user:
+            return {"accounts": []}
+        
+        accounts = db.query(ConnectedAccount).filter(
+            ConnectedAccount.user_id == user.id
+        ).all()
+        
+        return {
+            "accounts": [
+                {
+                    "id": str(acc.id),
+                    "provider": acc.provider,
+                    "email": acc.email,
+                    "is_primary": acc.is_primary,
+                    "created_at": acc.created_at.isoformat(),
+                    "updated_at": acc.updated_at.isoformat(),
+                    "scopes": acc.scopes or []
+                }
+                for acc in accounts
+            ]
+        }
+    except Exception as e:
+        print(f"❌ Error loading connected accounts: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.delete("/connected-accounts/{account_id}")
+async def disconnect_account(account_id: str, db: Session = Depends(get_db)):
+    """Disconnect a connected account"""
+    try:
+        import uuid
+        account = db.query(ConnectedAccount).filter(
+            ConnectedAccount.id == uuid.UUID(account_id)
+        ).first()
+        
+        if not account:
+            raise HTTPException(status_code=404, detail="Account not found")
+        
+        db.delete(account)
+        db.commit()
+        
+        return {"success": True, "message": "Account disconnected successfully"}
+    except Exception as e:
+        db.rollback()
+        print(f"❌ Error disconnecting account: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/settings")
+async def get_user_settings(user_email: str, db: Session = Depends(get_db)):
+    """Get user settings"""
+    try:
+        user = db.query(User).filter(User.email == user_email).first()
+        if not user:
+            return {
+                "ai_preferences": {},
+                "notification_preferences": {},
+                "privacy_settings": {}
+            }
+        
+        settings = db.query(UserSettings).filter(UserSettings.user_id == user.id).first()
+        if not settings:
+            # Return defaults
+            return {
+                "ai_preferences": {
+                    "model": "claude-3-haiku",
+                    "tone": "warm_friendly",
+                    "verbosity": "concise"
+                },
+                "notification_preferences": {
+                    "email_digest": {"enabled": True, "frequency": "daily"}
+                },
+                "privacy_settings": {
+                    "behavioral_learning": True
+                }
+            }
+        
+        return {
+            "ai_preferences": settings.ai_preferences or {},
+            "notification_preferences": settings.notification_preferences or {},
+            "privacy_settings": settings.privacy_settings or {}
+        }
+    except Exception as e:
+        print(f"❌ Error loading settings: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
