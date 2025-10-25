@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import AddProjectModal from './AddProjectModal';
 import ProfileSettings from './ProfileSettings';
+import ProjectDetailsModal from './ProjectDetailsModal';
+import UniversalCalendar from './UniversalCalendar';
 
 function MainDashboard({ user, onLogout }) {
   const [loading, setLoading] = useState(true);
@@ -11,6 +13,7 @@ function MainDashboard({ user, onLogout }) {
   const [showAddProject, setShowAddProject] = useState(false);
   const [showProfileSettings, setShowProfileSettings] = useState(false);
   const [currentUser, setCurrentUser] = useState(user);
+  const [selectedProject, setSelectedProject] = useState(null);
 
   useEffect(() => {
     loadDashboardData();
@@ -28,6 +31,14 @@ function MainDashboard({ user, onLogout }) {
     
     // Also update localStorage
     localStorage.setItem('okaimy_user', JSON.stringify(updatedUser));
+  };
+
+  const handleProjectUpdate = (updatedProject) => {
+    // Update the project in the list
+    setProjects(projects.map(p => 
+      p.id === updatedProject.id ? updatedProject : p
+    ));
+    setSelectedProject(null);
   };
 
   const loadDashboardData = async () => {
@@ -302,7 +313,8 @@ function MainDashboard({ user, onLogout }) {
                     .map(project => (
                       <div
                         key={project.id}
-                        className={`p-4 rounded-lg border-2 ${getPriorityColor(project.priority)} transition-all hover:shadow-md`}
+                        onClick={() => setSelectedProject(project)}
+                        className={`p-4 rounded-lg border-2 ${getPriorityColor(project.priority)} transition-all hover:shadow-md cursor-pointer`}
                       >
                         <div className="flex items-start justify-between mb-2">
                           <h4 className="font-semibold">{project.name}</h4>
@@ -402,6 +414,15 @@ function MainDashboard({ user, onLogout }) {
           </section>
         </div>
 
+        {/* Universal Calendar */}
+        <section className="mb-8">
+          <UniversalCalendar 
+            projects={projects}
+            calendarEvents={calendarEvents}
+            user={user}
+          />
+        </section>
+
         {/* Quick Actions */}
         <section className="mb-8">
           <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
@@ -455,6 +476,15 @@ function MainDashboard({ user, onLogout }) {
           onClose={() => setShowProfileSettings(false)}
           onProfileUpdate={handleProfileUpdate}
           onSave={() => setShowProfileSettings(false)}
+        />
+      )}
+
+      {/* Project Details Modal */}
+      {selectedProject && (
+        <ProjectDetailsModal
+          project={selectedProject}
+          onClose={() => setSelectedProject(null)}
+          onUpdate={handleProjectUpdate}
         />
       )}
     </div>

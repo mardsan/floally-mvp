@@ -4,6 +4,7 @@ from typing import List, Optional
 import anthropic
 import os
 import json
+from datetime import datetime
 
 router = APIRouter()
 
@@ -302,6 +303,8 @@ async def generate_project_plan(request: ProjectPlanRequest):
         
         prompt = f"""You are Aimy, an AI strategic partner helping someone plan their project.
 
+TODAY'S DATE: {datetime.now().strftime('%Y-%m-%d')}
+
 Project Description (provided by user):
 "{request.description}"
 
@@ -309,7 +312,7 @@ Based on this description, help plan the project by providing:
 
 1. **Enhanced Description**: Expand and refine the description (2-3 sentences)
 2. **Timeline**: Suggest a realistic timeframe (e.g., "2-3 weeks", "1-2 months")
-3. **Goals**: Generate 3-5 specific, actionable goals/tasks with suggested deadlines
+3. **Goals**: Generate 3-5 specific, actionable goals/tasks with ACTUAL deadline dates
 4. **Success Metrics**: How will we know this project succeeded?
 5. **Priority**: Recommend priority level (low/medium/high/critical)
 
@@ -320,7 +323,7 @@ Provide your response in this EXACT JSON format:
     "goals": [
         {{
             "goal": "Specific, actionable task",
-            "deadline": "Relative deadline (e.g., 'Week 1', 'End of month', '2 weeks')",
+            "deadline": "YYYY-MM-DD (actual date, not relative like 'Week 1')",
             "status": "not_started"
         }}
     ],
@@ -328,10 +331,15 @@ Provide your response in this EXACT JSON format:
     "recommended_priority": "low|medium|high|critical"
 }}
 
+IMPORTANT for deadlines:
+- Use ACTUAL dates in YYYY-MM-DD format (e.g., "2025-11-01", "2025-11-15")
+- Calculate dates from today: {datetime.now().strftime('%Y-%m-%d')}
+- Space goals realistically (1-2 weeks apart for most tasks)
+- Consider realistic timelines for creative/professional work
+
 Guidelines:
 - Be specific and actionable
 - Make goals SMART (Specific, Measurable, Achievable, Relevant, Time-bound)
-- Consider realistic timelines for creative/professional work
 - Be encouraging and supportive in tone
 - Prioritize based on urgency keywords and project scope"""
 
