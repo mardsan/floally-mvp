@@ -1,6 +1,35 @@
 # OpAime MVP - Session Log & Setup Guide
-**Date:** October 13-14, 2025  
+**Date:** October 13-14, 2025 | **Updated:** January 2025  
 **Codespace:** refactored-invention-6wpqr6wpqg42r747
+
+---
+
+## 🆕 Latest Updates - January 2025
+
+### ✅ Avatar Selection & Profile Deletion (commit c5fec08)
+**Features Added:**
+- **AvatarSelector Component:** 12 default avatars from DiceBear API + custom upload
+- **DeleteProfileModal:** 3-step confirmation process with feedback collection
+- **Backend Endpoints:** DELETE /api/user/profile, POST /api/user/delete-feedback
+- **Integration:** Both features fully integrated into ProfileSettings component
+- **Documentation:** See AVATAR_AND_DELETION_FEATURES.md for complete details
+
+### ✅ Profile Settings System (commit 36aac76)
+**Features Added:**
+- 4-tab profile management interface (Profile, Connected Accounts, Preferences, Billing)
+- Connected accounts listing and disconnect functionality
+- User settings management (AI preferences, notifications, privacy)
+- Backend endpoints for accounts and settings
+- **Documentation:** See PROFILE_HUB_COMPLETE.md
+
+### ✅ Database Integration & Session Persistence (commits 2fc86c2 - fdebddd)
+**Features Added:**
+- PostgreSQL database with 6 tables (users, user_profiles, connected_accounts, etc.)
+- Automatic database initialization via FastAPI lifespan events
+- Session management via URL params → localStorage
+- OAuth callback routing fixed (auth=success parameter)
+- Onboarding saves to database (no more loops!)
+- Logout redirects to landing page properly
 
 ---
 
