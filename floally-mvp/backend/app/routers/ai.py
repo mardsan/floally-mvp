@@ -380,3 +380,93 @@ Guidelines:
             success_metrics="Project completed on time with all requirements met",
             recommended_priority="medium"
         )
+
+
+# New endpoint for generating dates for existing goals
+class GoalDatesRequest(BaseModel):
+    projectName: str
+    projectDescription: str
+    goals: List[str]
+
+class GoalWithDate(BaseModel):
+    goal: str
+    deadline: str
+
+class GoalDatesResponse(BaseModel):
+    goals: List[GoalWithDate]
+
+@router.post("/generate-goal-dates", response_model=GoalDatesResponse)
+async def generate_goal_dates(request: GoalDatesRequest):
+    """
+    Use AI to suggest realistic deadlines for existing project goals
+    """
+    try:
+        client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+        
+        current_date = datetime.now().strftime('%Y-%m-%d')
+        
+        goals_list = "\n".join([f"{i+1}. {goal}" for i, goal in enumerate(request.goals)])
+        
+        prompt = f"""You are Aimy, helping schedule realistic deadlines for project goals.
+
+TODAY'S DATE: {current_date}
+
+Project: {request.projectName}
+Description: {request.projectDescription}
+
+Goals to schedule:
+{goals_list}
+
+Based on the project context and realistic timelines, suggest a deadline for each goal.
+
+Provide your response in this EXACT JSON format:
+{{
+    "goals": [
+        {{
+            "goal": "Goal text exactly as provided",
+            "deadline": "YYYY-MM-DD"
+        }}
+    ]
+}}
+
+IMPORTANT:
+- Use ACTUAL calendar dates in YYYY-MM-DD format (e.g., "2025-11-01", "2025-11-15")
+- Start from today: {current_date}
+- Space goals 1-2 weeks apart for most tasks
+- Consider realistic timelines for the work involved
+- Return goals in the same order as provided"""
+
+        response = client.messages.create(
+            model="claude-3-5-sonnet-20241022",
+            max_tokens=2000,
+            messages=[{
+                "role": "user",
+                "content": prompt
+            }]
+        )
+        
+        response_text = response.content[0].text
+        
+        # Clean up response if it's wrapped in code blocks
+        if "```json" in response_text:
+            response_text = response_text.split('```json')[1].split('```')[0]
+        elif "```" in response_text:
+            response_text = response_text.split('```')[1].split('```')[0]
+        
+        dates_data = json.loads(response_text.strip())
+        
+        return GoalDatesResponse(goals=[
+            GoalWithDate(goal=g["goal"], deadline=g["deadline"])
+            for g in dates_data["goals"]
+        ])
+        
+    except Exception as e:
+        print(f"Error generating goal dates: {e}")
+        # Return goals with dates spaced 1 week apart as fallback
+        from datetime import timedelta
+        goals_with_dates = []
+        current = datetime.now()
+        for i, goal in enumerate(request.goals):
+            deadline = (current + timedelta(weeks=i+1)).strftime('%Y-%m-%d')
+            goals_with_dates.append(GoalWithDate(goal=goal, deadline=deadline))
+        return GoalDatesResponse(goals=goals_with_dates)

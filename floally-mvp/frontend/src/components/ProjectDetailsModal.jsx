@@ -1,5 +1,20 @@
 import React, { useState, useEffect } from 'react';
 
+// Helper function to check if a date string is valid YYYY-MM-DD format
+const isValidDateFormat = (dateStr) => {
+  if (!dateStr) return true; // Empty is valid
+  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+  return dateRegex.test(dateStr);
+};
+
+// Helper function to normalize old relative dates to empty string
+const normalizeDeadline = (deadline) => {
+  if (!deadline) return '';
+  if (isValidDateFormat(deadline)) return deadline;
+  // If it's a relative date like "Week 1", return empty string
+  return '';
+};
+
 const ProjectDetailsModal = ({ project, onClose, onUpdate }) => {
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({
@@ -10,6 +25,7 @@ const ProjectDetailsModal = ({ project, onClose, onUpdate }) => {
     goals: []
   });
   const [saving, setSaving] = useState(false);
+  const [generatingDates, setGeneratingDates] = useState(false);
 
   useEffect(() => {
     if (project) {
@@ -18,7 +34,10 @@ const ProjectDetailsModal = ({ project, onClose, onUpdate }) => {
         description: project.description || '',
         status: project.status || 'active',
         priority: project.priority || 'medium',
-        goals: project.goals || []
+        goals: (project.goals || []).map(goal => ({
+          ...goal,
+          deadline: normalizeDeadline(goal.deadline)
+        }))
       });
     }
   }, [project]);
@@ -63,7 +82,12 @@ const ProjectDetailsModal = ({ project, onClose, onUpdate }) => {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const user = JSON.parse(localStorage.getItem('user'));
+      const user = JSON.parse(localStorage.getItem('okaimy_user'));
+      if (!user || !user.email) {
+        alert('User session not found. Please log in again.');
+        return;
+      }
+      
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/projects/${project.id}?user_email=${user.email}`, {
         method: 'PUT',
         headers: {
@@ -94,9 +118,50 @@ const ProjectDetailsModal = ({ project, onClose, onUpdate }) => {
       description: project.description || '',
       status: project.status || 'active',
       priority: project.priority || 'medium',
-      goals: project.goals || []
+      goals: (project.goals || []).map(goal => ({
+        ...goal,
+        deadline: normalizeDeadline(goal.deadline)
+      }))
     });
     setEditMode(false);
+  };
+
+  const handleGenerateDates = async () => {
+    setGeneratingDates(true);
+    try {
+      // Use Aimy to suggest dates for goals
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/ai/generate-goal-dates`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          projectName: formData.name,
+          projectDescription: formData.description,
+          goals: formData.goals.map(g => g.goal)
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate dates');
+      }
+
+      const { goals: goalsWithDates } = await response.json();
+      
+      // Update goals with AI-suggested dates
+      setFormData(prev => ({
+        ...prev,
+        goals: prev.goals.map((goal, index) => ({
+          ...goal,
+          deadline: goalsWithDates[index]?.deadline || goal.deadline
+        }))
+      }));
+    } catch (error) {
+      console.error('Error generating dates:', error);
+      alert('Failed to generate dates. Please add them manually.');
+    } finally {
+      setGeneratingDates(false);
+    }
   };
 
   if (!project) return null;
@@ -218,15 +283,26 @@ const ProjectDetailsModal = ({ project, onClose, onUpdate }) => {
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Goals & Milestones</h3>
               {editMode && (
-                <button
-                  onClick={addGoal}
-                  className="text-teal-600 hover:text-teal-700 text-sm font-medium flex items-center gap-1"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                  </svg>
-                  Add Goal
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleGenerateDates}
+                    disabled={generatingDates || formData.goals.length === 0}
+                    className="text-purple-600 hover:text-purple-700 text-sm font-medium flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                    title="Let Aimy suggest dates for your goals"
+                  >
+                    <span>🪄</span>
+                    {generatingDates ? 'Generating...' : 'Suggest Dates'}
+                  </button>
+                  <button
+                    onClick={addGoal}
+                    className="text-teal-600 hover:text-teal-700 text-sm font-medium flex items-center gap-1"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    Add Goal
+                  </button>
+                </div>
               )}
             </div>
             <div className="space-y-3">
