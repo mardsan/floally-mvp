@@ -14,6 +14,9 @@ router = APIRouter()
 
 # OAuth2 scopes we need
 SCOPES = [
+    'openid',  # Required for getting user ID
+    'https://www.googleapis.com/auth/userinfo.email',  # Required for email
+    'https://www.googleapis.com/auth/userinfo.profile',  # Required for name and picture
     'https://www.googleapis.com/auth/gmail.readonly',
     'https://www.googleapis.com/auth/gmail.send',
     'https://www.googleapis.com/auth/calendar.readonly',
