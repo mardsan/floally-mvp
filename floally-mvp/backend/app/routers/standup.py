@@ -2,9 +2,12 @@ from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
 from datetime import datetime, timedelta
+from sqlalchemy.orm import Session
 import anthropic
 import os
+
 from app.routers.auth import get_current_user
+from app.database import get_db
 
 router = APIRouter()
 
@@ -87,36 +90,116 @@ def categorize_email(email: Dict[str, Any]) -> str:
         return 'general'
 
 @router.get("/standup/generate")
-async def generate_standup(user_email: str):
+async def generate_standup(user_email: str, db: Session = Depends(get_db)):
     """
     Generate intelligent standup recommendations (GET version for simple calls).
-    Same as analyze_standup but accepts user_email as query parameter.
+    Uses user's active projects to provide personalized recommendations.
     """
-    # For now, return a simple standup without email analysis
-    # TODO: Integrate with email analysis
-    return {
-        'the_one_thing': {
-            'title': 'Focus on your creative work',
-            'description': 'Your inbox is clear! Time to focus on your most important project.',
-            'urgency': 80,
-            'project': 'personal',
-            'action': 'Block 2-3 hours for deep work'
-        },
-        'secondary_priorities': [
-            {'title': 'Review pending emails', 'urgency': 40, 'action': 'Quick scan for urgent items'},
-            {'title': 'Plan tomorrow', 'urgency': 30, 'action': 'Set intentions for next day'}
-        ],
-        'aimy_handling': [
-            {'task': 'Monitoring inbox for urgent items', 'status': 'monitoring', 'emails': []}
-        ],
-        'daily_plan': [
-            {'time': 'Morning', 'task': 'Deep creative work', 'duration': '3 hours'},
-            {'time': 'Midday', 'task': 'Respond to important emails', 'duration': '30 min'},
-            {'time': 'Afternoon', 'task': 'Meetings and collaboration', 'duration': '2 hours'},
-            {'time': 'Evening', 'task': 'Plan tomorrow', 'duration': '15 min'}
-        ],
-        'reasoning': 'Starting with a simple daily structure. As I learn your patterns, I\'ll provide more personalized recommendations.'
-    }
+    try:
+        from app.models.user import Project
+        
+        # Fetch user's active projects
+        projects = db.query(Project).join(
+            Project.user
+        ).filter(
+            Project.user.has(email=user_email),
+            Project.status.in_(['active', 'planning'])
+        ).order_by(
+            Project.is_primary.desc(),
+            Project.priority.desc()
+        ).limit(5).all()
+        
+        if projects:
+            # Generate standup based on projects
+            primary_project = next((p for p in projects if p.is_primary), projects[0] if projects else None)
+            
+            if primary_project:
+                # Find the most urgent goal with a deadline
+                urgent_goal = None
+                if primary_project.goals:
+                    for goal_obj in primary_project.goals:
+                        if goal_obj.get('deadline') and goal_obj.get('status') != 'completed':
+                            urgent_goal = goal_obj
+                            break
+                
+                return {
+                    'the_one_thing': {
+                        'title': f"Advance {primary_project.name}",
+                        'description': primary_project.description or f"Your primary project is {primary_project.name}. Focus on making meaningful progress today.",
+                        'urgency': 85 if primary_project.priority == 'critical' else 70,
+                        'project': primary_project.name,
+                        'action': urgent_goal.get('goal') if urgent_goal else 'Review project goals and identify next steps'
+                    },
+                    'secondary_priorities': [
+                        {
+                            'title': p.name,
+                            'urgency': 70 if p.priority == 'high' else 50,
+                            'action': f"Review and plan next steps"
+                        }
+                        for p in projects[1:3]  # Next 2 projects
+                    ],
+                    'aimy_handling': [
+                        {'task': 'Monitoring project deadlines', 'status': 'monitoring', 'emails': []},
+                        {'task': 'Tracking goal progress', 'status': 'monitoring', 'emails': []}
+                    ],
+                    'daily_plan': [
+                        {'time': 'Morning', 'task': f'Deep work on {primary_project.name}', 'duration': '3 hours'},
+                        {'time': 'Midday', 'task': 'Review emails and respond to urgent items', 'duration': '30 min'},
+                        {'time': 'Afternoon', 'task': 'Progress check and planning for tomorrow', 'duration': '1 hour'}
+                    ],
+                    'reasoning': f'Your primary project "{primary_project.name}" is marked as {primary_project.priority} priority. Focusing your morning energy on this will create the most impact.'
+                }
+        
+        # No projects - provide general guidance
+        return {
+            'the_one_thing': {
+                'title': 'Set up your first project',
+                'description': 'Start by creating a project to help Aimy understand your priorities and provide personalized recommendations.',
+                'urgency': 60,
+                'project': 'onboarding',
+                'action': 'Click "New Project" to get started'
+            },
+            'secondary_priorities': [
+                {'title': 'Explore your dashboard', 'urgency': 30, 'action': 'Familiarize yourself with OkAimy features'},
+                {'title': 'Connect your calendar', 'urgency': 40, 'action': 'Sync calendar for better planning'}
+            ],
+            'aimy_handling': [
+                {'task': 'Ready to help you organize', 'status': 'monitoring', 'emails': []}
+            ],
+            'daily_plan': [
+                {'time': 'Now', 'task': 'Create your first project', 'duration': '10 min'},
+                {'time': 'Today', 'task': 'Set your goals and priorities', 'duration': '20 min'},
+                {'time': 'This week', 'task': 'Build your workflow with Aimy', 'duration': 'Ongoing'}
+            ],
+            'reasoning': 'Let\'s start by setting up your first project! This helps me understand what matters most to you and provide personalized daily guidance.'
+        }
+        
+    except Exception as e:
+        print(f"Error generating standup: {e}")
+        # Fallback response
+        return {
+            'the_one_thing': {
+                'title': 'Focus on your creative work',
+                'description': 'Your inbox is clear! Time to focus on your most important project.',
+                'urgency': 80,
+                'project': 'personal',
+                'action': 'Block 2-3 hours for deep work'
+            },
+            'secondary_priorities': [
+                {'title': 'Review pending emails', 'urgency': 40, 'action': 'Quick scan for urgent items'},
+                {'title': 'Plan tomorrow', 'urgency': 30, 'action': 'Set intentions for next day'}
+            ],
+            'aimy_handling': [
+                {'task': 'Monitoring inbox for urgent items', 'status': 'monitoring', 'emails': []}
+            ],
+            'daily_plan': [
+                {'time': 'Morning', 'task': 'Deep creative work', 'duration': '3 hours'},
+                {'time': 'Midday', 'task': 'Respond to important emails', 'duration': '30 min'},
+                {'time': 'Afternoon', 'task': 'Meetings and collaboration', 'duration': '2 hours'},
+                {'time': 'Evening', 'task': 'Plan tomorrow', 'duration': '15 min'}
+            ],
+            'reasoning': 'Starting with a simple daily structure. As I learn your patterns, I\'ll provide more personalized recommendations.'
+        }
 
 @router.post("/standup/analyze")
 async def analyze_standup(user_email: str = Depends(get_current_user)):

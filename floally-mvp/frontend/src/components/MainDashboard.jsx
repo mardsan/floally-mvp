@@ -422,7 +422,10 @@ function MainDashboard({ user, onLogout }) {
                 <div className="font-semibold text-gray-900">View Insights</div>
                 <div className="text-xs text-gray-600 mt-1">Analytics & trends</div>
               </button>
-              <button className="p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border-2 border-green-200 hover:border-green-400 transition-all text-left">
+              <button 
+                onClick={() => setShowProfileSettings(true)}
+                className="p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border-2 border-green-200 hover:border-green-400 transition-all text-left"
+              >
                 <div className="text-2xl mb-2">⚙️</div>
                 <div className="font-semibold text-gray-900">Settings</div>
                 <div className="text-xs text-gray-600 mt-1">Manage account</div>

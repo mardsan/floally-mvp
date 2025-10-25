@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import AimyWizard from './AimyWizard';
 
 const PRIORITY_COLORS = {
   low: '#9ca3af',
@@ -32,6 +33,20 @@ function AddProjectModal({ user, onClose, onProjectAdded, isFirstProject = false
     goals: [{ goal: '', deadline: '', status: 'not_started' }]
   });
   const [saving, setSaving] = useState(false);
+  const [showAimyWizard, setShowAimyWizard] = useState(false);
+
+  const handleAimyGenerated = (generatedData) => {
+    // Update form with AI-generated data
+    setFormData({
+      ...formData,
+      description: generatedData.enhanced_description || formData.description,
+      priority: generatedData.recommended_priority || formData.priority,
+      color: PRIORITY_COLORS[generatedData.recommended_priority] || formData.color,
+      goals: generatedData.goals && generatedData.goals.length > 0 
+        ? generatedData.goals 
+        : formData.goals
+    });
+  };
 
   const handleAddGoal = () => {
     setFormData({
@@ -147,9 +162,21 @@ function AddProjectModal({ user, onClose, onProjectAdded, isFirstProject = false
 
             {/* Description */}
             <div>
-              <label className="block text-sm font-semibold text-gray-900 mb-2">
-                Description
-              </label>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-semibold text-gray-900">
+                  Description
+                </label>
+                {formData.description && formData.description.length >= 10 && (
+                  <button
+                    type="button"
+                    onClick={() => setShowAimyWizard(true)}
+                    className="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-teal-500 to-blue-500 text-white text-sm font-semibold rounded-lg hover:from-teal-600 hover:to-blue-600 transition-all shadow-sm"
+                  >
+                    <span>🪄</span>
+                    <span>Ask Aimy to Plan This</span>
+                  </button>
+                )}
+              </div>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -157,6 +184,11 @@ function AddProjectModal({ user, onClose, onProjectAdded, isFirstProject = false
                 rows={3}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
               />
+              {formData.description && formData.description.length >= 10 && (
+                <p className="text-xs text-teal-600 mt-1">
+                  💡 Tip: Click "Ask Aimy to Plan This" to generate goals, timeline, and success metrics!
+                </p>
+              )}
             </div>
 
             {/* Status and Priority */}
@@ -284,6 +316,15 @@ function AddProjectModal({ user, onClose, onProjectAdded, isFirstProject = false
           </button>
         </div>
       </div>
+
+      {/* Aimy Wizard Modal */}
+      {showAimyWizard && (
+        <AimyWizard
+          projectDescription={formData.description}
+          onGenerated={handleAimyGenerated}
+          onClose={() => setShowAimyWizard(false)}
+        />
+      )}
     </div>
   );
 }

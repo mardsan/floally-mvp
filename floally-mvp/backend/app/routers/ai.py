@@ -1,7 +1,9 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+from typing import List, Optional
 import anthropic
 import os
+import json
 
 router = APIRouter()
 
@@ -256,3 +258,117 @@ def format_comm_style(style):
         'casual_conversational': 'casual and conversational'
     }
     return styles.get(style, 'natural and professional')
+
+
+# ========== PROJECT PLANNING ENDPOINTS ==========
+
+class ProjectPlanRequest(BaseModel):
+    """Request for AI project plan generation"""
+    description: str
+
+class Goal(BaseModel):
+    """Project goal/task"""
+    goal: str
+    deadline: Optional[str] = None
+    status: str = "not_started"
+
+class ProjectPlanResponse(BaseModel):
+    """AI-generated project plan"""
+    enhanced_description: str
+    timeline: str
+    goals: List[Goal]
+    success_metrics: str
+    recommended_priority: str
+
+@router.post("/generate-project-plan", response_model=ProjectPlanResponse)
+async def generate_project_plan(request: ProjectPlanRequest):
+    """
+    Use Claude to generate a comprehensive project plan based on a brief description.
+    
+    This endpoint:
+    1. Takes a minimal project description
+    2. Enhances it with AI insights
+    3. Suggests timeline and milestones
+    4. Generates specific, actionable goals
+    5. Defines success metrics
+    6. Recommends priority level
+    """
+    try:
+        api_key = os.getenv("ANTHROPIC_API_KEY")
+        if not api_key:
+            raise HTTPException(status_code=500, detail="ANTHROPIC_API_KEY not configured")
+            
+        client = anthropic.Anthropic(api_key=api_key)
+        
+        prompt = f"""You are Aimy, an AI strategic partner helping someone plan their project.
+
+Project Description (provided by user):
+"{request.description}"
+
+Based on this description, help plan the project by providing:
+
+1. **Enhanced Description**: Expand and refine the description (2-3 sentences)
+2. **Timeline**: Suggest a realistic timeframe (e.g., "2-3 weeks", "1-2 months")
+3. **Goals**: Generate 3-5 specific, actionable goals/tasks with suggested deadlines
+4. **Success Metrics**: How will we know this project succeeded?
+5. **Priority**: Recommend priority level (low/medium/high/critical)
+
+Provide your response in this EXACT JSON format:
+{{
+    "enhanced_description": "Clear, comprehensive 2-3 sentence description",
+    "timeline": "Suggested timeframe",
+    "goals": [
+        {{
+            "goal": "Specific, actionable task",
+            "deadline": "Relative deadline (e.g., 'Week 1', 'End of month', '2 weeks')",
+            "status": "not_started"
+        }}
+    ],
+    "success_metrics": "How to measure success",
+    "recommended_priority": "low|medium|high|critical"
+}}
+
+Guidelines:
+- Be specific and actionable
+- Make goals SMART (Specific, Measurable, Achievable, Relevant, Time-bound)
+- Consider realistic timelines for creative/professional work
+- Be encouraging and supportive in tone
+- Prioritize based on urgency keywords and project scope"""
+
+        response = client.messages.create(
+            model="claude-3-5-sonnet-20241022",
+            max_tokens=2000,
+            messages=[{
+                "role": "user",
+                "content": prompt
+            }]
+        )
+        
+        # Parse Claude's response
+        response_text = response.content[0].text
+        
+        # Extract JSON from response (Claude might wrap it in markdown)
+        if '```json' in response_text:
+            response_text = response_text.split('```json')[1].split('```')[0]
+        elif '```' in response_text:
+            response_text = response_text.split('```')[1].split('```')[0]
+        
+        plan_data = json.loads(response_text.strip())
+        
+        return ProjectPlanResponse(**plan_data)
+        
+    except Exception as e:
+        print(f"Error generating project plan: {e}")
+        # Return a helpful fallback
+        return ProjectPlanResponse(
+            enhanced_description=request.description,
+            timeline="2-4 weeks",
+            goals=[
+                Goal(goal="Define project scope and requirements", deadline="Week 1", status="not_started"),
+                Goal(goal="Create initial plan and timeline", deadline="Week 1", status="not_started"),
+                Goal(goal="Execute main project work", deadline="Week 2-3", status="not_started"),
+                Goal(goal="Review, refine, and finalize", deadline="Week 4", status="not_started")
+            ],
+            success_metrics="Project completed on time with all requirements met",
+            recommended_priority="medium"
+        )
