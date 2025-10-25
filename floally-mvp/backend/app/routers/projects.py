@@ -124,6 +124,8 @@ async def update_project(project_id: str, project_data: Dict, user_email: str, d
         # Update fields
         for key, value in project_data.items():
             if hasattr(project, key):
+                if key == 'goals':
+                    print(f"📝 Updating goals to: {value}")
                 setattr(project, key, value)
         
         project.updated_at = datetime.utcnow()
@@ -131,6 +133,7 @@ async def update_project(project_id: str, project_data: Dict, user_email: str, d
         db.refresh(project)
         
         print(f"✅ Updated project: {project.name}")
+        print(f"📋 Saved goals: {project.goals}")
         
         return {
             "success": True,
@@ -144,6 +147,7 @@ async def update_project(project_id: str, project_data: Dict, user_email: str, d
                 "color": project.color,
                 "is_primary": project.is_primary,
                 "metadata": project.project_metadata or {},
+                "created_at": project.created_at.isoformat() if project.created_at else None,
                 "updated_at": project.updated_at.isoformat() if project.updated_at else None
             }
         }

@@ -88,6 +88,8 @@ const ProjectDetailsModal = ({ project, onClose, onUpdate }) => {
         return;
       }
       
+      console.log('💾 Saving project with goals:', formData.goals);
+      
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/projects/${project.id}?user_email=${user.email}`, {
         method: 'PUT',
         headers: {
@@ -100,7 +102,11 @@ const ProjectDetailsModal = ({ project, onClose, onUpdate }) => {
         throw new Error('Failed to update project');
       }
 
-      const updatedProject = await response.json();
+      const data = await response.json();
+      console.log('✅ Received updated project:', data);
+      // API returns {success: true, project: {...}}
+      const updatedProject = data.project || data;
+      console.log('📋 Updated project goals:', updatedProject.goals);
       onUpdate(updatedProject);
       setEditMode(false);
     } catch (error) {
