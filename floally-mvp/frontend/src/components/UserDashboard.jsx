@@ -38,14 +38,17 @@ function UserDashboard({ user, onLogout }) {
     // Check if profile/onboarding is completed
     const checkProfile = async () => {
       try {
-        const response = await fetch(`/api/profile/onboarding?userId=${user.userId}`);
+        const response = await fetch(`https://floally-mvp-production.up.railway.app/api/user/profile?user_email=${encodeURIComponent(user.email)}`);
         const data = await response.json();
-        setProfileCompleted(data.exists);
-        if (!data.exists) {
+        console.log('Profile check:', data);
+        setProfileCompleted(data.onboarding_completed || false);
+        if (!data.onboarding_completed) {
           setShowOnboarding(true);
         }
       } catch (error) {
         console.error('Failed to check profile:', error);
+        // If API fails, don't show onboarding (assume completed)
+        setProfileCompleted(true);
       } finally {
         setProfileLoading(false);
       }
@@ -81,8 +84,32 @@ function UserDashboard({ user, onLogout }) {
   }, [user.userId]);
 
   const handleOnboardingComplete = async (profile) => {
-    setShowOnboarding(false);
-    setProfileCompleted(true);
+    try {
+      console.log('Saving onboarding data:', profile);
+      const response = await fetch('https://floally-mvp-production.up.railway.app/api/user/profile/onboarding', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_email: user.email,
+          answers: profile
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Failed to save onboarding: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log('✅ Onboarding saved successfully:', data);
+      
+      setShowOnboarding(false);
+      setProfileCompleted(true);
+    } catch (error) {
+      console.error('Failed to save onboarding:', error);
+      alert('Failed to save your profile. Please try again.');
+    }
   };
 
   const handleConnectGoogle = () => {
