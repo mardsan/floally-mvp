@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import OnboardingFlow from './OnboardingFlow';
 import ProjectCreationModal from './ProjectCreationModal';
 import ProfileSettings from './ProfileSettings';
+import AddProjectModal from './AddProjectModal';
 
 function UserDashboard({ user, onLogout }) {
   const [projects, setProjects] = useState([]);
@@ -14,6 +15,9 @@ function UserDashboard({ user, onLogout }) {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [profileCompleted, setProfileCompleted] = useState(false);
   const [profileLoading, setProfileLoading] = useState(true);
+  
+  // First project prompt state
+  const [showFirstProjectModal, setShowFirstProjectModal] = useState(false);
   
   // Profile settings state
   const [showProfileSettings, setShowProfileSettings] = useState(false);
@@ -109,6 +113,12 @@ function UserDashboard({ user, onLogout }) {
       
       setShowOnboarding(false);
       setProfileCompleted(true);
+      
+      // Show first project modal if user hasn't seen it yet
+      const hasSeenProjectPrompt = localStorage.getItem('okaimy_project_prompt_shown');
+      if (!hasSeenProjectPrompt && projects.length === 0) {
+        setTimeout(() => setShowFirstProjectModal(true), 500); // Small delay for smooth transition
+      }
     } catch (error) {
       console.error('Failed to save onboarding:', error);
       alert('Failed to save your profile. Please try again.');
@@ -137,6 +147,13 @@ function UserDashboard({ user, onLogout }) {
       // Add new project
       setProjects([project, ...projects]);
     }
+  };
+  
+  const handleFirstProjectAdded = (project) => {
+    // Add project to list
+    setProjects([project]);
+    setShowFirstProjectModal(false);
+    localStorage.setItem('okaimy_project_prompt_shown', 'true');
   };
 
   const handleDeleteProject = async (projectId) => {
@@ -484,6 +501,19 @@ function UserDashboard({ user, onLogout }) {
         <ProfileSettings
           user={user}
           onClose={() => setShowProfileSettings(false)}
+        />
+      )}
+
+      {/* First Project Prompt Modal */}
+      {showFirstProjectModal && (
+        <AddProjectModal
+          user={user}
+          onClose={() => {
+            setShowFirstProjectModal(false);
+            localStorage.setItem('okaimy_project_prompt_shown', 'true');
+          }}
+          onProjectAdded={handleFirstProjectAdded}
+          isFirstProject={true}
         />
       )}
 
