@@ -2,14 +2,13 @@ from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import RedirectResponse
 from google_auth_oauthlib.flow import Flow
 from google.oauth2.credentials import Credentials
-from googleapiclient.discovery import build
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import User, ConnectedAccount
 import os
 import json
 import uuid
-from datetime import datetime
+import requests
 
 router = APIRouter()
 
@@ -72,14 +71,18 @@ async def callback(code: str, state: str, db: Session = Depends(get_db)):
         flow.fetch_token(code=code)
         credentials = flow.credentials
         
-        # Get user info from Google
-        from googleapiclient.discovery import build
-        oauth2_service = build('oauth2', 'v2', credentials=credentials)
-        user_info = oauth2_service.userinfo().get().execute()
+        # Get user info from Google using requests
+        import requests
+        headers = {'Authorization': f'Bearer {credentials.token}'}
+        response = requests.get('https://www.googleapis.com/oauth2/v2/userinfo', headers=headers)
+        response.raise_for_status()
+        user_info = response.json()
         
         email = user_info.get('email')
-        display_name = user_info.get('name', email.split('@')[0])
+        display_name = user_info.get('name', email.split('@')[0] if email else 'User')
         picture_url = user_info.get('picture')
+        
+        print(f"📧 OAuth successful for: {email}")
         
         # Check if user exists
         user = db.query(User).filter(User.email == email).first()
