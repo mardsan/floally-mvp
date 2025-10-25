@@ -84,7 +84,7 @@ class BehaviorAction(Base):
     email_category = Column(String(50))  # primary, promotional, social, updates
     has_unsubscribe = Column(Boolean, default=False)
     confidence_score = Column(Float, default=0.0)
-    metadata = Column(JSONB)  # Additional context
+    action_metadata = Column(JSONB)  # Additional context (renamed from 'metadata' to avoid SQLAlchemy conflict)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
     
     # Relationship

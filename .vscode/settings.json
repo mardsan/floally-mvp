@@ -1,4 +1,6 @@
 {
     "remote.autoForwardPortsFallback": 0,
-    "genieai.enableConversationHistory": true
+    "genieai.enableConversationHistory": true,
+    "python-envs.defaultEnvManager": "ms-python.python:venv",
+    "python-envs.pythonProjects": []
 }
