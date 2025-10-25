@@ -49,7 +49,7 @@ function ProfileSettings({ user, onClose }) {
       setProfileData({
         display_name: data.display_name || '',
         email: data.user_id || user.email,
-        avatar_url: user.avatar_url || '',
+        avatar_url: data.avatar_url || user.avatar_url || '',
         role: data.role || '',
         company: data.company || '',
         priorities: data.priorities || [],

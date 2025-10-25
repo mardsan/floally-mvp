@@ -61,6 +61,7 @@ async def get_user_profile(user_email: str, db: Session = Depends(get_db)):
         return {
             "user_id": user.email,
             "display_name": user.display_name,
+            "avatar_url": user.avatar_url,
             "role": profile.role,
             "company": profile.company,
             "priorities": profile.priorities or [],
