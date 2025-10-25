@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import AvatarSelector from './AvatarSelector';
 import DeleteProfileModal from './DeleteProfileModal';
 
-function ProfileSettings({ user, onClose }) {
+function ProfileSettings({ user, onClose, onProfileUpdate, onSave }) {
   const [activeTab, setActiveTab] = useState('profile');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -113,6 +113,21 @@ function ProfileSettings({ user, onClose }) {
       
       if (response.ok) {
         alert('✅ Profile updated successfully!');
+        
+        // Update parent component with new profile data
+        if (onProfileUpdate) {
+          onProfileUpdate({
+            display_name: profileData.display_name,
+            avatar_url: profileData.avatar_url,
+            company: profileData.company,
+            role: profileData.role
+          });
+        }
+        
+        // Close modal automatically
+        if (onSave) {
+          onSave();
+        }
       } else {
         throw new Error('Failed to update profile');
       }
@@ -140,6 +155,11 @@ function ProfileSettings({ user, onClose }) {
         const storedUser = JSON.parse(localStorage.getItem('okaimy_user') || '{}');
         storedUser.avatar_url = avatarUrl;
         localStorage.setItem('okaimy_user', JSON.stringify(storedUser));
+        
+        // Update parent component immediately
+        if (onProfileUpdate) {
+          onProfileUpdate({ avatar_url: avatarUrl });
+        }
       }
     } catch (error) {
       console.error('Failed to save avatar:', error);

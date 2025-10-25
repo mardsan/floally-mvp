@@ -10,10 +10,25 @@ function MainDashboard({ user, onLogout }) {
   const [messages, setMessages] = useState([]);
   const [showAddProject, setShowAddProject] = useState(false);
   const [showProfileSettings, setShowProfileSettings] = useState(false);
+  const [currentUser, setCurrentUser] = useState(user);
 
   useEffect(() => {
     loadDashboardData();
   }, [user.email]);
+
+  useEffect(() => {
+    // Update currentUser when user prop changes
+    setCurrentUser(user);
+  }, [user]);
+
+  const handleProfileUpdate = (updatedData) => {
+    // Update the current user state with new data
+    const updatedUser = { ...currentUser, ...updatedData };
+    setCurrentUser(updatedUser);
+    
+    // Also update localStorage
+    localStorage.setItem('okaimy_user', JSON.stringify(updatedUser));
+  };
 
   const loadDashboardData = async () => {
     setLoading(true);
@@ -56,7 +71,7 @@ function MainDashboard({ user, onLogout }) {
   const loadCalendarEvents = async () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app';
-      const response = await fetch(`${apiUrl}/api/calendar/events?days=7`);
+      const response = await fetch(`${apiUrl}/api/calendar/events?days=7&user_email=${encodeURIComponent(user.email)}`);
       const data = await response.json();
       setCalendarEvents(data.events || []);
     } catch (error) {
@@ -68,7 +83,7 @@ function MainDashboard({ user, onLogout }) {
   const loadMessages = async () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app';
-      const response = await fetch(`${apiUrl}/api/gmail/messages?max_results=20`);
+      const response = await fetch(`${apiUrl}/api/gmail/messages?max_results=20&user_email=${encodeURIComponent(user.email)}`);
       const data = await response.json();
       setMessages(data.messages || []);
     } catch (error) {
@@ -135,17 +150,17 @@ function MainDashboard({ user, onLogout }) {
                   className="flex items-center gap-3 hover:bg-gray-50 rounded-lg px-3 py-2 transition-colors"
                 >
                   <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-teal-400 to-blue-500 flex items-center justify-center">
-                    {user.avatar_url ? (
-                      <img src={user.avatar_url} alt={user.display_name || 'User'} className="w-full h-full object-cover" />
+                    {currentUser.avatar_url ? (
+                      <img src={currentUser.avatar_url} alt={currentUser.display_name || 'User'} className="w-full h-full object-cover" />
                     ) : (
                       <span className="text-white font-semibold text-lg">
-                        {(user.display_name || user.email).charAt(0).toUpperCase()}
+                        {(currentUser.display_name || currentUser.email).charAt(0).toUpperCase()}
                       </span>
                     )}
                   </div>
                   <div className="text-left">
                     <div className="text-sm font-semibold text-gray-900">
-                      {user.display_name || user.email.split('@')[0]}
+                      {currentUser.display_name || currentUser.email.split('@')[0]}
                     </div>
                     <div className="text-xs text-gray-500">Settings</div>
                   </div>
@@ -433,8 +448,10 @@ function MainDashboard({ user, onLogout }) {
       {/* Profile Settings Modal */}
       {showProfileSettings && (
         <ProfileSettings
-          user={user}
+          user={currentUser}
           onClose={() => setShowProfileSettings(false)}
+          onProfileUpdate={handleProfileUpdate}
+          onSave={() => setShowProfileSettings(false)}
         />
       )}
     </div>

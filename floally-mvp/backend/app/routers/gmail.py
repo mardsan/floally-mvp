@@ -1,31 +1,28 @@
-from fastapi import APIRouter, HTTPException
-from googleapiclient.discovery import build
-from google.oauth2.credentials import Credentials
-import json
+from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.orm import Session
 import base64
+
+from app.database import get_db
+from app.utils.google_auth import get_gmail_service
 
 router = APIRouter()
 
-def get_gmail_service():
-    """Get authenticated Gmail service"""
-    try:
-        with open('user_credentials.json', 'r') as f:
-            creds_data = json.load(f)
-        credentials = Credentials(**creds_data)
-        return build('gmail', 'v1', credentials=credentials)
-    except Exception as e:
-        raise HTTPException(status_code=401, detail="Not authenticated")
-
 @router.get("/messages")
-async def list_messages(max_results: int = 10, category: str = "primary"):
+async def list_messages(
+    user_email: str,
+    max_results: int = 10,
+    category: str = "primary",
+    db: Session = Depends(get_db)
+):
     """Get recent Gmail messages with importance indicators
     
     Args:
+        user_email: User's email address
         max_results: Number of messages to fetch (default: 10)
         category: Filter by category - 'primary', 'all', 'starred', 'important' (default: 'primary')
     """
     try:
-        service = get_gmail_service()
+        service = get_gmail_service(user_email, db)
         
         # Build query based on category filter
         # Leverage Gmail's native categorization system
@@ -123,10 +120,10 @@ async def list_messages(max_results: int = 10, category: str = "primary"):
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/profile")
-async def get_profile():
+async def get_profile(user_email: str, db: Session = Depends(get_db)):
     """Get user's Gmail profile"""
     try:
-        service = get_gmail_service()
+        service = get_gmail_service(user_email, db)
         profile = service.users().getProfile(userId='me').execute()
         return {
             "email": profile.get('emailAddress'),
@@ -137,10 +134,10 @@ async def get_profile():
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/mark-important")
-async def mark_important(email_id: str):
+async def mark_important(email_id: str, user_email: str, db: Session = Depends(get_db)):
     """Mark email as important (add IMPORTANT and STARRED labels)"""
     try:
-        service = get_gmail_service()
+        service = get_gmail_service(user_email, db)
         service.users().messages().modify(
             userId='me',
             id=email_id,
@@ -158,10 +155,10 @@ async def mark_important(email_id: str):
         raise HTTPException(status_code=500, detail=f"Failed to mark important: {str(e)}")
 
 @router.post("/mark-unimportant")
-async def mark_unimportant(email_id: str):
+async def mark_unimportant(email_id: str, user_email: str, db: Session = Depends(get_db)):
     """Mark email as unimportant (remove IMPORTANT label, add custom NOT_INTERESTED label)"""
     try:
-        service = get_gmail_service()
+        service = get_gmail_service(user_email, db)
         
         # Remove IMPORTANT label if present
         service.users().messages().modify(
@@ -181,10 +178,10 @@ async def mark_unimportant(email_id: str):
         raise HTTPException(status_code=500, detail=f"Failed to mark unimportant: {str(e)}")
 
 @router.post("/archive")
-async def archive_email(email_id: str):
+async def archive_email(email_id: str, user_email: str, db: Session = Depends(get_db)):
     """Archive email (remove INBOX label)"""
     try:
-        service = get_gmail_service()
+        service = get_gmail_service(user_email, db)
         service.users().messages().modify(
             userId='me',
             id=email_id,
@@ -202,10 +199,10 @@ async def archive_email(email_id: str):
         raise HTTPException(status_code=500, detail=f"Failed to archive: {str(e)}")
 
 @router.post("/trash")
-async def trash_email(email_id: str):
+async def trash_email(email_id: str, user_email: str, db: Session = Depends(get_db)):
     """Move email to trash"""
     try:
-        service = get_gmail_service()
+        service = get_gmail_service(user_email, db)
         service.users().messages().trash(
             userId='me',
             id=email_id
@@ -220,10 +217,10 @@ async def trash_email(email_id: str):
         raise HTTPException(status_code=500, detail=f"Failed to trash: {str(e)}")
 
 @router.get("/unsubscribe-link")
-async def get_unsubscribe_link(email_id: str):
+async def get_unsubscribe_link(email_id: str, user_email: str, db: Session = Depends(get_db)):
     """Extract unsubscribe link from email headers"""
     try:
-        service = get_gmail_service()
+        service = get_gmail_service(user_email, db)
         message = service.users().messages().get(
             userId='me',
             id=email_id,

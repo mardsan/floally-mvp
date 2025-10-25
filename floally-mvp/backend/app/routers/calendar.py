@@ -1,26 +1,17 @@
-from fastapi import APIRouter, HTTPException
-from googleapiclient.discovery import build
-from google.oauth2.credentials import Credentials
-import json
+from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
+
+from app.database import get_db
+from app.utils.google_auth import get_calendar_service
 
 router = APIRouter()
 
-def get_calendar_service():
-    """Get authenticated Calendar service"""
-    try:
-        with open('user_credentials.json', 'r') as f:
-            creds_data = json.load(f)
-        credentials = Credentials(**creds_data)
-        return build('calendar', 'v3', credentials=credentials)
-    except Exception as e:
-        raise HTTPException(status_code=401, detail="Not authenticated")
-
 @router.get("/events")
-async def list_events(days: int = 1):
+async def list_events(user_email: str, days: int = 1, db: Session = Depends(get_db)):
     """Get upcoming calendar events"""
     try:
-        service = get_calendar_service()
+        service = get_calendar_service(user_email, db)
         
         # Get events for the next N days
         now = datetime.utcnow()
@@ -61,10 +52,10 @@ async def list_events(days: int = 1):
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/calendars")
-async def list_calendars():
+async def list_calendars(user_email: str, db: Session = Depends(get_db)):
     """Get user's calendars"""
     try:
-        service = get_calendar_service()
+        service = get_calendar_service(user_email, db)
         calendars = service.calendarList().list().execute()
         
         return {

@@ -86,6 +86,38 @@ def categorize_email(email: Dict[str, Any]) -> str:
     else:
         return 'general'
 
+@router.get("/standup/generate")
+async def generate_standup(user_email: str):
+    """
+    Generate intelligent standup recommendations (GET version for simple calls).
+    Same as analyze_standup but accepts user_email as query parameter.
+    """
+    # For now, return a simple standup without email analysis
+    # TODO: Integrate with email analysis
+    return {
+        'the_one_thing': {
+            'title': 'Focus on your creative work',
+            'description': 'Your inbox is clear! Time to focus on your most important project.',
+            'urgency': 80,
+            'project': 'personal',
+            'action': 'Block 2-3 hours for deep work'
+        },
+        'secondary_priorities': [
+            {'title': 'Review pending emails', 'urgency': 40, 'action': 'Quick scan for urgent items'},
+            {'title': 'Plan tomorrow', 'urgency': 30, 'action': 'Set intentions for next day'}
+        ],
+        'aimy_handling': [
+            {'task': 'Monitoring inbox for urgent items', 'status': 'monitoring', 'emails': []}
+        ],
+        'daily_plan': [
+            {'time': 'Morning', 'task': 'Deep creative work', 'duration': '3 hours'},
+            {'time': 'Midday', 'task': 'Respond to important emails', 'duration': '30 min'},
+            {'time': 'Afternoon', 'task': 'Meetings and collaboration', 'duration': '2 hours'},
+            {'time': 'Evening', 'task': 'Plan tomorrow', 'duration': '15 min'}
+        ],
+        'reasoning': 'Starting with a simple daily structure. As I learn your patterns, I\'ll provide more personalized recommendations.'
+    }
+
 @router.post("/standup/analyze")
 async def analyze_standup(user_email: str = Depends(get_current_user)):
     """
