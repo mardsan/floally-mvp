@@ -77,9 +77,15 @@ function App() {
   }
   
   // Check if we should show landing page (for waitlist mode)
-  const showLandingPage = window.location.pathname === '/waitlist' || 
-                          window.location.hostname === 'okaimy.com' ||
-                          window.location.hostname === 'www.okaimy.com';
+  // BUT NOT if we're handling an OAuth callback
+  const urlParams = new URLSearchParams(window.location.search);
+  const isOAuthCallback = urlParams.get('auth') === 'success';
+  
+  const showLandingPage = !isOAuthCallback && (
+    window.location.pathname === '/waitlist' || 
+    window.location.hostname === 'okaimy.com' ||
+    window.location.hostname === 'www.okaimy.com'
+  );
   
   // If landing page mode, render that and exit early
   if (showLandingPage) {
