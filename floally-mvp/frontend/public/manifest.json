@@ -1,7 +1,7 @@
 {
-  "name": "OpAlly - AI Daily Stand-Up Partner",
-  "short_name": "OpAlly",
-  "description": "Your AI-powered daily stand-up and operational partner for creative work",
+  "name": "OkAimy - AI Strategic Partner",
+  "short_name": "OkAimy",
+  "description": "Your AI-powered strategic and operational partner for creative work",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#dafef4",
@@ -9,10 +9,16 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/opally-icon.png",
-      "sizes": "any",
+      "src": "/okaimy-logo-01-avatar.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "/okaimy-pfp-01.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }

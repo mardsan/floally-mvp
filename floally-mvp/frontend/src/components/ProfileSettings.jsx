@@ -256,7 +256,7 @@ function ProfileSettings({ user, onClose, onProfileUpdate, onSave }) {
               <div className="flex items-center gap-6 pb-6 border-b border-gray-200">
                 <div className="relative">
                   <img
-                    src={profileData.avatar_url || 'https://via.placeholder.com/100'}
+                    src={profileData.avatar_url || 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23e5e7eb%22 width=%22100%22 height=%22100%22/%3E%3Ctext fill=%22%239ca3af%22 font-family=%22sans-serif%22 font-size=%2240%22 text-anchor=%22middle%22 x=%2250%22 y=%2265%22%3E' + (profileData.display_name?.charAt(0) || profileData.email?.charAt(0) || '?').toUpperCase() + '%3C/text%3E%3C/svg%3E'}
                     alt="Profile"
                     className="w-24 h-24 rounded-full object-cover ring-4 ring-teal-100"
                   />
