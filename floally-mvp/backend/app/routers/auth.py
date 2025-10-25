@@ -165,10 +165,13 @@ async def auth_status(db: Session = Depends(get_db)):
                     "authenticated": True,
                     "email": user.email,
                     "display_name": user.display_name,
-                    "picture_url": user.picture_url,
+                    "avatar_url": user.avatar_url,
                     "user_id": str(user.id)
                 }
         
         return {"authenticated": False}
     except FileNotFoundError:
+        return {"authenticated": False}
+    except Exception as e:
+        print(f"❌ Auth status error: {e}")
         return {"authenticated": False}
