@@ -9,4 +9,7 @@ cmds = [
 ]
 
 [start]
-cmd = "cd floally-mvp/backend && python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT --proxy-headers --log-level info"
+cmd = "cd floally-mvp/backend && python -m uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-3000} --proxy-headers --log-level info"
+
+[variables]
+PORT = "3000"
