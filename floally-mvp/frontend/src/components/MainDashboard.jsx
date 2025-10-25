@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import AddProjectModal from './AddProjectModal';
+import ProfileSettings from './ProfileSettings';
 
 function MainDashboard({ user, onLogout }) {
   const [loading, setLoading] = useState(true);
@@ -8,6 +9,7 @@ function MainDashboard({ user, onLogout }) {
   const [calendarEvents, setCalendarEvents] = useState([]);
   const [messages, setMessages] = useState([]);
   const [showAddProject, setShowAddProject] = useState(false);
+  const [showProfileSettings, setShowProfileSettings] = useState(false);
 
   useEffect(() => {
     loadDashboardData();
@@ -118,19 +120,44 @@ function MainDashboard({ user, onLogout }) {
                 <p className="text-sm text-gray-600">Here's what's happening today</p>
               </div>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               <button
                 onClick={() => setShowAddProject(true)}
                 className="px-4 py-2 text-teal-600 hover:bg-teal-50 rounded-lg transition-colors"
               >
                 + New Project
               </button>
-              <button
-                onClick={onLogout}
-                className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                Logout
-              </button>
+              
+              {/* User Profile Section */}
+              <div className="flex items-center gap-3 pl-4 border-l border-gray-300">
+                <button
+                  onClick={() => setShowProfileSettings(true)}
+                  className="flex items-center gap-3 hover:bg-gray-50 rounded-lg px-3 py-2 transition-colors"
+                >
+                  <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-teal-400 to-blue-500 flex items-center justify-center">
+                    {user.avatar_url ? (
+                      <img src={user.avatar_url} alt={user.display_name || 'User'} className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-white font-semibold text-lg">
+                        {(user.display_name || user.email).charAt(0).toUpperCase()}
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-left">
+                    <div className="text-sm font-semibold text-gray-900">
+                      {user.display_name || user.email.split('@')[0]}
+                    </div>
+                    <div className="text-xs text-gray-500">Settings</div>
+                  </div>
+                </button>
+                
+                <button
+                  onClick={onLogout}
+                  className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  Logout
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -400,6 +427,14 @@ function MainDashboard({ user, onLogout }) {
             setShowAddProject(false);
           }}
           isFirstProject={false}
+        />
+      )}
+
+      {/* Profile Settings Modal */}
+      {showProfileSettings && (
+        <ProfileSettings
+          user={user}
+          onClose={() => setShowProfileSettings(false)}
         />
       )}
     </div>
