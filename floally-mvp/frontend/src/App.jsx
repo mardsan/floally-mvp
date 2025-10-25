@@ -44,6 +44,8 @@ function App() {
     localStorage.removeItem('okaimy_token');
     localStorage.removeItem('okaimy_user');
     setCurrentUser(null);
+    // Redirect to home page (landing page)
+    window.location.href = '/';
   };
   
   // Check if we should show admin page
