@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import RedirectResponse
 from google_auth_oauthlib.flow import Flow
 from google.oauth2.credentials import Credentials
@@ -14,6 +14,16 @@ SCOPES = [
     'https://www.googleapis.com/auth/calendar.readonly',
     'https://www.googleapis.com/auth/calendar.events',
 ]
+
+async def get_current_user():
+    """Get current user from stored credentials"""
+    try:
+        with open('user_credentials.json', 'r') as f:
+            creds_data = json.load(f)
+        # Return user email - in production this would validate JWT token
+        return "user@example.com"  # For MVP, return a placeholder
+    except FileNotFoundError:
+        raise HTTPException(status_code=401, detail="Not authenticated")
 
 def get_flow():
     """Create OAuth flow from credentials"""
