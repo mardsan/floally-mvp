@@ -119,38 +119,27 @@ async def callback(code: str, state: str, db: Session = Depends(get_db)):
             ConnectedAccount.provider == 'google'
         ).first()
         
-        creds_data = {
-            'token': credentials.token,
-            'refresh_token': credentials.refresh_token,
-            'token_uri': credentials.token_uri,
-            'client_id': credentials.client_id,
-            'client_secret': credentials.client_secret,
-            'scopes': credentials.scopes
-        }
-        
         if not connected_account:
             connected_account = ConnectedAccount(
                 id=uuid.uuid4(),
                 user_id=user.id,
                 provider='google',
                 provider_account_id=email,
+                email=email,
                 access_token=credentials.token,
                 refresh_token=credentials.refresh_token,
-                token_expiry=credentials.expiry,
-                credentials_data=creds_data
+                token_expires_at=credentials.expiry,
+                scopes=credentials.scopes
             )
             db.add(connected_account)
         else:
             connected_account.access_token = credentials.token
             connected_account.refresh_token = credentials.refresh_token
-            connected_account.token_expiry = credentials.expiry
-            connected_account.credentials_data = creds_data
+            connected_account.token_expires_at = credentials.expiry
+            connected_account.scopes = credentials.scopes
         
         db.commit()
-        
-        # Also save to file for backward compatibility (can be removed later)
-        with open('user_credentials.json', 'w') as f:
-            json.dump({**creds_data, 'email': email}, f)
+        print(f"✅ Connected account saved for {email}")
         
         # Redirect to frontend root with auth success param
         frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
