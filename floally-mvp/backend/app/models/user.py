@@ -167,7 +167,7 @@ class Project(Base):
     goals = Column(JSONB)  # Array of goal objects: [{goal: "", deadline: "", status: ""}]
     color = Column(String(7), default='#3b82f6')  # Hex color for UI
     is_primary = Column(Boolean, default=False, nullable=False)  # Flag for main focus project
-    metadata = Column(JSONB)  # Additional flexible data
+    project_metadata = Column(JSONB)  # Additional flexible data (renamed to avoid SQLAlchemy conflict)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     

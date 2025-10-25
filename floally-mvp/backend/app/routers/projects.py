@@ -34,7 +34,7 @@ async def get_projects(user_email: str, db: Session = Depends(get_db)):
                     "goals": proj.goals or [],
                     "color": proj.color,
                     "is_primary": proj.is_primary,
-                    "metadata": proj.metadata or {},
+                    "metadata": proj.project_metadata or {},
                     "created_at": proj.created_at.isoformat() if proj.created_at else None,
                     "updated_at": proj.updated_at.isoformat() if proj.updated_at else None
                 }
@@ -67,7 +67,7 @@ async def create_project(project_data: Dict, user_email: str, db: Session = Depe
             goals=project_data.get('goals', []),
             color=project_data.get('color', '#3b82f6'),
             is_primary=project_data.get('is_primary', False),
-            metadata=project_data.get('metadata', {})
+            project_metadata=project_data.get('metadata', {})
         )
         
         db.add(new_project)
@@ -87,7 +87,7 @@ async def create_project(project_data: Dict, user_email: str, db: Session = Depe
                 "goals": new_project.goals or [],
                 "color": new_project.color,
                 "is_primary": new_project.is_primary,
-                "metadata": new_project.metadata or {},
+                "metadata": new_project.project_metadata or {},
                 "created_at": new_project.created_at.isoformat() if new_project.created_at else None
             }
         }
@@ -143,7 +143,7 @@ async def update_project(project_id: str, project_data: Dict, user_email: str, d
                 "goals": project.goals or [],
                 "color": project.color,
                 "is_primary": project.is_primary,
-                "metadata": project.metadata or {},
+                "metadata": project.project_metadata or {},
                 "updated_at": project.updated_at.isoformat() if project.updated_at else None
             }
         }
