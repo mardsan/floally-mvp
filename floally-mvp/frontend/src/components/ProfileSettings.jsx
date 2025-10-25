@@ -338,27 +338,6 @@ function ProfileSettings({ user, onClose }) {
                   </select>
                 </div>
               </div>
-
-              {/* Danger Zone */}
-              <div className="border-t border-gray-200 pt-6 mt-8">
-                <h3 className="text-lg font-semibold text-red-900 mb-4">⚠️ Danger Zone</h3>
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h4 className="font-semibold text-red-900">Delete Account</h4>
-                      <p className="text-sm text-red-700 mt-1">
-                        Permanently delete your account and all associated data. This action cannot be undone.
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => setShowDeleteModal(true)}
-                      className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors whitespace-nowrap ml-4"
-                    >
-                      Delete Account
-                    </button>
-                  </div>
-                </div>
-              </div>
             </div>
           )}
 
@@ -477,6 +456,24 @@ function ProfileSettings({ user, onClose }) {
                     <input type="checkbox" className="w-5 h-5 text-teal-600 rounded" />
                     <span className="text-gray-900">Share anonymous usage data</span>
                   </label>
+                </div>
+              </div>
+
+              <div className="border-t border-gray-200 pt-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Account Management</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between py-3">
+                    <div>
+                      <p className="font-medium text-gray-900">Delete Account</p>
+                      <p className="text-sm text-gray-600">Permanently remove your account and all data</p>
+                    </div>
+                    <button
+                      onClick={() => setShowDeleteModal(true)}
+                      className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                      Delete Account
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
