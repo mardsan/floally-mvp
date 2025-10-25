@@ -86,18 +86,17 @@ function UserDashboard({ user, onLogout }) {
   const handleOnboardingComplete = async (profile) => {
     try {
       console.log('Saving onboarding data:', profile);
-      const response = await fetch('https://floally-mvp-production.up.railway.app/api/user/profile/onboarding', {
+      const response = await fetch(`https://floally-mvp-production.up.railway.app/api/user/profile/onboarding?user_email=${encodeURIComponent(user.email)}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          user_email: user.email,
-          answers: profile
-        })
+        body: JSON.stringify(profile)
       });
       
       if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Save failed:', errorData);
         throw new Error(`Failed to save onboarding: ${response.status}`);
       }
       
