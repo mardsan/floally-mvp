@@ -141,10 +141,19 @@ async def callback(code: str, state: str, db: Session = Depends(get_db)):
         db.commit()
         print(f"✅ Connected account saved for {email}")
         
-        # Redirect to frontend root with auth success param
+        # Redirect to frontend root with user info
+        # URL encode the user data to pass it to frontend
+        import urllib.parse
+        user_data = urllib.parse.quote(json.dumps({
+            "email": user.email,
+            "display_name": user.display_name,
+            "avatar_url": user.avatar_url
+        }))
+        
         frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
-        print(f"✅ Redirecting to: {frontend_url}/?auth=success")
-        return RedirectResponse(url=f"{frontend_url}/?auth=success")
+        redirect_url = f"{frontend_url}/?auth=success&user={user_data}"
+        print(f"✅ Redirecting to: {redirect_url}")
+        return RedirectResponse(url=redirect_url)
     
     except Exception as e:
         import traceback

@@ -125,10 +125,35 @@ function App() {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('auth') === 'success') {
       console.log('Auth callback detected, cleaning URL...');
+      
+      // Get user data from URL if present
+      const userData = urlParams.get('user');
+      if (userData) {
+        try {
+          const user = JSON.parse(decodeURIComponent(userData));
+          console.log('✅ User data received from OAuth:', user);
+          
+          // Store user data in localStorage
+          localStorage.setItem('okaimy_user', JSON.stringify(user));
+          localStorage.setItem('okaimy_token', 'authenticated'); // Simple flag for now
+          
+          // Update state
+          setCurrentUser(user);
+          setAuthenticated(true);
+          
+          // Load dashboard data
+          loadDashboardData();
+        } catch (e) {
+          console.error('Failed to parse user data from OAuth:', e);
+        }
+      }
+      
       // Clean the URL without reloading
       window.history.replaceState({}, document.title, '/');
+    } else {
+      // Normal auth check
+      checkAuthStatus();
     }
-    checkAuthStatus();
   }, []);
 
   const checkAuthStatus = async () => {
