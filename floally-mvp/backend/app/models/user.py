@@ -25,6 +25,7 @@ class User(Base):
     connected_accounts = relationship("ConnectedAccount", back_populates="user", cascade="all, delete-orphan")
     behavior_actions = relationship("BehaviorAction", back_populates="user", cascade="all, delete-orphan")
     settings = relationship("UserSettings", back_populates="user", uselist=False, cascade="all, delete-orphan")
+    projects = relationship("Project", back_populates="user", cascade="all, delete-orphan")
 
 
 class UserProfile(Base):
@@ -151,3 +152,24 @@ class SenderStats(Base):
     __table_args__ = (
         {'comment': 'Sender statistics per user for behavioral learning'}
     ,)
+
+
+class Project(Base):
+    """User projects for context and goal alignment"""
+    __tablename__ = "projects"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(UUID(as_uuid=True), ForeignKey('users.id', ondelete='CASCADE'), nullable=False, index=True)
+    name = Column(String(255), nullable=False)
+    description = Column(Text)
+    status = Column(String(50), default='active')  # active, on_hold, completed, archived
+    priority = Column(String(20), default='medium')  # low, medium, high, critical
+    goals = Column(JSONB)  # Array of goal objects: [{goal: "", deadline: "", status: ""}]
+    color = Column(String(7), default='#3b82f6')  # Hex color for UI
+    is_primary = Column(Boolean, default=False, nullable=False)  # Flag for main focus project
+    metadata = Column(JSONB)  # Additional flexible data
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    
+    # Relationship
+    user = relationship("User", back_populates="projects")
