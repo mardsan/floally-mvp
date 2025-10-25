@@ -11,6 +11,7 @@ import LandingPage from './components/LandingPage';
 import WaitlistAdmin from './components/WaitlistAdmin';
 import AuthPage from './components/AuthPage';
 import UserDashboard from './components/UserDashboard';
+import MainDashboard from './components/MainDashboard';
 import GoogleSignIn from './components/GoogleSignIn';
 
 function App() {
@@ -75,7 +76,7 @@ function App() {
       return <AuthPage onAuthSuccess={handleAuthSuccess} />;
     }
     
-    return <UserDashboard user={currentUser} onLogout={handleLogout} />;
+    return <MainDashboard user={currentUser} onLogout={handleLogout} />;
   }
   
   // Check if we should show landing page (for waitlist mode)
