@@ -80,18 +80,25 @@ async def get_user_profile(user_email: str, db: Session = Depends(get_db)):
 async def complete_onboarding(user_email: str, answers: OnboardingAnswers, db: Session = Depends(get_db)):
     """Save user's onboarding answers"""
     try:
+        print(f"📝 Onboarding request for: {user_email}")
+        print(f"   Answers: {answers.dict()}")
+        
         # Get or create user
         user = db.query(User).filter(User.email == user_email).first()
         if not user:
+            print(f"   Creating new user...")
             user = User(email=user_email, display_name=answers.display_name)
             db.add(user)
             db.flush()
         elif answers.display_name:
             user.display_name = answers.display_name
         
+        print(f"   User ID: {user.id}")
+        
         # Get or create profile
         profile = db.query(UserProfile).filter(UserProfile.user_id == user.id).first()
         if not profile:
+            print(f"   Creating new profile...")
             profile = UserProfile(user_id=user.id)
             db.add(profile)
         
@@ -105,6 +112,8 @@ async def complete_onboarding(user_email: str, answers: OnboardingAnswers, db: S
         profile.work_hours = answers.work_hours
         profile.onboarding_completed = True
         
+        print(f"   Set onboarding_completed = True")
+        
         # Ensure user has settings
         settings = db.query(UserSettings).filter(UserSettings.user_id == user.id).first()
         if not settings:
@@ -112,6 +121,7 @@ async def complete_onboarding(user_email: str, answers: OnboardingAnswers, db: S
             db.add(settings)
         
         db.commit()
+        print(f"✅ Onboarding saved successfully for {user_email}")
         
         return {
             "success": True,
@@ -130,6 +140,7 @@ async def complete_onboarding(user_email: str, answers: OnboardingAnswers, db: S
         }
     except Exception as e:
         db.rollback()
+        print(f"❌ Error saving onboarding for {user_email}: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.put("/profile")

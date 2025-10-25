@@ -90,18 +90,17 @@ async def callback(code: str, state: str, db: Session = Depends(get_db)):
                 id=uuid.uuid4(),
                 email=email,
                 display_name=display_name,
-                picture_url=picture_url,
-                auth_provider='google',
-                is_active=True
+                avatar_url=picture_url
             )
             db.add(user)
             db.flush()  # Get the user ID
+            print(f"✅ Created new user: {email}")
             
         else:
             # Update existing user info
             user.display_name = display_name
-            user.picture_url = picture_url
-            user.last_login = datetime.utcnow()
+            user.avatar_url = picture_url
+            print(f"✅ Updated existing user: {email}")
         
         # Store/update connected account credentials
         connected_account = db.query(ConnectedAccount).filter(
