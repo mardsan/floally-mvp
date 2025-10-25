@@ -11,6 +11,7 @@ import LandingPage from './components/LandingPage';
 import WaitlistAdmin from './components/WaitlistAdmin';
 import AuthPage from './components/AuthPage';
 import UserDashboard from './components/UserDashboard';
+import GoogleSignIn from './components/GoogleSignIn';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -48,6 +49,11 @@ function App() {
   // Check if we should show admin page
   if (window.location.pathname === '/admin' || window.location.pathname === '/waitlist-admin') {
     return <WaitlistAdmin />;
+  }
+  
+  // Check if we should show Google Sign In page
+  if (window.location.pathname === '/auth' || window.location.pathname === '/signin' || window.location.pathname === '/login') {
+    return <GoogleSignIn />;
   }
   
   // Check if we should show app (for logged-in users)

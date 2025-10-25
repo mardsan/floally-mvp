@@ -110,14 +110,20 @@ function LandingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-emerald-50">
-      {/* Header with Logo */}
+      {/* Header with Logo and Sign In */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-        <div className="flex justify-center">
+        <div className="flex justify-between items-center">
           <img 
             src="/okaimy-logo-01.png" 
             alt="OkAimy" 
             className="h-12 md:h-16 w-auto"
           />
+          <a
+            href="/auth"
+            className="bg-white text-teal-600 font-semibold px-6 py-2 rounded-lg hover:bg-gray-50 transition-all border border-teal-200 shadow-sm"
+          >
+            Sign In
+          </a>
         </div>
       </div>
 
