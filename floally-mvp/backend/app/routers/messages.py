@@ -2,7 +2,7 @@
 Smart Messages API - AI-powered message curation and management
 """
 from fastapi import APIRouter, HTTPException, Depends
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func, desc
 from typing import List, Dict, Optional
 from datetime import datetime, timedelta
@@ -10,6 +10,7 @@ from pydantic import BaseModel
 import anthropic
 import os
 import base64
+import traceback
 
 from app.database import get_db
 from app.models.user import User, BehaviorAction, SenderStats
@@ -477,8 +478,13 @@ async def draft_email_response(
     - no_attribution: Just from user, no mention of AI
     """
     try:
-        # Get user and profile
-        user = db.query(User).filter(User.email == request.user_email).first()
+        # Get user with relationships eagerly loaded
+        user = db.query(User).options(
+            joinedload(User.profile),
+            joinedload(User.settings),
+            joinedload(User.projects)
+        ).filter(User.email == request.user_email).first()
+        
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
         
