@@ -309,7 +309,7 @@ function MainDashboard({ user, onLogout }) {
                   </div>
                 ) : (
                   projects
-                    .filter(p => p.status === 'active')
+                    .filter(p => p.status !== 'completed')
                     .map(project => (
                       <div
                         key={project.id}
