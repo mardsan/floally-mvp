@@ -514,7 +514,7 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
                     <AttachmentConsentPrompt
                       senderEmail={attachmentInfo.sender_email}
                       senderName={message.from?.split('<')[0].trim()}
-                      attachments={attachmentInfo.files}
+                      attachments={attachmentInfo.files.map(f => typeof f === 'string' ? f : f.filename)}
                       onApprove={handleAttachmentApprove}
                       onDecline={handleAttachmentDecline}
                       userEmail={user.email}
