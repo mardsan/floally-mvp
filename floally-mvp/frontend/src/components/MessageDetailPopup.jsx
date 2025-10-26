@@ -55,7 +55,9 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
       });
       
       if (!response.ok) {
-        throw new Error('Failed to generate draft');
+        const errorData = await response.json().catch(() => ({ detail: 'Unknown error' }));
+        console.error('API Error Response:', errorData);
+        throw new Error(errorData.detail || 'Failed to generate draft');
       }
       
       const data = await response.json();
@@ -67,7 +69,7 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
       
     } catch (error) {
       console.error('Failed to generate AI response:', error);
-      alert('❌ Failed to generate response. Please try again.');
+      alert(`❌ Failed to generate response: ${error.message}`);
     } finally {
       setAiDrafting(false);
     }
