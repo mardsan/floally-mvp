@@ -280,20 +280,25 @@ def check_sender_trust(
     Check if sender is trusted for attachment processing
     Returns (is_trusted, auto_approved)
     """
-    user = db.query(User).filter(User.email == user_email).first()
-    if not user:
+    try:
+        user = db.query(User).filter(User.email == user_email).first()
+        if not user:
+            return False, False
+        
+        trusted_sender = db.query(TrustedSender).filter(
+            TrustedSender.user_id == user.id,
+            TrustedSender.sender_email == sender_email,
+            TrustedSender.allow_attachments == True
+        ).first()
+        
+        if trusted_sender:
+            return True, trusted_sender.auto_approved
+        
         return False, False
-    
-    trusted_sender = db.query(TrustedSender).filter(
-        TrustedSender.user_id == user.id,
-        TrustedSender.sender_email == sender_email,
-        TrustedSender.allow_attachments == True
-    ).first()
-    
-    if trusted_sender:
-        return True, trusted_sender.auto_approved
-    
-    return False, False
+    except Exception as e:
+        # If trusted_senders table doesn't exist yet, treat as untrusted
+        print(f"⚠️ Error checking sender trust (table may not exist): {e}")
+        return False, False
 
 
 def update_sender_attachment_count(
@@ -302,16 +307,20 @@ def update_sender_attachment_count(
     sender_email: str
 ):
     """Increment attachment count for trusted sender"""
-    user = db.query(User).filter(User.email == user_email).first()
-    if not user:
-        return
-    
-    trusted_sender = db.query(TrustedSender).filter(
-        TrustedSender.user_id == user.id,
-        TrustedSender.sender_email == sender_email
-    ).first()
-    
-    if trusted_sender:
-        trusted_sender.attachment_count += 1
-        trusted_sender.last_used = datetime.utcnow()
-        db.commit()
+    try:
+        user = db.query(User).filter(User.email == user_email).first()
+        if not user:
+            return
+        
+        trusted_sender = db.query(TrustedSender).filter(
+            TrustedSender.user_id == user.id,
+            TrustedSender.sender_email == sender_email
+        ).first()
+        
+        if trusted_sender:
+            trusted_sender.attachment_count += 1
+            trusted_sender.last_used = datetime.utcnow()
+            db.commit()
+    except Exception as e:
+        # If trusted_senders table doesn't exist yet, silently skip
+        print(f"⚠️ Error updating sender attachment count (table may not exist): {e}")
