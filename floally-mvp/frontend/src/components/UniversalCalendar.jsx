@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
+// Helper function to parse date string as local date (avoid timezone shifts)
+const parseLocalDate = (dateStr) => {
+  const [year, month, day] = dateStr.split('-').map(Number);
+  return new Date(year, month - 1, day);
+};
+
 const UniversalCalendar = ({ projects, calendarEvents, user }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState('month'); // 'week', 'month'
@@ -25,7 +31,7 @@ const UniversalCalendar = ({ projects, calendarEvents, user }) => {
               allEvents.push({
                 id: `goal-${project.id}-${goal.goal}`,
                 title: goal.goal,
-                date: new Date(goal.deadline),
+                date: parseLocalDate(goal.deadline),
                 type: 'project_goal',
                 project: project,
                 status: goal.status,
