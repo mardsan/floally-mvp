@@ -267,8 +267,8 @@ function MainDashboard({ user, onLogout }) {
           </div>
         </section>
 
-        {/* Projects + Calendar + Messages Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        {/* Projects + Calendar Grid (2 columns instead of 3) */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Active Projects */}
           <section className="lg:col-span-1">
             <div className="bg-white rounded-xl shadow-lg border border-gray-200 h-full">
@@ -360,12 +360,12 @@ function MainDashboard({ user, onLogout }) {
               </div>
             </div>
           </section>
-
-          {/* Messages Summary */}
-          <section className="lg:col-span-1">
-            <EnhancedMessages user={user} />
-          </section>
         </div>
+
+        {/* Smart Messages - Full Width */}
+        <section className="mb-8">
+          <EnhancedMessages user={user} />
+        </section>
 
         {/* Universal Calendar */}
         <section className="mb-8">

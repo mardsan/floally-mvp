@@ -18,18 +18,19 @@ const FEEDBACK_OPTIONS = [
 
 function EnhancedMessages({ user }) {
   const [messages, setMessages] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [activeCategory, setActiveCategory] = useState('all');
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [showFeedback, setShowFeedback] = useState(null);
   const [aiAnalysisEnabled, setAiAnalysisEnabled] = useState(true);
+  const [hasAnalyzed, setHasAnalyzed] = useState(false);
 
-  useEffect(() => {
-    loadMessages();
-  }, [activeCategory, user.email]);
+  // Don't auto-load on mount - wait for user to click "Analyze"
+  // useEffect removed to prevent auto-analysis on every refresh
 
   const loadMessages = async () => {
     setLoading(true);
+    setHasAnalyzed(true);
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app';
       const category = activeCategory === 'all' ? '' : activeCategory;
@@ -128,24 +129,52 @@ function EnhancedMessages({ user }) {
           <div>
             <h3 className="text-lg font-bold text-gray-900">✉️ Smart Messages</h3>
             <p className="text-sm text-gray-500 mt-1">
-              {aiAnalysisEnabled ? 'Curated by your AI teammate Aimy' : 'Recent messages'}
+              {aiAnalysisEnabled ? 'AI-curated by your teammate Aimy' : 'Recent messages'}
             </p>
           </div>
           
-          {/* AI Toggle */}
-          <button
-            onClick={() => {
-              setAiAnalysisEnabled(!aiAnalysisEnabled);
-              setTimeout(() => loadMessages(), 100);
-            }}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
-              aiAnalysisEnabled
-                ? 'bg-gradient-to-r from-teal-500 to-blue-500 text-white shadow-md'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            {aiAnalysisEnabled ? '✨ AI Enabled' : '⚡ Enable AI'}
-          </button>
+          <div className="flex items-center gap-2">
+            {/* Analyze Button */}
+            <button
+              onClick={loadMessages}
+              disabled={loading}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${
+                loading
+                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-teal-500 to-blue-500 text-white hover:shadow-lg hover:scale-105'
+              }`}
+            >
+              {loading ? (
+                <>
+                  <span className="animate-spin">⚙️</span>
+                  Analyzing...
+                </>
+              ) : (
+                <>
+                  <span>🔍</span>
+                  {hasAnalyzed ? 'Refresh' : 'Analyze Messages'}
+                </>
+              )}
+            </button>
+            
+            {/* AI Toggle */}
+            <button
+              onClick={() => {
+                setAiAnalysisEnabled(!aiAnalysisEnabled);
+                if (hasAnalyzed) {
+                  setTimeout(() => loadMessages(), 100);
+                }
+              }}
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                aiAnalysisEnabled
+                  ? 'bg-purple-100 text-purple-700 border border-purple-300'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+              title={aiAnalysisEnabled ? 'AI curation enabled' : 'AI curation disabled'}
+            >
+              {aiAnalysisEnabled ? '✨ AI' : '⚡ AI'}
+            </button>
+          </div>
         </div>
         
         {/* Category Tabs */}
@@ -169,10 +198,22 @@ function EnhancedMessages({ user }) {
 
       {/* Messages List */}
       <div className="max-h-[600px] overflow-y-auto">
-        {loading ? (
+        {!hasAnalyzed ? (
+          <div className="text-center py-16 px-4">
+            <div className="text-6xl mb-4">📬</div>
+            <h4 className="text-lg font-semibold text-gray-900 mb-2">Ready to analyze your inbox</h4>
+            <p className="text-gray-600 mb-6">
+              Click <strong>"Analyze Messages"</strong> to let Aimy review and curate your emails
+            </p>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-teal-50 border border-teal-200 rounded-lg text-sm text-teal-800">
+              <span>💡</span>
+              <span>AI analysis runs on-demand to save resources</span>
+            </div>
+          </div>
+        ) : loading ? (
           <div className="text-center py-12">
             <div className="animate-spin text-4xl mb-3">📧</div>
-            <p className="text-gray-600">Loading messages...</p>
+            <p className="text-gray-600">Analyzing messages with AI...</p>
           </div>
         ) : messages.length === 0 ? (
           <div className="text-center py-12">
