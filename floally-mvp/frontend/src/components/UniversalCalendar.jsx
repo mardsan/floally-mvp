@@ -7,7 +7,7 @@ const parseLocalDate = (dateStr) => {
   return new Date(year, month - 1, day);
 };
 
-const UniversalCalendar = ({ projects, calendarEvents, user, onOpenProject }) => {
+const UniversalCalendar = ({ projects, calendarEvents, user, onOpenProject, onProjectUpdate }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState('month'); // 'week', 'month'
   const [selectedProject, setSelectedProject] = useState(null); // null = show all
@@ -63,6 +63,64 @@ const UniversalCalendar = ({ projects, calendarEvents, user, onOpenProject }) =>
     // Sort by date
     allEvents.sort((a, b) => a.date - b.date);
     setEvents(allEvents);
+  };
+
+  const handleStatusUpdate = async (event, newStatus) => {
+    if (!event.project) return;
+
+    try {
+      const user = JSON.parse(localStorage.getItem('okaimy_user'));
+      if (!user || !user.email) {
+        throw new Error('User session not found');
+      }
+
+      // Find the goal in the project and update its status
+      const updatedGoals = event.project.goals.map(goal => 
+        goal.goal === event.title 
+          ? { ...goal, status: newStatus }
+          : goal
+      );
+
+      // Update the project via API
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/projects/${event.project.id}?user_email=${user.email}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...event.project,
+          goals: updatedGoals
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update status');
+      }
+
+      const data = await response.json();
+      const updatedProject = data.project || data;
+
+      // Update the local event's status immediately for UI feedback
+      if (selectedEvent) {
+        setSelectedEvent({
+          ...selectedEvent,
+          status: newStatus,
+          project: updatedProject
+        });
+      }
+
+      // Notify parent component to refresh projects
+      if (onProjectUpdate) {
+        onProjectUpdate(updatedProject);
+      }
+
+      // Trigger a re-aggregation of events to update the calendar
+      aggregateEvents();
+      
+    } catch (error) {
+      console.error('Error updating goal status:', error);
+      throw error; // Re-throw to let the popup handle the error display
+    }
   };
 
   const getDaysInMonth = (date) => {
@@ -313,6 +371,7 @@ const UniversalCalendar = ({ projects, calendarEvents, user, onOpenProject }) =>
           event={selectedEvent}
           onClose={() => setSelectedEvent(null)}
           onOpenProject={onOpenProject}
+          onStatusUpdate={handleStatusUpdate}
         />
       )}
     </div>

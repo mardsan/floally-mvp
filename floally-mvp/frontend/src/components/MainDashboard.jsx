@@ -421,6 +421,7 @@ function MainDashboard({ user, onLogout }) {
             calendarEvents={calendarEvents}
             user={user}
             onOpenProject={(project) => setSelectedProject(project)}
+            onProjectUpdate={handleProjectUpdate}
           />
         </section>
 

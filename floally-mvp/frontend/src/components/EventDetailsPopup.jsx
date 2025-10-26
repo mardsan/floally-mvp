@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const EventDetailsPopup = ({ event, onClose, onOpenProject }) => {
+const EventDetailsPopup = ({ event, onClose, onOpenProject, onStatusUpdate }) => {
+  const [currentStatus, setCurrentStatus] = useState(event.status);
+  const [updating, setUpdating] = useState(false);
+
   if (!event) return null;
 
   const getStatusColor = (status) => {
@@ -30,6 +33,27 @@ const EventDetailsPopup = ({ event, onClose, onOpenProject }) => {
       month: 'long', 
       day: 'numeric' 
     });
+  };
+
+  const handleStatusChange = async (newStatus) => {
+    if (!isProjectGoal || !event.project) return;
+    
+    setUpdating(true);
+    setCurrentStatus(newStatus);
+    
+    try {
+      // Call the parent's onStatusUpdate callback
+      if (onStatusUpdate) {
+        await onStatusUpdate(event, newStatus);
+      }
+    } catch (error) {
+      console.error('Error updating status:', error);
+      // Revert on error
+      setCurrentStatus(event.status);
+      alert('Failed to update status. Please try again.');
+    } finally {
+      setUpdating(false);
+    }
   };
 
   const isProjectGoal = event.type === 'project_goal';
@@ -84,18 +108,27 @@ const EventDetailsPopup = ({ event, onClose, onOpenProject }) => {
           </div>
 
           {/* Status (for project goals) */}
-          {isProjectGoal && event.status && (
+          {isProjectGoal && currentStatus && (
             <div className="mb-4">
               <div className="flex items-center gap-2 text-gray-600 mb-1">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <span className="font-semibold text-sm">Status</span>
+                {updating && <span className="text-xs text-blue-600 animate-pulse">Updating...</span>}
               </div>
               <div className="ml-7">
-                <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(event.status)}`}>
-                  {event.status.replace('_', ' ').charAt(0).toUpperCase() + event.status.slice(1).replace('_', ' ')}
-                </span>
+                <select
+                  value={currentStatus}
+                  onChange={(e) => handleStatusChange(e.target.value)}
+                  disabled={updating}
+                  className={`${getStatusColor(currentStatus)} px-3 py-2 rounded-lg text-sm font-medium border-2 border-transparent hover:border-gray-300 focus:border-teal-500 focus:outline-none transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
+                >
+                  <option value="not_started">⭕ Not Started</option>
+                  <option value="in_progress">🔄 In Progress</option>
+                  <option value="completed">✅ Completed</option>
+                  <option value="blocked">🚫 Blocked</option>
+                </select>
               </div>
             </div>
           )}
