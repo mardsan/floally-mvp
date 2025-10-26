@@ -27,7 +27,7 @@ const AttachmentConsentPrompt = ({
       if (permanent) {
         // Add sender to trusted list
         const response = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}/api/trusted-senders/${userEmail}`,
+          `${import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app'}/api/trusted-senders/${userEmail}`,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
