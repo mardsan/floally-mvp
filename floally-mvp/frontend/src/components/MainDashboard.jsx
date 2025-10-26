@@ -216,13 +216,14 @@ function MainDashboard({ user, onLogout }) {
       </header>
 
       <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* Daily Standup - Hero Section */}
+        {/* Daily Standup - Redesigned Split-Panel Layout */}
         <section className="mb-8">
-          <div className="bg-gradient-to-r from-teal-500 to-blue-600 rounded-2xl shadow-xl p-8 text-white">
-            <div className="flex items-start justify-between mb-6">
+          <div className="bg-gradient-to-r from-teal-500 to-blue-600 rounded-2xl shadow-xl overflow-hidden">
+            {/* Header */}
+            <div className="px-8 py-6 text-white flex items-start justify-between">
               <div>
                 <h2 className="text-2xl font-bold mb-2">📊 Your Daily Standup</h2>
-                <p className="text-teal-100">AI-powered insights based on your goals and activities</p>
+                <p className="text-teal-100">AI-powered partnership for your most productive day</p>
               </div>
               <button
                 onClick={loadStandup}
@@ -233,77 +234,227 @@ function MainDashboard({ user, onLogout }) {
               </button>
             </div>
 
-            {standup ? (
-              <div className="space-y-6">
-                {/* The One Thing */}
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-                  <h3 className="text-lg font-bold mb-3 flex items-center gap-2">
-                    🎯 The One Thing
-                  </h3>
-                  <p className="text-lg text-teal-50">
-                    {standup.one_thing || "Focus on your most important task today"}
-                  </p>
+            {/* Main Content - Split Panel */}
+            <div className="bg-white p-8">
+              <div className="grid lg:grid-cols-2 gap-8 mb-8">
+                
+                {/* LEFT PANEL: USER'S FOCUS */}
+                <div className="space-y-6">
+                  {/* User Avatar Header */}
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-16 h-16 rounded-full overflow-hidden ring-4 ring-blue-200 bg-gradient-to-br from-blue-400 to-purple-400 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                      {currentUser?.avatar_url ? (
+                        <img src={currentUser.avatar_url} alt={currentUser.display_name} className="w-full h-full object-cover" />
+                      ) : (
+                        currentUser?.display_name?.charAt(0).toUpperCase() || '👤'
+                      )}
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-800">Your Focus Today</h3>
+                      <p className="text-sm text-gray-600">{currentUser?.display_name || 'You'}</p>
+                    </div>
+                  </div>
+
+                  {/* The One Thing */}
+                  <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 shadow-md border-2 border-blue-300">
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="text-2xl">🎯</span>
+                      <h4 className="text-lg font-bold text-blue-900">The One Thing</h4>
+                    </div>
+                    <p className="text-gray-800 text-lg mb-4">
+                      {standup?.one_thing || "Focus on your most important task today"}
+                    </p>
+                    <div className="flex gap-2">
+                      <button className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                        ✅ Confirm & Start
+                      </button>
+                      <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors">
+                        🔄
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Other Priorities */}
+                  <div className="bg-gray-50 rounded-xl p-6">
+                    <h4 className="text-lg font-bold text-gray-800 mb-4">📋 Other Priorities</h4>
+                    <div className="space-y-3">
+                      {standup?.decisions && standup.decisions.length > 0 ? (
+                        standup.decisions.map((decision, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => {
+                              setStandup({...standup, one_thing: decision.decision});
+                            }}
+                            className="w-full text-left bg-white rounded-lg p-4 hover:bg-blue-50 hover:border-blue-300 border-2 border-gray-200 transition-all group"
+                          >
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <p className="text-gray-800 font-medium group-hover:text-blue-900">
+                                  {decision.decision}
+                                </p>
+                                {decision.confidence && (
+                                  <div className="mt-2 flex items-center gap-2">
+                                    <div className="flex-1 bg-gray-200 rounded-full h-1.5">
+                                      <div
+                                        className="bg-blue-600 rounded-full h-1.5 transition-all"
+                                        style={{ width: `${decision.confidence * 100}%` }}
+                                      />
+                                    </div>
+                                    <span className="text-xs text-gray-500">
+                                      {Math.round(decision.confidence * 100)}%
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                              <span className="text-gray-400 group-hover:text-blue-600 ml-3">→</span>
+                            </div>
+                          </button>
+                        ))
+                      ) : (
+                        <div className="text-center py-8 text-gray-500">
+                          <p className="text-sm">No additional priorities identified</p>
+                          <p className="text-xs mt-1">Focus on "The One Thing" above</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
 
-                {/* Key Decisions */}
-                {standup.decisions && standup.decisions.length > 0 && (
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-                    <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                      💡 Key Decisions
-                    </h3>
-                    <div className="space-y-3">
-                      {standup.decisions.map((decision, idx) => (
-                        <div key={idx} className="flex items-start gap-3">
-                          <div className="flex-1">
-                            <p className="text-teal-50">{decision.decision}</p>
-                            {decision.confidence && (
-                              <div className="mt-2 flex items-center gap-2">
-                                <div className="flex-1 bg-white/20 rounded-full h-2">
-                                  <div
-                                    className="bg-white rounded-full h-2 transition-all"
-                                    style={{ width: `${decision.confidence * 100}%` }}
-                                  />
-                                </div>
-                                <span className="text-xs text-teal-100">
-                                  {Math.round(decision.confidence * 100)}% confident
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      ))}
+                {/* RIGHT PANEL: AIMY'S WORK */}
+                <div className="space-y-6">
+                  {/* Aimy Avatar Header */}
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-16 h-16 rounded-full overflow-hidden ring-4 ring-teal-200 bg-white shadow-lg">
+                      <img 
+                        src="/okaimy-pfp-01.png" 
+                        alt="Aimy" 
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.parentElement.innerHTML = '<div class="w-full h-full bg-gradient-to-br from-teal-400 to-emerald-400 flex items-center justify-center text-white text-2xl font-bold">A</div>';
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-800">Aimy's Work Today</h3>
+                      <p className="text-sm text-gray-600">Your AI Partner</p>
                     </div>
                   </div>
-                )}
 
-                {/* Autonomous Tasks */}
-                {standup.autonomous_tasks && standup.autonomous_tasks.length > 0 && (
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-                    <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                      ✅ Handled for You
-                    </h3>
-                    <div className="grid grid-cols-2 gap-3">
-                      {standup.autonomous_tasks.map((task, idx) => (
-                        <div key={idx} className="flex items-center gap-2 text-teal-50">
-                          <span className="text-green-300">✓</span>
-                          <span>{task}</span>
-                        </div>
-                      ))}
+                  {/* Daily Summary */}
+                  <div className="bg-gradient-to-br from-teal-50 to-emerald-50 rounded-xl p-6 shadow-md border-2 border-teal-300">
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="text-2xl">📈</span>
+                      <h4 className="text-lg font-bold text-teal-900">Daily Summary</h4>
+                    </div>
+                    <div className="text-sm text-teal-800 space-y-2">
+                      <p className="flex items-start gap-2">
+                        <span className="text-teal-600">•</span>
+                        <span>Monitoring your inbox for urgent items</span>
+                      </p>
+                      <p className="flex items-start gap-2">
+                        <span className="text-teal-600">•</span>
+                        <span>Calendar is organized for today</span>
+                      </p>
+                      <p className="flex items-start gap-2">
+                        <span className="text-teal-600">•</span>
+                        <span>Ready to assist with email responses</span>
+                      </p>
                     </div>
                   </div>
-                )}
+
+                  {/* Things Aimy is Working On */}
+                  <div className="bg-white rounded-xl border-2 border-gray-200 overflow-hidden">
+                    <div className="bg-gradient-to-r from-teal-500 to-emerald-500 px-6 py-4 flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-white">
+                        <span className="text-xl">🔄</span>
+                        <h4 className="font-bold">Things I'm Working On</h4>
+                      </div>
+                      <button
+                        onClick={loadStandup}
+                        disabled={loadingStandup}
+                        className="text-sm bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg transition-colors text-white"
+                      >
+                        {loadingStandup ? '⏳' : '🔄 Regenerate'}
+                      </button>
+                    </div>
+                    
+                    <div className="p-6 space-y-4">
+                      {standup?.autonomous_tasks && standup.autonomous_tasks.length > 0 ? (
+                        standup.autonomous_tasks.map((task, idx) => (
+                          <div key={idx} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                            <div className="flex items-start justify-between mb-3">
+                              <div className="flex-1">
+                                <p className="text-gray-800 font-medium mb-1">{task}</p>
+                                <span className="text-xs text-teal-600 bg-teal-50 px-2 py-1 rounded">Ready to execute</span>
+                              </div>
+                            </div>
+                            <div className="flex gap-2">
+                              <button className="flex-1 bg-green-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">
+                                ✅ Go
+                              </button>
+                              <button className="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+                                👀 Let me check
+                              </button>
+                              <button className="flex-1 bg-red-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors">
+                                ❌ Don't do this
+                              </button>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-center py-8 text-gray-500">
+                          <p className="text-sm">All caught up! 🎉</p>
+                          <p className="text-xs mt-1">I'll notify you if something comes up</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
-            ) : (
-              <div className="text-center py-8">
-                <p className="text-teal-100 mb-4">Generate your first standup to get started</p>
-                <button
-                  onClick={loadStandup}
-                  className="px-6 py-3 bg-white text-teal-600 rounded-lg font-semibold hover:bg-teal-50 transition-colors"
-                >
-                  Generate Daily Standup
-                </button>
+
+              {/* Chat with Aimy - Full Width */}
+              <div className="border-t-2 border-gray-200 pt-8">
+                <div className="bg-gradient-to-br from-gray-50 to-teal-50 rounded-xl p-6 border-2 border-teal-200">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-full overflow-hidden bg-white shadow">
+                      <img 
+                        src="/okaimy-pfp-01.png" 
+                        alt="Aimy" 
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.parentElement.innerHTML = '<div class="w-full h-full bg-gradient-to-br from-teal-400 to-emerald-400 flex items-center justify-center text-white text-sm font-bold">A</div>';
+                        }}
+                      />
+                    </div>
+                    <h4 className="text-lg font-bold text-gray-800">💬 Chat with Aimy</h4>
+                    <span className="text-xs text-gray-500 ml-auto">Ask about your day, clarify tasks, or get advice</span>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    {/* Chat messages would go here */}
+                    <div className="bg-white rounded-lg p-4 shadow-sm">
+                      <p className="text-sm text-gray-600 italic">
+                        💡 Quick tip: You can ask me to explain any task, suggest alternatives, or help prioritize your day.
+                      </p>
+                    </div>
+                    
+                    {/* Chat Input */}
+                    <div className="flex gap-3">
+                      <input
+                        type="text"
+                        placeholder="Ask Aimy anything about your day..."
+                        className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-teal-500 focus:outline-none"
+                      />
+                      <button className="px-6 py-3 bg-teal-600 text-white rounded-lg font-medium hover:bg-teal-700 transition-colors">
+                        Send
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
-            )}
+            </div>
           </div>
         </section>
 
