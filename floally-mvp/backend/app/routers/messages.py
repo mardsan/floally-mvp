@@ -77,7 +77,7 @@ async def ai_analyze_messages(messages: List[Dict], user_context: Dict) -> List[
             'has_unsubscribe': msg.get('hasUnsubscribeLink', False)
         })
     
-    prompt = f"""You are Aimy, an AI assistant helping a user prioritize their inbox. Analyze these messages and score their importance/relevance.
+    prompt = f"""You are Aimy, the user's AI teammate helping them prioritize their inbox. Analyze these messages and score their importance/relevance.
 
 User Context:
 - Role: {user_context.get('role', 'Professional')}
@@ -543,7 +543,7 @@ async def draft_email_response(
         if past_approvals:
             style_learning = f"\n\nUser has previously approved {len(past_approvals)} response(s) to this sender. Maintain similar tone and style."
         
-        prompt = f"""You are Aimy, {user_context['name']}'s AI assistant, helping draft an email response.
+        prompt = f"""You are Aimy, {user_context['name']}'s AI teammate on their operations team, helping draft an email response.
 
 USER PROFILE:
 - Name: {user_context['name']}
@@ -603,7 +603,7 @@ Best regards,
 Aimy (on behalf of {user_name})
 
 ---
-Sent via OkAimy - AI-Powered Productivity Assistant
+Sent via OkAimy - Your AI Teammate for Productivity
 www.okaimy.com"""
             
         elif request.signature_style == "ai_assisted":
@@ -613,7 +613,7 @@ Best,
 {user_name}
 
 ---
-Composed with OkAimy - my AI productivity assistant"""
+Composed with Aimy - my AI teammate at OkAimy"""
             
         else:  # no_attribution
             signature = f"""

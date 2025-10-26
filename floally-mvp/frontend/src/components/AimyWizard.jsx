@@ -52,7 +52,7 @@ function AimyWizard({ projectDescription, onGenerated, onClose }) {
               <h2 className="text-2xl font-bold text-white flex items-center gap-2">
                 🪄 Aimy Project Wizard
               </h2>
-              <p className="text-teal-50 mt-1">Let me help you plan your project intelligently</p>
+              <p className="text-teal-50 mt-1">Your AI teammate is ready to plan your project</p>
             </div>
             <button
               onClick={onClose}

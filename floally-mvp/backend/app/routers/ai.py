@@ -47,7 +47,7 @@ User Profile:
         
         # Build context from messages and events
         context = f"""
-You are Aimy, a calm and competent AI assistant helping a creative professional plan their day.
+You are Aimy, the user's calm and competent AI teammate, helping them plan their day as a member of their operations team.
 {user_context_text}
 
 Today's Gmail messages ({len(request.messages)} total):
@@ -62,7 +62,7 @@ Generate a concise daily stand-up with:
 3. What you'll handle autonomously
 4. Brief digest of what's already taken care of
 
-Be warm, competent, and protective of their creative flow.
+Be warm, competent, and protective of their creative flow. You're their teammate, not just an assistant.
 {f"Match your tone to their preference: {format_comm_style(request.userContext.get('communicationStyle', ''))}." if request.userContext and request.userContext.get('communicationStyle') else ""}
 Keep the response concise and actionable.
 """
@@ -116,7 +116,7 @@ async def analyze_emails(request: EmailAnalysisRequest):
         ])
         
         context = f"""
-You are Aimy, an intelligent email assistant. Analyze these emails and identify which ones are IMPORTANT and require action or response.
+You are Aimy, the user's intelligent email teammate. Analyze these emails and identify which ones are IMPORTANT and require action or response.
 
 **PRIORITIZATION RULES:**
 1. ALWAYS mark emails as important if they have "Already Starred: True" or "Gmail Important: True" - these are user-designated priorities

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 
 const SIGNATURE_STYLES = [
-  { value: 'ai_assisted', label: '✨ From Me (AI-assisted)', description: 'Your name with subtle OkAimy credit' },
-  { value: 'as_aimy', label: '🤖 From Aimy', description: 'Clearly from Aimy on your behalf' },
+  { value: 'ai_assisted', label: '✨ From Me (with Aimy)', description: 'Your name with Aimy as your teammate' },
+  { value: 'as_aimy', label: '🤖 From Aimy (on my team)', description: 'Aimy responding on your behalf' },
   { value: 'no_attribution', label: '👤 From Me Only', description: 'No mention of AI' }
 ];
 
@@ -273,7 +273,7 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
               disabled={aiDrafting}
               className="px-3 py-1.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-sm font-medium transition-colors shadow-md"
             >
-              {aiDrafting ? '✨ Drafting...' : '✨ Let Aimy Respond'}
+              {aiDrafting ? '✨ Drafting...' : '✨ Let Aimy (teammate) respond'}
             </button>
             <button
               onClick={handleArchive}
@@ -327,14 +327,14 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
                 </div>
               )}
 
-              {/* Train Aimy Section */}
+              {/* Teach Your Teammate Section */}
               <div className="mb-6 p-4 bg-gray-50 border border-gray-200 rounded-xl">
                 <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
                   <span>🎓</span>
-                  <span>Train Aimy</span>
+                  <span>Teach Your Teammate</span>
                 </h4>
                 <p className="text-sm text-gray-600 mb-3">
-                  Help Aimy learn your preferences by rating this message:
+                  Help Aimy learn how your team operates by rating this message:
                 </p>
                 <div className="flex gap-2 flex-wrap">
                   <button
@@ -435,7 +435,7 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
                         console.log('User modified AI draft');
                       }
                     }}
-                    placeholder="Type your reply here, or click 'Let Aimy Respond' to generate a draft..."
+                    placeholder="Type your reply here, or click 'Let Aimy (teammate) respond' to generate a draft..."
                     className="w-full px-4 py-3 border border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                     rows={aiDraft ? 12 : 6}
                   />

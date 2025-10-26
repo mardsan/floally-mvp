@@ -77,7 +77,7 @@ function EnhancedMessages({ user }) {
       setShowFeedback(null);
       
       // Show confirmation
-      alert(`✅ Feedback recorded! Aimy will learn from this.`);
+      alert(`✅ Feedback recorded! Your teammate Aimy will learn from this.`);
       
     } catch (error) {
       console.error('Failed to record feedback:', error);
@@ -128,7 +128,7 @@ function EnhancedMessages({ user }) {
           <div>
             <h3 className="text-lg font-bold text-gray-900">✉️ Smart Messages</h3>
             <p className="text-sm text-gray-500 mt-1">
-              {aiAnalysisEnabled ? 'AI-curated by Aimy' : 'Recent messages'}
+              {aiAnalysisEnabled ? 'Curated by your AI teammate Aimy' : 'Recent messages'}
             </p>
           </div>
           

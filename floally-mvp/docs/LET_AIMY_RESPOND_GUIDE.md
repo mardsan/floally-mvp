@@ -1,7 +1,7 @@
-# ✨ Let Aimy Respond - AI Email Draft Generation
+# ✨ Let Aimy (teammate) Respond - AI Email Draft Generation
 
 ## Overview
-"Let Aimy Respond" is an intelligent email response drafting feature that learns your communication style and helps you respond faster while maintaining authenticity.
+"Let Aimy (teammate) Respond" is an intelligent email response drafting feature that learns your communication style and helps you respond faster while maintaining authenticity. Aimy works as your AI teammate, not just an assistant.
 
 ---
 
@@ -15,9 +15,9 @@
 
 ### **Three Signature Styles**
 
-You choose how to represent AI assistance:
+You choose how to represent your AI teammate:
 
-#### **1. ✨ From Me (AI-assisted)** - DEFAULT ⭐
+#### **1. ✨ From Me (with Aimy)** - DEFAULT ⭐
 ```
 Hi [Recipient],
 
@@ -27,29 +27,30 @@ Best,
 [Your Name]
 
 ---
-Composed with OkAimy - my AI productivity assistant
+Composed with Aimy - my AI teammate at OkAimy
 ```
 
 **Perfect For:**
 - Most professional communications
 - Maintaining personal connection
-- Subtle brand exposure
+- Collaborative positioning
 - Honest but non-disruptive attribution
 
 **Why It's Great:**
 - ✅ Maintains your personal voice
-- ✅ Shows you're tech-savvy
+- ✅ Shows you're tech-savvy and have a great team
 - ✅ Creates curiosity about OkAimy
 - ✅ Doesn't distract from message content
+- ✅ Positions AI as partner, not tool
 - ✅ Easy to remove if needed
 
 ---
 
-#### **2. 🤖 From Aimy** - OVERT AGENT
+#### **2. 🤖 From Aimy (on my team)** - OVERT DELEGATION
 ```
 Hi [Recipient],
 
-This is Aimy, [Your Name]'s AI assistant. [He/She] asked me to help with this.
+This is Aimy, [Your Name]'s AI teammate. [He/She] asked me to help with this.
 
 [AI-generated response content]
 
@@ -57,7 +58,7 @@ Best regards,
 Aimy (on behalf of [Your Name])
 
 ---
-Sent via OkAimy - AI-Powered Productivity Assistant
+Sent via OkAimy - Your AI Teammate for Productivity
 www.okaimy.com
 ```
 
@@ -69,7 +70,7 @@ www.okaimy.com
 
 **Why Use It:**
 - ✅ Maximum honesty about AI involvement
-- ✅ Clear delegation signal
+- ✅ Clear delegation signal (trusted teammate handling it)
 - ✅ Strong OkAimy promotion
 - ✅ Sets expectations appropriately
 - ✅ Great for automated workflows
