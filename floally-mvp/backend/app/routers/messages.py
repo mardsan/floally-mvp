@@ -519,6 +519,44 @@ async def draft_email_response(
         
         headers = {h['name']: h['value'] for h in message['payload']['headers']}
         
+        # Check for attachments
+        from app.services.attachment_service import (
+            extract_attachments_from_message,
+            is_attachment_safe,
+            check_sender_trust
+        )
+        
+        attachments = extract_attachments_from_message(message)
+        attachment_context = ""
+        has_unprocessed_attachments = False
+        sender_from = headers.get('From', '')
+        sender_email = ''
+        if '<' in sender_from:
+            sender_email = sender_from.split('<')[1].split('>')[0]
+        elif '@' in sender_from:
+            sender_email = sender_from.strip()
+        
+        if attachments:
+            print(f"📎 Found {len(attachments)} attachment(s)")
+            is_trusted, auto_approved = check_sender_trust(db, user.email, sender_email)
+            
+            if is_trusted and auto_approved:
+                print(f"✅ Sender trusted with auto-approval for attachments")
+                # Will process attachments
+                # For now, just note them in context
+                attachment_names = [att['filename'] for att in attachments]
+                attachment_context = f"\n\nATTACHMENTS: {', '.join(attachment_names)} (attachment processing in progress)"
+            elif is_trusted:
+                print(f"⚠️ Sender trusted but requires manual approval for attachments")
+                has_unprocessed_attachments = True
+                attachment_names = [att['filename'] for att in attachments]
+                attachment_context = f"\n\nNOTE: Email includes attachments ({', '.join(attachment_names)}) - user can approve processing separately"
+            else:
+                print(f"⚠️ Sender not trusted for attachment processing")
+                has_unprocessed_attachments = True
+                attachment_names = [att['filename'] for att in attachments]
+                attachment_context = f"\n\nNOTE: Email includes attachments ({', '.join(attachment_names)}) - sender not yet trusted for processing"
+        
         # Extract body
         body = ""
         try:
@@ -611,6 +649,7 @@ Date: {headers.get('Date', '')}
 
 Content:
 {body[:1500] if body else message.get('snippet', 'No content')}
+{attachment_context}
 
 {f"ADDITIONAL CONTEXT: {request.custom_context}" if request.custom_context else ""}
 
@@ -696,6 +735,13 @@ Best,
             "user_context": {
                 "tone": user_context['tone_preference'],
                 "style": user_context['communication_style']
+            },
+            "attachments": {
+                "has_attachments": len(attachments) > 0,
+                "count": len(attachments),
+                "unprocessed": has_unprocessed_attachments,
+                "sender_email": sender_email if has_unprocessed_attachments else None,
+                "files": [att['filename'] for att in attachments] if has_unprocessed_attachments else []
             }
         }
         

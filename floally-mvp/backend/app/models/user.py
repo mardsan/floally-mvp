@@ -26,6 +26,7 @@ class User(Base):
     behavior_actions = relationship("BehaviorAction", back_populates="user", cascade="all, delete-orphan")
     settings = relationship("UserSettings", back_populates="user", uselist=False, cascade="all, delete-orphan")
     projects = relationship("Project", back_populates="user", cascade="all, delete-orphan")
+    trusted_senders = relationship("TrustedSender", back_populates="user", cascade="all, delete-orphan")
 
 
 class UserProfile(Base):

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import AttachmentConsentPrompt from './AttachmentConsentPrompt';
 
 const SIGNATURE_STYLES = [
   { value: 'ai_assisted', label: '✨ From Me (with Aimy)', description: 'Your name with Aimy as your teammate' },
@@ -16,6 +17,8 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
   const [signatureStyle, setSignatureStyle] = useState('ai_assisted');
   const [customContext, setCustomContext] = useState('');
   const [sending, setSending] = useState(false);
+  const [showAttachmentConsent, setShowAttachmentConsent] = useState(false);
+  const [attachmentInfo, setAttachmentInfo] = useState(null);
 
   useEffect(() => {
     loadFullMessage();
@@ -64,6 +67,13 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
       setAiDraft(data);
       setReplyText(data.draft);
       
+      // Check if there are unprocessed attachments
+      if (data.attachments && data.attachments.has_attachments && data.attachments.unprocessed) {
+        setAttachmentInfo(data.attachments);
+        setShowAttachmentConsent(true);
+        console.log(`📎 ${data.attachments.count} unprocessed attachment(s) detected`);
+      }
+      
       // Record that draft was generated
       console.log('✨ Aimy generated draft response');
       
@@ -73,6 +83,18 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
     } finally {
       setAiDrafting(false);
     }
+  };
+
+  const handleAttachmentApprove = async (permanent) => {
+    console.log(`✅ Attachments approved${permanent ? ' (saved preference)' : ' (one-time)'}`);
+    setShowAttachmentConsent(false);
+    // TODO: Re-generate draft with attachment context
+    // For now, just hide the prompt - full implementation will process attachments
+  };
+
+  const handleAttachmentDecline = () => {
+    console.log('❌ Attachment processing declined');
+    setShowAttachmentConsent(false);
   };
 
   const handleApproveDraft = async (approved) => {
@@ -377,6 +399,18 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
                       </span>
                     )}
                   </div>
+                  
+                  {/* Attachment Consent Prompt */}
+                  {showAttachmentConsent && attachmentInfo && (
+                    <AttachmentConsentPrompt
+                      senderEmail={attachmentInfo.sender_email}
+                      senderName={message.from?.split('<')[0].trim()}
+                      attachments={attachmentInfo.files}
+                      onApprove={handleAttachmentApprove}
+                      onDecline={handleAttachmentDecline}
+                      userEmail={user.email}
+                    />
+                  )}
                   
                   {/* Signature Style Selector */}
                   {!aiDraft && (

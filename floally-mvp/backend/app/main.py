@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import auth, gmail, calendar, ai, user_profile_db, behavior_db, profile, insights, waitlist, standup, projects, messages
+from app.routers import auth, gmail, calendar, ai, user_profile_db, behavior_db, profile, insights, waitlist, standup, projects, messages, trusted_senders
 import os
 from dotenv import load_dotenv
 
@@ -28,6 +28,7 @@ async def lifespan(app: FastAPI):
             logger.info("📊 Initializing database tables...")
             from app.database import engine, Base
             from app.models import User, UserProfile, ConnectedAccount, BehaviorAction, UserSettings, SenderStats, Project
+            from app.models.trusted_sender import TrustedSender
             
             # Create all tables if they don't exist
             Base.metadata.create_all(bind=engine)
@@ -90,6 +91,7 @@ app.include_router(waitlist.router, prefix="/api", tags=["waitlist"])
 app.include_router(standup.router, prefix="/api", tags=["standup"])
 app.include_router(projects.router, prefix="/api", tags=["projects"])
 app.include_router(messages.router, prefix="/api", tags=["messages"])
+app.include_router(trusted_senders.router, tags=["trusted-senders"])
 
 @app.get("/")
 async def root():
