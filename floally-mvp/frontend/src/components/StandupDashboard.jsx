@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { ai } from '../services/api';
 
-const StandupDashboard = ({ user, userAvatar, userName }) => {
+const StandupDashboard = ({ user, userAvatar, userName, messages, events, userProfile }) => {
   const [userFocusStatus, setUserFocusStatus] = useState('not_started');
   const [showAlternatives, setShowAlternatives] = useState(false);
   const [selectedFocus, setSelectedFocus] = useState(null);
   const [aimyWork, setAimyWork] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [standupData, setStandupData] = useState(null);
 
   // Mock data - will be replaced with real API calls
   const mockStandupData = {
@@ -132,10 +136,56 @@ const StandupDashboard = ({ user, userAvatar, userName }) => {
   };
 
   useEffect(() => {
-    // TODO: Fetch real standup data from API
-    setSelectedFocus(mockStandupData.user.theOneThing);
-    setAimyWork(mockStandupData.aimy);
+    // Load real standup data from API when component mounts
+    if (messages && events) {
+      loadStandupData();
+    } else {
+      // Fallback to mock data if no messages/events provided
+      setSelectedFocus(mockStandupData.user.theOneThing);
+      setAimyWork(mockStandupData.aimy);
+    }
   }, []);
+
+  const loadStandupData = async () => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      console.log('🔄 Loading standup data from API...');
+      
+      const context = {
+        messages: messages || [],
+        events: events || []
+      };
+      
+      // Include user profile context if available
+      if (userProfile && userProfile.onboarding_completed) {
+        context.userContext = {
+          role: userProfile.role,
+          priorities: userProfile.priorities,
+          communicationStyle: userProfile.communication_style
+        };
+      }
+      
+      const response = await ai.generateStandup(context);
+      console.log('✅ Standup data loaded:', response.data);
+      
+      setStandupData(response.data);
+      
+      // For now, keep mock data structure but show we have real standup text
+      setSelectedFocus(mockStandupData.user.theOneThing);
+      setAimyWork(mockStandupData.aimy);
+      
+    } catch (err) {
+      console.error('❌ Failed to load standup:', err);
+      setError(err.message);
+      // Fallback to mock data on error
+      setSelectedFocus(mockStandupData.user.theOneThing);
+      setAimyWork(mockStandupData.aimy);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleStatusChange = (newStatus) => {
     setUserFocusStatus(newStatus);
@@ -204,6 +254,37 @@ const StandupDashboard = ({ user, userAvatar, userName }) => {
 
   return (
     <div className="bg-white rounded-xl shadow-2xl overflow-hidden">
+      {/* Error Banner */}
+      {error && (
+        <div className="bg-red-50 border-b border-red-200 px-6 py-3">
+          <div className="flex items-center gap-2">
+            <span className="text-red-600">⚠️</span>
+            <p className="text-sm text-red-700">Failed to load standup: {error}</p>
+            <button
+              onClick={loadStandupData}
+              className="ml-auto text-red-600 hover:text-red-700 text-sm font-medium"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      )}
+      
+      {/* Aimy's Standup Text Banner */}
+      {standupData && standupData.standup && (
+        <div className="bg-gradient-to-r from-teal-50 to-emerald-50 border-b border-teal-200 px-6 py-4">
+          <div className="flex items-start gap-3">
+            <span className="text-2xl">🤖</span>
+            <div className="flex-1">
+              <h4 className="font-bold text-teal-900 mb-2">Aimy's Daily Brief:</h4>
+              <div className="text-sm text-teal-800 whitespace-pre-wrap max-h-48 overflow-y-auto pr-2">
+                {standupData.standup}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* Header */}
       <div className="bg-gradient-to-r from-teal-600 to-teal-700 text-white p-6">
         <div className="flex justify-between items-center">
@@ -527,10 +608,11 @@ const StandupDashboard = ({ user, userAvatar, userName }) => {
           </a>
         </div>
         <button
-          onClick={() => window.location.reload()}
-          className="bg-teal-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-teal-700 transition-colors"
+          onClick={loadStandupData}
+          disabled={loading}
+          className="bg-teal-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          🔄 Refresh
+          {loading ? '⏳ Loading...' : '🔄 Refresh'}
         </button>
       </div>
     </div>

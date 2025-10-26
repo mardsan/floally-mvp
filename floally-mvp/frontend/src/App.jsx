@@ -653,6 +653,9 @@ function App() {
             user={data.profile} 
             userAvatar={profile?.avatar_url}
             userName={profile?.display_name || data.profile?.email}
+            messages={data.messages}
+            events={data.events}
+            userProfile={profile}
           />
         </div>
 
