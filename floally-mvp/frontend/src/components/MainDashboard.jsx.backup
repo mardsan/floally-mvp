@@ -15,8 +15,6 @@ function MainDashboard({ user, onLogout }) {
   const [showProfileSettings, setShowProfileSettings] = useState(false);
   const [currentUser, setCurrentUser] = useState(user);
   const [selectedProject, setSelectedProject] = useState(null);
-  const [expandedOneThingDetails, setExpandedOneThingDetails] = useState(false);
-  const [oneThingStatus, setOneThingStatus] = useState('preparing');
 
   useEffect(() => {
     loadDashboardData();
@@ -271,53 +269,33 @@ function MainDashboard({ user, onLogout }) {
 
                   {/* The One Thing */}
                   <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 shadow-md border-2 border-blue-300">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-2">
-                        <span className="text-2xl">🎯</span>
-                        <h4 className="text-lg font-bold text-blue-900">The One Thing</h4>
-                      </div>
-                      {/* Status Dropdown */}
-                      <select
-                        value={oneThingStatus}
-                        onChange={(e) => setOneThingStatus(e.target.value)}
-                        className="px-3 py-1.5 text-sm border-2 border-blue-300 rounded-lg bg-white font-medium focus:outline-none focus:border-blue-500"
-                      >
-                        <option value="preparing">⚪ Preparing</option>
-                        <option value="in_progress">🟡 In Progress</option>
-                        <option value="complete">🟢 Complete</option>
-                        <option value="blocked">🔴 Blocked</option>
-                      </select>
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="text-2xl">🎯</span>
+                      <h4 className="text-lg font-bold text-blue-900">The One Thing</h4>
                     </div>
                     
                     {/* Main task - bold and prominent */}
-                    <div className="mb-4">
-                      <h5 className="text-xl font-bold text-gray-900 mb-2">
+                    <button 
+                      className="w-full text-left mb-4 group"
+                      onClick={() => {
+                        // TODO: Open modal with full task details
+                        console.log('Show task details');
+                      }}
+                    >
+                      <h5 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                         {standup?.one_thing || "Review Q4 budget priorities"}
                       </h5>
                       <p className="text-sm text-gray-600">
                         From Aimy: High priority deadline today · 2-3 hours
                       </p>
-                    </div>
-                    
-                    {/* Expandable Details */}
-                    {expandedOneThingDetails && standup?.full_text && (
-                      <div className="mb-4 p-4 bg-white/70 rounded-lg border border-blue-200">
-                        <h6 className="text-sm font-semibold text-blue-900 mb-2">Details from Aimy:</h6>
-                        <div className="text-sm text-gray-700 whitespace-pre-wrap max-h-60 overflow-y-auto">
-                          {standup.full_text}
-                        </div>
-                      </div>
-                    )}
+                    </button>
                     
                     <div className="flex gap-2">
-                      <button 
-                        onClick={() => setExpandedOneThingDetails(!expandedOneThingDetails)}
-                        className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium hover:bg-blue-200 transition-colors"
-                      >
-                        {expandedOneThingDetails ? '▼ Hide Details' : '▶ Show Details'}
-                      </button>
                       <button className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors">
                         ✅ Start Working
+                      </button>
+                      <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors">
+                        🔄 Switch
                       </button>
                     </div>
                   </div>
@@ -331,27 +309,7 @@ function MainDashboard({ user, onLogout }) {
                           <button
                             key={idx}
                             onClick={() => {
-                              // Swap tasks: current one_thing goes back to decisions
-                              const currentTask = standup.one_thing;
-                              const newDecisions = standup.decisions.filter((_, i) => i !== idx);
-                              
-                              // Add the current one_thing back to decisions (if it's not the default text)
-                              if (currentTask && currentTask !== "Review Q4 budget priorities" && currentTask !== "Unable to load standup. Please try again.") {
-                                newDecisions.push({
-                                  decision: currentTask,
-                                  confidence: 0.80 // Default confidence for swapped item
-                                });
-                              }
-                              
-                              setStandup({
-                                ...standup,
-                                one_thing: decision.decision,
-                                decisions: newDecisions
-                              });
-                              
-                              // Reset status when switching tasks
-                              setOneThingStatus('preparing');
-                              setExpandedOneThingDetails(false);
+                              setStandup({...standup, one_thing: decision.decision});
                             }}
                             className="w-full text-left bg-white rounded-lg p-4 hover:bg-blue-50 hover:border-blue-300 border-2 border-gray-200 transition-all group"
                           >
