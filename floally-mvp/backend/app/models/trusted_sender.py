@@ -1,15 +1,23 @@
 """
 Trusted Sender Model
-Tracks senders whose attachments can be processed by Aimy
+Tracks senders and their trust level for attachment processing
 """
-from sqlalchemy import Column, String, Integer, DateTime, Boolean, ForeignKey
+from sqlalchemy import Column, String, Integer, DateTime, Boolean, ForeignKey, Enum
 from sqlalchemy.orm import relationship
-from datetime import datetime
+from datetime import datetime, timezone
+import enum
 from app.database import Base
 
 
+class TrustLevel(str, enum.Enum):
+    """Trust level for sender attachments"""
+    TRUSTED = "trusted"      # Always allow Aimy to read attachments
+    BLOCKED = "blocked"      # Never allow - potential threat
+    ONE_TIME = "one_time"    # Ask each time (default for new senders)
+
+
 class TrustedSender(Base):
-    """Sender whose attachments are trusted for AI processing"""
+    """Sender trust settings for attachment processing"""
     __tablename__ = "trusted_senders"
     
     id = Column(Integer, primary_key=True, index=True)
@@ -18,11 +26,11 @@ class TrustedSender(Base):
     sender_name = Column(String)
     
     # Trust settings
-    allow_attachments = Column(Boolean, default=True)
-    auto_approved = Column(Boolean, default=False)  # Auto-approve without asking
+    trust_level = Column(Enum(TrustLevel), default=TrustLevel.ONE_TIME, nullable=False)
+    auto_approved = Column(Boolean, default=False)  # Deprecated: use trust_level instead
     
     # Metadata
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     last_used = Column(DateTime)
     attachment_count = Column(Integer, default=0)  # How many attachments processed
     

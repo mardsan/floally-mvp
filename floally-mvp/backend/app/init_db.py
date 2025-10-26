@@ -59,17 +59,27 @@ def init_database():
 
 def create_trusted_senders_manually():
     """
-    Manually create trusted_senders table if automatic creation fails
+    Manually create trusted_senders table with trust_level enum
     """
     try:
         with engine.connect() as conn:
+            # Create enum type first
+            conn.execute(text("""
+                DO $$ BEGIN
+                    CREATE TYPE trustlevel AS ENUM ('trusted', 'blocked', 'one_time');
+                EXCEPTION
+                    WHEN duplicate_object THEN null;
+                END $$;
+            """))
+            
+            # Create table
             conn.execute(text("""
                 CREATE TABLE IF NOT EXISTS trusted_senders (
                     id SERIAL PRIMARY KEY,
-                    user_id UUID NOT NULL,
+                    user_id INTEGER NOT NULL,
                     sender_email VARCHAR(255) NOT NULL,
                     sender_name VARCHAR(255),
-                    allow_attachments BOOLEAN DEFAULT true,
+                    trust_level trustlevel DEFAULT 'one_time' NOT NULL,
                     auto_approved BOOLEAN DEFAULT false,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     last_used TIMESTAMP,
@@ -83,7 +93,7 @@ def create_trusted_senders_manually():
                 )
             """))
             conn.commit()
-            logger.info("✅ Manually created trusted_senders table")
+            logger.info("✅ Manually created trusted_senders table with trust_level enum")
     except Exception as e:
         logger.error(f"❌ Failed to manually create trusted_senders: {e}")
         raise
