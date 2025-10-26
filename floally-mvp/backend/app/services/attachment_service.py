@@ -107,6 +107,27 @@ def is_attachment_safe(attachment_info: Dict) -> tuple[bool, str]:
     return True, "Safe"
 
 
+def download_attachment(gmail_service, user_id: str, message_id: str, attachment_id: str) -> Optional[bytes]:
+    """
+    Download attachment from Gmail
+    Returns attachment data as bytes
+    """
+    try:
+        attachment = gmail_service.users().messages().attachments().get(
+            userId=user_id,
+            messageId=message_id,
+            id=attachment_id
+        ).execute()
+        
+        # Decode base64 data
+        import base64
+        attachment_data = base64.urlsafe_b64decode(attachment['data'])
+        return attachment_data
+    except Exception as e:
+        print(f"Error downloading attachment: {str(e)}")
+        return None
+
+
 def extract_pdf_text(pdf_data: bytes) -> str:
     """Extract text content from PDF"""
     try:
@@ -185,6 +206,69 @@ Summary:"""
     except Exception as e:
         print(f"Error summarizing attachment: {str(e)}")
         return f"[Attachment: {filename}]"
+
+
+async def process_attachments_for_message(
+    gmail_service,
+    message_id: str,
+    attachments: List[Dict],
+    user_email: str
+) -> List[Dict]:
+    """
+    Download and process all attachments for a message
+    Returns list of processed attachments with extracted text and summaries
+    """
+    processed_attachments = []
+    
+    for att_info in attachments:
+        # Check if safe
+        is_safe, reason = is_attachment_safe(att_info)
+        if not is_safe:
+            print(f"⚠️ Skipping unsafe attachment {att_info['filename']}: {reason}")
+            continue
+        
+        # Download attachment
+        print(f"📎 Downloading attachment: {att_info['filename']}")
+        attachment_data = download_attachment(
+            gmail_service,
+            'me',
+            message_id,
+            att_info['attachment_id']
+        )
+        
+        if not attachment_data:
+            print(f"❌ Failed to download {att_info['filename']}")
+            continue
+        
+        # Extract text
+        print(f"📄 Extracting text from {att_info['filename']}")
+        extracted_text = extract_text_from_attachment(
+            attachment_data,
+            att_info['mime_type']
+        )
+        
+        # Summarize with AI
+        summary = ""
+        if extracted_text:
+            print(f"🤖 Summarizing {att_info['filename']} with AI")
+            summary = await summarize_attachment_with_ai(
+                att_info['filename'],
+                extracted_text,
+                context=f"Email to {user_email}"
+            )
+        
+        processed_attachments.append({
+            'filename': att_info['filename'],
+            'mime_type': att_info['mime_type'],
+            'size': att_info['size'],
+            'extracted_text': extracted_text[:1000] if extracted_text else None,  # First 1000 chars
+            'summary': summary,
+            'text_length': len(extracted_text) if extracted_text else 0
+        })
+        
+        print(f"✅ Processed {att_info['filename']}: {len(extracted_text) if extracted_text else 0} chars extracted")
+    
+    return processed_attachments
 
 
 def check_sender_trust(

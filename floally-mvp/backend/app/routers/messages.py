@@ -866,3 +866,66 @@ async def health_check():
         "anthropic_key_set": bool(os.getenv("ANTHROPIC_API_KEY"))
     }
 
+
+class ProcessAttachmentsRequest(BaseModel):
+    user_email: str
+    message_id: str
+
+
+@router.post("/messages/process-attachments")
+async def process_message_attachments(
+    request: ProcessAttachmentsRequest,
+    db: Session = Depends(get_db)
+):
+    """
+    Download and process attachments for a message after user approval
+    Returns attachment summaries and extracted text
+    """
+    try:
+        from app.services.attachment_service import (
+            extract_attachments_from_message,
+            is_attachment_safe,
+            process_attachments_for_message
+        )
+        
+        # Get Gmail service
+        service = get_gmail_service(request.user_email, db)
+        
+        # Get full message
+        message = service.users().messages().get(
+            userId='me',
+            id=request.message_id,
+            format='full'
+        ).execute()
+        
+        # Extract attachments
+        attachments = extract_attachments_from_message(message)
+        
+        if not attachments:
+            return {
+                "success": True,
+                "attachments": [],
+                "message": "No attachments found"
+            }
+        
+        # Process attachments (download, extract, summarize)
+        processed = await process_attachments_for_message(
+            service,
+            request.message_id,
+            attachments,
+            request.user_email
+        )
+        
+        return {
+            "success": True,
+            "attachments": processed,
+            "count": len(processed),
+            "message": f"Processed {len(processed)} attachment(s)"
+        }
+        
+    except Exception as e:
+        import traceback
+        print(f"❌ Error processing attachments: {str(e)}")
+        print(traceback.format_exc())
+        raise HTTPException(status_code=500, detail=f"Failed to process attachments: {str(e)}")
+

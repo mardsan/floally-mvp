@@ -40,12 +40,22 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
     }
   };
 
-  const handleLetAimyRespond = async () => {
+  const handleLetAimyRespond = async (processedAttachments = null) => {
     setAiDrafting(true);
     setShowReply(true);
     
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app';
+      
+      // Build custom context with attachment summaries if available
+      let enhancedContext = customContext || '';
+      if (processedAttachments && processedAttachments.length > 0) {
+        const attachmentSummaries = processedAttachments
+          .map(att => `[${att.filename}]: ${att.summary}`)
+          .join('\n');
+        enhancedContext = `${customContext ? customContext + '\n\n' : ''}ATTACHMENT SUMMARIES:\n${attachmentSummaries}`;
+      }
+      
       const response = await fetch(`${apiUrl}/api/messages/draft-response`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -53,7 +63,7 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
           user_email: user.email,
           message_id: message.id,
           signature_style: signatureStyle,
-          custom_context: customContext || null
+          custom_context: enhancedContext || null
         })
       });
       
@@ -67,15 +77,19 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
       setAiDraft(data);
       setReplyText(data.draft);
       
-      // Check if there are unprocessed attachments
-      if (data.attachments && data.attachments.has_attachments && data.attachments.unprocessed) {
+      // Check if there are unprocessed attachments (only on initial generation, not re-generation)
+      if (!processedAttachments && data.attachments && data.attachments.has_attachments && data.attachments.unprocessed) {
         setAttachmentInfo(data.attachments);
         setShowAttachmentConsent(true);
         console.log(`📎 ${data.attachments.count} unprocessed attachment(s) detected`);
       }
       
       // Record that draft was generated
-      console.log('✨ Aimy generated draft response');
+      if (processedAttachments) {
+        console.log(`✨ Aimy generated draft response with ${processedAttachments.length} attachment(s)`);
+      } else {
+        console.log('✨ Aimy generated draft response');
+      }
       
     } catch (error) {
       console.error('Failed to generate AI response:', error);
@@ -88,13 +102,42 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
   const handleAttachmentApprove = async (permanent) => {
     console.log(`✅ Attachments approved${permanent ? ' (saved preference)' : ' (one-time)'}`);
     setShowAttachmentConsent(false);
-    // TODO: Re-generate draft with attachment context
-    // For now, just hide the prompt - full implementation will process attachments
+    
+    // Process attachments
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app';
+      const response = await fetch(`${apiUrl}/api/messages/process-attachments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_email: user.email,
+          message_id: message.id
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to process attachments');
+      }
+      
+      const data = await response.json();
+      console.log(`📎 Processed ${data.count} attachment(s):`, data.attachments);
+      
+      // Re-generate draft with attachment context
+      await handleLetAimyRespond(data.attachments);
+      
+    } catch (error) {
+      console.error('Failed to process attachments:', error);
+      alert('⚠️ Failed to process attachments. Generating response without attachment context.');
+      // Generate draft anyway without attachments
+      await handleLetAimyRespond();
+    }
   };
 
   const handleAttachmentDecline = () => {
     console.log('❌ Attachment processing declined');
     setShowAttachmentConsent(false);
+    // Generate draft without attachments
+    handleLetAimyRespond();
   };
 
   const handleApproveDraft = async (approved) => {
