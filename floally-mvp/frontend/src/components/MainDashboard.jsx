@@ -261,15 +261,29 @@ function MainDashboard({ user, onLogout }) {
                       <span className="text-2xl">🎯</span>
                       <h4 className="text-lg font-bold text-blue-900">The One Thing</h4>
                     </div>
-                    <p className="text-gray-800 text-lg mb-4">
-                      {standup?.one_thing || "Focus on your most important task today"}
-                    </p>
+                    
+                    {/* Main task - bold and prominent */}
+                    <button 
+                      className="w-full text-left mb-4 group"
+                      onClick={() => {
+                        // TODO: Open modal with full task details
+                        console.log('Show task details');
+                      }}
+                    >
+                      <h5 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                        {standup?.one_thing || "Review Q4 budget priorities"}
+                      </h5>
+                      <p className="text-sm text-gray-600">
+                        From Aimy: High priority deadline today · 2-3 hours
+                      </p>
+                    </button>
+                    
                     <div className="flex gap-2">
                       <button className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors">
-                        ✅ Confirm & Start
+                        ✅ Start Working
                       </button>
                       <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors">
-                        🔄
+                        🔄 Switch
                       </button>
                     </div>
                   </div>
