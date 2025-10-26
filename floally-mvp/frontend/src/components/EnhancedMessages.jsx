@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import MessageDetailPopup from './MessageDetailPopup';
 
 const CATEGORY_TABS = [
@@ -25,10 +25,7 @@ function EnhancedMessages({ user }) {
   const [aiAnalysisEnabled, setAiAnalysisEnabled] = useState(true);
   const [hasAnalyzed, setHasAnalyzed] = useState(false);
 
-  // Don't auto-load on mount - wait for user to click "Analyze"
-  // useEffect removed to prevent auto-analysis on every refresh
-
-  const loadMessages = async () => {
+  const loadMessages = useCallback(async () => {
     setLoading(true);
     setHasAnalyzed(true);
     try {
@@ -48,7 +45,14 @@ function EnhancedMessages({ user }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [activeCategory, aiAnalysisEnabled, user.email]);
+
+  // Reload messages when category changes (only if already analyzed)
+  useEffect(() => {
+    if (hasAnalyzed) {
+      loadMessages();
+    }
+  }, [loadMessages, hasAnalyzed]);
 
   const handleFeedback = async (message, feedbackType) => {
     try {
