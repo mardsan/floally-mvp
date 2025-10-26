@@ -502,13 +502,20 @@ async def draft_email_response(
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
         
+        print(f"✅ User found: {user.email}")
+        
         # Get full message
-        service = get_gmail_service(request.user_email, db)
-        message = service.users().messages().get(
-            userId='me',
-            id=request.message_id,
-            format='full'
-        ).execute()
+        try:
+            service = get_gmail_service(request.user_email, db)
+            message = service.users().messages().get(
+                userId='me',
+                id=request.message_id,
+                format='full'
+            ).execute()
+            print(f"✅ Gmail message retrieved successfully")
+        except Exception as e:
+            print(f"❌ Failed to get Gmail message: {e}")
+            raise HTTPException(status_code=500, detail=f"Failed to retrieve email: {str(e)}")
         
         headers = {h['name']: h['value'] for h in message['payload']['headers']}
         
@@ -610,14 +617,20 @@ IMPORTANT:
 Draft the response now:"""
 
         # Generate response
-        response = anthropic_client.messages.create(
-            model="claude-3-5-sonnet-20241022",
-            max_tokens=2000,
-            messages=[{
-                "role": "user",
-                "content": prompt
-            }]
-        )
+        try:
+            print(f"🤖 Calling Anthropic API...")
+            response = anthropic_client.messages.create(
+                model="claude-3-5-sonnet-20241022",
+                max_tokens=2000,
+                messages=[{
+                    "role": "user",
+                    "content": prompt
+                }]
+            )
+            print(f"✅ Anthropic API responded successfully")
+        except Exception as e:
+            print(f"❌ Anthropic API error: {e}")
+            raise HTTPException(status_code=500, detail=f"AI service error: {str(e)}")
         
         draft_body = response.content[0].text if response.content else ""
         
