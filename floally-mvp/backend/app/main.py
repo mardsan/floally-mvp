@@ -26,15 +26,13 @@ async def lifespan(app: FastAPI):
     if database_url:
         try:
             logger.info("📊 Initializing database tables...")
-            from app.database import engine, Base
-            from app.models import User, UserProfile, ConnectedAccount, BehaviorAction, UserSettings, SenderStats, Project
-            from app.models.trusted_sender import TrustedSender
+            from app.init_db import init_database
             
-            # Create all tables if they don't exist (including trusted_senders for attachment processing)
-            Base.metadata.create_all(bind=engine)
-            logger.info("✅ Database tables initialized successfully (including trusted_senders)")
+            # Use robust initialization that verifies table creation
+            init_database()
+            logger.info("✅ Database initialization complete")
         except Exception as e:
-            logger.error(f"❌ Error initializing database: {e}")
+            logger.error(f"❌ Error initializing database: {e}", exc_info=True)
     else:
         logger.warning("⚠️  DATABASE_URL not set - database features disabled")
     
