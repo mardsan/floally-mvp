@@ -30,9 +30,9 @@ async def lifespan(app: FastAPI):
             from app.models import User, UserProfile, ConnectedAccount, BehaviorAction, UserSettings, SenderStats, Project
             from app.models.trusted_sender import TrustedSender
             
-            # Create all tables if they don't exist
+            # Create all tables if they don't exist (including trusted_senders for attachment processing)
             Base.metadata.create_all(bind=engine)
-            logger.info("✅ Database tables initialized successfully")
+            logger.info("✅ Database tables initialized successfully (including trusted_senders)")
         except Exception as e:
             logger.error(f"❌ Error initializing database: {e}")
     else:
