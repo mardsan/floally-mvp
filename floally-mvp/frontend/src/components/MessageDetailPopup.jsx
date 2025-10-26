@@ -140,6 +140,13 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
     handleLetAimyRespond();
   };
 
+  const handleAttachmentBlock = () => {
+    console.log('🚫 Sender blocked - attachments will never be processed');
+    setShowAttachmentConsent(false);
+    // Don't generate draft - user blocked this sender
+    alert('🚫 Sender blocked. Aimy will never process attachments from this sender.\n\nYou can manage blocked senders in your Profile settings.');
+  };
+
   const handleApproveDraft = async (approved) => {
     if (!aiDraft) return;
     
@@ -517,6 +524,7 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
                       attachments={attachmentInfo.files.map(f => typeof f === 'string' ? f : f.filename)}
                       onApprove={handleAttachmentApprove}
                       onDecline={handleAttachmentDecline}
+                      onBlock={handleAttachmentBlock}
                       userEmail={user.email}
                     />
                   )}

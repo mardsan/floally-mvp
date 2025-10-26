@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import { AlertCircle, FileText, Shield, Check } from 'lucide-react';
+import { AlertCircle, FileText, Shield, Check, Ban } from 'lucide-react';
 
 /**
  * AttachmentConsentPrompt
  * 
- * Shows when an email has attachments from an untrusted sender.
- * Allows user to:
- * 1. Allow attachment processing for this sender (one-time or permanent)
- * 2. Set auto-approval for future attachments from this sender
- * 3. Decline and proceed without processing attachments
+ * 3-Tier Trust System for Attachment Processing:
+ * 1. TRUSTED - Always allow Aimy to read attachments from this sender
+ * 2. ONE_TIME - Process attachments just this time (no preference saved)
+ * 3. BLOCKED - Never allow - potential security threat
  */
 const AttachmentConsentPrompt = ({ 
   senderEmail, 
@@ -16,40 +15,78 @@ const AttachmentConsentPrompt = ({
   attachments = [],
   onApprove,
   onDecline,
+  onBlock,
   userEmail
 }) => {
-  const [autoApprove, setAutoApprove] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleApprove = async (permanent = false) => {
+  const handleTrust = async () => {
     setLoading(true);
     try {
-      if (permanent) {
-        // Add sender to trusted list
-        const response = await fetch(
-          `${import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app'}/api/trusted-senders/${userEmail}`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              sender_email: senderEmail,
-              sender_name: senderName || senderEmail,
-              auto_approved: autoApprove
-            })
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error('Failed to save trusted sender');
+      // Add sender to trusted list with TRUSTED level
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app'}/api/trusted-senders/${userEmail}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sender_email: senderEmail,
+            sender_name: senderName || senderEmail,
+            trust_level: 'trusted'
+          })
         }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to save trusted sender');
       }
 
-      // Only proceed if save succeeded (or wasn't needed)
-      onApprove(permanent);
+      // Proceed with processing
+      onApprove(true); // permanent = true
     } catch (error) {
-      console.error('Error approving attachments:', error);
-      alert('⚠️ Failed to save preference to database. The trusted_senders table needs to be created.\n\nYou can still process attachments one-time by clicking "Yes, Just This Time".');
-      // Don't call onApprove - let user try again or choose one-time
+      console.error('Error trusting sender:', error);
+      alert('⚠️ Failed to save trust preference.\n\nYou can still process attachments one-time by clicking "Yes, Just This Time".');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleOneTime = () => {
+    // Process without saving preference
+    onApprove(false); // permanent = false
+  };
+
+  const handleBlock = async () => {
+    setLoading(true);
+    try {
+      // Add sender to blocked list
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app'}/api/trusted-senders/${userEmail}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sender_email: senderEmail,
+            sender_name: senderName || senderEmail,
+            trust_level: 'blocked'
+          })
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to block sender');
+      }
+
+      // Don't process attachments
+      if (onBlock) {
+        onBlock();
+      } else {
+        onDecline();
+      }
+    } catch (error) {
+      console.error('Error blocking sender:', error);
+      alert('⚠️ Failed to save block preference.\n\nSkipping attachments for now.');
+      onDecline();
     } finally {
       setLoading(false);
     }
@@ -81,46 +118,49 @@ const AttachmentConsentPrompt = ({
         <div className="consent-message">
           <AlertCircle size={16} className="info-icon" />
           <p>
-            Would you like Aimy to read {attachments.length > 1 ? 'these attachments' : 'this attachment'} to provide better context for the draft response?
+            Would you like Aimy to read {attachments.length > 1 ? 'these attachments' : 'this attachment'}?
           </p>
-        </div>
-
-        <div className="consent-options">
-          <label className="checkbox-option">
-            <input
-              type="checkbox"
-              checked={autoApprove}
-              onChange={(e) => setAutoApprove(e.target.checked)}
-            />
-            <span>Always allow for {senderName || senderEmail} (auto-approve future attachments)</span>
-          </label>
+          <p className="security-note">
+            Choose how to handle attachments from this sender:
+          </p>
         </div>
       </div>
 
-      <div className="consent-actions">
+      <div className="consent-actions-3tier">
         <button
-          className="btn btn-decline"
-          onClick={() => onDecline()}
+          className="btn btn-trust"
+          onClick={handleTrust}
           disabled={loading}
         >
-          No, Skip Attachments
-        </button>
-        
-        <button
-          className="btn btn-approve-once"
-          onClick={() => handleApprove(false)}
-          disabled={loading}
-        >
-          Yes, Just This Time
+          <Check size={18} />
+          <div className="btn-content">
+            <span className="btn-title">✅ Trust Always</span>
+            <span className="btn-subtitle">Auto-allow future attachments</span>
+          </div>
         </button>
 
         <button
-          className="btn btn-approve-always"
-          onClick={() => handleApprove(true)}
+          className="btn btn-onetime"
+          onClick={handleOneTime}
           disabled={loading}
         >
-          <Check size={16} />
-          Yes, Remember Choice
+          <FileText size={18} />
+          <div className="btn-content">
+            <span className="btn-title">📥 Just This Time</span>
+            <span className="btn-subtitle">Don't save preference</span>
+          </div>
+        </button>
+        
+        <button
+          className="btn btn-block"
+          onClick={handleBlock}
+          disabled={loading}
+        >
+          <Ban size={18} />
+          <div className="btn-content">
+            <span className="btn-title">🚫 Block Sender</span>
+            <span className="btn-subtitle">Never allow attachments</span>
+          </div>
         </button>
       </div>
 
@@ -204,74 +244,39 @@ const AttachmentConsentPrompt = ({
         }
 
         .consent-message {
-          display: flex;
-          align-items: flex-start;
-          gap: 10px;
           margin: 15px 0;
-          padding: 12px;
-          background: #fff3cd;
-          border-left: 3px solid #ffc107;
-          border-radius: 4px;
-        }
-
-        .info-icon {
-          color: #f59e0b;
-          flex-shrink: 0;
-          margin-top: 2px;
         }
 
         .consent-message p {
-          margin: 0;
+          margin: 0 0 8px 0;
           font-size: 14px;
-          color: #856404;
+          color: #555;
         }
 
-        .consent-options {
-          margin: 15px 0;
+        .security-note {
+          font-size: 13px;
+          color: #666;
+          font-weight: 500;
         }
 
-        .checkbox-option {
+        .consent-actions-3tier {
           display: flex;
-          align-items: center;
-          gap: 8px;
-          cursor: pointer;
-          padding: 8px;
-          border-radius: 6px;
-          transition: background 0.2s;
-        }
-
-        .checkbox-option:hover {
-          background: rgba(0, 102, 204, 0.05);
-        }
-
-        .checkbox-option input[type="checkbox"] {
-          width: 18px;
-          height: 18px;
-          cursor: pointer;
-        }
-
-        .checkbox-option span {
-          font-size: 14px;
-          color: #444;
-        }
-
-        .consent-actions {
-          display: flex;
-          gap: 10px;
-          flex-wrap: wrap;
+          flex-direction: column;
+          gap: 12px;
         }
 
         .btn {
-          padding: 10px 16px;
-          border: none;
-          border-radius: 6px;
+          padding: 14px 18px;
+          border: 2px solid;
+          border-radius: 10px;
           font-size: 14px;
           font-weight: 500;
           cursor: pointer;
           transition: all 0.2s;
           display: flex;
           align-items: center;
-          gap: 6px;
+          gap: 12px;
+          text-align: left;
         }
 
         .btn:disabled {
@@ -279,33 +284,57 @@ const AttachmentConsentPrompt = ({
           cursor: not-allowed;
         }
 
-        .btn-decline {
-          background: #e0e0e0;
-          color: #555;
-        }
-
-        .btn-decline:hover:not(:disabled) {
-          background: #d0d0d0;
-        }
-
-        .btn-approve-once {
-          background: white;
-          color: #0066cc;
-          border: 1px solid #0066cc;
-        }
-
-        .btn-approve-once:hover:not(:disabled) {
-          background: #f0f7ff;
-        }
-
-        .btn-approve-always {
-          background: #0066cc;
-          color: white;
+        .btn-content {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
           flex: 1;
         }
 
-        .btn-approve-always:hover:not(:disabled) {
-          background: #0052a3;
+        .btn-title {
+          font-size: 15px;
+          font-weight: 600;
+        }
+
+        .btn-subtitle {
+          font-size: 12px;
+          opacity: 0.8;
+        }
+
+        .btn-trust {
+          background: #d1fae5;
+          color: #065f46;
+          border-color: #10b981;
+        }
+
+        .btn-trust:hover:not(:disabled) {
+          background: #a7f3d0;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-onetime {
+          background: #dbeafe;
+          color: #1e40af;
+          border-color: #3b82f6;
+        }
+
+        .btn-onetime:hover:not(:disabled) {
+          background: #bfdbfe;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn-block {
+          background: #fee2e2;
+          color: #991b1b;
+          border-color: #ef4444;
+        }
+
+        .btn-block:hover:not(:disabled) {
+          background: #fecaca;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
         }
 
         @media (max-width: 600px) {
