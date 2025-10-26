@@ -77,11 +77,44 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
       setAiDraft(data);
       setReplyText(data.draft);
       
+      // Handle auto-approved attachments (trusted sender)
+      if (!processedAttachments && data.attachments && data.attachments.has_attachments && data.attachments.auto_approved) {
+        console.log(`✅ Sender is TRUSTED - auto-processing ${data.attachments.count} attachment(s)`);
+        // Auto-process attachments without showing consent prompt
+        try {
+          const processResponse = await fetch(`${apiUrl}/api/messages/process-attachments`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              user_email: user.email,
+              message_id: message.id
+            })
+          });
+          
+          if (processResponse.ok) {
+            const processData = await processResponse.json();
+            console.log(`📎 Auto-processed ${processData.count} attachment(s) from trusted sender`);
+            // Re-generate draft with attachment context
+            await handleLetAimyRespond(processData.attachments);
+            return; // Exit early - we're regenerating
+          }
+        } catch (error) {
+          console.error('Failed to auto-process attachments:', error);
+          // Continue with draft without attachments
+        }
+      }
+      
+      // Handle blocked sender
+      if (data.attachments && data.attachments.has_attachments && data.attachments.sender_blocked) {
+        console.log(`🚫 Sender is BLOCKED - skipping ${data.attachments.count} attachment(s)`);
+        // Don't show consent prompt, just note in UI
+      }
+      
       // Check if there are unprocessed attachments (only on initial generation, not re-generation)
       if (!processedAttachments && data.attachments && data.attachments.has_attachments && data.attachments.unprocessed) {
         setAttachmentInfo(data.attachments);
         setShowAttachmentConsent(true);
-        console.log(`📎 ${data.attachments.count} unprocessed attachment(s) detected`);
+        console.log(`📎 ${data.attachments.count} unprocessed attachment(s) detected - requiring consent`);
       }
       
       // Record that draft was generated

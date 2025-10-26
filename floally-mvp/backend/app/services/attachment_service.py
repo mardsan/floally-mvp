@@ -5,8 +5,8 @@ Secure extraction and analysis of email attachments
 import base64
 import io
 import os
-from typing import Dict, List, Optional
-from datetime import datetime
+from typing import Dict, List, Optional, Any
+from datetime import datetime, timezone
 
 import anthropic
 from PyPDF2 import PdfReader
@@ -275,32 +275,57 @@ def check_sender_trust(
     db: Session,
     user_email: str,
     sender_email: str
-) -> tuple[bool, bool]:
+) -> dict:
     """
-    Check if sender is trusted for attachment processing
-    Returns (is_trusted, auto_approved)
+    Check sender's trust level for attachment processing
+    Returns dict with trust_level, should_process, and sender_name
     """
+    from app.models.trusted_sender import TrustLevel
+    
     try:
         user = db.query(User).filter(User.email == user_email).first()
         if not user:
-            return False, False
+            return {
+                'trust_level': 'unknown',
+                'should_process': False,
+                'sender_name': None
+            }
         
         trusted_sender = db.query(TrustedSender).filter(
             TrustedSender.user_id == user.id,
-            TrustedSender.sender_email == sender_email,
-            TrustedSender.allow_attachments == True
+            TrustedSender.sender_email == sender_email
         ).first()
         
         if trusted_sender:
-            return True, trusted_sender.auto_approved
+            if trusted_sender.trust_level == TrustLevel.TRUSTED:
+                return {
+                    'trust_level': 'trusted',
+                    'should_process': True,
+                    'sender_name': trusted_sender.sender_name
+                }
+            elif trusted_sender.trust_level == TrustLevel.BLOCKED:
+                return {
+                    'trust_level': 'blocked',
+                    'should_process': False,
+                    'sender_name': trusted_sender.sender_name
+                }
         
-        return False, False
+        # Unknown sender (not in database or trust_level is ONE_TIME)
+        return {
+            'trust_level': 'unknown',
+            'should_process': False,
+            'sender_name': None
+        }
+        
     except Exception as e:
         # If trusted_senders table doesn't exist yet, treat as untrusted
-        # Rollback the transaction to prevent "current transaction is aborted" errors
         db.rollback()
         print(f"⚠️ Error checking sender trust (table may not exist): {e}")
-        return False, False
+        return {
+            'trust_level': 'unknown',
+            'should_process': False,
+            'sender_name': None
+        }
 
 
 def update_sender_attachment_count(
@@ -320,8 +345,8 @@ def update_sender_attachment_count(
         ).first()
         
         if trusted_sender:
-            trusted_sender.attachment_count += 1
-            trusted_sender.last_used = datetime.utcnow()
+            setattr(trusted_sender, 'attachment_count', trusted_sender.attachment_count + 1)
+            setattr(trusted_sender, 'last_used', datetime.now(timezone.utc))
             db.commit()
     except Exception as e:
         # If trusted_senders table doesn't exist yet, silently skip

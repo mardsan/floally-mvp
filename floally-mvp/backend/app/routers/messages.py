@@ -543,24 +543,26 @@ async def draft_email_response(
         
         if attachments:
             print(f"📎 Found {len(attachments)} attachment(s)")
-            is_trusted, auto_approved = check_sender_trust(db, user.email, sender_email)
+            trust_info = check_sender_trust(db, user.email, sender_email)
+            trust_level = trust_info['trust_level']
+            should_process = trust_info['should_process']
             
-            if is_trusted and auto_approved:
-                print(f"✅ Sender trusted with auto-approval for attachments")
-                # Will process attachments
-                # For now, just note them in context
+            if trust_level == 'trusted':
+                print(f"✅ Sender is TRUSTED - auto-processing attachments")
+                # Auto-process attachments without prompting
                 attachment_names = [att['filename'] for att in attachments]
-                attachment_context = f"\n\nATTACHMENTS: {', '.join(attachment_names)} (attachment processing in progress)"
-            elif is_trusted:
-                print(f"⚠️ Sender trusted but requires manual approval for attachments")
+                attachment_context = f"\n\nATTACHMENTS: {', '.join(attachment_names)} (auto-approved from trusted sender)"
+                # Note: Actual attachment processing will happen when user opens the message
+            elif trust_level == 'blocked':
+                print(f"🚫 Sender is BLOCKED - skipping attachments")
                 has_unprocessed_attachments = True
                 attachment_names = [att['filename'] for att in attachments]
-                attachment_context = f"\n\nNOTE: Email includes attachments ({', '.join(attachment_names)}) - user can approve processing separately"
-            else:
-                print(f"⚠️ Sender not trusted for attachment processing")
+                attachment_context = f"\n\nNOTE: Email includes attachments ({', '.join(attachment_names)}) - sender is blocked, attachments will not be processed"
+            else:  # unknown
+                print(f"⚠️ Sender is UNKNOWN - requiring user consent for attachments")
                 has_unprocessed_attachments = True
                 attachment_names = [att['filename'] for att in attachments]
-                attachment_context = f"\n\nNOTE: Email includes attachments ({', '.join(attachment_names)}) - sender not yet trusted for processing"
+                attachment_context = f"\n\nNOTE: Email includes attachments ({', '.join(attachment_names)}) - user consent required for processing"
         
         # Extract body
         body = ""
@@ -745,6 +747,8 @@ Best,
                 "has_attachments": len(attachments) > 0,
                 "count": len(attachments),
                 "unprocessed": has_unprocessed_attachments,
+                "auto_approved": len(attachments) > 0 and trust_level == 'trusted',
+                "sender_blocked": len(attachments) > 0 and trust_level == 'blocked',
                 "sender_email": sender_email if has_unprocessed_attachments else None,
                 "files": [att['filename'] for att in attachments] if has_unprocessed_attachments else []
             }
