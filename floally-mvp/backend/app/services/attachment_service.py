@@ -297,6 +297,8 @@ def check_sender_trust(
         return False, False
     except Exception as e:
         # If trusted_senders table doesn't exist yet, treat as untrusted
+        # Rollback the transaction to prevent "current transaction is aborted" errors
+        db.rollback()
         print(f"⚠️ Error checking sender trust (table may not exist): {e}")
         return False, False
 
@@ -323,4 +325,6 @@ def update_sender_attachment_count(
             db.commit()
     except Exception as e:
         # If trusted_senders table doesn't exist yet, silently skip
+        # Rollback the transaction to prevent "current transaction is aborted" errors
+        db.rollback()
         print(f"⚠️ Error updating sender attachment count (table may not exist): {e}")
