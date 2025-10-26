@@ -449,6 +449,10 @@ async def get_full_message(
             import base64
             body = base64.urlsafe_b64decode(message['payload']['body']['data']).decode('utf-8')
         
+        # Extract attachments
+        from app.services.attachment_service import extract_attachments_from_message
+        attachments = extract_attachments_from_message(message)
+        
         return {
             "id": message['id'],
             "threadId": message['threadId'],
@@ -459,7 +463,8 @@ async def get_full_message(
             "date": headers.get('Date', ''),
             "body": body,
             "snippet": message.get('snippet', ''),
-            "labels": message.get('labelIds', [])
+            "labels": message.get('labelIds', []),
+            "attachments": attachments
         }
         
     except Exception as e:
