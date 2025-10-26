@@ -503,15 +503,23 @@ async def draft_email_response(
         elif 'body' in message['payload'] and 'data' in message['payload']['body']:
             body = base64.urlsafe_b64decode(message['payload']['body']['data']).decode('utf-8')
         
-        # Build user context for AI
+        # Build user context for AI - with safe attribute access
+        try:
+            active_projects = []
+            if hasattr(user, 'projects') and user.projects:
+                active_projects = [p.name for p in user.projects if hasattr(p, 'status') and p.status in ['active', 'planning']][:3]
+        except Exception as e:
+            print(f"Warning: Could not load active projects: {e}")
+            active_projects = []
+        
         user_context = {
             'name': user.display_name or user.email.split('@')[0],
             'email': user.email,
-            'role': user.profile.role if user.profile else 'Professional',
-            'communication_style': user.profile.communication_style if user.profile else 'professional',
-            'tone_preference': user.settings.ai_preferences.get('tone', 'warm_friendly') if user.settings and user.settings.ai_preferences else 'warm_friendly',
-            'priorities': user.profile.priorities if user.profile and user.profile.priorities else [],
-            'active_projects': [p.name for p in user.projects if p.status in ['active', 'planning']][:3]
+            'role': getattr(user.profile, 'role', 'Professional') if user.profile else 'Professional',
+            'communication_style': getattr(user.profile, 'communication_style', 'professional') if user.profile else 'professional',
+            'tone_preference': user.settings.ai_preferences.get('tone', 'warm_friendly') if (user.settings and hasattr(user.settings, 'ai_preferences') and user.settings.ai_preferences) else 'warm_friendly',
+            'priorities': getattr(user.profile, 'priorities', []) if (user.profile and hasattr(user.profile, 'priorities') and user.profile.priorities) else [],
+            'active_projects': active_projects
         }
         
         # Craft AI prompt based on user preferences
@@ -644,8 +652,11 @@ Best,
         }
         
     except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
         print(f"❌ Error drafting response: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"❌ Full traceback:\n{error_details}")
+        raise HTTPException(status_code=500, detail=f"Draft generation failed: {str(e)}")
 
 
 @router.post("/messages/approve-draft")
