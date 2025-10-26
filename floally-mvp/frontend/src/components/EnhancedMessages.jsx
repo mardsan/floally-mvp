@@ -244,9 +244,18 @@ function EnhancedMessages({ user }) {
                     >
                       <div className="flex items-start justify-between gap-2 mb-1">
                         <div className="flex-1 min-w-0">
-                          <h4 className={`font-semibold ${message.unread ? 'text-gray-900' : 'text-gray-700'} truncate`}>
-                            {message.from}
-                          </h4>
+                          <div className="flex items-center gap-2">
+                            <h4 className={`font-semibold ${message.unread ? 'text-gray-900' : 'text-gray-700'} truncate`}>
+                              {message.from}
+                            </h4>
+                            {/* Attachment Indicator */}
+                            {message.attachmentCount > 0 && (
+                              <span className="flex items-center gap-1 text-xs text-gray-500" title={`${message.attachmentCount} attachment(s)`}>
+                                <span>📎</span>
+                                <span>{message.attachmentCount}</span>
+                              </span>
+                            )}
+                          </div>
                           <p className={`text-sm ${message.unread ? 'font-semibold text-gray-900' : 'text-gray-700'} truncate mt-0.5`}>
                             {message.subject}
                           </p>

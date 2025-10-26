@@ -929,3 +929,83 @@ async def process_message_attachments(
         print(traceback.format_exc())
         raise HTTPException(status_code=500, detail=f"Failed to process attachments: {str(e)}")
 
+
+class SummarizeMessageRequest(BaseModel):
+    user_email: str
+    message_id: str
+
+
+@router.post("/summarize-message")
+async def summarize_message(request: SummarizeMessageRequest, db: Session = Depends(get_db)):
+    """
+    Generate an AI summary of a message
+    """
+    try:
+        if not anthropic_client:
+            raise HTTPException(status_code=503, detail="AI service not configured")
+        
+        # Get Gmail service
+        user = db.query(User).filter(User.email == request.user_email).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        service = get_gmail_service(user)
+        if not service:
+            raise HTTPException(status_code=401, detail="Gmail authentication required")
+        
+        # Fetch message
+        message = service.users().messages().get(
+            userId='me',
+            id=request.message_id,
+            format='full'
+        ).execute()
+        
+        # Extract message content
+        headers = {h['name']: h['value'] for h in message.get('payload', {}).get('headers', [])}
+        subject = headers.get('Subject', 'No Subject')
+        from_email = headers.get('From', 'Unknown')
+        
+        # Get body
+        body = ""
+        if 'parts' in message['payload']:
+            for part in message['payload']['parts']:
+                if part['mimeType'] == 'text/plain':
+                    if 'data' in part['body']:
+                        body = base64.urlsafe_b64decode(part['body']['data']).decode('utf-8')
+                        break
+        elif 'body' in message['payload'] and 'data' in message['payload']['body']:
+            body = base64.urlsafe_b64decode(message['payload']['body']['data']).decode('utf-8')
+        
+        if not body:
+            body = message.get('snippet', '')
+        
+        # Generate AI summary
+        prompt = f"""Summarize this email in 2-3 sentences. Be concise but capture the key points and any action items.
+
+From: {from_email}
+Subject: {subject}
+
+Message:
+{body[:3000]}  # Limit to first 3000 chars
+
+Provide a clear, helpful summary that helps the recipient quickly understand what this email is about."""
+
+        response = anthropic_client.messages.create(
+            model="claude-3-haiku-20240307",
+            max_tokens=200,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        
+        summary = response.content[0].text.strip()
+        
+        return {
+            "success": True,
+            "summary": summary,
+            "message_id": request.message_id
+        }
+        
+    except Exception as e:
+        import traceback
+        print(f"❌ Error summarizing message: {str(e)}")
+        print(traceback.format_exc())
+        raise HTTPException(status_code=500, detail=f"Failed to summarize message: {str(e)}")

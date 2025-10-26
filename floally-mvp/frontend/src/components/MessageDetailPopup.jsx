@@ -19,6 +19,8 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
   const [sending, setSending] = useState(false);
   const [showAttachmentConsent, setShowAttachmentConsent] = useState(false);
   const [attachmentInfo, setAttachmentInfo] = useState(null);
+  const [aiSummary, setAiSummary] = useState(null);
+  const [summarizing, setSummarizing] = useState(false);
 
   useEffect(() => {
     loadFullMessage();
@@ -178,6 +180,34 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
     setAiDraft(null);
     setReplyText('');
     handleLetAimyRespond();
+  };
+
+  const handleSummarizeMessage = async () => {
+    setSummarizing(true);
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app';
+      const response = await fetch(`${apiUrl}/api/messages/summarize-message`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_email: user.email,
+          message_id: message.id
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate summary');
+      }
+
+      const data = await response.json();
+      setAiSummary(data.summary);
+      console.log('✨ Aimy generated message summary');
+    } catch (error) {
+      console.error('Failed to summarize message:', error);
+      alert('❌ Failed to generate summary. Please try again.');
+    } finally {
+      setSummarizing(false);
+    }
   };
 
   const handleSendReply = async () => {
@@ -374,6 +404,50 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
             </div>
           ) : (
             <>
+              {/* AI Summary Section */}
+              {aiSummary && (
+                <div className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200 rounded-xl">
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">✨</span>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-purple-900 mb-2">Aimy's Message Summary</h4>
+                      <p className="text-sm text-purple-800 leading-relaxed">{aiSummary}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Message Body */}
+              <div className="mb-6">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-semibold text-gray-900">📧 Message</h4>
+                  {!aiSummary && (
+                    <button
+                      onClick={handleSummarizeMessage}
+                      disabled={summarizing}
+                      className="px-3 py-1.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg text-sm font-medium transition-colors shadow-sm"
+                    >
+                      {summarizing ? '✨ Summarizing...' : '✨ Summarize with Aimy'}
+                    </button>
+                  )}
+                </div>
+                
+                {fullMessage && fullMessage.body ? (
+                  <div 
+                    className="prose prose-sm max-w-none bg-gray-50 border border-gray-200 rounded-lg p-4 max-h-96 overflow-y-auto"
+                    dangerouslySetInnerHTML={{ __html: fullMessage.body }}
+                  />
+                ) : fullMessage && fullMessage.snippet ? (
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <p className="text-sm text-gray-700">{fullMessage.snippet}</p>
+                  </div>
+                ) : (
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <p className="text-sm text-gray-500 italic">Message content not available</p>
+                  </div>
+                )}
+              </div>
+
               {/* AI Insights */}
               {message.aiReason && (
                 <div className="mb-6 p-4 bg-gradient-to-r from-teal-50 to-blue-50 border-2 border-teal-200 rounded-xl">
