@@ -775,3 +775,14 @@ async def send_email_reply(
     except Exception as e:
         print(f"❌ Error sending reply: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/messages/health")
+async def health_check():
+    """Simple health check to verify AI service is configured"""
+    return {
+        "status": "ok",
+        "anthropic_configured": anthropic_client is not None,
+        "anthropic_key_set": bool(os.getenv("ANTHROPIC_API_KEY"))
+    }
+
