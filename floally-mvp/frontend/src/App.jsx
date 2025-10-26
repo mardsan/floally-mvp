@@ -245,6 +245,9 @@ function App() {
   };
 
   const handleGenerateStandup = async () => {
+    console.log('🚀 handleGenerateStandup called!');
+    console.log('Data:', { messagesCount: data.messages.length, eventsCount: data.events.length });
+    
     setGeneratingStandup(true);
     setError(null);
     try {
@@ -262,13 +265,17 @@ function App() {
           priorities: profile.priorities,
           communicationStyle: profile.communication_style
         };
+        console.log('Including user profile context:', context.userContext);
       }
       
+      console.log('Calling ai.generateStandup with:', context);
       const response = await ai.generateStandup(context);
+      console.log('Stand-up response:', response);
       console.log('Stand-up generated:', response.data);
       setStandup(response.data.standup);
     } catch (error) {
       console.error('Failed to generate stand-up:', error);
+      console.error('Error details:', error.response || error);
       setError(`Failed to generate stand-up: ${error.message}`);
     } finally {
       setGeneratingStandup(false);
