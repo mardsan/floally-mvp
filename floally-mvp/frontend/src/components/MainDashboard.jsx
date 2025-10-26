@@ -3,13 +3,13 @@ import AddProjectModal from './AddProjectModal';
 import ProfileSettings from './ProfileSettings';
 import ProjectDetailsModal from './ProjectDetailsModal';
 import UniversalCalendar from './UniversalCalendar';
+import EnhancedMessages from './EnhancedMessages';
 
 function MainDashboard({ user, onLogout }) {
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState([]);
   const [standup, setStandup] = useState(null);
   const [calendarEvents, setCalendarEvents] = useState([]);
-  const [messages, setMessages] = useState([]);
   const [showAddProject, setShowAddProject] = useState(false);
   const [showProfileSettings, setShowProfileSettings] = useState(false);
   const [currentUser, setCurrentUser] = useState(user);
@@ -47,8 +47,7 @@ function MainDashboard({ user, onLogout }) {
       await Promise.all([
         loadProjects(),
         loadStandup(),
-        loadCalendarEvents(),
-        loadMessages()
+        loadCalendarEvents()
       ]);
     } catch (error) {
       console.error('Error loading dashboard:', error);
@@ -88,18 +87,6 @@ function MainDashboard({ user, onLogout }) {
     } catch (error) {
       console.error('Failed to load calendar:', error);
       setCalendarEvents([]);
-    }
-  };
-
-  const loadMessages = async () => {
-    try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app';
-      const response = await fetch(`${apiUrl}/api/gmail/messages?max_results=20&user_email=${encodeURIComponent(user.email)}`);
-      const data = await response.json();
-      setMessages(data.messages || []);
-    } catch (error) {
-      console.error('Failed to load messages:', error);
-      setMessages([]);
     }
   };
 
@@ -376,41 +363,7 @@ function MainDashboard({ user, onLogout }) {
 
           {/* Messages Summary */}
           <section className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 h-full">
-              <div className="p-6 border-b border-gray-200">
-                <h3 className="text-lg font-bold text-gray-900">✉️ Recent Messages</h3>
-                <p className="text-sm text-gray-500 mt-1">Prioritized by Aimy</p>
-              </div>
-              <div className="p-6 space-y-3 max-h-96 overflow-y-auto">
-                {messages.length === 0 ? (
-                  <div className="text-center py-8">
-                    <p className="text-gray-500">No messages</p>
-                  </div>
-                ) : (
-                  messages.slice(0, 10).map((msg, idx) => (
-                    <div key={idx} className="p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors cursor-pointer">
-                      <div className="flex items-start gap-3">
-                        <div className="flex-shrink-0 w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center text-sm font-semibold text-teal-700">
-                          {msg.from?.charAt(0)?.toUpperCase() || '?'}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between gap-2 mb-1">
-                            <h4 className="font-semibold text-gray-900 truncate">{msg.from || 'Unknown Sender'}</h4>
-                            {msg.is_important && (
-                              <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full flex-shrink-0">
-                                Important
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-sm text-gray-700 font-medium truncate">{msg.subject || 'No subject'}</p>
-                          <p className="text-xs text-gray-500 mt-1 line-clamp-2">{msg.snippet || ''}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
+            <EnhancedMessages user={user} />
           </section>
         </div>
 
