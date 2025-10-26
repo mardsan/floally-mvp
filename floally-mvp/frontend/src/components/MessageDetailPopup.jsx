@@ -394,15 +394,15 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
                       >
                         <div className="flex items-center gap-3 flex-1 min-w-0">
                           <span className="text-2xl">
-                            {attachment.mimeType?.includes('pdf') ? '📄' :
-                             attachment.mimeType?.includes('image') ? '🖼️' :
-                             attachment.mimeType?.includes('word') ? '📝' :
+                            {attachment.mime_type?.includes('pdf') ? '📄' :
+                             attachment.mime_type?.includes('image') ? '🖼️' :
+                             attachment.mime_type?.includes('word') ? '📝' :
                              '📎'}
                           </span>
                           <div className="flex-1 min-w-0">
                             <p className="font-medium text-gray-900 truncate">{attachment.filename}</p>
                             <p className="text-xs text-gray-500">
-                              {attachment.mimeType} • {Math.round((attachment.size || 0) / 1024)} KB
+                              {attachment.mime_type} • {Math.round((attachment.size || 0) / 1024)} KB
                             </p>
                           </div>
                         </div>
@@ -418,7 +418,11 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
                               // Trigger attachment review workflow
                               setAttachmentInfo({
                                 sender_email: message.from.includes('<') ? message.from.split('<')[1].split('>')[0] : message.from,
-                                files: [attachment],
+                                files: [{
+                                  filename: attachment.filename,
+                                  mime_type: attachment.mime_type,
+                                  size: attachment.size
+                                }],
                                 count: 1,
                                 has_attachments: true,
                                 unprocessed: true
