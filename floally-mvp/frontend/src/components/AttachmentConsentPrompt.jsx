@@ -44,10 +44,12 @@ const AttachmentConsentPrompt = ({
         }
       }
 
+      // Only proceed if save succeeded (or wasn't needed)
       onApprove(permanent);
     } catch (error) {
       console.error('Error approving attachments:', error);
-      alert('Failed to save preference. Please try again.');
+      alert('⚠️ Failed to save preference to database. The trusted_senders table needs to be created.\n\nYou can still process attachments one-time by clicking "Yes, Just This Time".');
+      // Don't call onApprove - let user try again or choose one-time
     } finally {
       setLoading(false);
     }
