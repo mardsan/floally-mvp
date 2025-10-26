@@ -543,6 +543,7 @@ async def draft_email_response(
         
         print(f"📧 Message body: {body[:200]}..." if len(body) > 200 else f"📧 Message body: {body}")
         
+        print(f"👤 Building user context...")
         # Build user context for AI - with safe attribute access
         try:
             active_projects = []
@@ -561,6 +562,7 @@ async def draft_email_response(
             'priorities': getattr(user.profile, 'priorities', []) if (user.profile and hasattr(user.profile, 'priorities') and user.profile.priorities) else [],
             'active_projects': active_projects
         }
+        print(f"✅ User context built: {user_context['name']}, {user_context['role']}")
         
         # Craft AI prompt based on user preferences
         tone_map = {
@@ -700,9 +702,15 @@ Best,
     except Exception as e:
         import traceback
         error_details = traceback.format_exc()
-        print(f"❌ Error drafting response: {e}")
+        error_type = type(e).__name__
+        error_msg = str(e) if str(e) else repr(e)
+        
+        print(f"❌ Error drafting response - Type: {error_type}, Message: {error_msg}")
         print(f"❌ Full traceback:\n{error_details}")
-        raise HTTPException(status_code=500, detail=f"Draft generation failed: {str(e)}")
+        
+        # Return more detailed error
+        detail_msg = f"{error_type}: {error_msg}" if error_msg else f"{error_type} (no error message)"
+        raise HTTPException(status_code=500, detail=f"Draft generation failed: {detail_msg}")
 
 
 @router.post("/messages/approve-draft")
