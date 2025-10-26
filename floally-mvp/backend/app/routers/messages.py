@@ -6,8 +6,10 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func, desc
 from typing import List, Dict, Optional
 from datetime import datetime, timedelta
+from pydantic import BaseModel
 import anthropic
 import os
+import base64
 
 from app.database import get_db
 from app.models.user import User, BehaviorAction, SenderStats
@@ -17,6 +19,13 @@ router = APIRouter()
 
 # Initialize Anthropic client
 anthropic_client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+
+
+class DraftResponseRequest(BaseModel):
+    user_email: str
+    message_id: str
+    signature_style: str = "ai_assisted"  # "as_aimy", "ai_assisted", "no_attribution"
+    custom_context: Optional[str] = None
 
 
 def calculate_sender_importance(user_id: str, sender_email: str, sender_domain: str, db: Session) -> float:
@@ -448,4 +457,290 @@ async def get_full_message(
         }
         
     except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/messages/draft-response")
+async def draft_email_response(
+    request: DraftResponseRequest,
+    db: Session = Depends(get_db)
+):
+    """
+    Generate AI-powered email response draft
+    
+    Uses user profile (communication style, tone, priorities) to craft personalized responses.
+    Learns from approved drafts to improve future suggestions.
+    
+    Signature styles:
+    - as_aimy: Clearly from Aimy on behalf of user (max transparency + promotion)
+    - ai_assisted: From user with subtle OkAimy attribution (default, balanced)
+    - no_attribution: Just from user, no mention of AI
+    """
+    try:
+        # Get user and profile
+        user = db.query(User).filter(User.email == request.user_email).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        # Get full message
+        service = get_gmail_service(request.user_email, db)
+        message = service.users().messages().get(
+            userId='me',
+            id=request.message_id,
+            format='full'
+        ).execute()
+        
+        headers = {h['name']: h['value'] for h in message['payload']['headers']}
+        
+        # Extract body
+        body = ""
+        if 'parts' in message['payload']:
+            for part in message['payload']['parts']:
+                if part['mimeType'] == 'text/plain':
+                    if 'data' in part['body']:
+                        body = base64.urlsafe_b64decode(part['body']['data']).decode('utf-8')
+                        break
+        elif 'body' in message['payload'] and 'data' in message['payload']['body']:
+            body = base64.urlsafe_b64decode(message['payload']['body']['data']).decode('utf-8')
+        
+        # Build user context for AI
+        user_context = {
+            'name': user.display_name or user.email.split('@')[0],
+            'email': user.email,
+            'role': user.profile.role if user.profile else 'Professional',
+            'communication_style': user.profile.communication_style if user.profile else 'professional',
+            'tone_preference': user.settings.ai_preferences.get('tone', 'warm_friendly') if user.settings and user.settings.ai_preferences else 'warm_friendly',
+            'priorities': user.profile.priorities if user.profile and user.profile.priorities else [],
+            'active_projects': [p.name for p in user.projects if p.status in ['active', 'planning']][:3]
+        }
+        
+        # Craft AI prompt based on user preferences
+        tone_map = {
+            'warm_friendly': 'warm, friendly, and approachable',
+            'professional': 'professional and formal',
+            'casual': 'casual and conversational',
+            'concise': 'brief and to-the-point'
+        }
+        
+        tone_description = tone_map.get(user_context['tone_preference'], 'professional and friendly')
+        
+        # Check for previous approved drafts from this sender to learn style
+        sender_from = headers.get('From', '')
+        sender_email = ''
+        if '<' in sender_from:
+            sender_email = sender_from.split('<')[1].split('>')[0]
+        elif '@' in sender_from:
+            sender_email = sender_from.strip()
+        
+        # Get past approved responses for style reference (if any)
+        past_approvals = db.query(BehaviorAction).filter(
+            BehaviorAction.user_id == user.id,
+            BehaviorAction.action_type == 'draft_approved',
+            BehaviorAction.sender_email == sender_email
+        ).order_by(desc(BehaviorAction.created_at)).limit(2).all()
+        
+        style_learning = ""
+        if past_approvals:
+            style_learning = f"\n\nUser has previously approved {len(past_approvals)} response(s) to this sender. Maintain similar tone and style."
+        
+        prompt = f"""You are Aimy, {user_context['name']}'s AI assistant, helping draft an email response.
+
+USER PROFILE:
+- Name: {user_context['name']}
+- Role: {user_context['role']}
+- Communication Style: {user_context['communication_style']}
+- Tone Preference: {tone_description}
+- Current Priorities: {', '.join(user_context['priorities'][:3]) if user_context['priorities'] else 'Not specified'}
+- Active Projects: {', '.join(user_context['active_projects']) if user_context['active_projects'] else 'None'}
+{style_learning}
+
+ORIGINAL EMAIL:
+From: {headers.get('From', 'Unknown')}
+Subject: {headers.get('Subject', 'No Subject')}
+Date: {headers.get('Date', '')}
+
+Content:
+{body[:1500] if body else message.get('snippet', 'No content')}
+
+{f"ADDITIONAL CONTEXT: {request.custom_context}" if request.custom_context else ""}
+
+INSTRUCTIONS:
+1. Draft a response that matches {user_context['name']}'s communication style and tone ({tone_description})
+2. Address all key points from the original email
+3. Keep it concise but thorough (2-4 paragraphs maximum)
+4. Use first-person perspective (as {user_context['name']})
+5. Include a clear call-to-action or next steps if appropriate
+6. Be helpful and constructive
+7. Match the formality level of the original email
+
+IMPORTANT: 
+- Write ONLY the email body content
+- Do NOT include "Subject:" or "To:" lines
+- Do NOT include greetings like "Dear Aimy" - start with addressing the recipient
+- End with just the closing (no signature block, that will be added separately)
+
+Draft the response now:"""
+
+        # Generate response
+        response = anthropic_client.messages.create(
+            model="claude-3-5-sonnet-20241022",
+            max_tokens=2000,
+            messages=[{
+                "role": "user",
+                "content": prompt
+            }]
+        )
+        
+        draft_body = response.content[0].text if response.content else ""
+        
+        # Add signature based on style preference
+        user_name = user.display_name or user.email.split('@')[0]
+        
+        if request.signature_style == "as_aimy":
+            signature = f"""
+
+Best regards,
+Aimy (on behalf of {user_name})
+
+---
+Sent via OkAimy - AI-Powered Productivity Assistant
+www.okaimy.com"""
+            
+        elif request.signature_style == "ai_assisted":
+            signature = f"""
+
+Best,
+{user_name}
+
+---
+Composed with OkAimy - my AI productivity assistant"""
+            
+        else:  # no_attribution
+            signature = f"""
+
+Best,
+{user_name}"""
+        
+        full_draft = draft_body.strip() + signature
+        
+        return {
+            "success": True,
+            "draft": full_draft,
+            "draft_body": draft_body.strip(),
+            "signature": signature.strip(),
+            "subject": f"Re: {headers.get('Subject', 'No Subject')}",
+            "to": headers.get('From', ''),
+            "original_message": {
+                "id": message['id'],
+                "threadId": message['threadId'],
+                "from": headers.get('From', ''),
+                "subject": headers.get('Subject', '')
+            },
+            "signature_style": request.signature_style,
+            "user_context": {
+                "tone": user_context['tone_preference'],
+                "style": user_context['communication_style']
+            }
+        }
+        
+    except Exception as e:
+        print(f"❌ Error drafting response: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/messages/approve-draft")
+async def approve_draft_response(
+    message_id: str,
+    user_email: str,
+    sender_email: str,
+    draft_approved: bool,
+    db: Session = Depends(get_db)
+):
+    """
+    Record that user approved/rejected a draft response
+    Used for behavioral learning to improve future suggestions
+    """
+    try:
+        user = db.query(User).filter(User.email == user_email).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        # Extract sender domain
+        sender_domain = sender_email.split('@')[1] if '@' in sender_email else ''
+        
+        # Record behavior
+        action_type = 'draft_approved' if draft_approved else 'draft_rejected'
+        
+        behavior = BehaviorAction(
+            user_id=user.id,
+            email_id=message_id,
+            sender_email=sender_email,
+            sender_domain=sender_domain,
+            action_type=action_type,
+            confidence_score=1.0,
+            action_metadata={'draft_learning': True}
+        )
+        db.add(behavior)
+        
+        # Update sender stats
+        stats = db.query(SenderStats).filter(
+            SenderStats.user_id == user.id,
+            SenderStats.sender_email == sender_email
+        ).first()
+        
+        if stats and draft_approved:
+            stats.responded += 1
+            stats.last_interaction = datetime.utcnow()
+        
+        db.commit()
+        
+        return {
+            "success": True,
+            "message": "Draft feedback recorded",
+            "action": action_type
+        }
+        
+    except Exception as e:
+        db.rollback()
+        print(f"❌ Error recording draft approval: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/messages/send-reply")
+async def send_email_reply(
+    message_id: str,
+    user_email: str,
+    reply_body: str,
+    reply_to: str,
+    subject: str,
+    db: Session = Depends(get_db)
+):
+    """Send email reply via Gmail API"""
+    try:
+        service = get_gmail_service(user_email, db)
+        
+        # Create email message
+        from email.mime.text import MIMEText
+        
+        message = MIMEText(reply_body)
+        message['to'] = reply_to
+        message['subject'] = subject
+        
+        # Encode message
+        raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode('utf-8')
+        
+        # Send via Gmail API
+        sent_message = service.users().messages().send(
+            userId='me',
+            body={'raw': raw_message}
+        ).execute()
+        
+        return {
+            "success": True,
+            "message_id": sent_message['id'],
+            "thread_id": sent_message.get('threadId')
+        }
+        
+    except Exception as e:
+        print(f"❌ Error sending reply: {e}")
         raise HTTPException(status_code=500, detail=str(e))

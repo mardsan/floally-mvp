@@ -1,10 +1,21 @@
 import { useState, useEffect } from 'react';
 
+const SIGNATURE_STYLES = [
+  { value: 'ai_assisted', label: '✨ From Me (AI-assisted)', description: 'Your name with subtle OkAimy credit' },
+  { value: 'as_aimy', label: '🤖 From Aimy', description: 'Clearly from Aimy on your behalf' },
+  { value: 'no_attribution', label: '👤 From Me Only', description: 'No mention of AI' }
+];
+
 function MessageDetailPopup({ message, user, onClose, onFeedback }) {
   const [fullMessage, setFullMessage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [replyText, setReplyText] = useState('');
   const [showReply, setShowReply] = useState(false);
+  const [aiDrafting, setAiDrafting] = useState(false);
+  const [aiDraft, setAiDraft] = useState(null);
+  const [signatureStyle, setSignatureStyle] = useState('ai_assisted');
+  const [customContext, setCustomContext] = useState('');
+  const [sending, setSending] = useState(false);
 
   useEffect(() => {
     loadFullMessage();
@@ -23,6 +34,125 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
       console.error('Failed to load full message:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleLetAimyRespond = async () => {
+    setAiDrafting(true);
+    setShowReply(true);
+    
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app';
+      const response = await fetch(`${apiUrl}/api/messages/draft-response`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_email: user.email,
+          message_id: message.id,
+          signature_style: signatureStyle,
+          custom_context: customContext || null
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to generate draft');
+      }
+      
+      const data = await response.json();
+      setAiDraft(data);
+      setReplyText(data.draft);
+      
+      // Record that draft was generated
+      console.log('✨ Aimy generated draft response');
+      
+    } catch (error) {
+      console.error('Failed to generate AI response:', error);
+      alert('❌ Failed to generate response. Please try again.');
+    } finally {
+      setAiDrafting(false);
+    }
+  };
+
+  const handleApproveDraft = async (approved) => {
+    if (!aiDraft) return;
+    
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app';
+      
+      // Extract sender email
+      let senderEmail = message.from;
+      if (senderEmail.includes('<')) {
+        senderEmail = senderEmail.split('<')[1].split('>')[0];
+      }
+      
+      await fetch(`${apiUrl}/api/messages/approve-draft`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message_id: message.id,
+          user_email: user.email,
+          sender_email: senderEmail,
+          draft_approved: approved
+        })
+      });
+      
+      if (approved) {
+        console.log('✅ Draft approved - Aimy is learning!');
+      } else {
+        console.log('❌ Draft rejected - Aimy will improve');
+      }
+      
+    } catch (error) {
+      console.error('Failed to record draft approval:', error);
+    }
+  };
+
+  const handleRegenerateDraft = () => {
+    setAiDraft(null);
+    setReplyText('');
+    handleLetAimyRespond();
+  };
+
+  const handleSendReply = async () => {
+    if (!replyText.trim()) {
+      alert('Please write a reply first');
+      return;
+    }
+    
+    setSending(true);
+    
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app';
+      
+      // If this was an AI draft, record approval
+      if (aiDraft) {
+        await handleApproveDraft(true);
+      }
+      
+      const response = await fetch(`${apiUrl}/api/messages/send-reply`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message_id: message.id,
+          user_email: user.email,
+          reply_body: replyText,
+          reply_to: message.from,
+          subject: aiDraft?.subject || `Re: ${message.subject}`
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to send reply');
+      }
+      
+      alert('✅ Reply sent successfully!');
+      onClose();
+      
+    } catch (error) {
+      console.error('Failed to send reply:', error);
+      alert('❌ Failed to send reply. Please try in Gmail.');
+    } finally {
+      setSending(false);
     }
   };
 
@@ -139,6 +269,13 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
               ↩️ Reply
             </button>
             <button
+              onClick={handleLetAimyRespond}
+              disabled={aiDrafting}
+              className="px-3 py-1.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-sm font-medium transition-colors shadow-md"
+            >
+              {aiDrafting ? '✨ Drafting...' : '✨ Let Aimy Respond'}
+            </button>
+            <button
               onClick={handleArchive}
               className="px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-colors"
             >
@@ -229,27 +366,138 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
 
               {/* Reply Box */}
               {showReply && (
-                <div className="mb-6 p-4 bg-blue-50 border-2 border-blue-200 rounded-xl">
-                  <h4 className="font-semibold text-blue-900 mb-3">↩️ Reply</h4>
+                <div className="mb-6 p-4 bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200 rounded-xl">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-semibold text-purple-900">↩️ Reply</h4>
+                    {aiDraft && (
+                      <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">
+                        ✨ AI Draft
+                      </span>
+                    )}
+                  </div>
+                  
+                  {/* Signature Style Selector */}
+                  {!aiDraft && (
+                    <div className="mb-3">
+                      <label className="text-sm font-medium text-purple-900 mb-2 block">
+                        Signature Style:
+                      </label>
+                      <div className="grid grid-cols-1 gap-2">
+                        {SIGNATURE_STYLES.map(style => (
+                          <label
+                            key={style.value}
+                            className={`flex items-start gap-2 p-2 rounded-lg border-2 cursor-pointer transition-all ${
+                              signatureStyle === style.value
+                                ? 'border-purple-500 bg-purple-100'
+                                : 'border-purple-200 hover:border-purple-300 bg-white'
+                            }`}
+                          >
+                            <input
+                              type="radio"
+                              name="signature"
+                              value={style.value}
+                              checked={signatureStyle === style.value}
+                              onChange={(e) => setSignatureStyle(e.target.value)}
+                              className="mt-1"
+                            />
+                            <div className="flex-1">
+                              <div className="text-sm font-medium text-purple-900">{style.label}</div>
+                              <div className="text-xs text-purple-600">{style.description}</div>
+                            </div>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Custom Context Input */}
+                  {!aiDraft && (
+                    <div className="mb-3">
+                      <label className="text-sm font-medium text-purple-900 mb-2 block">
+                        Additional Context (optional):
+                      </label>
+                      <input
+                        type="text"
+                        value={customContext}
+                        onChange={(e) => setCustomContext(e.target.value)}
+                        placeholder="e.g., 'Mention the project deadline' or 'Keep it brief'"
+                        className="w-full px-3 py-2 border border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                      />
+                    </div>
+                  )}
+                  
                   <textarea
                     value={replyText}
-                    onChange={(e) => setReplyText(e.target.value)}
-                    placeholder="Type your reply here..."
-                    className="w-full px-4 py-3 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    rows={6}
+                    onChange={(e) => {
+                      setReplyText(e.target.value);
+                      // If user edits AI draft, mark it as modified
+                      if (aiDraft && e.target.value !== aiDraft.draft) {
+                        console.log('User modified AI draft');
+                      }
+                    }}
+                    placeholder="Type your reply here, or click 'Let Aimy Respond' to generate a draft..."
+                    className="w-full px-4 py-3 border border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    rows={aiDraft ? 12 : 6}
                   />
+                  
+                  {/* Draft Controls */}
+                  {aiDraft && (
+                    <div className="mt-3 p-3 bg-white/50 rounded-lg border border-purple-200">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-medium text-purple-900">
+                          Draft Style: {SIGNATURE_STYLES.find(s => s.value === aiDraft.signature_style)?.label}
+                        </span>
+                        <button
+                          onClick={handleRegenerateDraft}
+                          disabled={aiDrafting}
+                          className="text-xs px-2 py-1 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded transition-colors"
+                        >
+                          🔄 Regenerate
+                        </button>
+                      </div>
+                      <p className="text-xs text-purple-600">
+                        Tone: {aiDraft.user_context?.tone} • Style: {aiDraft.user_context?.style}
+                      </p>
+                    </div>
+                  )}
+                  
                   <div className="mt-3 flex gap-2">
                     <button
-                      onClick={() => {
-                        // TODO: Implement send reply
-                        alert('Reply functionality coming soon! For now, please reply in Gmail.');
-                      }}
-                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+                      onClick={handleSendReply}
+                      disabled={sending || !replyText.trim()}
+                      className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors shadow-md"
                     >
-                      Send Reply
+                      {sending ? '📤 Sending...' : '📤 Send Reply'}
                     </button>
+                    {aiDraft && (
+                      <>
+                        <button
+                          onClick={() => handleApproveDraft(true)}
+                          className="px-4 py-2 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg font-medium transition-colors"
+                          title="Approve draft (helps Aimy learn)"
+                        >
+                          ✅
+                        </button>
+                        <button
+                          onClick={() => {
+                            handleApproveDraft(false);
+                            setAiDraft(null);
+                            setReplyText('');
+                          }}
+                          className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg font-medium transition-colors"
+                          title="Reject draft (helps Aimy learn)"
+                        >
+                          ❌
+                        </button>
+                      </>
+                    )}
                     <button
-                      onClick={() => setShowReply(false)}
+                      onClick={() => {
+                        setShowReply(false);
+                        setAiDraft(null);
+                        setReplyText('');
+                        setCustomContext('');
+                      }}
                       className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium transition-colors"
                     >
                       Cancel
