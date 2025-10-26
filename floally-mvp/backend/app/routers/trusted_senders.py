@@ -56,38 +56,47 @@ async def add_trusted_sender(
     db: Session = Depends(get_db)
 ):
     """Add a sender to trusted list"""
-    user = db.query(User).filter(User.email == user_email).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    # Check if already exists
-    existing = db.query(TrustedSender).filter(
-        TrustedSender.user_id == user.id,
-        TrustedSender.sender_email == sender.sender_email
-    ).first()
-    
-    if existing:
-        # Update existing
-        existing.allow_attachments = True
-        existing.auto_approved = sender.auto_approved
-        if sender.sender_name:
-            existing.sender_name = sender.sender_name
+    try:
+        user = db.query(User).filter(User.email == user_email).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        # Check if already exists
+        existing = db.query(TrustedSender).filter(
+            TrustedSender.user_id == user.id,
+            TrustedSender.sender_email == sender.sender_email
+        ).first()
+        
+        if existing:
+            # Update existing
+            existing.allow_attachments = True
+            existing.auto_approved = sender.auto_approved
+            if sender.sender_name:
+                existing.sender_name = sender.sender_name
+            db.commit()
+            db.refresh(existing)
+            return existing
+        
+        # Create new
+        trusted_sender = TrustedSender(
+            user_id=user.id,
+            sender_email=sender.sender_email,
+            sender_name=sender.sender_name,
+            auto_approved=sender.auto_approved
+        )
+        db.add(trusted_sender)
         db.commit()
-        db.refresh(existing)
-        return existing
-    
-    # Create new
-    trusted_sender = TrustedSender(
-        user_id=user.id,
-        sender_email=sender.sender_email,
-        sender_name=sender.sender_name,
-        auto_approved=sender.auto_approved
-    )
-    db.add(trusted_sender)
-    db.commit()
-    db.refresh(trusted_sender)
-    
-    return trusted_sender
+        db.refresh(trusted_sender)
+        
+        return trusted_sender
+    except Exception as e:
+        # If trusted_senders table doesn't exist, rollback and return error
+        db.rollback()
+        print(f"❌ Error adding trusted sender: {e}")
+        raise HTTPException(
+            status_code=503, 
+            detail="Trusted senders feature temporarily unavailable. Table not yet created."
+        )
 
 
 @router.delete("/{user_email}/{sender_email}")
