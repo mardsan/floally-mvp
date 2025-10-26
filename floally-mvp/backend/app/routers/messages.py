@@ -18,8 +18,13 @@ from app.utils.google_auth import get_gmail_service
 
 router = APIRouter()
 
-# Initialize Anthropic client
-anthropic_client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+# Initialize Anthropic client with validation
+anthropic_api_key = os.getenv("ANTHROPIC_API_KEY")
+if not anthropic_api_key:
+    print("⚠️ WARNING: ANTHROPIC_API_KEY not set - draft generation will fail")
+    anthropic_client = None
+else:
+    anthropic_client = anthropic.Anthropic(api_key=anthropic_api_key)
 
 
 class DraftResponseRequest(BaseModel):
@@ -478,6 +483,15 @@ async def draft_email_response(
     - no_attribution: Just from user, no mention of AI
     """
     try:
+        print(f"🔍 Draft request - User: {request.user_email}, Message: {request.message_id}, Style: {request.signature_style}")
+        
+        # Check if Anthropic is configured
+        if not anthropic_client:
+            raise HTTPException(
+                status_code=500, 
+                detail="AI service not configured. Please contact support."
+            )
+        
         # Get user with relationships eagerly loaded
         user = db.query(User).options(
             joinedload(User.profile),
