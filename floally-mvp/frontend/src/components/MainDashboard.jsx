@@ -7,6 +7,7 @@ import EnhancedMessages from './EnhancedMessages';
 
 function MainDashboard({ user, onLogout }) {
   const [loading, setLoading] = useState(true);
+  const [loadingStandup, setLoadingStandup] = useState(false);
   const [projects, setProjects] = useState([]);
   const [standup, setStandup] = useState(null);
   const [calendarEvents, setCalendarEvents] = useState([]);
@@ -68,13 +69,51 @@ function MainDashboard({ user, onLogout }) {
   };
 
   const loadStandup = async () => {
+    setLoadingStandup(true);
     try {
+      console.log('🔄 Refreshing standup...');
       const apiUrl = import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app';
-      const response = await fetch(`${apiUrl}/api/standup/generate?user_email=${encodeURIComponent(user.email)}`);
+      
+      // First, get messages and events
+      const [messagesRes, eventsRes] = await Promise.all([
+        fetch(`${apiUrl}/api/messages?user_email=${encodeURIComponent(user.email)}&max_results=50`),
+        fetch(`${apiUrl}/api/calendar/events?days=1&user_email=${encodeURIComponent(user.email)}`)
+      ]);
+      
+      const messagesData = await messagesRes.json();
+      const eventsData = await eventsRes.json();
+      
+      // Build context for standup
+      const context = {
+        messages: messagesData.messages || [],
+        events: eventsData.events || []
+      };
+      
+      // Call the correct AI standup endpoint
+      const response = await fetch(`${apiUrl}/api/ai/standup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(context)
+      });
+      
       const data = await response.json();
-      setStandup(data);
+      console.log('✅ Standup refreshed:', data);
+      
+      // For now, set a simple standup object with the text
+      setStandup({
+        one_thing: data.standup || "Focus on your most important task today",
+        decisions: [],
+        autonomous_tasks: []
+      });
     } catch (error) {
       console.error('Failed to load standup:', error);
+      setStandup({
+        one_thing: "Unable to load standup. Please try again.",
+        decisions: [],
+        autonomous_tasks: []
+      });
+    } finally {
+      setLoadingStandup(false);
     }
   };
 
@@ -187,9 +226,10 @@ function MainDashboard({ user, onLogout }) {
               </div>
               <button
                 onClick={loadStandup}
-                className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors backdrop-blur-sm"
+                disabled={loadingStandup}
+                className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                🔄 Refresh
+                {loadingStandup ? '⏳ Loading...' : '🔄 Refresh'}
               </button>
             </div>
 
