@@ -115,7 +115,7 @@ function MainDashboard({ user, onLogout }) {
           "Sending calendar invite reminder",
           "Processing non-urgent inbox items"
         ]
-      });
+
       });
     } catch (error) {
       console.error('Failed to load standup:', error);
