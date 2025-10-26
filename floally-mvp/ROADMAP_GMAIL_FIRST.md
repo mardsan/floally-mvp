@@ -412,9 +412,13 @@ class TeamsAdapter implements ChannelAdapter { ... }
 3. ✅ Remove Profile/Hub redundancy (done)
 4. ✅ Add Gmail category tabs (done)
 5. ✅ Document vision (done)
-6. 🔄 **Next: Redesign message card for universal use**
-7. 🔄 **Next: Implement importance color coding**
-8. 🔄 **Next: Add quick action buttons**
+6. ✅ Sender Trust Management System (3-tier: TRUSTED/BLOCKED/ONE_TIME)
+7. ✅ Daily Stand-up API Integration (split-panel User/Aimy layout)
+8. ✅ Enhanced "The One Thing" (expandable details, status tracking, task swapping)
+9. 🔄 **Next: Test Daily Stand-up features thoroughly**
+10. 🔄 **Next: Redesign message card for universal use**
+11. 🔄 **Next: Implement importance color coding**
+12. 🔄 **Next: Add quick action buttons**
 
 ### Next Week (Oct 27-Nov 2)
 **Goal:** Complete Gmail feature set

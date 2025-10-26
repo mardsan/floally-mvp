@@ -1,6 +1,51 @@
 # OpAime MVP - Session Log & Setup Guide
-**Date:** October 13-14, 2025 | **Updated:** January 2025  
+**Date:** October 13-14, 2025 | **Updated:** October 26, 2025  
 **Codespace:** refactored-invention-6wpqr6wpqg42r747
+
+---
+
+## 🆕 Latest Updates - October 26, 2025
+
+### ✅ Daily Stand-up Enhanced - The One Thing Module (commit f93ed56)
+**Features Added:**
+- **Expandable Details:** Show/Hide button reveals full AI context from standup analysis
+- **Status Tracking:** 4-state dropdown (⚪ Preparing, 🟡 In Progress, 🟢 Complete, 🔴 Blocked)
+- **Task Swapping:** Selecting from "Other Priorities" preserves current task (no data loss)
+- **UX Improvements:** Clean task title display, emoji indicators, scrollable details panel
+- **State Management:** Added expandedOneThingDetails and oneThingStatus hooks
+
+**Technical Details:**
+- Modified: `frontend/src/components/MainDashboard.jsx`
+- Task swapping logic filters selected decision and adds current one_thing back to list with 80% confidence
+- Status resets to 'preparing' and details collapse when switching tasks
+- Prevents default text from being added back to priorities list
+
+### ✅ Sender Trust Management - Auto-Detection (commits 8f3002b - 5963eb1)
+**Features Added:**
+- **3-Tier Trust System:** TRUSTED, BLOCKED, ONE_TIME with automatic processing
+- **Auto-Processing:** Trusted senders' attachments processed without prompts
+- **Auto-Blocking:** Blocked senders handled silently with user notification
+- **AttachmentConsentPrompt:** 3-button UI (Trust Always, Just This Time, Block Sender)
+- **Database:** trusted_senders table with trust_level enum column
+
+**Technical Details:**
+- Backend: `app/services/attachment_service.py` check_sender_trust() function
+- Frontend: `components/AttachmentConsentPrompt.jsx` color-coded action buttons
+- Integration: `components/MessageDetailPopup.jsx` auto-processes based on trust level
+- Fixed datetime.now(timezone.utc) deprecation warning
+
+### ✅ Daily Stand-up API Integration (commits 79fef78 - 0242824)
+**Features Completed:**
+- **Split-Panel Layout:** User tasks (left) + Aimy insights (right)
+- **API Endpoints:** Connected to /api/gmail/messages, /api/calendar/events, /api/ai/standup
+- **Refresh Functionality:** Fixed button to call loadStandup() instead of full page reload
+- **Data Structure:** Clean task titles, decisions array, autonomous_tasks array, daily summary cards
+- **Error Handling:** Loading states, error messages, graceful fallbacks
+
+**Bug Fixes:**
+- Fixed 404 errors from incorrect API endpoints (/api/messages → /api/gmail/messages)
+- Removed duplicate closing brace syntax error that prevented deployment
+- Fixed refresh button functionality (was doing full page reload)
 
 ---
 
