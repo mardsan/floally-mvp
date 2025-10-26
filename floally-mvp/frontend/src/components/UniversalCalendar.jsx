@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import EventDetailsPopup from './EventDetailsPopup';
 
 // Helper function to parse date string as local date (avoid timezone shifts)
 const parseLocalDate = (dateStr) => {
@@ -6,11 +7,12 @@ const parseLocalDate = (dateStr) => {
   return new Date(year, month - 1, day);
 };
 
-const UniversalCalendar = ({ projects, calendarEvents, user }) => {
+const UniversalCalendar = ({ projects, calendarEvents, user, onOpenProject }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState('month'); // 'week', 'month'
   const [selectedProject, setSelectedProject] = useState(null); // null = show all
   const [events, setEvents] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   useEffect(() => {
     aggregateEvents();
@@ -269,6 +271,7 @@ const UniversalCalendar = ({ projects, calendarEvents, user }) => {
                   {dayEvents.map((event, idx) => (
                     <div
                       key={idx}
+                      onClick={() => setSelectedEvent(event)}
                       className={`text-xs p-1 rounded border ${getEventColor(event)} truncate cursor-pointer hover:shadow-md transition-shadow`}
                       title={`${event.title} - ${event.source}`}
                     >
@@ -303,6 +306,15 @@ const UniversalCalendar = ({ projects, calendarEvents, user }) => {
           </div>
         </div>
       </div>
+
+      {/* Event Details Popup */}
+      {selectedEvent && (
+        <EventDetailsPopup
+          event={selectedEvent}
+          onClose={() => setSelectedEvent(null)}
+          onOpenProject={onOpenProject}
+        />
+      )}
     </div>
   );
 };

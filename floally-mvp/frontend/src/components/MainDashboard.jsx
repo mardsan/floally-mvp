@@ -420,6 +420,7 @@ function MainDashboard({ user, onLogout }) {
             projects={projects}
             calendarEvents={calendarEvents}
             user={user}
+            onOpenProject={(project) => setSelectedProject(project)}
           />
         </section>
 
