@@ -521,14 +521,27 @@ async def draft_email_response(
         
         # Extract body
         body = ""
-        if 'parts' in message['payload']:
-            for part in message['payload']['parts']:
-                if part['mimeType'] == 'text/plain':
-                    if 'data' in part['body']:
-                        body = base64.urlsafe_b64decode(part['body']['data']).decode('utf-8')
-                        break
-        elif 'body' in message['payload'] and 'data' in message['payload']['body']:
-            body = base64.urlsafe_b64decode(message['payload']['body']['data']).decode('utf-8')
+        try:
+            if 'parts' in message['payload']:
+                for part in message['payload']['parts']:
+                    if part['mimeType'] == 'text/plain':
+                        if 'data' in part['body']:
+                            body = base64.urlsafe_b64decode(part['body']['data']).decode('utf-8')
+                            print(f"✅ Extracted body from parts (length: {len(body)})")
+                            break
+            elif 'body' in message['payload'] and 'data' in message['payload']['body']:
+                body = base64.urlsafe_b64decode(message['payload']['body']['data']).decode('utf-8')
+                print(f"✅ Extracted body from payload (length: {len(body)})")
+            
+            # Fallback to snippet if no body found
+            if not body and 'snippet' in message:
+                body = message['snippet']
+                print(f"⚠️ Using snippet as body (length: {len(body)})")
+        except Exception as e:
+            print(f"⚠️ Error extracting body: {e}, using snippet")
+            body = message.get('snippet', 'No content available')
+        
+        print(f"📧 Message body: {body[:200]}..." if len(body) > 200 else f"📧 Message body: {body}")
         
         # Build user context for AI - with safe attribute access
         try:
