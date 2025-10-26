@@ -13,6 +13,7 @@
     "@anthropic-ai/sdk": "^0.32.1",
     "@vercel/kv": "^3.0.0",
     "axios": "^1.12.2",
+    "lucide-react": "^0.548.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "redis": "^5.8.3"
