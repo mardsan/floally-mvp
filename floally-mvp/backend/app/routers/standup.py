@@ -19,6 +19,10 @@ class StandupAnalysis(BaseModel):
     daily_plan: List[Dict[str, Any]]  # Suggested timeline
     reasoning: str  # Why Aimy chose this focus
 
+class StandupAnalyzeRequest(BaseModel):
+    """Request body for standup analysis"""
+    user_email: str
+
 class EmailContext(BaseModel):
     """Email data for analysis"""
     id: str
@@ -202,7 +206,7 @@ async def generate_standup(user_email: str, db: Session = Depends(get_db)):
         }
 
 @router.post("/standup/analyze")
-async def analyze_standup(user_email: str):
+async def analyze_standup(request: StandupAnalyzeRequest):
     """
     Analyze user's current situation and generate intelligent standup recommendations.
     
@@ -221,7 +225,7 @@ async def analyze_standup(user_email: str):
         from app.routers.gmail import get_gmail_service
         
         # Get user's Gmail service
-        service = await get_gmail_service(user_email)
+        service = await get_gmail_service(request.user_email)
         
         # Fetch recent emails (last 3 days, inbox only)
         three_days_ago = (datetime.now() - timedelta(days=3)).strftime('%Y/%m/%d')
