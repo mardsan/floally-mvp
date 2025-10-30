@@ -64,7 +64,8 @@ async def login():
         include_granted_scopes='true',
         prompt='consent'
     )
-    return {"authorization_url": authorization_url, "state": state}
+    # Return redirect response instead of JSON
+    return RedirectResponse(url=authorization_url)
 
 @router.get("/callback")
 async def callback(code: str, state: str, db: Session = Depends(get_db)):

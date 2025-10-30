@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authenticate with Aimy - Railway Backend</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-2xl w-full bg-white rounded-2xl shadow-2xl p-8">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">🔐 Authentication Required</h1>
+            <p class="text-lg text-gray-600">Connect your Google account to enable AI standup analysis</p>
+        </div>
+
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-yellow-800">Why am I seeing this?</h3>
+                    <div class="mt-2 text-sm text-yellow-700">
+                        <p>Your app has two separate authentication systems:</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1">
+                            <li><strong>Vercel OAuth</strong> (for calendar & inbox) → Stores in Redis</li>
+                            <li><strong>Railway OAuth</strong> (for AI features) → Stores in PostgreSQL</li>
+                        </ul>
+                        <p class="mt-2">The standup AI analysis requires Railway authentication to access Gmail.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-4 mb-8">
+            <div class="flex items-start">
+                <div class="flex-shrink-0 h-6 w-6 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-bold">1</div>
+                <div class="ml-4">
+                    <h3 class="text-lg font-semibold text-gray-900">Click "Authenticate Now"</h3>
+                    <p class="text-gray-600">You'll be redirected to Google's consent screen</p>
+                </div>
+            </div>
+            <div class="flex items-start">
+                <div class="flex-shrink-0 h-6 w-6 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-bold">2</div>
+                <div class="ml-4">
+                    <h3 class="text-lg font-semibold text-gray-900">Grant Permissions</h3>
+                    <p class="text-gray-600">Allow access to Gmail (read-only) and Calendar</p>
+                </div>
+            </div>
+            <div class="flex items-start">
+                <div class="flex-shrink-0 h-6 w-6 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-bold">3</div>
+                <div class="ml-4">
+                    <h3 class="text-lg font-semibold text-gray-900">Automatic Redirect</h3>
+                    <p class="text-gray-600">You'll be sent back to www.okaimy.com with credentials saved</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <a href="https://floally-mvp-production.up.railway.app/api/auth/login" 
+               class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-lg font-semibold rounded-xl shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 transform hover:scale-105">
+                <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                </svg>
+                Authenticate Now
+            </a>
+        </div>
+
+        <div class="mt-8 p-4 bg-gray-50 rounded-lg">
+            <h4 class="font-semibold text-gray-900 mb-2">What permissions will be requested?</h4>
+            <ul class="text-sm text-gray-600 space-y-1">
+                <li>✅ <strong>Email & Profile</strong> - To identify you</li>
+                <li>✅ <strong>Gmail (read-only)</strong> - To analyze your emails for standup</li>
+                <li>✅ <strong>Gmail (send)</strong> - To draft responses for you</li>
+                <li>✅ <strong>Calendar (read-only)</strong> - To show your schedule</li>
+                <li>✅ <strong>Calendar (events)</strong> - To create/update events</li>
+            </ul>
+        </div>
+
+        <div class="mt-6 text-center text-sm text-gray-500">
+            <p>🔒 Your credentials are encrypted and stored securely in Railway's PostgreSQL database.</p>
+            <p class="mt-2">This is a one-time setup. Your session will remain active.</p>
+        </div>
+    </div>
+
+    <script>
+        // Track if user clicks the auth button
+        const authButton = document.querySelector('a[href*="auth/login"]');
+        authButton.addEventListener('click', () => {
+            console.log('🔐 Initiating Railway OAuth flow...');
+            localStorage.setItem('authStartTime', Date.now());
+        });
+
+        // Check if we just came back from auth
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('user_data')) {
+            document.body.innerHTML = `
+                <div class="min-h-screen flex items-center justify-center bg-green-50">
+                    <div class="text-center">
+                        <div class="mb-4">
+                            <svg class="w-20 h-20 text-green-500 mx-auto" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">✅ Authentication Successful!</h1>
+                        <p class="text-lg text-gray-600 mb-4">Your credentials have been saved.</p>
+                        <p class="text-gray-500">Redirecting to dashboard...</p>
+                    </div>
+                </div>
+            `;
+            setTimeout(() => {
+                window.location.href = 'https://www.okaimy.com/';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
