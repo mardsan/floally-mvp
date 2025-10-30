@@ -5,6 +5,7 @@ const StandupDashboard = ({ user, userAvatar, userName, messages, events, userPr
   const [userFocusStatus, setUserFocusStatus] = useState('not_started');
   const [showAlternatives, setShowAlternatives] = useState(false);
   const [selectedFocus, setSelectedFocus] = useState(null);
+  const [alternatives, setAlternatives] = useState([]);
   const [aimyWork, setAimyWork] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -151,30 +152,70 @@ const StandupDashboard = ({ user, userAvatar, userName, messages, events, userPr
     setError(null);
     
     try {
-      console.log('🔄 Loading standup data from API...');
+      console.log('🔄 Loading standup analysis from API...');
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app';
       
-      const context = {
-        messages: messages || [],
-        events: events || []
-      };
+      // Use the comprehensive standup analysis endpoint
+      const response = await fetch(`${apiUrl}/api/standup/analyze`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          user_email: user?.email
+        })
+      });
       
-      // Include user profile context if available
-      if (userProfile && userProfile.onboarding_completed) {
-        context.userContext = {
-          role: userProfile.role,
-          priorities: userProfile.priorities,
-          communicationStyle: userProfile.communication_style
-        };
+      if (!response.ok) {
+        throw new Error(`Standup analysis failed: ${response.status}`);
       }
       
-      const response = await ai.generateStandup(context);
-      console.log('✅ Standup data loaded:', response.data);
+      const analysis = await response.json();
+      console.log('✅ AI Standup analysis loaded:', analysis);
       
-      setStandupData(response.data);
+      setStandupData(analysis);
       
-      // For now, keep mock data structure but show we have real standup text
-      setSelectedFocus(mockStandupData.user.theOneThing);
-      setAimyWork(mockStandupData.aimy);
+      // Transform AI analysis into component state
+      const theOneThing = analysis.the_one_thing || {};
+      const secondaryPriorities = analysis.secondary_priorities || [];
+      const aimyHandling = analysis.aimy_handling || [];
+      
+      setSelectedFocus({
+        title: theOneThing.title || "Check in with Aimy",
+        description: theOneThing.description || "Your inbox is clear!",
+        context: `Category: ${theOneThing.project || 'general'}\nUrgency: ${theOneThing.urgency || 0}/100\n\n${analysis.reasoning || ''}`,
+        urgency: theOneThing.urgency || 0,
+        project: theOneThing.project || 'general',
+        nextStep: theOneThing.action || "Review your priorities",
+        estimatedTime: '2-3 hours'
+      });
+      
+      // Map secondary priorities to alternatives
+      setAlternatives(secondaryPriorities.map((priority, index) => ({
+        rank: index + 2,
+        title: priority.title,
+        reasoning: priority.action || 'Alternative priority',
+        importance: priority.urgency || 50,
+        canDefer: priority.urgency < 70
+      })));
+      
+      setAimyWork({
+        handling: aimyHandling.map(item => ({
+          type: item.status || 'monitoring',
+          title: item.task,
+          reasoning: `Status: ${item.status}`,
+          impact: 'Handled autonomously',
+          urgency: 'medium',
+          items: item.emails || []
+        })),
+        plan: analysis.daily_plan?.map(item => ({
+          task: item.task,
+          scheduledTime: item.time,
+          description: `Duration: ${item.duration}`,
+          status: 'scheduled'
+        })) || [],
+        needsFromYou: []
+      });
       
     } catch (err) {
       console.error('❌ Failed to load standup:', err);
@@ -418,13 +459,13 @@ const StandupDashboard = ({ user, userAvatar, userName, messages, events, userPr
                 These are also important. Want to switch your focus?
               </p>
               <div className="space-y-3">
-                {mockStandupData.user.alternatives.map((alt, idx) => (
+                {(alternatives.length > 0 ? alternatives : mockStandupData.user.alternatives).map((alt, idx) => (
                   <div key={idx} className="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 cursor-pointer border border-gray-200"
                        onClick={() => handleSelectAlternative(alt)}>
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="text-lg">{alt.rank === 2 ? '2️⃣' : '3️⃣'}</span>
+                          <span className="text-lg">{alt.rank === 2 ? '2️⃣' : alt.rank === 3 ? '3️⃣' : `${alt.rank}️⃣`}</span>
                           <h5 className="font-semibold text-gray-800">{alt.title}</h5>
                         </div>
                         <p className="text-sm text-gray-600 italic ml-7">{alt.reasoning}</p>
@@ -453,12 +494,12 @@ const StandupDashboard = ({ user, userAvatar, userName, messages, events, userPr
             <div className="bg-gray-50 rounded-lg p-6">
               <h4 className="text-lg font-bold text-gray-800 mb-4">📊 Your Other Priorities</h4>
               <div className="space-y-3">
-                {mockStandupData.user.secondaryPriorities.map((item, idx) => (
+                {(alternatives.length > 0 ? alternatives : mockStandupData.user.secondaryPriorities).map((item, idx) => (
                   <div key={idx} className="flex items-start gap-3">
-                    <span className="text-xl">{item.rank === 2 ? '2️⃣' : '3️⃣'}</span>
+                    <span className="text-xl">{item.rank === 2 ? '2️⃣' : item.rank === 3 ? '3️⃣' : `${item.rank}️⃣`}</span>
                     <div>
                       <p className="text-gray-800 font-medium">{item.title}</p>
-                      <p className="text-sm text-gray-500">{item.note}</p>
+                      <p className="text-sm text-gray-500">{item.note || item.reasoning || `Importance: ${item.importance}/100`}</p>
                     </div>
                   </div>
                 ))}
