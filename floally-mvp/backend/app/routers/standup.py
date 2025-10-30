@@ -202,7 +202,7 @@ async def generate_standup(user_email: str, db: Session = Depends(get_db)):
         }
 
 @router.post("/standup/analyze")
-async def analyze_standup(user_email: str = Depends(get_current_user)):
+async def analyze_standup(user_email: str):
     """
     Analyze user's current situation and generate intelligent standup recommendations.
     

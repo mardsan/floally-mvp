@@ -73,58 +73,83 @@ function MainDashboard({ user, onLogout }) {
   const loadStandup = async () => {
     setLoadingStandup(true);
     try {
-      console.log('🔄 Refreshing standup...');
+      console.log('🔄 Refreshing standup with AI analysis...');
       const apiUrl = import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app';
       
-      // First, get messages and events
-      const [messagesRes, eventsRes] = await Promise.all([
-        fetch(`${apiUrl}/api/gmail/messages?max_results=50`),
-        fetch(`${apiUrl}/api/calendar/events?days=1`)
-      ]);
-      
-      const messagesData = await messagesRes.json();
-      const eventsData = await eventsRes.json();
-      
-      // Build context for standup
-      const context = {
-        messages: messagesData.messages || [],
-        events: eventsData.events || []
-      };
-      
-      // Call the correct AI standup endpoint
-      const response = await fetch(`${apiUrl}/api/ai/standup`, {
+      // Use the comprehensive standup analysis endpoint
+      const response = await fetch(`${apiUrl}/api/standup/analyze`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(context)
+        headers: { 
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          user_email: user.email
+        })
       });
       
-      const data = await response.json();
-      console.log('✅ Standup refreshed:', data);
+      if (!response.ok) {
+        throw new Error(`Standup analysis failed: ${response.status}`);
+      }
       
-      // Parse the standup text to extract structured data
-      // For now, set a clean task title and mock structured data
+      const analysis = await response.json();
+      console.log('✅ AI Standup analysis:', analysis);
+      
+      // Transform the structured response into our component state
+      const theOneThing = analysis.the_one_thing || {};
+      const secondaryPriorities = analysis.secondary_priorities || [];
+      const aimyHandling = analysis.aimy_handling || [];
+      const dailyPlan = analysis.daily_plan || [];
+      
       setStandup({
-        one_thing: "Prepare for personal training appointment",
-        full_text: data.standup,
-        decisions: [
-          { decision: "Pack healthy snack for training session", confidence: 0.90 },
-          { decision: "Set reminder for gym appointment", confidence: 0.85 },
-          { decision: "Review fitness goals beforehand", confidence: 0.75 }
-        ],
-        autonomous_tasks: [
-          "Checking weather forecast for training gear",
-          "Ensuring training gear is ready to go",
-          "Sending calendar invite reminder",
-          "Processing non-urgent inbox items"
-        ]
-
+        // The One Thing
+        one_thing: theOneThing.title || "Check in with Aimy",
+        subtitle: theOneThing.description || "Your inbox is clear!",
+        urgency: theOneThing.urgency || 0,
+        project: theOneThing.project || "general",
+        action: theOneThing.action || "Review your priorities",
+        
+        // Full context for expandable details
+        full_text: `${theOneThing.description || ''}\n\n` +
+                   `Next Action: ${theOneThing.action || 'Review priorities'}\n` +
+                   `Category: ${theOneThing.project || 'general'}\n` +
+                   `Urgency: ${theOneThing.urgency || 0}/100\n\n` +
+                   `AI Reasoning:\n${analysis.reasoning || 'No additional context available.'}`,
+        
+        // Secondary priorities (Other Priorities section)
+        decisions: secondaryPriorities.map(priority => ({
+          decision: priority.title,
+          confidence: (priority.urgency || 50) / 100, // Convert urgency to confidence score
+          action: priority.action
+        })),
+        
+        // Aimy's autonomous tasks
+        autonomous_tasks: aimyHandling.map(item => 
+          `${item.task} (${item.status})`
+        ),
+        
+        // Daily plan for summary cards
+        daily_plan: dailyPlan,
+        
+        // Summary stats
+        summary: {
+          total_emails: aimyHandling.length,
+          urgent_items: secondaryPriorities.filter(p => p.urgency > 70).length,
+          focus_time: dailyPlan.find(p => p.time === 'Morning')?.duration || 'Available'
+        }
       });
     } catch (error) {
       console.error('Failed to load standup:', error);
       setStandup({
         one_thing: "Unable to load standup. Please try again.",
+        subtitle: "There was an error analyzing your inbox",
+        full_text: `Error: ${error.message}\n\nPlease try refreshing the page or contact support if the issue persists.`,
         decisions: [],
-        autonomous_tasks: []
+        autonomous_tasks: [],
+        summary: {
+          total_emails: 0,
+          urgent_items: 0,
+          focus_time: 'N/A'
+        }
       });
     } finally {
       setLoadingStandup(false);
@@ -295,7 +320,7 @@ function MainDashboard({ user, onLogout }) {
                         {standup?.one_thing || "Review Q4 budget priorities"}
                       </h5>
                       <p className="text-sm text-gray-600">
-                        From Aimy: High priority deadline today · 2-3 hours
+                        {standup?.subtitle || "From Aimy: High priority deadline today · 2-3 hours"}
                       </p>
                     </div>
                     
@@ -415,19 +440,44 @@ function MainDashboard({ user, onLogout }) {
                       <span className="text-2xl">📈</span>
                       <h4 className="text-lg font-bold text-teal-900">Daily Summary</h4>
                     </div>
+                    <div className="grid grid-cols-2 gap-3 mb-4">
+                      <div className="bg-white/60 rounded-lg p-3 text-center">
+                        <div className="text-2xl font-bold text-teal-700">
+                          {standup?.summary?.total_emails || 0}
+                        </div>
+                        <div className="text-xs text-teal-600">Items Monitored</div>
+                      </div>
+                      <div className="bg-white/60 rounded-lg p-3 text-center">
+                        <div className="text-2xl font-bold text-orange-600">
+                          {standup?.summary?.urgent_items || 0}
+                        </div>
+                        <div className="text-xs text-orange-600">Urgent Items</div>
+                      </div>
+                    </div>
                     <div className="text-sm text-teal-800 space-y-2">
-                      <p className="flex items-start gap-2">
-                        <span className="text-teal-600">•</span>
-                        <span>Monitoring your inbox for urgent items</span>
-                      </p>
-                      <p className="flex items-start gap-2">
-                        <span className="text-teal-600">•</span>
-                        <span>Calendar is organized for today</span>
-                      </p>
-                      <p className="flex items-start gap-2">
-                        <span className="text-teal-600">•</span>
-                        <span>Ready to assist with email responses</span>
-                      </p>
+                      {standup?.daily_plan && standup.daily_plan.length > 0 ? (
+                        standup.daily_plan.map((item, idx) => (
+                          <p key={idx} className="flex items-start gap-2">
+                            <span className="text-teal-600">•</span>
+                            <span><strong>{item.time}:</strong> {item.task} ({item.duration})</span>
+                          </p>
+                        ))
+                      ) : (
+                        <>
+                          <p className="flex items-start gap-2">
+                            <span className="text-teal-600">•</span>
+                            <span>Monitoring your inbox for urgent items</span>
+                          </p>
+                          <p className="flex items-start gap-2">
+                            <span className="text-teal-600">•</span>
+                            <span>Calendar is organized for today</span>
+                          </p>
+                          <p className="flex items-start gap-2">
+                            <span className="text-teal-600">•</span>
+                            <span>Ready to assist with email responses</span>
+                          </p>
+                        </>
+                      )}
                     </div>
                   </div>
 
@@ -449,27 +499,43 @@ function MainDashboard({ user, onLogout }) {
                     
                     <div className="p-6 space-y-4">
                       {standup?.autonomous_tasks && standup.autonomous_tasks.length > 0 ? (
-                        standup.autonomous_tasks.map((task, idx) => (
-                          <div key={idx} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                            <div className="flex items-start justify-between mb-3">
-                              <div className="flex-1">
-                                <p className="text-gray-800 font-medium mb-1">{task}</p>
-                                <span className="text-xs text-teal-600 bg-teal-50 px-2 py-1 rounded">Ready to execute</span>
+                        standup.autonomous_tasks.map((task, idx) => {
+                          // Parse task if it's a string with status in parentheses
+                          const taskText = typeof task === 'string' ? task : task.task || 'Unknown task';
+                          const taskStatus = typeof task === 'string' 
+                            ? (task.includes('monitoring') ? 'monitoring' : task.includes('drafting') ? 'drafting' : 'ready')
+                            : (task.status || 'ready');
+                          
+                          return (
+                            <div key={idx} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                              <div className="flex items-start justify-between mb-3">
+                                <div className="flex-1">
+                                  <p className="text-gray-800 font-medium mb-1">{taskText}</p>
+                                  <span className={`text-xs px-2 py-1 rounded ${
+                                    taskStatus === 'monitoring' ? 'text-blue-600 bg-blue-50' :
+                                    taskStatus === 'drafting' ? 'text-purple-600 bg-purple-50' :
+                                    'text-teal-600 bg-teal-50'
+                                  }`}>
+                                    {taskStatus === 'monitoring' ? '👀 Monitoring' :
+                                     taskStatus === 'drafting' ? '✍️ Drafting' :
+                                     '✅ Ready to execute'}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="flex gap-2">
+                                <button className="flex-1 bg-green-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">
+                                  ✅ Go
+                                </button>
+                                <button className="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+                                  👀 Let me check
+                                </button>
+                                <button className="flex-1 bg-red-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors">
+                                  ❌ Don't do this
+                                </button>
                               </div>
                             </div>
-                            <div className="flex gap-2">
-                              <button className="flex-1 bg-green-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">
-                                ✅ Go
-                              </button>
-                              <button className="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
-                                👀 Let me check
-                              </button>
-                              <button className="flex-1 bg-red-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors">
-                                ❌ Don't do this
-                              </button>
-                            </div>
-                          </div>
-                        ))
+                          );
+                        })
                       ) : (
                         <div className="text-center py-8 text-gray-500">
                           <p className="text-sm">All caught up! 🎉</p>
