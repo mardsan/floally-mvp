@@ -11,16 +11,11 @@ function GoogleSignIn() {
     
     try {
       console.log('Initiating Google OAuth...');
-      const response = await auth.login();
-      console.log('OAuth response:', response.data);
       
-      if (response.data.authorization_url) {
-        // Redirect to Google OAuth
-        window.location.href = response.data.authorization_url;
-      } else {
-        setError('Failed to get authorization URL');
-        setLoading(false);
-      }
+      // Directly navigate to Railway backend login endpoint
+      // This will redirect to Google OAuth consent screen
+      window.location.href = 'https://floally-mvp-production.up.railway.app/api/auth/login';
+      
     } catch (err) {
       console.error('Sign in error:', err);
       setError(err.message || 'Failed to sign in with Google');
