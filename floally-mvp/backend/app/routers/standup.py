@@ -206,7 +206,7 @@ async def generate_standup(user_email: str, db: Session = Depends(get_db)):
         }
 
 @router.post("/standup/analyze")
-async def analyze_standup(request: StandupAnalyzeRequest):
+async def analyze_standup(request: StandupAnalyzeRequest, db: Session = Depends(get_db)):
     """
     Analyze user's current situation and generate intelligent standup recommendations.
     
@@ -221,11 +221,11 @@ async def analyze_standup(request: StandupAnalyzeRequest):
     Returns: StandupAnalysis object
     """
     try:
-        # Import gmail service
-        from app.routers.gmail import get_gmail_service
+        # Import gmail service from utils
+        from app.utils.google_auth import get_gmail_service
         
-        # Get user's Gmail service
-        service = await get_gmail_service(request.user_email)
+        # Get user's Gmail service (not async, don't await)
+        service = get_gmail_service(request.user_email, db)
         
         # Fetch recent emails (last 3 days, inbox only)
         three_days_ago = (datetime.now() - timedelta(days=3)).strftime('%Y/%m/%d')
