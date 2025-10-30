@@ -42,7 +42,7 @@ def get_user_credentials(user_email: str, db: Session = None) -> Credentials:
         if not account:
             raise HTTPException(
                 status_code=401,
-                detail="Google account not connected. Please sign in with Google."
+                detail=f"Google account not connected for {user_email}. Please authenticate via: https://floally-mvp-production.up.railway.app/api/auth/login"
             )
         
         if not account.access_token:
