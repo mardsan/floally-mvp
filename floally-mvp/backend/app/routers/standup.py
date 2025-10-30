@@ -221,21 +221,41 @@ async def analyze_standup(request: StandupAnalyzeRequest, db: Session = Depends(
     Returns: StandupAnalysis object
     """
     try:
+        print(f"🔍 Starting standup analysis for user: {request.user_email}")
+        
         # Import gmail service from utils
         from app.utils.google_auth import get_gmail_service
         
         # Get user's Gmail service (not async, don't await)
-        service = get_gmail_service(request.user_email, db)
+        print(f"📧 Getting Gmail service...")
+        try:
+            service = get_gmail_service(request.user_email, db)
+            print(f"✅ Gmail service obtained successfully")
+        except Exception as gmail_auth_error:
+            print(f"❌ Failed to get Gmail service:")
+            print(f"   Type: {type(gmail_auth_error).__name__}")
+            print(f"   Message: {str(gmail_auth_error)}")
+            raise  # Re-raise to be caught by outer exception handler
         
         # Fetch recent emails (last 3 days, inbox only)
         three_days_ago = (datetime.now() - timedelta(days=3)).strftime('%Y/%m/%d')
         query = f'in:inbox after:{three_days_ago}'
         
-        results = service.users().messages().list(
-            userId='me',
-            q=query,
-            maxResults=50
-        ).execute()
+        print(f"📨 Fetching emails with query: {query}")
+        try:
+            results = service.users().messages().list(
+                userId='me',
+                q=query,
+                maxResults=50
+            ).execute()
+            print(f"✅ Email list fetched: {len(results.get('messages', []))} messages")
+        except Exception as gmail_api_error:
+            print(f"❌ Gmail API call failed:")
+            print(f"   Type: {type(gmail_api_error).__name__}")
+            print(f"   Message: {str(gmail_api_error)}")
+            import traceback
+            print(f"   Traceback:\n{traceback.format_exc()}")
+            raise  # Re-raise to be caught by outer exception handler
         
         messages = results.get('messages', [])
         
@@ -379,8 +399,17 @@ Guidelines:
         return analysis
         
     except Exception as e:
-        # If analysis fails, return a helpful default
-        print(f"Standup analysis error: {e}")
+        # If analysis fails, return a helpful default with detailed error logging
+        import traceback
+        error_type = type(e).__name__
+        error_msg = str(e)
+        error_trace = traceback.format_exc()
+        
+        print(f"❌ Standup analysis error:")
+        print(f"   Type: {error_type}")
+        print(f"   Message: {error_msg}")
+        print(f"   Traceback:\n{error_trace}")
+        
         return {
             'the_one_thing': {
                 'title': 'Review your inbox with Aimy',
@@ -396,7 +425,7 @@ Guidelines:
                 {'time': 'Morning', 'task': 'Focus on priority work', 'duration': '2-3 hours'},
                 {'time': 'Afternoon', 'task': 'Handle follow-ups', 'duration': '30 min'}
             ],
-            'reasoning': f'I had trouble analyzing your emails ({str(e)}), but let\'s review them together to find your focus.'
+            'reasoning': f'I had trouble analyzing your emails ({error_type}: {error_msg}), but let\'s review them together to find your focus.'
         }
 
 @router.get("/standup/status")
