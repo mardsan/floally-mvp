@@ -77,6 +77,13 @@ function MainDashboard({ user, onLogout }) {
         'blocked': 'deferred'
       };
       
+      // Convert decisions array to proper secondary_priorities format with urgency values
+      const secondaryPriorities = (standup?.decisions || []).map(decision => ({
+        title: decision.decision,
+        urgency: Math.round((decision.confidence || 0.5) * 100), // Convert confidence back to 0-100 urgency
+        action: decision.action || ''
+      }));
+      
       const payload = {
         user_email: user.email,
         task_title: standup?.one_thing || "No task",
@@ -84,8 +91,8 @@ function MainDashboard({ user, onLogout }) {
         task_project: standup?.project || "general",
         urgency: standup?.urgency || 50,
         status: statusMap[newStatus] || 'not_started',
-        ai_reasoning: standup?.full_text || "",
-        secondary_priorities: standup?.decisions || [],
+        ai_reasoning: standup?.reasoning || "",
+        secondary_priorities: secondaryPriorities,
         daily_plan: standup?.daily_plan || []
       };
       
@@ -240,11 +247,13 @@ function MainDashboard({ user, onLogout }) {
     // Add secondary priority details
     secondaryPriorities.forEach(priority => {
       const title = priority.title || priority.decision || 'Unknown task';
+      // Handle both urgency (0-100) from fresh AI and confidence (0-1) from cached data
+      const urgency = priority.urgency || (priority.confidence ? Math.round(priority.confidence * 100) : 50);
       taskDetails[title] = {
         description: priority.description || `Focus on: ${title}`,
         action: priority.action || 'Review and take next steps',
         project: priority.project || "general",
-        urgency: priority.urgency || 50
+        urgency: urgency
       };
     });
       
