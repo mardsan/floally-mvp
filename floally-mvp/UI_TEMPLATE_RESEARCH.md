@@ -1,4 +1,4 @@
-# UI Template Research - Tailwind Templates
+O# UI Template Research - Tailwind Templates
 
 ## 🎨 Template Options to Consider
 

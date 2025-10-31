@@ -226,6 +226,27 @@ function MainDashboard({ user, onLogout }) {
       secondaryPriorities,
       firstPriority: secondaryPriorities[0]
     });
+    
+    // Build task details map for easy lookup
+    const taskDetails = {
+      [theOneThing.title || "Check in with Aimy"]: {
+        description: theOneThing.description || "Your inbox is clear!",
+        action: theOneThing.action || "Review your priorities",
+        project: theOneThing.project || "general",
+        urgency: theOneThing.urgency || 0
+      }
+    };
+    
+    // Add secondary priority details
+    secondaryPriorities.forEach(priority => {
+      const title = priority.title || priority.decision || 'Unknown task';
+      taskDetails[title] = {
+        description: priority.description || `Focus on: ${title}`,
+        action: priority.action || 'Review and take next steps',
+        project: priority.project || "general",
+        urgency: priority.urgency || 50
+      };
+    });
       
     setStandup({
       // The One Thing
@@ -235,12 +256,9 @@ function MainDashboard({ user, onLogout }) {
       project: theOneThing.project || "general",
       action: theOneThing.action || "Review your priorities",
       
-      // Full context for expandable details
-      full_text: `${theOneThing.description || ''}\n\n` +
-                 `Next Action: ${theOneThing.action || 'Review priorities'}\n` +
-                 `Category: ${theOneThing.project || 'general'}\n` +
-                 `Urgency: ${theOneThing.urgency || 0}/100\n\n` +
-                 `AI Reasoning:\n${analysis.reasoning || 'No additional context available.'}`,
+      // Store task details and reasoning for dynamic details display
+      task_details: taskDetails,
+      reasoning: analysis.reasoning || 'No additional context available.',
       
       // Secondary priorities (Other Priorities section)
       decisions: secondaryPriorities.map(priority => ({
@@ -464,11 +482,19 @@ function MainDashboard({ user, onLogout }) {
                     </div>
                     
                     {/* Expandable Details */}
-                    {expandedOneThingDetails && standup?.full_text && (
+                    {expandedOneThingDetails && standup?.task_details && (
                       <div className="mb-4 p-4 bg-white/70 rounded-lg border border-blue-200">
                         <h6 className="text-sm font-semibold text-blue-900 mb-2">Details from Aimy:</h6>
                         <div className="text-sm text-gray-700 whitespace-pre-wrap max-h-60 overflow-y-auto">
-                          {standup.full_text}
+                          {(() => {
+                            const currentTask = standup.one_thing;
+                            const details = standup.task_details[currentTask] || {};
+                            return `${details.description || standup.subtitle || ''}\n\n` +
+                                   `Next Action: ${details.action || standup.action || 'Review priorities'}\n` +
+                                   `Category: ${details.project || standup.project || 'general'}\n` +
+                                   `Urgency: ${details.urgency || standup.urgency || 0}/100\n\n` +
+                                   `AI Reasoning:\n${standup.reasoning || 'No additional context available.'}`;
+                          })()}
                         </div>
                       </div>
                     )}
