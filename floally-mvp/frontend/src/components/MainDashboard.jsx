@@ -221,6 +221,11 @@ function MainDashboard({ user, onLogout }) {
     const secondaryPriorities = analysis.secondary_priorities || [];
     const aimyHandling = analysis.aimy_handling || [];
     const dailyPlan = analysis.daily_plan || [];
+    
+    console.log('🔧 Building standup state:', {
+      secondaryPriorities,
+      firstPriority: secondaryPriorities[0]
+    });
       
     setStandup({
       // The One Thing
@@ -239,9 +244,9 @@ function MainDashboard({ user, onLogout }) {
       
       // Secondary priorities (Other Priorities section)
       decisions: secondaryPriorities.map(priority => ({
-        decision: priority.title,
-        confidence: (priority.urgency || 50) / 100, // Convert urgency to confidence score
-        action: priority.action
+        decision: priority.title || priority.decision || 'Unknown task',
+        confidence: (priority.urgency || priority.confidence * 100 || 50) / 100, // Convert urgency to confidence score
+        action: priority.action || ''
       })),
       
       // Aimy's autonomous tasks
