@@ -532,12 +532,33 @@ function MainDashboard({ user, onLogout }) {
                                 {decision.confidence && (
                                   <div className="mt-2">
                                     {(() => {
+                                      const urgencyScore = Math.round(decision.confidence * 100);
                                       const urgency = getUrgencyLevel(decision.confidence);
                                       return (
-                                        <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium border ${urgency.color}`}>
-                                          <span>{urgency.icon}</span>
-                                          {urgency.label}
-                                        </span>
+                                        <div className="space-y-1">
+                                          {/* Urgency Scale */}
+                                          <div className="relative h-2 bg-gradient-to-r from-green-200 via-yellow-200 via-orange-200 to-red-200 rounded-full">
+                                            {/* Marker at specific urgency level */}
+                                            <div 
+                                              className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-gray-800 rounded-full border-2 border-white shadow-md"
+                                              style={{ left: `${urgencyScore}%`, marginLeft: '-6px' }}
+                                            />
+                                          </div>
+                                          {/* Label with score */}
+                                          <div className="flex items-center justify-between text-xs">
+                                            <span className={`font-medium ${
+                                              urgencyScore >= 80 ? 'text-red-700' :
+                                              urgencyScore >= 60 ? 'text-orange-700' :
+                                              urgencyScore >= 40 ? 'text-yellow-700' :
+                                              'text-green-700'
+                                            }`}>
+                                              {urgency.icon} {urgency.label}
+                                            </span>
+                                            <span className="text-gray-500 font-mono">
+                                              {urgencyScore}/100
+                                            </span>
+                                          </div>
+                                        </div>
                                       );
                                     })()}
                                   </div>
