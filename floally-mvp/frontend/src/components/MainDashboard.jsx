@@ -17,6 +17,7 @@ function MainDashboard({ user, onLogout }) {
   const [selectedProject, setSelectedProject] = useState(null);
   const [expandedOneThingDetails, setExpandedOneThingDetails] = useState(false);
   const [oneThingStatus, setOneThingStatus] = useState('preparing');
+  const [standupStatusId, setStandupStatusId] = useState(null);
 
   useEffect(() => {
     loadDashboardData();
@@ -26,6 +27,84 @@ function MainDashboard({ user, onLogout }) {
     // Update currentUser when user prop changes
     setCurrentUser(user);
   }, [user]);
+
+  // Load saved status when standup data changes
+  useEffect(() => {
+    if (standup) {
+      loadSavedStatus();
+    }
+  }, [standup?.one_thing]); // Re-check when the one thing changes
+
+  const loadSavedStatus = async () => {
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app';
+      const response = await fetch(`${apiUrl}/api/standup/status?user_email=${encodeURIComponent(user.email)}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.has_status) {
+          setStandupStatusId(data.id);
+          // Map database status values to UI status values
+          const statusMap = {
+            'not_started': 'preparing',
+            'in_progress': 'in_progress',
+            'completed': 'complete',
+            'deferred': 'blocked'
+          };
+          setOneThingStatus(statusMap[data.status] || 'preparing');
+          console.log('✅ Loaded saved status:', data.status);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to load saved status:', error);
+    }
+  };
+
+  const saveStandupStatus = async (newStatus) => {
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app';
+      
+      // Map UI status values to database status values
+      const statusMap = {
+        'preparing': 'not_started',
+        'in_progress': 'in_progress',
+        'complete': 'completed',
+        'blocked': 'deferred'
+      };
+      
+      const payload = {
+        user_email: user.email,
+        task_title: standup?.one_thing || "No task",
+        task_description: standup?.subtitle || "",
+        task_project: standup?.project || "general",
+        urgency: standup?.urgency || 50,
+        status: statusMap[newStatus] || 'not_started',
+        ai_reasoning: standup?.full_text || "",
+        secondary_priorities: standup?.decisions || [],
+        daily_plan: standup?.daily_plan || []
+      };
+      
+      const response = await fetch(`${apiUrl}/api/standup/status`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setStandupStatusId(data.id);
+        console.log('✅ Status saved:', newStatus);
+      }
+    } catch (error) {
+      console.error('Failed to save status:', error);
+    }
+  };
+
+  const handleStatusChange = async (newStatus) => {
+    setOneThingStatus(newStatus);
+    await saveStandupStatus(newStatus);
+  };
+
 
   const handleProfileUpdate = (updatedData) => {
     // Update the current user state with new data
@@ -304,7 +383,7 @@ function MainDashboard({ user, onLogout }) {
                       {/* Status Dropdown */}
                       <select
                         value={oneThingStatus}
-                        onChange={(e) => setOneThingStatus(e.target.value)}
+                        onChange={(e) => handleStatusChange(e.target.value)}
                         className="px-3 py-1.5 text-sm border-2 border-blue-300 rounded-lg bg-white font-medium focus:outline-none focus:border-blue-500"
                       >
                         <option value="preparing">⚪ Preparing</option>

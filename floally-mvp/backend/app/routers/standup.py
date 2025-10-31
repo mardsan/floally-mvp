@@ -1,13 +1,15 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from sqlalchemy.orm import Session
+from sqlalchemy import and_
 import anthropic
 import os
 
 from app.routers.auth import get_current_user
 from app.database import get_db
+from app.models import User, StandupStatus
 
 router = APIRouter()
 
@@ -429,20 +431,196 @@ Guidelines:
         }
 
 @router.get("/standup/status")
-async def get_standup_status(user_email: str = Depends(get_current_user)):
+async def get_standup_status(user_email: str, db: Session = Depends(get_db)):
     """
-    Get current status of user's standup items.
+    Get current status of user's standup for today.
     
     Returns:
     - Current focus status
-    - Completed items today
-    - Items needing attention
+    - Started/completed timestamps
+    - Full standup details from today
     """
-    # TODO: Implement status tracking (will store in database later)
-    return {
-        'current_focus': 'Finalize brand proposal',
-        'status': 'in_progress',
-        'started_at': datetime.now().isoformat(),
-        'completed_today': [],
-        'needs_attention': []
-    }
+    try:
+        # Get user
+        user = db.query(User).filter(User.email == user_email).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        # Get today's standup status
+        today = datetime.now().date()
+        status = db.query(StandupStatus).filter(
+            and_(
+                StandupStatus.user_id == user.id,
+                StandupStatus.date >= datetime.combine(today, datetime.min.time()),
+                StandupStatus.date < datetime.combine(today + timedelta(days=1), datetime.min.time())
+            )
+        ).first()
+        
+        if not status:
+            return {
+                'has_status': False,
+                'status': 'not_started',
+                'message': 'No standup status for today'
+            }
+        
+        return {
+            'has_status': True,
+            'id': str(status.id),
+            'task_title': status.task_title,
+            'task_description': status.task_description,
+            'task_project': status.task_project,
+            'urgency': status.urgency,
+            'status': status.status,
+            'started_at': status.started_at.isoformat() if status.started_at else None,
+            'completed_at': status.completed_at.isoformat() if status.completed_at else None,
+            'created_at': status.created_at.isoformat(),
+            'ai_reasoning': status.ai_reasoning,
+            'secondary_priorities': status.secondary_priorities or [],
+            'daily_plan': status.daily_plan or []
+        }
+    
+    except Exception as e:
+        print(f"Error getting standup status: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+class SaveStandupStatusRequest(BaseModel):
+    """Request body for saving standup status"""
+    user_email: str
+    task_title: str
+    task_description: Optional[str] = None
+    task_project: Optional[str] = None
+    urgency: int = 50
+    status: str = 'not_started'  # not_started, in_progress, completed, deferred
+    ai_reasoning: Optional[str] = None
+    secondary_priorities: Optional[List[Dict[str, Any]]] = None
+    daily_plan: Optional[List[Dict[str, Any]]] = None
+
+
+@router.post("/standup/status")
+async def save_standup_status(request: SaveStandupStatusRequest, db: Session = Depends(get_db)):
+    """
+    Save or update standup status for today.
+    
+    Creates a new status entry or updates existing one for today.
+    """
+    try:
+        # Get user
+        user = db.query(User).filter(User.email == request.user_email).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        # Get or create today's standup status
+        today = datetime.now().date()
+        status = db.query(StandupStatus).filter(
+            and_(
+                StandupStatus.user_id == user.id,
+                StandupStatus.date >= datetime.combine(today, datetime.min.time()),
+                StandupStatus.date < datetime.combine(today + timedelta(days=1), datetime.min.time())
+            )
+        ).first()
+        
+        if not status:
+            # Create new status
+            status = StandupStatus(
+                user_id=user.id,
+                task_title=request.task_title,
+                task_description=request.task_description,
+                task_project=request.task_project,
+                urgency=request.urgency,
+                status=request.status,
+                ai_reasoning=request.ai_reasoning,
+                secondary_priorities=request.secondary_priorities,
+                daily_plan=request.daily_plan,
+                date=datetime.now()
+            )
+            db.add(status)
+        else:
+            # Update existing status
+            status.task_title = request.task_title
+            status.task_description = request.task_description
+            status.task_project = request.task_project
+            status.urgency = request.urgency
+            status.status = request.status
+            if request.ai_reasoning:
+                status.ai_reasoning = request.ai_reasoning
+            if request.secondary_priorities is not None:
+                status.secondary_priorities = request.secondary_priorities
+            if request.daily_plan is not None:
+                status.daily_plan = request.daily_plan
+        
+        # Update timestamps based on status
+        if request.status == 'in_progress' and not status.started_at:
+            status.started_at = datetime.now()
+        elif request.status == 'completed' and not status.completed_at:
+            status.completed_at = datetime.now()
+        
+        db.commit()
+        db.refresh(status)
+        
+        return {
+            'success': True,
+            'id': str(status.id),
+            'status': status.status,
+            'message': 'Standup status saved successfully'
+        }
+    
+    except Exception as e:
+        db.rollback()
+        print(f"Error saving standup status: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.put("/standup/status/{status_id}")
+async def update_standup_status(
+    status_id: str,
+    status_update: str,
+    user_email: str,
+    db: Session = Depends(get_db)
+):
+    """
+    Update just the status of a standup (not_started -> in_progress -> completed).
+    
+    Quick endpoint for status changes without full data.
+    """
+    try:
+        # Get user
+        user = db.query(User).filter(User.email == user_email).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        # Get the standup status
+        import uuid
+        status = db.query(StandupStatus).filter(
+            and_(
+                StandupStatus.id == uuid.UUID(status_id),
+                StandupStatus.user_id == user.id
+            )
+        ).first()
+        
+        if not status:
+            raise HTTPException(status_code=404, detail="Standup status not found")
+        
+        # Update status
+        status.status = status_update
+        
+        # Update timestamps
+        if status_update == 'in_progress' and not status.started_at:
+            status.started_at = datetime.now()
+        elif status_update == 'completed' and not status.completed_at:
+            status.completed_at = datetime.now()
+        
+        db.commit()
+        
+        return {
+            'success': True,
+            'status': status.status,
+            'started_at': status.started_at.isoformat() if status.started_at else None,
+            'completed_at': status.completed_at.isoformat() if status.completed_at else None
+        }
+    
+    except Exception as e:
+        db.rollback()
+        print(f"Error updating standup status: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+

@@ -174,3 +174,36 @@ class Project(Base):
     
     # Relationship
     user = relationship("User", back_populates="projects")
+
+
+class StandupStatus(Base):
+    """Track daily standup status and completion"""
+    __tablename__ = "standup_status"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(UUID(as_uuid=True), ForeignKey('users.id', ondelete='CASCADE'), nullable=False, index=True)
+    
+    # The One Thing details
+    task_title = Column(String(500), nullable=False)
+    task_description = Column(Text)
+    task_project = Column(String(255))
+    urgency = Column(Integer, default=50)
+    
+    # Status tracking
+    status = Column(String(50), default='not_started')  # not_started, in_progress, completed, deferred
+    started_at = Column(DateTime)
+    completed_at = Column(DateTime)
+    
+    # AI analysis context (for history)
+    ai_reasoning = Column(Text)
+    secondary_priorities = Column(JSONB)  # Store the other priorities from that day
+    daily_plan = Column(JSONB)  # Store the planned timeline
+    
+    # Metadata
+    date = Column(DateTime, nullable=False, index=True)  # Date this standup was for
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    
+    # Relationship
+    user = relationship("User", backref="standup_statuses")
+
