@@ -521,7 +521,13 @@ function MainDashboard({ user, onLogout }) {
                       >
                         {expandedOneThingDetails ? '▼ Hide Details' : '▶ Show Details'}
                       </button>
-                      <button className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                      <button 
+                        onClick={() => {
+                          handleStatusChange('in_progress');
+                          setExpandedOneThingDetails(true);
+                        }}
+                        className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                      >
                         ✅ Start Working
                       </button>
                     </div>
