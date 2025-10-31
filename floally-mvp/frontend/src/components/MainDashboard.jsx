@@ -163,6 +163,7 @@ function MainDashboard({ user, onLogout }) {
 
   const loadStandup = async (forceRefresh = false) => {
     setLoadingStandup(true);
+    console.log(`🔄 loadStandup called with forceRefresh=${forceRefresh}`);
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app';
       
