@@ -437,19 +437,24 @@ function MainDashboard({ user, onLogout }) {
                             onClick={() => {
                               // Swap tasks: current one_thing goes back to decisions
                               const currentTask = standup.one_thing;
+                              const currentSubtitle = standup.subtitle;
+                              const currentAction = standup.action;
                               const newDecisions = standup.decisions.filter((_, i) => i !== idx);
                               
                               // Add the current one_thing back to decisions (if it's not the default text)
                               if (currentTask && currentTask !== "Review Q4 budget priorities" && currentTask !== "Unable to load standup. Please try again.") {
                                 newDecisions.push({
                                   decision: currentTask,
-                                  confidence: 0.80 // Default confidence for swapped item
+                                  confidence: 0.80, // Default confidence for swapped item
+                                  action: currentAction
                                 });
                               }
                               
                               setStandup({
                                 ...standup,
                                 one_thing: decision.decision,
+                                subtitle: decision.action || `Next action: ${decision.decision}`,
+                                action: decision.action,
                                 decisions: newDecisions
                               });
                               
