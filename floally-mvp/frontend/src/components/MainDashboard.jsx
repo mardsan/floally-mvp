@@ -287,15 +287,44 @@ function MainDashboard({ user, onLogout }) {
 
   const getPriorityColor = (priority) => {
     const colors = {
-      critical: 'text-red-600 bg-red-50 border-red-200',
-      high: 'text-orange-600 bg-orange-50 border-orange-200',
-      medium: 'text-blue-600 bg-blue-50 border-blue-200',
-      low: 'text-gray-600 bg-gray-50 border-gray-200'
+      'critical': 'bg-red-500',
+      'high': 'bg-orange-500',
+      'medium': 'bg-yellow-500',
+      'low': 'bg-green-500'
     };
     return colors[priority] || colors.medium;
   };
 
-  if (loading) {
+  const getUrgencyLevel = (confidence) => {
+    // confidence is 0-1, convert to urgency level
+    const urgencyScore = confidence * 100;
+    
+    if (urgencyScore >= 80) {
+      return { 
+        label: 'High Priority', 
+        color: 'bg-red-100 text-red-800 border-red-300',
+        icon: '🔴'
+      };
+    } else if (urgencyScore >= 60) {
+      return { 
+        label: 'Medium-High', 
+        color: 'bg-orange-100 text-orange-800 border-orange-300',
+        icon: '🟠'
+      };
+    } else if (urgencyScore >= 40) {
+      return { 
+        label: 'Medium', 
+        color: 'bg-yellow-100 text-yellow-800 border-yellow-300',
+        icon: '🟡'
+      };
+    } else {
+      return { 
+        label: 'Low Priority', 
+        color: 'bg-green-100 text-green-800 border-green-300',
+        icon: '🟢'
+      };
+    }
+  };  if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-emerald-50 flex items-center justify-center">
         <div className="text-center">
@@ -501,16 +530,16 @@ function MainDashboard({ user, onLogout }) {
                                   {decision.decision}
                                 </p>
                                 {decision.confidence && (
-                                  <div className="mt-2 flex items-center gap-2">
-                                    <div className="flex-1 bg-gray-200 rounded-full h-1.5">
-                                      <div
-                                        className="bg-blue-600 rounded-full h-1.5 transition-all"
-                                        style={{ width: `${decision.confidence * 100}%` }}
-                                      />
-                                    </div>
-                                    <span className="text-xs text-gray-500">
-                                      {Math.round(decision.confidence * 100)}%
-                                    </span>
+                                  <div className="mt-2">
+                                    {(() => {
+                                      const urgency = getUrgencyLevel(decision.confidence);
+                                      return (
+                                        <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium border ${urgency.color}`}>
+                                          <span>{urgency.icon}</span>
+                                          {urgency.label}
+                                        </span>
+                                      );
+                                    })()}
                                   </div>
                                 )}
                               </div>
