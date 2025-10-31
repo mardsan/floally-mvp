@@ -163,7 +163,6 @@ function MainDashboard({ user, onLogout }) {
 
   const loadStandup = async (forceRefresh = false) => {
     setLoadingStandup(true);
-    console.log(`🔄 loadStandup called with forceRefresh=${forceRefresh}`);
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app';
       
@@ -251,10 +250,6 @@ function MainDashboard({ user, onLogout }) {
       const title = priority.title || priority.decision || 'Unknown task';
       // Handle both urgency (0-100) from fresh AI and confidence (0-1) from cached data
       const urgency = priority.urgency || (priority.confidence ? Math.round(priority.confidence * 100) : 50);
-      console.log(`📊 Task "${title}":`, {
-        raw_priority: priority,
-        calculated_urgency: urgency
-      });
       taskDetails[title] = {
         description: priority.description || `Focus on: ${title}`,
         action: priority.action || 'Review and take next steps',
@@ -280,7 +275,6 @@ function MainDashboard({ user, onLogout }) {
         const decision = priority.title || priority.decision || 'Unknown task';
         // Backend sends urgency as 0-100, convert to 0-1 for confidence scale
         const confidence = priority.urgency ? priority.urgency / 100 : (priority.confidence || 0.5);
-        console.log(`💡 Decision "${decision}": confidence=${confidence} (from urgency=${priority.urgency}, confidence=${priority.confidence})`);
         return {
           decision,
           confidence,
@@ -510,12 +504,6 @@ function MainDashboard({ user, onLogout }) {
                           {(() => {
                             const currentTask = standup.one_thing;
                             const details = standup.task_details[currentTask] || {};
-                            console.log(`🔍 Looking up details for: "${currentTask}"`, {
-                              found: !!standup.task_details[currentTask],
-                              available_keys: Object.keys(standup.task_details || {}),
-                              details_urgency: details.urgency,
-                              fallback_urgency: standup.urgency
-                            });
                             return `${details.description || standup.subtitle || ''}\n\n` +
                                    `Next Action: ${details.action || standup.action || 'Review priorities'}\n` +
                                    `Category: ${details.project || standup.project || 'general'}\n` +
@@ -582,39 +570,10 @@ function MainDashboard({ user, onLogout }) {
                                 <p className="text-gray-800 font-medium group-hover:text-blue-900">
                                   {decision.decision}
                                 </p>
-                                {decision.confidence && (
-                                  <div className="mt-2">
-                                    {(() => {
-                                      const urgencyScore = Math.round(decision.confidence * 100);
-                                      const urgency = getUrgencyLevel(decision.confidence);
-                                      return (
-                                        <div className="space-y-1">
-                                          {/* Urgency Scale */}
-                                          <div className="relative h-2 bg-gradient-to-r from-green-200 via-yellow-200 via-orange-200 to-red-200 rounded-full">
-                                            {/* Marker at specific urgency level */}
-                                            <div 
-                                              className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-gray-800 rounded-full border-2 border-white shadow-md"
-                                              style={{ left: `${urgencyScore}%`, marginLeft: '-6px' }}
-                                            />
-                                          </div>
-                                          {/* Label with score */}
-                                          <div className="flex items-center justify-between text-xs">
-                                            <span className={`font-medium ${
-                                              urgencyScore >= 80 ? 'text-red-700' :
-                                              urgencyScore >= 60 ? 'text-orange-700' :
-                                              urgencyScore >= 40 ? 'text-yellow-700' :
-                                              'text-green-700'
-                                            }`}>
-                                              {urgency.icon} {urgency.label}
-                                            </span>
-                                            <span className="text-gray-500 font-mono">
-                                              {urgencyScore}/100
-                                            </span>
-                                          </div>
-                                        </div>
-                                      );
-                                    })()}
-                                  </div>
+                                {decision.action && (
+                                  <p className="text-sm text-gray-500 mt-1">
+                                    {decision.action}
+                                  </p>
                                 )}
                               </div>
                               <span className="text-gray-400 group-hover:text-blue-600 ml-3">→</span>
