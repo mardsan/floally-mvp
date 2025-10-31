@@ -231,7 +231,8 @@ function MainDashboard({ user, onLogout }) {
     
     console.log('🔧 Building standup state:', {
       secondaryPriorities,
-      firstPriority: secondaryPriorities[0]
+      firstPriority: secondaryPriorities[0],
+      cached: analysis.cached
     });
     
     // Build task details map for easy lookup
@@ -249,6 +250,10 @@ function MainDashboard({ user, onLogout }) {
       const title = priority.title || priority.decision || 'Unknown task';
       // Handle both urgency (0-100) from fresh AI and confidence (0-1) from cached data
       const urgency = priority.urgency || (priority.confidence ? Math.round(priority.confidence * 100) : 50);
+      console.log(`📊 Task "${title}":`, {
+        raw_priority: priority,
+        calculated_urgency: urgency
+      });
       taskDetails[title] = {
         description: priority.description || `Focus on: ${title}`,
         action: priority.action || 'Review and take next steps',
@@ -270,12 +275,17 @@ function MainDashboard({ user, onLogout }) {
       reasoning: analysis.reasoning || 'No additional context available.',
       
       // Secondary priorities (Other Priorities section)
-      decisions: secondaryPriorities.map(priority => ({
-        decision: priority.title || priority.decision || 'Unknown task',
+      decisions: secondaryPriorities.map(priority => {
+        const decision = priority.title || priority.decision || 'Unknown task';
         // Backend sends urgency as 0-100, convert to 0-1 for confidence scale
-        confidence: priority.urgency ? priority.urgency / 100 : (priority.confidence || 0.5),
-        action: priority.action || ''
-      })),
+        const confidence = priority.urgency ? priority.urgency / 100 : (priority.confidence || 0.5);
+        console.log(`💡 Decision "${decision}": confidence=${confidence} (from urgency=${priority.urgency}, confidence=${priority.confidence})`);
+        return {
+          decision,
+          confidence,
+          action: priority.action || ''
+        };
+      }),
       
       // Aimy's autonomous tasks
       autonomous_tasks: aimyHandling.map(item => 
