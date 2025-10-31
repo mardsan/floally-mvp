@@ -263,7 +263,8 @@ function MainDashboard({ user, onLogout }) {
       // Secondary priorities (Other Priorities section)
       decisions: secondaryPriorities.map(priority => ({
         decision: priority.title || priority.decision || 'Unknown task',
-        confidence: (priority.urgency || priority.confidence * 100 || 50) / 100, // Convert urgency to confidence score
+        // Backend sends urgency as 0-100, convert to 0-1 for confidence scale
+        confidence: priority.urgency ? priority.urgency / 100 : (priority.confidence || 0.5),
         action: priority.action || ''
       })),
       
