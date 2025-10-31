@@ -385,10 +385,10 @@ function MainDashboard({ user, onLogout }) {
             </div>
             <div className="flex items-center gap-4">
               <button
-                onClick={() => setShowAddProject(true)}
-                className="px-4 py-2 text-teal-600 hover:bg-teal-50 rounded-lg transition-colors"
+                onClick={() => window.location.href = '/projects'}
+                className="px-4 py-2 text-teal-600 hover:bg-teal-50 rounded-lg transition-colors font-medium"
               >
-                + New Project
+                📁 Projects
               </button>
               
               {/* User Profile Section */}

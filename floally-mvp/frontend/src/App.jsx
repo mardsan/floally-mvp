@@ -12,6 +12,7 @@ import WaitlistAdmin from './components/WaitlistAdmin';
 import AuthPage from './components/AuthPage';
 import UserDashboard from './components/UserDashboard';
 import MainDashboard from './components/MainDashboard';
+import ProjectsPage from './components/ProjectsPage';
 import GoogleSignIn from './components/GoogleSignIn';
 
 function App() {
@@ -57,6 +58,26 @@ function App() {
   // Check if we should show Google Sign In page
   if (window.location.pathname === '/auth' || window.location.pathname === '/signin' || window.location.pathname === '/login') {
     return <GoogleSignIn />;
+  }
+  
+  // Check if we should show projects page
+  if (window.location.pathname === '/projects') {
+    if (checkingAuth) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 via-white to-emerald-50">
+          <div className="text-center">
+            <div className="text-4xl mb-4">🔄</div>
+            <div className="text-slate-700">Loading...</div>
+          </div>
+        </div>
+      );
+    }
+    
+    if (!currentUser) {
+      return <AuthPage onAuthSuccess={handleAuthSuccess} />;
+    }
+    
+    return <ProjectsPage user={currentUser} onLogout={handleLogout} />;
   }
   
   // Check if we should show app (for logged-in users)
