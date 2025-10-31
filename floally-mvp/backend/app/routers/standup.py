@@ -431,9 +431,13 @@ Guidelines:
         }
 
 @router.get("/standup/status")
-async def get_standup_status(user_email: str, db: Session = Depends(get_db)):
+async def get_standup_status(user_email: str, task_title: str = None, db: Session = Depends(get_db)):
     """
-    Get current status of user's standup for today.
+    Get current status of user's standup for a specific task.
+    
+    Args:
+        user_email: User's email
+        task_title: Optional - specific task to get status for
     
     Returns:
     - Current focus status
@@ -446,15 +450,19 @@ async def get_standup_status(user_email: str, db: Session = Depends(get_db)):
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
         
-        # Get today's standup status
+        # Get today's standup status for this specific task
         today = datetime.now().date()
-        status = db.query(StandupStatus).filter(
-            and_(
-                StandupStatus.user_id == user.id,
-                StandupStatus.date >= datetime.combine(today, datetime.min.time()),
-                StandupStatus.date < datetime.combine(today + timedelta(days=1), datetime.min.time())
-            )
-        ).first()
+        query_filters = [
+            StandupStatus.user_id == user.id,
+            StandupStatus.date >= datetime.combine(today, datetime.min.time()),
+            StandupStatus.date < datetime.combine(today + timedelta(days=1), datetime.min.time())
+        ]
+        
+        # If task_title provided, filter by it
+        if task_title:
+            query_filters.append(StandupStatus.task_title == task_title)
+        
+        status = db.query(StandupStatus).filter(and_(*query_filters)).first()
         
         if not status:
             return {
@@ -510,11 +518,12 @@ async def save_standup_status(request: SaveStandupStatusRequest, db: Session = D
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
         
-        # Get or create today's standup status
+        # Get or create today's standup status for this specific task
         today = datetime.now().date()
         status = db.query(StandupStatus).filter(
             and_(
                 StandupStatus.user_id == user.id,
+                StandupStatus.task_title == request.task_title,
                 StandupStatus.date >= datetime.combine(today, datetime.min.time()),
                 StandupStatus.date < datetime.combine(today + timedelta(days=1), datetime.min.time())
             )

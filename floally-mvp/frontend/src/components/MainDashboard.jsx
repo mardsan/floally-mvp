@@ -38,7 +38,8 @@ function MainDashboard({ user, onLogout }) {
   const loadSavedStatus = async () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app';
-      const response = await fetch(`${apiUrl}/api/standup/status?user_email=${encodeURIComponent(user.email)}`);
+      const taskTitle = encodeURIComponent(standup?.one_thing || '');
+      const response = await fetch(`${apiUrl}/api/standup/status?user_email=${encodeURIComponent(user.email)}&task_title=${taskTitle}`);
       
       if (response.ok) {
         const data = await response.json();
@@ -52,7 +53,11 @@ function MainDashboard({ user, onLogout }) {
             'deferred': 'blocked'
           };
           setOneThingStatus(statusMap[data.status] || 'preparing');
-          console.log('✅ Loaded saved status:', data.status);
+          console.log('✅ Loaded saved status for task:', standup?.one_thing, '→', data.status);
+        } else {
+          // No status for this task, reset to preparing
+          setOneThingStatus('preparing');
+          setStandupStatusId(null);
         }
       }
     } catch (error) {
