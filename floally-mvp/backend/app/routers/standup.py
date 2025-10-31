@@ -243,6 +243,14 @@ async def get_todays_standup(user_email: str, db: Session = Depends(get_db)):
         if not primary_status:
             primary_status = max(statuses, key=lambda s: s.created_at)
         
+        # Find the record with the most complete data (secondary_priorities, daily_plan)
+        # This is usually the first task saved from the AI analysis
+        data_source = primary_status
+        for status in statuses:
+            if status.secondary_priorities and len(status.secondary_priorities) > 0:
+                data_source = status
+                break
+        
         # Build the standup response from cached data
         the_one_thing = {
             'title': primary_status.task_title,
@@ -252,9 +260,11 @@ async def get_todays_standup(user_email: str, db: Session = Depends(get_db)):
             'action': primary_status.task_description or 'Continue working on this task'
         }
         
-        # Get secondary priorities from the primary task's stored data
-        secondary_priorities = primary_status.secondary_priorities or []
-        daily_plan = primary_status.daily_plan or []
+        # Get secondary priorities and daily plan from the data source
+        secondary_priorities = data_source.secondary_priorities or []
+        daily_plan = data_source.daily_plan or []
+        
+        print(f"📋 Cache loaded: Primary='{primary_status.task_title}', SecondaryPriorities={len(secondary_priorities)} items")
         
         # Build complete response
         return {
