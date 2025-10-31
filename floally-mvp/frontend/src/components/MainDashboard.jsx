@@ -509,6 +509,12 @@ function MainDashboard({ user, onLogout }) {
                           {(() => {
                             const currentTask = standup.one_thing;
                             const details = standup.task_details[currentTask] || {};
+                            console.log(`🔍 Looking up details for: "${currentTask}"`, {
+                              found: !!standup.task_details[currentTask],
+                              available_keys: Object.keys(standup.task_details || {}),
+                              details_urgency: details.urgency,
+                              fallback_urgency: standup.urgency
+                            });
                             return `${details.description || standup.subtitle || ''}\n\n` +
                                    `Next Action: ${details.action || standup.action || 'Review priorities'}\n` +
                                    `Category: ${details.project || standup.project || 'general'}\n` +
