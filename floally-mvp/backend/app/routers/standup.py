@@ -207,6 +207,70 @@ async def generate_standup(user_email: str, db: Session = Depends(get_db)):
             'reasoning': 'Starting with a simple daily structure. As I learn your patterns, I\'ll provide more personalized recommendations.'
         }
 
+@router.get("/standup/today")
+async def get_todays_standup(user_email: str, db: Session = Depends(get_db)):
+    """
+    Get today's cached standup analysis if it exists.
+    
+    Returns cached standup to avoid re-running AI analysis on every page load.
+    If no cache exists, returns None and client should call /standup/analyze.
+    """
+    try:
+        # Get user
+        user = db.query(User).filter(User.email == user_email).first()
+        if not user:
+            return {'has_standup': False, 'message': 'User not found'}
+        
+        # Get all standup statuses from today (one per task)
+        today = datetime.now().date()
+        statuses = db.query(StandupStatus).filter(
+            and_(
+                StandupStatus.user_id == user.id,
+                StandupStatus.date >= datetime.combine(today, datetime.min.time()),
+                StandupStatus.date < datetime.combine(today + timedelta(days=1), datetime.min.time())
+            )
+        ).all()
+        
+        if not statuses:
+            return {'has_standup': False, 'message': 'No standup for today yet'}
+        
+        # Find the primary task (most recent or in_progress)
+        primary_status = None
+        for status in statuses:
+            if status.status == 'in_progress':
+                primary_status = status
+                break
+        if not primary_status:
+            primary_status = max(statuses, key=lambda s: s.created_at)
+        
+        # Build the standup response from cached data
+        the_one_thing = {
+            'title': primary_status.task_title,
+            'description': primary_status.task_description or '',
+            'urgency': primary_status.urgency,
+            'project': primary_status.task_project or 'general',
+            'action': primary_status.task_description or 'Continue working on this task'
+        }
+        
+        # Get secondary priorities from the primary task's stored data
+        secondary_priorities = primary_status.secondary_priorities or []
+        daily_plan = primary_status.daily_plan or []
+        
+        # Build complete response
+        return {
+            'has_standup': True,
+            'cached': True,
+            'the_one_thing': the_one_thing,
+            'secondary_priorities': secondary_priorities,
+            'aimy_handling': [],  # Could be stored too
+            'daily_plan': daily_plan,
+            'reasoning': primary_status.ai_reasoning or 'Continuing with your saved priorities for today.'
+        }
+        
+    except Exception as e:
+        print(f"Error getting today's standup: {e}")
+        return {'has_standup': False, 'error': str(e)}
+
 @router.post("/standup/analyze")
 async def analyze_standup(request: StandupAnalyzeRequest, db: Session = Depends(get_db)):
     """

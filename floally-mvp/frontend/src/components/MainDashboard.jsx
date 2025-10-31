@@ -154,13 +154,29 @@ function MainDashboard({ user, onLogout }) {
     }
   };
 
-  const loadStandup = async () => {
+  const loadStandup = async (forceRefresh = false) => {
     setLoadingStandup(true);
     try {
-      console.log('🔄 Refreshing standup with AI analysis...');
       const apiUrl = import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app';
       
-      // Use the comprehensive standup analysis endpoint
+      // Try to get cached standup first (unless force refresh)
+      if (!forceRefresh) {
+        console.log('📋 Checking for cached standup...');
+        const cachedResponse = await fetch(`${apiUrl}/api/standup/today?user_email=${encodeURIComponent(user.email)}`);
+        
+        if (cachedResponse.ok) {
+          const cachedData = await cachedResponse.json();
+          if (cachedData.has_standup) {
+            console.log('✅ Using cached standup from today');
+            buildStandupState(cachedData);
+            setLoadingStandup(false);
+            return;
+          }
+        }
+      }
+      
+      // No cache or force refresh - run AI analysis
+      console.log('🔄 Running fresh AI standup analysis...');
       const response = await fetch(`${apiUrl}/api/standup/analyze`, {
         method: 'POST',
         headers: { 
@@ -178,49 +194,8 @@ function MainDashboard({ user, onLogout }) {
       const analysis = await response.json();
       console.log('✅ AI Standup analysis:', analysis);
       
-      // Transform the structured response into our component state
-      const theOneThing = analysis.the_one_thing || {};
-      const secondaryPriorities = analysis.secondary_priorities || [];
-      const aimyHandling = analysis.aimy_handling || [];
-      const dailyPlan = analysis.daily_plan || [];
+      buildStandupState(analysis);
       
-      setStandup({
-        // The One Thing
-        one_thing: theOneThing.title || "Check in with Aimy",
-        subtitle: theOneThing.description || "Your inbox is clear!",
-        urgency: theOneThing.urgency || 0,
-        project: theOneThing.project || "general",
-        action: theOneThing.action || "Review your priorities",
-        
-        // Full context for expandable details
-        full_text: `${theOneThing.description || ''}\n\n` +
-                   `Next Action: ${theOneThing.action || 'Review priorities'}\n` +
-                   `Category: ${theOneThing.project || 'general'}\n` +
-                   `Urgency: ${theOneThing.urgency || 0}/100\n\n` +
-                   `AI Reasoning:\n${analysis.reasoning || 'No additional context available.'}`,
-        
-        // Secondary priorities (Other Priorities section)
-        decisions: secondaryPriorities.map(priority => ({
-          decision: priority.title,
-          confidence: (priority.urgency || 50) / 100, // Convert urgency to confidence score
-          action: priority.action
-        })),
-        
-        // Aimy's autonomous tasks
-        autonomous_tasks: aimyHandling.map(item => 
-          `${item.task} (${item.status})`
-        ),
-        
-        // Daily plan for summary cards
-        daily_plan: dailyPlan,
-        
-        // Summary stats
-        summary: {
-          total_emails: aimyHandling.length,
-          urgent_items: secondaryPriorities.filter(p => p.urgency > 70).length,
-          focus_time: dailyPlan.find(p => p.time === 'Morning')?.duration || 'Available'
-        }
-      });
     } catch (error) {
       console.error('Failed to load standup:', error);
       setStandup({
@@ -232,12 +207,58 @@ function MainDashboard({ user, onLogout }) {
         summary: {
           total_emails: 0,
           urgent_items: 0,
-          focus_time: 'N/A'
+          focus_time: 'Unknown'
         }
       });
     } finally {
       setLoadingStandup(false);
     }
+  };
+
+  const buildStandupState = (analysis) => {
+    // Transform the structured response into our component state
+    const theOneThing = analysis.the_one_thing || {};
+    const secondaryPriorities = analysis.secondary_priorities || [];
+    const aimyHandling = analysis.aimy_handling || [];
+    const dailyPlan = analysis.daily_plan || [];
+      
+    setStandup({
+      // The One Thing
+      one_thing: theOneThing.title || "Check in with Aimy",
+      subtitle: theOneThing.description || "Your inbox is clear!",
+      urgency: theOneThing.urgency || 0,
+      project: theOneThing.project || "general",
+      action: theOneThing.action || "Review your priorities",
+      
+      // Full context for expandable details
+      full_text: `${theOneThing.description || ''}\n\n` +
+                 `Next Action: ${theOneThing.action || 'Review priorities'}\n` +
+                 `Category: ${theOneThing.project || 'general'}\n` +
+                 `Urgency: ${theOneThing.urgency || 0}/100\n\n` +
+                 `AI Reasoning:\n${analysis.reasoning || 'No additional context available.'}`,
+      
+      // Secondary priorities (Other Priorities section)
+      decisions: secondaryPriorities.map(priority => ({
+        decision: priority.title,
+        confidence: (priority.urgency || 50) / 100, // Convert urgency to confidence score
+        action: priority.action
+      })),
+      
+      // Aimy's autonomous tasks
+      autonomous_tasks: aimyHandling.map(item => 
+        `${item.task} (${item.status})`
+      ),
+      
+      // Daily plan for summary cards
+      daily_plan: dailyPlan,
+      
+      // Summary stats
+      summary: {
+        total_emails: aimyHandling.length,
+        urgent_items: secondaryPriorities.filter(p => p.urgency > 70).length,
+        focus_time: dailyPlan.find(p => p.time === 'Morning')?.duration || 'Available'
+      }
+    });
   };
 
   const loadCalendarEvents = async () => {
@@ -349,7 +370,7 @@ function MainDashboard({ user, onLogout }) {
                 <p className="text-teal-100">AI-powered partnership for your most productive day</p>
               </div>
               <button
-                onClick={loadStandup}
+                onClick={() => loadStandup(true)}
                 disabled={loadingStandup}
                 className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
