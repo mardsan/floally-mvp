@@ -7,7 +7,7 @@ const parseLocalDate = (dateStr) => {
   return new Date(year, month - 1, day);
 };
 
-const UniversalCalendar = ({ projects, calendarEvents, user, onOpenProject, onProjectUpdate }) => {
+const UniversalCalendar = ({ projects, calendarEvents, user, onOpenProject }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState('month'); // 'week', 'month'
   const [selectedProject, setSelectedProject] = useState(null); // null = show all
@@ -109,13 +109,11 @@ const UniversalCalendar = ({ projects, calendarEvents, user, onOpenProject, onPr
         });
       }
 
-      // Notify parent component to refresh projects
-      if (onProjectUpdate) {
-        onProjectUpdate(updatedProject);
-      }
-
       // Trigger a re-aggregation of events to update the calendar
       aggregateEvents();
+      
+      // Reload the page to sync with the main Projects page
+      window.location.reload();
       
     } catch (error) {
       console.error('Error updating goal status:', error);
