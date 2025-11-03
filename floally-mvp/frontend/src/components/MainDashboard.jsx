@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
-import AddProjectModal from './AddProjectModal';
 import ProfileSettings from './ProfileSettings';
-import ProjectDetailsModal from './ProjectDetailsModal';
 import UniversalCalendar from './UniversalCalendar';
 import EnhancedMessages from './EnhancedMessages';
 
@@ -11,10 +9,8 @@ function MainDashboard({ user, onLogout }) {
   const [projects, setProjects] = useState([]);
   const [standup, setStandup] = useState(null);
   const [calendarEvents, setCalendarEvents] = useState([]);
-  const [showAddProject, setShowAddProject] = useState(false);
   const [showProfileSettings, setShowProfileSettings] = useState(false);
   const [currentUser, setCurrentUser] = useState(user);
-  const [selectedProject, setSelectedProject] = useState(null);
   const [expandedOneThingDetails, setExpandedOneThingDetails] = useState(false);
   const [oneThingStatus, setOneThingStatus] = useState('preparing');
   const [standupStatusId, setStandupStatusId] = useState(null);
@@ -125,14 +121,6 @@ function MainDashboard({ user, onLogout }) {
     
     // Also update localStorage
     localStorage.setItem('okaimy_user', JSON.stringify(updatedUser));
-  };
-
-  const handleProjectUpdate = (updatedProject) => {
-    // Update the project in the list
-    setProjects(projects.map(p => 
-      p.id === updatedProject.id ? updatedProject : p
-    ));
-    setSelectedProject(null);
   };
 
   const loadDashboardData = async () => {
@@ -316,16 +304,6 @@ function MainDashboard({ user, onLogout }) {
     if (hour < 12) return 'Good morning';
     if (hour < 18) return 'Good afternoon';
     return 'Good evening';
-  };
-
-  const getPriorityColor = (priority) => {
-    const colors = {
-      'critical': 'bg-red-500',
-      'high': 'bg-orange-500',
-      'medium': 'bg-yellow-500',
-      'low': 'bg-green-500'
-    };
-    return colors[priority] || colors.medium;
   };
 
   const getUrgencyLevel = (confidence) => {
@@ -784,10 +762,10 @@ function MainDashboard({ user, onLogout }) {
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-bold text-gray-900">📁 Active Projects</h3>
                   <button
-                    onClick={() => setShowAddProject(true)}
+                    onClick={() => window.location.href = '/projects'}
                     className="text-teal-600 hover:text-teal-700 text-sm font-medium"
                   >
-                    + Add
+                    View All →
                   </button>
                 </div>
               </div>
@@ -796,7 +774,7 @@ function MainDashboard({ user, onLogout }) {
                   <div className="text-center py-8">
                     <p className="text-gray-500 mb-3">No projects yet</p>
                     <button
-                      onClick={() => setShowAddProject(true)}
+                      onClick={() => window.location.href = '/projects'}
                       className="text-teal-600 hover:text-teal-700 font-medium"
                     >
                       Create your first project
@@ -805,26 +783,40 @@ function MainDashboard({ user, onLogout }) {
                 ) : (
                   projects
                     .filter(p => p.status !== 'completed')
+                    .slice(0, 5)
                     .map(project => (
                       <div
                         key={project.id}
-                        onClick={() => setSelectedProject(project)}
-                        className={`p-4 rounded-lg border-2 ${getPriorityColor(project.priority)} transition-all hover:shadow-md cursor-pointer`}
+                        onClick={() => window.location.href = '/projects'}
+                        className="p-4 rounded-lg border-2 border-gray-200 bg-gradient-to-br from-gray-50 to-white hover:border-teal-300 hover:shadow-md transition-all cursor-pointer"
                       >
                         <div className="flex items-start justify-between mb-2">
-                          <h4 className="font-semibold">{project.name}</h4>
+                          <div className="flex items-center gap-2">
+                            <div 
+                              className="w-3 h-3 rounded-full"
+                              style={{ backgroundColor: project.color || '#3b82f6' }}
+                            ></div>
+                            <h4 className="font-semibold text-gray-900">{project.name}</h4>
+                          </div>
                           {project.is_primary && (
                             <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
-                              Primary
+                              ⭐ Primary
                             </span>
                           )}
                         </div>
                         {project.description && (
-                          <p className="text-sm opacity-75 line-clamp-2">{project.description}</p>
+                          <p className="text-sm text-gray-600 line-clamp-2 ml-5">{project.description}</p>
                         )}
                         {project.goals && project.goals.length > 0 && (
-                          <div className="mt-3 pt-3 border-t border-current opacity-50">
-                            <p className="text-xs">{project.goals.length} goals</p>
+                          <div className="mt-3 pt-3 border-t border-gray-200 ml-5">
+                            <p className="text-xs text-gray-500">
+                              🎯 {project.goals.length} goal{project.goals.length !== 1 ? 's' : ''} 
+                              {project.goals.some(g => g.sub_tasks?.length > 0) && (
+                                <span className="ml-2">
+                                  • {project.goals.reduce((sum, g) => sum + (g.sub_tasks?.length || 0), 0)} sub-tasks
+                                </span>
+                              )}
+                            </p>
                           </div>
                         )}
                       </div>
@@ -881,8 +873,7 @@ function MainDashboard({ user, onLogout }) {
             projects={projects}
             calendarEvents={calendarEvents}
             user={user}
-            onOpenProject={(project) => setSelectedProject(project)}
-            onProjectUpdate={handleProjectUpdate}
+            onOpenProject={(project) => window.location.href = '/projects'}
           />
         </section>
 
@@ -919,19 +910,6 @@ function MainDashboard({ user, onLogout }) {
         </section>
       </div>
 
-      {/* Add Project Modal */}
-      {showAddProject && (
-        <AddProjectModal
-          user={user}
-          onClose={() => setShowAddProject(false)}
-          onProjectAdded={(project) => {
-            setProjects([project, ...projects]);
-            setShowAddProject(false);
-          }}
-          isFirstProject={false}
-        />
-      )}
-
       {/* Profile Settings Modal */}
       {showProfileSettings && (
         <ProfileSettings
@@ -939,15 +917,6 @@ function MainDashboard({ user, onLogout }) {
           onClose={() => setShowProfileSettings(false)}
           onProfileUpdate={handleProfileUpdate}
           onSave={() => setShowProfileSettings(false)}
-        />
-      )}
-
-      {/* Project Details Modal */}
-      {selectedProject && (
-        <ProjectDetailsModal
-          project={selectedProject}
-          onClose={() => setSelectedProject(null)}
-          onUpdate={handleProjectUpdate}
         />
       )}
     </div>
