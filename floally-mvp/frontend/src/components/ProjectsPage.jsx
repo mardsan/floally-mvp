@@ -89,6 +89,7 @@ export default function ProjectsPage({ user, onLogout }) {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [showWizard, setShowWizard] = useState(false);
+  const [wizardStep, setWizardStep] = useState('input'); // 'input' or 'generating'
   const [projectDescription, setProjectDescription] = useState('');
   const [editingProject, setEditingProject] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -136,7 +137,8 @@ export default function ProjectsPage({ user, onLogout }) {
       color: '#3b82f6',
       goals: []
     });
-    setShowWizard(true); // Show wizard first for AI-powered planning
+    setWizardStep('input'); // Start at input step
+    setShowWizard(true); // Show wizard for AI-powered planning
   };
 
   const handleWizardGenerated = (generatedData) => {
@@ -604,7 +606,7 @@ export default function ProjectsPage({ user, onLogout }) {
       )}
 
       {/* Aimy Wizard - Initial Description Step */}
-      {showWizard && !projectDescription && (
+      {showWizard && wizardStep === 'input' && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg max-w-xl w-full">
             <div className="p-6">
@@ -649,8 +651,8 @@ export default function ProjectsPage({ user, onLogout }) {
                         alert('Please provide at least a brief description (10+ characters)');
                         return;
                       }
-                      // Description entered, now show the wizard
-                      setShowWizard(true);
+                      // Move to generation step
+                      setWizardStep('generating');
                     }}
                     disabled={projectDescription.trim().length < 10}
                     className="flex-1 px-4 py-2 bg-gradient-to-r from-teal-500 to-blue-500 text-white rounded-lg hover:from-teal-600 hover:to-blue-600 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
@@ -683,7 +685,7 @@ export default function ProjectsPage({ user, onLogout }) {
       )}
 
       {/* Aimy Wizard - AI Generation */}
-      {showWizard && projectDescription && (
+      {showWizard && wizardStep === 'generating' && (
         <AimyWizard
           projectDescription={projectDescription}
           onGenerated={handleWizardGenerated}
