@@ -151,8 +151,12 @@ export default function ProjectsPage({ user, onLogout }) {
       color: '#3b82f6',
       goals: generatedData.goals || []
     });
-    setShowWizard(false);
-    setShowModal(true); // Show form to review/edit before saving
+    
+    // Close wizard and open modal - using setTimeout to ensure state updates complete
+    setTimeout(() => {
+      setShowWizard(false);
+      setShowModal(true);
+    }, 0);
   };
 
   const handleEditProject = (project) => {
