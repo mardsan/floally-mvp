@@ -178,23 +178,29 @@ export default function ProjectsPage({ user, onLogout }) {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app';
       const url = editingProject 
-        ? `${apiUrl}/api/projects/${editingProject.id}`
-        : `${apiUrl}/api/projects`;
+        ? `${apiUrl}/api/projects/${editingProject.id}?user_email=${encodeURIComponent(user.email)}`
+        : `${apiUrl}/api/projects?user_email=${encodeURIComponent(user.email)}`;
       
       const method = editingProject ? 'PUT' : 'POST';
       
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_email: user.email,
-          ...formData
-        })
+        body: JSON.stringify(formData)
       });
 
       if (response.ok) {
         await loadProjects();
         setShowModal(false);
+        setEditingProject(null);
+        setFormData({
+          name: '',
+          description: '',
+          status: 'active',
+          priority: 'medium',
+          color: '#3b82f6',
+          goals: []
+        });
       }
     } catch (error) {
       console.error('Failed to save project:', error);
