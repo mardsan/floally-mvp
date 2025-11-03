@@ -1,6 +1,89 @@
 import React, { useState, useEffect } from 'react';
 import AimyWizard from './AimyWizard';
 
+// Sub-component for displaying goals with expandable sub-tasks
+function GoalWithSubTasks({ goal, goalIndex, onToggleSubTask }) {
+  const [expanded, setExpanded] = useState(false);
+  const hasSubTasks = goal.sub_tasks && goal.sub_tasks.length > 0;
+  
+  // Calculate completion percentage
+  const completedCount = hasSubTasks 
+    ? goal.sub_tasks.filter(st => st.status === 'completed').length 
+    : 0;
+  const totalCount = hasSubTasks ? goal.sub_tasks.length : 0;
+  const completionPercent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+  
+  return (
+    <div className="bg-white border border-teal-300 rounded-lg p-3">
+      {/* Goal Header */}
+      <div className="flex items-start gap-2">
+        <span className="text-teal-600 mt-0.5 text-lg">🎯</span>
+        <div className="flex-1">
+          <div className="font-medium text-gray-900">{goal.goal}</div>
+          <div className="flex items-center gap-3 mt-1">
+            {goal.deadline && (
+              <div className="text-xs text-gray-600">📅 {goal.deadline}</div>
+            )}
+            {hasSubTasks && (
+              <div className="text-xs text-gray-500">
+                {completedCount}/{totalCount} tasks completed ({completionPercent}%)
+              </div>
+            )}
+          </div>
+        </div>
+        {hasSubTasks && (
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="text-teal-600 hover:text-teal-700 text-sm font-medium"
+          >
+            {expanded ? '▼' : '▶'}
+          </button>
+        )}
+      </div>
+      
+      {/* Sub-tasks (expandable) */}
+      {expanded && hasSubTasks && (
+        <div className="mt-3 pl-7 space-y-2">
+          {goal.sub_tasks.map((subTask, subIdx) => (
+            <div 
+              key={subIdx} 
+              className="flex items-start gap-2 group hover:bg-teal-50 rounded p-2 -ml-2 cursor-pointer transition-colors"
+              onClick={() => onToggleSubTask(subIdx)}
+            >
+              <input 
+                type="checkbox"
+                checked={subTask.status === 'completed'}
+                onChange={() => {}} // Handled by parent onClick
+                className="mt-0.5 cursor-pointer"
+              />
+              <div className="flex-1">
+                <div className={`text-sm ${subTask.status === 'completed' ? 'line-through text-gray-500' : 'text-gray-700'}`}>
+                  {subTask.task}
+                </div>
+                {subTask.estimated_hours && (
+                  <div className="text-xs text-gray-400 mt-0.5">
+                    ⏱️ {subTask.estimated_hours}h estimated
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      
+      {/* Quick expand hint */}
+      {!expanded && hasSubTasks && (
+        <div 
+          onClick={() => setExpanded(true)}
+          className="text-xs text-teal-600 mt-2 pl-7 cursor-pointer hover:text-teal-700"
+        >
+          Click to see {totalCount} sub-tasks →
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function ProjectsPage({ user, onLogout }) {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -322,22 +405,37 @@ export default function ProjectsPage({ user, onLogout }) {
                     </p>
                   )}
 
-                  {/* Goals */}
+                  {/* Goals with Progress */}
                   {project.goals && project.goals.length > 0 && (
                     <div className="mb-4">
                       <div className="text-xs font-semibold text-gray-500 mb-2">
                         Goals ({project.goals.length})
                       </div>
-                      <div className="space-y-1">
-                        {project.goals.slice(0, 2).map((goal, idx) => (
-                          <div key={idx} className="text-xs text-gray-600 flex items-start gap-1">
-                            <span className="text-gray-400">•</span>
-                            <span className="line-clamp-1">{goal.goal || goal}</span>
-                          </div>
-                        ))}
+                      <div className="space-y-2">
+                        {project.goals.slice(0, 2).map((goal, idx) => {
+                          const hasSubTasks = goal.sub_tasks && goal.sub_tasks.length > 0;
+                          const completedCount = hasSubTasks 
+                            ? goal.sub_tasks.filter(st => st.status === 'completed').length 
+                            : 0;
+                          const totalCount = hasSubTasks ? goal.sub_tasks.length : 0;
+                          
+                          return (
+                            <div key={idx} className="text-xs">
+                              <div className="text-gray-700 font-medium flex items-start gap-1">
+                                <span className="text-gray-400">•</span>
+                                <span className="line-clamp-1 flex-1">{goal.goal || goal}</span>
+                              </div>
+                              {hasSubTasks && (
+                                <div className="text-gray-500 text-xs ml-3 mt-1">
+                                  {completedCount}/{totalCount} sub-tasks completed
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
                         {project.goals.length > 2 && (
-                          <div className="text-xs text-gray-400">
-                            +{project.goals.length - 2} more
+                          <div className="text-xs text-gray-400 ml-3">
+                            +{project.goals.length - 2} more goals
                           </div>
                         )}
                       </div>
@@ -453,27 +551,32 @@ export default function ProjectsPage({ user, onLogout }) {
                   />
                 </div>
 
-                {/* Goals (if generated by Aimy) */}
+                {/* Goals with Sub-tasks (if generated by Aimy) */}
                 {formData.goals && formData.goals.length > 0 && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Goals & Tasks (from Aimy)
                     </label>
-                    <div className="space-y-2 bg-teal-50 border border-teal-200 rounded-lg p-4">
-                      {formData.goals.map((goal, idx) => (
-                        <div key={idx} className="flex items-start gap-2 text-sm">
-                          <span className="text-teal-600 mt-0.5">✓</span>
-                          <div className="flex-1">
-                            <div className="font-medium text-gray-900">{goal.goal}</div>
-                            {goal.deadline && (
-                              <div className="text-xs text-gray-600 mt-0.5">📅 {goal.deadline}</div>
-                            )}
-                          </div>
-                        </div>
+                    <div className="space-y-3 bg-teal-50 border border-teal-200 rounded-lg p-4">
+                      {formData.goals.map((goal, goalIdx) => (
+                        <GoalWithSubTasks 
+                          key={goalIdx}
+                          goal={goal}
+                          goalIndex={goalIdx}
+                          onToggleSubTask={(subTaskIdx) => {
+                            const updatedGoals = [...formData.goals];
+                            if (updatedGoals[goalIdx].sub_tasks && updatedGoals[goalIdx].sub_tasks[subTaskIdx]) {
+                              const currentStatus = updatedGoals[goalIdx].sub_tasks[subTaskIdx].status;
+                              updatedGoals[goalIdx].sub_tasks[subTaskIdx].status = 
+                                currentStatus === 'completed' ? 'not_started' : 'completed';
+                              setFormData({ ...formData, goals: updatedGoals });
+                            }
+                          }}
+                        />
                       ))}
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
-                      These goals will be saved with the project and can be tracked later
+                      Click sub-tasks to mark as complete. These will be saved with the project.
                     </p>
                   </div>
                 )}
