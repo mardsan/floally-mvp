@@ -4,7 +4,7 @@ from typing import List, Optional
 import anthropic
 import os
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 router = APIRouter()
 
@@ -267,11 +267,18 @@ class ProjectPlanRequest(BaseModel):
     """Request for AI project plan generation"""
     description: str
 
+class SubTask(BaseModel):
+    """Sub-task within a goal"""
+    task: str
+    estimated_hours: Optional[float] = None
+    status: str = "not_started"
+
 class Goal(BaseModel):
     """Project goal/task"""
     goal: str
     deadline: Optional[str] = None
     status: str = "not_started"
+    sub_tasks: Optional[List[SubTask]] = []
 
 class ProjectPlanResponse(BaseModel):
     """AI-generated project plan"""
@@ -313,8 +320,9 @@ Based on this description, help plan the project by providing:
 1. **Enhanced Description**: Expand and refine the description (2-3 sentences)
 2. **Timeline**: Suggest a realistic timeframe (e.g., "2-3 weeks", "1-2 months")
 3. **Goals**: Generate 3-5 specific, actionable goals/tasks with ACTUAL deadline dates
-4. **Success Metrics**: How will we know this project succeeded?
-5. **Priority**: Recommend priority level (low/medium/high/critical)
+4. **Sub-tasks**: For EACH goal, break it down into 3-5 specific, actionable sub-tasks
+5. **Success Metrics**: How will we know this project succeeded?
+6. **Priority**: Recommend priority level (low/medium/high/critical)
 
 Provide your response in this EXACT JSON format:
 {{
@@ -322,9 +330,16 @@ Provide your response in this EXACT JSON format:
     "timeline": "Suggested timeframe",
     "goals": [
         {{
-            "goal": "Specific, actionable task",
+            "goal": "Specific, actionable goal",
             "deadline": "YYYY-MM-DD (actual date, not relative like 'Week 1')",
-            "status": "not_started"
+            "status": "not_started",
+            "sub_tasks": [
+                {{
+                    "task": "Specific action item that contributes to the goal",
+                    "estimated_hours": 2.0,
+                    "status": "not_started"
+                }}
+            ]
         }}
     ],
     "success_metrics": "How to measure success",
@@ -337,11 +352,20 @@ IMPORTANT for deadlines:
 - Space goals realistically (1-2 weeks apart for most tasks)
 - Consider realistic timelines for creative/professional work
 
+IMPORTANT for sub-tasks:
+- Each goal should have 3-5 practical sub-tasks
+- Sub-tasks should be concrete actions (e.g., "Create wireframes", "Write API endpoints", "Research competitors")
+- Estimate hours realistically (0.5-8 hours per sub-task)
+- Make sub-tasks simple enough that a user can check them off in one sitting
+- Think Trello-style simplicity, NOT JIRA complexity
+- Focus on WHAT to do, not bureaucratic process
+
 Guidelines:
 - Be specific and actionable
 - Make goals SMART (Specific, Measurable, Achievable, Relevant, Time-bound)
 - Be encouraging and supportive in tone
-- Prioritize based on urgency keywords and project scope"""
+- Prioritize based on urgency keywords and project scope
+- Help creative professionals stay organized without overwhelming them"""
 
         response = client.messages.create(
             model="claude-3-haiku-20240307",
@@ -367,15 +391,52 @@ Guidelines:
         
     except Exception as e:
         print(f"Error generating project plan: {e}")
-        # Return a helpful fallback
+        # Return a helpful fallback with sub-tasks
+        today = datetime.now()
         return ProjectPlanResponse(
             enhanced_description=request.description,
             timeline="2-4 weeks",
             goals=[
-                Goal(goal="Define project scope and requirements", deadline="Week 1", status="not_started"),
-                Goal(goal="Create initial plan and timeline", deadline="Week 1", status="not_started"),
-                Goal(goal="Execute main project work", deadline="Week 2-3", status="not_started"),
-                Goal(goal="Review, refine, and finalize", deadline="Week 4", status="not_started")
+                Goal(
+                    goal="Define project scope and requirements", 
+                    deadline=(today + timedelta(days=7)).strftime('%Y-%m-%d'), 
+                    status="not_started",
+                    sub_tasks=[
+                        SubTask(task="Identify key stakeholders", estimated_hours=1.0, status="not_started"),
+                        SubTask(task="List project requirements", estimated_hours=2.0, status="not_started"),
+                        SubTask(task="Define success criteria", estimated_hours=1.0, status="not_started")
+                    ]
+                ),
+                Goal(
+                    goal="Create initial plan and timeline", 
+                    deadline=(today + timedelta(days=10)).strftime('%Y-%m-%d'), 
+                    status="not_started",
+                    sub_tasks=[
+                        SubTask(task="Break down into milestones", estimated_hours=2.0, status="not_started"),
+                        SubTask(task="Estimate time for each phase", estimated_hours=1.5, status="not_started"),
+                        SubTask(task="Identify potential risks", estimated_hours=1.0, status="not_started")
+                    ]
+                ),
+                Goal(
+                    goal="Execute main project work", 
+                    deadline=(today + timedelta(days=21)).strftime('%Y-%m-%d'), 
+                    status="not_started",
+                    sub_tasks=[
+                        SubTask(task="Complete core deliverables", estimated_hours=20.0, status="not_started"),
+                        SubTask(task="Regular progress check-ins", estimated_hours=3.0, status="not_started"),
+                        SubTask(task="Address blockers as they arise", estimated_hours=5.0, status="not_started")
+                    ]
+                ),
+                Goal(
+                    goal="Review, refine, and finalize", 
+                    deadline=(today + timedelta(days=28)).strftime('%Y-%m-%d'), 
+                    status="not_started",
+                    sub_tasks=[
+                        SubTask(task="Conduct final review", estimated_hours=3.0, status="not_started"),
+                        SubTask(task="Implement feedback and polish", estimated_hours=4.0, status="not_started"),
+                        SubTask(task="Prepare final deliverable", estimated_hours=2.0, status="not_started")
+                    ]
+                )
             ],
             success_metrics="Project completed on time with all requirements met",
             recommended_priority="medium"
