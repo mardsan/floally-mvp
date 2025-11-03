@@ -111,6 +111,23 @@ export default function ProjectsPage({ user, onLogout }) {
     loadProjects();
   }, []);
 
+  // Check for URL parameter to auto-open a specific project
+  useEffect(() => {
+    if (projects.length > 0) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const projectIdToOpen = urlParams.get('open');
+      
+      if (projectIdToOpen) {
+        const project = projects.find(p => p.id === projectIdToOpen);
+        if (project) {
+          handleEditProject(project);
+          // Clear the URL parameter
+          window.history.replaceState({}, '', '/projects');
+        }
+      }
+    }
+  }, [projects]);
+
   const loadProjects = async () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app';

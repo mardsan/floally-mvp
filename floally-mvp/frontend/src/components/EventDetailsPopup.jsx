@@ -198,8 +198,8 @@ const EventDetailsPopup = ({ event, onClose, onOpenProject, onStatusUpdate }) =>
             {isProjectGoal && event.project && (
               <button
                 onClick={() => {
-                  onOpenProject(event.project);
-                  onClose();
+                  // Navigate to Projects page with project ID to auto-open it
+                  window.location.href = `/projects?open=${event.project.id}`;
                 }}
                 className="px-4 py-2 bg-gradient-to-r from-teal-500 to-blue-500 text-white rounded-lg hover:from-teal-600 hover:to-blue-600 transition-all shadow-md flex items-center gap-2"
               >
