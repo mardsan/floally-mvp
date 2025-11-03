@@ -33,6 +33,7 @@ function GoalWithSubTasks({ goal, goalIndex, onToggleSubTask }) {
         </div>
         {hasSubTasks && (
           <button
+            type="button"
             onClick={() => setExpanded(!expanded)}
             className="text-teal-600 hover:text-teal-700 text-sm font-medium"
           >
