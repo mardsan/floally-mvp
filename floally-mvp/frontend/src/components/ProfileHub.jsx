@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { insights, profile, userProfile } from '../services/api';
 import AimySettings from './AimeSettings';
+import TrustedContactsManager from './TrustedContactsManager';
 
 const ProfileHub = ({ userEmail }) => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -45,6 +46,7 @@ const ProfileHub = ({ userEmail }) => {
   const tabs = [
     { id: 'overview', label: 'Overview', icon: '👤' },
     { id: 'insights', label: 'Insights', icon: '📊' },
+    { id: 'contacts', label: 'Trusted Contacts', icon: '🤝' },
     { id: 'integrations', label: 'Integrations', icon: '🔗' },
     { id: 'settings', label: 'Settings', icon: '⚙️' },
   ];
@@ -118,6 +120,10 @@ const ProfileHub = ({ userEmail }) => {
               data={behavioralData}
               userEmail={userEmail}
             />
+          )}
+
+          {activeTab === 'contacts' && (
+            <TrustedContactsManager userEmail={userEmail} />
           )}
 
           {activeTab === 'integrations' && (
