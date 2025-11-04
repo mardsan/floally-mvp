@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AimyWizard from './AimyWizard';
+import { useActivityLogger, EVENT_TYPES, ENTITY_TYPES, ACTIONS } from '../hooks/useActivityLogger';
 
 // Sub-component for displaying goals with expandable sub-tasks
 function GoalWithSubTasks({ goal, goalIndex, onToggleSubTask }) {
@@ -96,6 +97,9 @@ export default function ProjectsPage({ user, onLogout }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
+  
+  // Activity logging
+  const { logActivity } = useActivityLogger(user?.email);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -208,6 +212,17 @@ export default function ProjectsPage({ user, onLogout }) {
       });
 
       if (response.ok) {
+        const savedProject = await response.json();
+        
+        // Log activity
+        logActivity(
+          editingProject ? EVENT_TYPES.PROJECT_UPDATED : EVENT_TYPES.PROJECT_CREATED,
+          ENTITY_TYPES.PROJECT,
+          savedProject.id,
+          { name: formData.name, priority: formData.priority, goals_count: formData.goals?.length || 0 },
+          editingProject ? ACTIONS.UPDATED : ACTIONS.CREATED
+        );
+        
         await loadProjects();
         setShowModal(false);
         setEditingProject(null);

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import auth, gmail, calendar, ai, user_profile_db, behavior_db, profile, insights, waitlist, standup, projects, messages, trusted_senders, admin
+from app.routers import auth, gmail, calendar, ai, user_profile_db, behavior_db, profile, insights, waitlist, standup, projects, messages, trusted_senders, admin, activity_log
 import os
 from dotenv import load_dotenv
 
@@ -90,6 +90,7 @@ app.include_router(standup.router, prefix="/api", tags=["standup"])
 app.include_router(projects.router, prefix="/api", tags=["projects"])
 app.include_router(messages.router, prefix="/api", tags=["messages"])
 app.include_router(trusted_senders.router, tags=["trusted-senders"])
+app.include_router(activity_log.router, tags=["activity"])
 app.include_router(admin.router, prefix="/api", tags=["admin"])
 
 @app.get("/")
