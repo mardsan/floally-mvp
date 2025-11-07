@@ -8,6 +8,9 @@ const ProfileHub = ({ userEmail }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
+  // Deployment marker - Nov 7 2025 - Trusted Contacts feature
+  console.log('ProfileHub loaded - v0.0.5 with Trusted Contacts');
+  
   // Data states
   const [overviewData, setOverviewData] = useState(null);
   const [behavioralData, setBehavioralData] = useState(null);
