@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Icon from './Icon';
 
 function LandingPage() {
   const [email, setEmail] = useState('');
@@ -240,7 +241,9 @@ function LandingPage() {
         {/* Value Proposition - 3 Panels */}
         <div className="grid md:grid-cols-3 gap-8 mb-20">
           <div className="bg-white rounded-lg shadow-lg p-8 hover:shadow-xl transition-all transform hover:-translate-y-1 border border-okaimy-mint-50">
-            <div className="text-5xl mb-4">🎯</div>
+            <div className="mb-4 flex justify-center">
+              <Icon name="target" size="3xl" className="text-primary" />
+            </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-3">
               "The One Thing"
             </h3>
@@ -251,7 +254,9 @@ function LandingPage() {
           </div>
 
           <div className="bg-white rounded-lg shadow-lg p-8 hover:shadow-xl transition-all transform hover:-translate-y-1 border border-okaimy-mint-50">
-            <div className="text-5xl mb-4">🤝</div>
+            <div className="mb-4 flex justify-center">
+              <Icon name="partnership" size="3xl" className="text-primary" />
+            </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-3">
               Daily Standup Partnership
             </h3>
@@ -262,7 +267,9 @@ function LandingPage() {
           </div>
 
           <div className="bg-white rounded-lg shadow-lg p-8 hover:shadow-xl transition-all transform hover:-translate-y-1 border border-okaimy-mint-50">
-            <div className="text-5xl mb-4">✨</div>
+            <div className="mb-4 flex justify-center">
+              <Icon name="star" size="3xl" className="text-primary" />
+            </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-3">
               Nothing Falls Through
             </h3>
@@ -315,9 +322,18 @@ function LandingPage() {
                     </div>
                   </div>
                   <div className="space-y-2 text-sm text-gray-600">
-                    <div>✓ Following up with John about timeline</div>
-                    <div>✓ Tracking 3 pending approvals</div>
-                    <div>✓ Reminder scheduled for Friday</div>
+                    <div className="flex items-center">
+                      <Icon name="check" size="sm" className="text-okaimy-mint-500 mr-2" />
+                      Following up with John about timeline
+                    </div>
+                    <div className="flex items-center">
+                      <Icon name="check" size="sm" className="text-okaimy-mint-500 mr-2" />
+                      Tracking 3 pending approvals
+                    </div>
+                    <div className="flex items-center">
+                      <Icon name="check" size="sm" className="text-okaimy-mint-500 mr-2" />
+                      Reminder scheduled for Friday
+                    </div>
                   </div>
                 </div>
               </div>
