@@ -1,0 +1,18 @@
+//
+// Gallery Demo
+//
+
+.filter-options li a {
+    @apply text-gray-700 px-4 py-1.5 rounded border border-gray-300 flex items-center justify-center text-sm transition-all duration-500;
+}
+
+.filter-options li:hover a,
+.filter-options li.active a,
+.filter-options li:active a,
+.filter-options li:focus a {
+    @apply bg-primary text-white border-transparent shadow-md shadow-primary/25;
+}
+
+.lg-react-element {
+    @apply flex flex-wrap justify-center items-start #{!important};
+}

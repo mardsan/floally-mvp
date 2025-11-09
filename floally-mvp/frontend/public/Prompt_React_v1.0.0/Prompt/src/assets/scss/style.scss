@@ -1,0 +1,19 @@
+/*
+Template Name: Prompt - Tailwind CSS Multipurpose Landing Page Template
+Version: 1.0
+Author: coderthemes
+Email: support@coderthemes.com
+File: style Css File
+*/
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// Custom
+@import "custom/reboot";
+@import "custom/helper";
+@import "custom/navbar";
+@import "custom/gallery";
+@import "custom/aos";

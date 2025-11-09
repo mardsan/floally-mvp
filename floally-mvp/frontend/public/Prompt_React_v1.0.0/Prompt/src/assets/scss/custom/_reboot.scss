@@ -1,0 +1,47 @@
+//
+// reboot.scss
+//
+
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap');
+
+html {
+    @apply relative scroll-smooth;
+}
+
+
+body {
+    font-size: 15px;
+    @apply font-body overflow-x-hidden text-gray-500;
+}
+
+// Fix event bubbling on iOS devices
+@supports (-webkit-overflow-scrolling: touch) {
+    body {
+        cursor: pointer;
+    }
+}
+
+
+input,
+textarea,
+button,
+select,
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    @apply font-semibold;
+}
+
+.vertical-rl {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+}
+
+
+:root {
+    &:is([data-mode="dark"]) {
+        color-scheme: dark;
+    }
+}

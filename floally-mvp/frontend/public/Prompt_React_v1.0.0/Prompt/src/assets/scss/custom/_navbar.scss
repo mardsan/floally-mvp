@@ -1,0 +1,145 @@
+// 
+// _navbar.scss 
+// 
+
+.logo-light {
+    @apply hidden;
+}
+
+@screen lg {
+    .logo-light {
+        @apply hidden dark:block;
+    }
+
+    .logo-dark {
+        @apply block dark:hidden;
+    }
+}
+
+.navbar-nav {
+    .nav-item {
+        .nav-link {
+            @apply font-medium relative tracking-wide flex items-center py-1.5 px-3.5 text-gray-800 
+                   rounded-md text-sm cursor-pointer transition-all duration-300 bg-transparent;
+
+            &:is(.active, :active, :focus, :hover) {
+                @apply text-primary;
+            }
+        }
+
+        .nav-item {
+            .nav-item {
+      
+                .nav-link {
+                    @apply text-gray-800;
+                }
+            }
+        }
+    }
+}
+
+// Navbar 
+header {
+
+    
+    &.nav-sticky {
+        @apply bg-white shadow;
+    }
+
+    &.dark {
+        .navbar-nav {
+            .nav-item {
+                .nav-link {
+                    @apply text-gray-100;
+
+                    &:is(.active, :active, :focus, :hover) {
+                        @apply text-primary;
+                    }
+                }
+
+                .fc-dropdown {
+                    .nav-link {
+                        @apply text-gray-800;
+
+                        &.active {
+                            @apply text-primary;
+                        }
+                    }
+                }
+            }
+        }
+
+        &.nav-sticky {
+
+            @screen lg {
+
+                .logo-light {
+                    @apply hidden;
+                }
+
+                .logo-dark {
+                    @apply block;
+                }
+            }
+
+            .navbar-nav {
+                .nav-link {
+                    @apply text-gray-800 hover:text-primary;
+
+                    &:is(.active, :active, :focus, :hover) {
+                        @apply text-primary;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// .navbar-toggle {
+//     display: none;
+//     position: relative;
+//     cursor: pointer;
+//     float: left;
+//     padding: 0;
+//     background-color: transparent;
+//     color: $topbar-item-color;
+//     border: none;
+
+//     .lines {
+//         width: 25px;
+//         display: block;
+//         position: relative;
+//         height: 16px;
+//         transition: all 0.5s ease;
+//     }
+
+//     span {
+//         height: 2px;
+//         width: 100%;
+//         background-color: $topbar-item-color;
+//         display: block;
+//         margin-bottom: 5px;
+//         transition: transform 0.5s ease;
+//     }
+
+//     &.open {
+//         span {
+//             position: absolute;
+
+//             &:first-child {
+//                 top: 7px;
+//                 transform: rotate(45deg);
+//             }
+
+//             &:nth-child(2) {
+//                 visibility: hidden;
+//             }
+
+//             &:last-child {
+//                 width: 100%;
+//                 top: 7px;
+//                 transform: rotate(-45deg);
+//             }
+//         }
+//     }
+// }
