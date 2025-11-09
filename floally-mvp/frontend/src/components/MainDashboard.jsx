@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import ProfileSettings from './ProfileSettings';
+import ProfileHub from './ProfileHub';
 import UniversalCalendar from './UniversalCalendar';
 import EnhancedMessages from './EnhancedMessages';
 
@@ -10,6 +11,7 @@ function MainDashboard({ user, onLogout }) {
   const [standup, setStandup] = useState(null);
   const [calendarEvents, setCalendarEvents] = useState([]);
   const [showProfileSettings, setShowProfileSettings] = useState(false);
+  const [showProfileHub, setShowProfileHub] = useState(false);
   const [currentUser, setCurrentUser] = useState(user);
   const [expandedOneThingDetails, setExpandedOneThingDetails] = useState(false);
   const [oneThingStatus, setOneThingStatus] = useState('preparing');
@@ -371,25 +373,24 @@ function MainDashboard({ user, onLogout }) {
               
               {/* User Profile Section */}
               <div className="flex items-center gap-3 pl-4 border-l border-gray-300">
+                {/* Profile Hub Button */}
+                <button
+                  onClick={() => setShowProfileHub(true)}
+                  className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
+                  title="Profile Hub - Trusted Contacts & More"
+                >
+                  <span className="text-xl">👤</span>
+                  <span className="text-sm font-medium">Profile</span>
+                </button>
+                
+                {/* Settings Button */}
                 <button
                   onClick={() => setShowProfileSettings(true)}
-                  className="flex items-center gap-3 hover:bg-gray-50 rounded-lg px-3 py-2 transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
+                  title="Settings"
                 >
-                  <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-teal-400 to-blue-500 flex items-center justify-center">
-                    {currentUser.avatar_url ? (
-                      <img src={currentUser.avatar_url} alt={currentUser.display_name || 'User'} className="w-full h-full object-cover" />
-                    ) : (
-                      <span className="text-white font-semibold text-lg">
-                        {(currentUser.display_name || currentUser.email).charAt(0).toUpperCase()}
-                      </span>
-                    )}
-                  </div>
-                  <div className="text-left">
-                    <div className="text-sm font-semibold text-gray-900">
-                      {currentUser.display_name || currentUser.email.split('@')[0]}
-                    </div>
-                    <div className="text-xs text-gray-500">Settings</div>
-                  </div>
+                  <span className="text-xl">⚙️</span>
+                  <span className="text-sm font-medium">Settings</span>
                 </button>
                 
                 <button
@@ -918,6 +919,26 @@ function MainDashboard({ user, onLogout }) {
           onProfileUpdate={handleProfileUpdate}
           onSave={() => setShowProfileSettings(false)}
         />
+      )}
+
+      {/* Profile Hub Modal */}
+      {showProfileHub && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl max-h-[90vh] overflow-hidden">
+            <div className="flex justify-between items-center p-6 border-b border-gray-200">
+              <h2 className="text-2xl font-bold text-gray-900">Profile Hub</h2>
+              <button
+                onClick={() => setShowProfileHub(false)}
+                className="text-gray-500 hover:text-gray-700 text-2xl"
+              >
+                ×
+              </button>
+            </div>
+            <div className="overflow-y-auto max-h-[calc(90vh-80px)]">
+              <ProfileHub userEmail={currentUser.email} />
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
