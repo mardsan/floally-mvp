@@ -9,7 +9,10 @@ const ProfileHub = ({ userEmail }) => {
   const [error, setError] = useState(null);
   
   // Deployment marker - Nov 7 2025 - Trusted Contacts feature
-  console.log('ProfileHub loaded - v0.0.5 with Trusted Contacts');
+  console.log('ProfileHub loaded - v0.0.6 with Trusted Contacts');
+  
+  // Force Vite to include TrustedContactsManager in bundle
+  if (false) { console.log(TrustedContactsManager); }
   
   // Data states
   const [overviewData, setOverviewData] = useState(null);
