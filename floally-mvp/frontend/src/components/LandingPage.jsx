@@ -57,49 +57,49 @@ function LandingPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-emerald-50 flex items-center justify-center px-4">
-        <div className="max-w-2xl text-center">
+      <div className="min-h-screen bg-gradient-to-br from-okaimy-mint-50 via-white to-okaimy-emerald-50 flex items-center justify-center px-4">
+        <div className="max-w-2xl text-center animate-fade-in">
           <div className="mb-8">
             <div className="inline-block animate-bounce">
               <span className="text-6xl">✨</span>
             </div>
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-5xl font-bold text-gray-900 mb-4">
             You're on the list!
           </h1>
           {signupNote && (
-            <p className="text-2xl font-semibold text-teal-600 mb-4">
+            <p className="text-2xl font-semibold text-primary mb-4">
               {signupNote}
             </p>
           )}
           <p className="text-xl text-gray-600 mb-8">
-            Thanks {name}! We'll email you at <strong>{email}</strong> when early access opens.
+            Thanks {name}! We'll email you at <strong className="text-gray-900">{email}</strong> when early access opens.
           </p>
           <p className="text-gray-500 mb-8">
             In the meantime, we're building something special just for you.
           </p>
-          <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-            <h2 className="text-lg font-semibold text-gray-900 mb-3">
+          <div className="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-okaimy-mint-100">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">
               What happens next?
             </h2>
-            <ul className="text-left text-gray-600 space-y-2">
+            <ul className="text-left text-gray-600 space-y-3">
               <li className="flex items-start">
-                <span className="text-teal-500 mr-2">✓</span>
+                <span className="text-primary text-xl mr-3">✓</span>
                 <span>We'll send you updates on our progress</span>
               </li>
               <li className="flex items-start">
-                <span className="text-teal-500 mr-2">✓</span>
+                <span className="text-primary text-xl mr-3">✓</span>
                 <span>You'll get early access before the public launch</span>
               </li>
               <li className="flex items-start">
-                <span className="text-teal-500 mr-2">✓</span>
+                <span className="text-primary text-xl mr-3">✓</span>
                 <span>Special founding member pricing (50% off for life)</span>
               </li>
             </ul>
           </div>
           <button
             onClick={() => window.location.reload()}
-            className="text-teal-600 hover:text-teal-700 font-medium"
+            className="text-primary hover:text-primary-dark font-semibold transition-colors"
           >
             ← Back to homepage
           </button>
@@ -109,7 +109,7 @@ function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-emerald-50">
+    <div className="min-h-screen bg-gradient-to-br from-okaimy-mint-50 via-white to-okaimy-emerald-50">
       {/* Header with Logo and Sign In */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <div className="flex justify-between items-center">
@@ -120,7 +120,7 @@ function LandingPage() {
           />
           <a
             href="/auth"
-            className="bg-white text-teal-600 font-semibold px-6 py-2 rounded-lg hover:bg-gray-50 transition-all border border-teal-200 shadow-sm"
+            className="bg-white text-primary font-semibold px-6 py-2.5 rounded-xl hover:bg-gray-50 transition-all border border-okaimy-mint-200 shadow-sm hover:shadow-md"
           >
             Sign In
           </a>
@@ -133,9 +133,9 @@ function LandingPage() {
           {/* Animated Aimy - Larger size for emotional impact */}
           <div className="mb-8 flex justify-center">
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-teal-400 to-emerald-400 rounded-full opacity-20 animate-pulse blur-2xl"></div>
+              <div className="absolute inset-0 bg-okaimy-gradient rounded-full opacity-20 animate-pulse blur-3xl"></div>
               <video
-                className="relative w-64 h-64 md:w-72 md:h-72 rounded-full object-cover shadow-2xl"
+                className="relative w-64 h-64 md:w-80 md:h-80 rounded-full object-cover shadow-2xl ring-4 ring-okaimy-mint-100 hover:ring-okaimy-mint-200 transition-all"
                 autoPlay
                 loop
                 muted
@@ -150,17 +150,17 @@ function LandingPage() {
               <img
                 src="/okaimy-static-01.png"
                 alt="Aimy"
-                className="hidden w-64 h-64 md:w-72 md:h-72 rounded-full object-cover shadow-2xl"
+                className="hidden w-64 h-64 md:w-80 md:h-80 rounded-full object-cover shadow-2xl ring-4 ring-okaimy-mint-100"
               />
 ```
             </div>
           </div>
 
           {/* Headline - Aimy speaking, smaller second line */}
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+          <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
             Stay in flow.
             <br />
-            <span className="text-4xl md:text-5xl text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-emerald-600">
+            <span className="text-4xl md:text-6xl text-transparent bg-clip-text bg-okaimy-gradient">
               Let me handle the rest.
             </span>
           </h1>
@@ -171,11 +171,11 @@ function LandingPage() {
           </p>
 
           {/* CTA */}
-          <div className="inline-block bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <div className="inline-block bg-white rounded-3xl shadow-2xl p-8 md:p-10 max-w-md w-full border border-okaimy-mint-100 hover:shadow-glow-lg transition-all">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
               Join Early Access
             </h2>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600 mb-8">
               Be among the first to experience OkAimy
             </p>
 
@@ -205,7 +205,7 @@ function LandingPage() {
                   value={struggle}
                   onChange={(e) => setStruggle(e.target.value)}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent text-gray-700"
+                  className="w-full px-4 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent text-gray-700 transition-all text-lg"
                 >
                   <option value="">How can Aimy help you most?</option>
                   <option value="too_many_emails">Managing my inbox</option>
@@ -218,7 +218,7 @@ function LandingPage() {
               </div>
 
               {error && (
-                <div className="text-red-600 text-sm">
+                <div className="text-red-600 text-sm bg-red-50 p-3 rounded-xl">
                   {error}
                 </div>
               )}
@@ -226,7 +226,7 @@ function LandingPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-teal-600 to-emerald-600 text-white font-semibold py-4 rounded-lg hover:from-teal-700 hover:to-emerald-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                className="w-full bg-okaimy-gradient text-white font-bold py-4 rounded-xl hover:shadow-glow transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg text-lg"
               >
                 {isSubmitting ? 'Joining...' : 'Get Early Access'}
               </button>
@@ -240,34 +240,34 @@ function LandingPage() {
 
         {/* Value Proposition - 3 Panels */}
         <div className="grid md:grid-cols-3 gap-8 mb-20">
-          <div className="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow">
-            <div className="text-4xl mb-4">🎯</div>
+          <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all transform hover:-translate-y-1 border border-okaimy-mint-50">
+            <div className="text-5xl mb-4">🎯</div>
             <h3 className="text-2xl font-bold text-gray-900 mb-3">
               "The One Thing"
             </h3>
-            <p className="text-gray-600">
+            <p className="text-gray-600 leading-relaxed">
               Every morning, Aimy analyzes your inbox and tells you exactly what matters most. 
               No more decision fatigue. Just clarity.
             </p>
           </div>
 
-          <div className="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow">
-            <div className="text-4xl mb-4">🤝</div>
+          <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all transform hover:-translate-y-1 border border-okaimy-mint-50">
+            <div className="text-5xl mb-4">🤝</div>
             <h3 className="text-2xl font-bold text-gray-900 mb-3">
               Daily Standup Partnership
             </h3>
-            <p className="text-gray-600">
+            <p className="text-gray-600 leading-relaxed">
               You and Aimy sync up each day. You focus on creating. 
               Aimy handles the follow-ups, reminders, and coordination.
             </p>
           </div>
 
-          <div className="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow">
-            <div className="text-4xl mb-4">✨</div>
+          <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-all transform hover:-translate-y-1 border border-okaimy-mint-50">
+            <div className="text-5xl mb-4">✨</div>
             <h3 className="text-2xl font-bold text-gray-900 mb-3">
               Nothing Falls Through
             </h3>
-            <p className="text-gray-600">
+            <p className="text-gray-600 leading-relaxed">
               Sleep peacefully knowing Aimy's got your back. 
               She tracks everything, so you can stay in flow.
             </p>
@@ -351,23 +351,23 @@ function LandingPage() {
         </div>
 
         {/* Final CTA */}
-        <div className="text-center bg-gradient-to-r from-teal-600 to-emerald-600 rounded-2xl shadow-2xl p-12 text-white">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+        <div className="text-center bg-okaimy-gradient rounded-3xl shadow-2xl p-12 text-white">
+          <h2 className="text-3xl md:text-5xl font-bold mb-4">
             Ready to stay in flow?
           </h2>
-          <p className="text-xl mb-8 opacity-90">
+          <p className="text-xl md:text-2xl mb-8 opacity-90">
             Join the waitlist for early access and founding member pricing
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="bg-white text-teal-600 font-semibold px-8 py-4 rounded-lg hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg"
+              className="bg-white text-primary font-bold px-8 py-4 rounded-xl hover:bg-gray-50 transition-all transform hover:scale-105 shadow-xl"
             >
               Join Early Access →
             </button>
             <a
               href="/app"
-              className="bg-teal-700 text-white font-semibold px-8 py-4 rounded-lg hover:bg-teal-800 transition-all transform hover:scale-105 shadow-lg text-center"
+              className="bg-okaimy-mint-700 text-white font-bold px-8 py-4 rounded-xl hover:bg-okaimy-mint-800 transition-all transform hover:scale-105 shadow-xl text-center"
             >
               Try Demo (No Login) →
             </a>
@@ -379,7 +379,7 @@ function LandingPage() {
           <p>© 2025 OkAimy. We respect your privacy. No spam, ever.</p>
           <p className="mt-2">
             Questions? Email us at{' '}
-            <a href="mailto:hello@okaimy.com" className="text-teal-600 hover:text-teal-700">
+            <a href="mailto:hello@okaimy.com" className="text-primary hover:text-primary-dark">
               hello@okaimy.com
             </a>
           </p>
