@@ -2,14 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { insights, profile, userProfile } from '../services/api';
 import AimySettings from './AimeSettings';
 import TrustedContactsManager from './TrustedContactsManager';
+import Button from './Button';
+import Card from './Card';
+import Icon from './Icon';
 
 const ProfileHub = ({ userEmail }) => {
   const [activeTab, setActiveTab] = useState('overview');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  // Deployment marker - Nov 7 2025 - Trusted Contacts feature
-  console.log('ProfileHub loaded - v0.0.6 with Trusted Contacts');
+  // Deployment marker - Nov 10 2025 - Design System Upgrade
+  console.log('ProfileHub loaded - v0.1.1 with Design System');
   
   // Force Vite to include TrustedContactsManager in bundle
   if (false) { console.log(TrustedContactsManager); }
@@ -50,18 +53,18 @@ const ProfileHub = ({ userEmail }) => {
   };
 
   const tabs = [
-    { id: 'overview', label: 'Overview', icon: '👤' },
-    { id: 'insights', label: 'Insights', icon: '📊' },
-    { id: 'contacts', label: 'Trusted Contacts', icon: '🤝' },
-    { id: 'integrations', label: 'Integrations', icon: '🔗' },
-    { id: 'settings', label: 'Settings', icon: '⚙️' },
+    { id: 'overview', label: 'Overview', icon: 'contacts' },
+    { id: 'insights', label: 'Insights', icon: 'check' },
+    { id: 'contacts', label: 'Trusted Contacts', icon: 'partnership' },
+    { id: 'integrations', label: 'Integrations', icon: 'note' },
+    { id: 'settings', label: 'Settings', icon: null },
   ];
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-emerald-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-okaimy-mint-50 via-white to-okaimy-emerald-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-gray-600">Loading your profile...</p>
         </div>
       </div>
@@ -69,7 +72,7 @@ const ProfileHub = ({ userEmail }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-emerald-50 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-okaimy-mint-50 via-white to-okaimy-emerald-50 py-8 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8 text-center">
@@ -77,7 +80,7 @@ const ProfileHub = ({ userEmail }) => {
             <img 
               src="/okaimy-pfp-01.png" 
               alt="Aimy" 
-              className="w-16 h-16 rounded-full mr-4 shadow-lg"
+              className="w-16 h-16 rounded-full mr-4 shadow-glow"
             />
             <div className="text-left">
               <h1 className="text-3xl font-bold text-gray-800">Profile Hub</h1>
@@ -87,27 +90,33 @@ const ProfileHub = ({ userEmail }) => {
         </div>
 
         {/* Tab Navigation */}
-        <div className="bg-white rounded-lg shadow-md mb-6 overflow-hidden">
+        <Card variant="elevated" padding="none" className="mb-6 overflow-hidden">
           <div className="flex border-b border-gray-200">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 px-6 py-4 text-center font-medium transition-colors ${
+                className={`flex-1 px-6 py-4 text-center font-medium transition-all ${
                   activeTab === tab.id
-                    ? 'bg-teal-50 text-teal-700 border-b-2 border-teal-600'
+                    ? 'bg-okaimy-mint-50 text-primary border-b-2 border-primary'
                     : 'text-gray-600 hover:bg-gray-50'
                 }`}
               >
-                <span className="mr-2">{tab.icon}</span>
-                {tab.label}
+                <div className="flex items-center justify-center gap-2">
+                  {tab.icon ? (
+                    <Icon name={tab.icon} size="sm" className={activeTab === tab.id ? 'text-primary' : 'text-gray-500'} />
+                  ) : (
+                    <span className="text-xl">⚙️</span>
+                  )}
+                  {tab.label}
+                </div>
               </button>
             ))}
           </div>
-        </div>
+        </Card>
 
         {/* Tab Content */}
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <Card variant="elevated" padding="lg">
           {error && (
             <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
               {error}
@@ -146,7 +155,7 @@ const ProfileHub = ({ userEmail }) => {
               onUpdate={loadData}
             />
           )}
-        </div>
+        </Card>
       </div>
     </div>
   );
@@ -163,7 +172,7 @@ const OverviewTab = ({ data, userProfile }) => {
   return (
     <div className="space-y-6">
       {/* User Info Card */}
-      <div className="bg-gradient-to-r from-teal-50 to-emerald-50 rounded-lg p-6 border border-teal-100">
+      <Card variant="gradient" padding="lg" className="border border-okaimy-mint-100">
         <h2 className="text-2xl font-bold text-gray-800 mb-2">{user_info.email}</h2>
         {user_info.role && (
           <p className="text-lg text-gray-700 mb-4">
@@ -171,29 +180,29 @@ const OverviewTab = ({ data, userProfile }) => {
           </p>
         )}
         {aimy_understanding && (
-          <div className="mt-4 p-4 bg-white rounded-lg border border-teal-200">
-            <h3 className="font-semibold text-teal-700 mb-2 flex items-center">
+          <div className="mt-4 p-4 bg-white rounded-lg border border-okaimy-mint-200">
+            <h3 className="font-semibold text-primary mb-2 flex items-center">
               <img src="/okaimy-pfp-01.png" alt="Aimy" className="w-6 h-6 rounded-full mr-2" />
               Aimy's Understanding of You
             </h3>
             <p className="text-gray-700 italic">{aimy_understanding}</p>
           </div>
         )}
-      </div>
+      </Card>
 
       {/* Quick Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard 
-          icon="📧" 
+          icon="Mail" 
           label="Total Actions" 
           value={quick_stats?.total_actions || 0}
-          color="blue"
+          color="primary"
         />
         <StatCard 
-          icon="📈" 
+          icon="check" 
           label="Recent (7d)" 
           value={quick_stats?.recent_actions_7d || 0}
-          color="green"
+          color="accent"
         />
         <StatCard 
           icon="🎯" 
@@ -495,18 +504,20 @@ const SettingsTab = ({ userProfile, userEmail, onUpdate }) => {
 // Helper Components
 const StatCard = ({ icon, label, value, color }) => {
   const colorClasses = {
-    blue: 'bg-blue-50 border-blue-200 text-blue-700',
-    green: 'bg-green-50 border-green-200 text-green-700',
+    primary: 'bg-okaimy-mint-50 border-okaimy-mint-200 text-primary',
+    accent: 'bg-emerald-50 border-emerald-200 text-accent',
     purple: 'bg-purple-50 border-purple-200 text-purple-700',
     orange: 'bg-orange-50 border-orange-200 text-orange-700',
   };
 
   return (
-    <div className={`p-4 rounded-lg border-2 ${colorClasses[color] || colorClasses.blue}`}>
-      <div className="text-3xl mb-2">{icon}</div>
-      <div className="text-2xl font-bold">{value}</div>
-      <div className="text-sm opacity-80">{label}</div>
-    </div>
+    <Card variant="bordered" className={`${colorClasses[color] || colorClasses.primary}`}>
+      <CardBody className="p-4">
+        <Icon name={icon} size="xl" className="mb-2" />
+        <div className="text-2xl font-bold">{value}</div>
+        <div className="text-sm opacity-80">{label}</div>
+      </CardBody>
+    </Card>
   );
 };
 
@@ -514,28 +525,39 @@ const ActionBar = ({ action, count, total }) => {
   const percentage = total > 0 ? (count / total) * 100 : 0;
   
   const actionColors = {
-    focus: 'bg-teal-500',
+    focus: 'bg-primary',
     archive: 'bg-gray-500',
     respond: 'bg-blue-500',
     unsubscribe: 'bg-red-500',
     not_interested: 'bg-yellow-500',
   };
 
+  const actionIcons = {
+    focus: 'star',
+    archive: 'note',
+    respond: 'chat',
+    unsubscribe: 'Mail',
+    not_interested: 'check',
+  };
+
   const actionLabels = {
-    focus: '⭐ Focus',
-    archive: '📦 Archive',
-    respond: '💬 Respond',
-    unsubscribe: '🚫 Unsubscribe',
-    not_interested: '👎 Not Interested',
+    focus: 'Focus',
+    archive: 'Archive',
+    respond: 'Respond',
+    unsubscribe: 'Unsubscribe',
+    not_interested: 'Not Interested',
   };
 
   return (
     <div>
-      <div className="flex justify-between text-sm mb-1">
-        <span className="font-medium text-gray-700">{actionLabels[action] || action}</span>
+      <div className="flex justify-between items-center text-sm mb-1">
+        <span className="font-medium text-gray-700 flex items-center gap-2">
+          <Icon name={actionIcons[action] || 'check'} size="sm" />
+          {actionLabels[action] || action}
+        </span>
         <span className="text-gray-600">{count} ({percentage.toFixed(1)}%)</span>
       </div>
-      <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+      <div className="w-full bg-gray-200 rounded-lg h-3 overflow-hidden">
         <div 
           className={`h-full ${actionColors[action] || 'bg-gray-400'} transition-all duration-500`}
           style={{ width: `${percentage}%` }}

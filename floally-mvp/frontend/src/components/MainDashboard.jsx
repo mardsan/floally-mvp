@@ -725,29 +725,31 @@ function MainDashboard({ user, onLogout }) {
               </div>
 
               {/* Chat with Aimy - Full Width */}
-              <div className="border-t-2 border-gray-200 pt-8">
-                <div className="bg-gradient-to-br from-gray-50 to-teal-50 rounded-xl p-6 border-2 border-teal-200">
+              <div className="border-t-2 border-okaimy-mint-100 pt-8">
+                <Card variant="gradient" padding="lg" className="border-2 border-okaimy-mint-200">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-full overflow-hidden bg-white shadow">
+                    <div className="w-10 h-10 rounded-full overflow-hidden bg-white shadow-glow">
                       <img 
                         src="/okaimy-pfp-01.png" 
                         alt="Aimy" 
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           e.target.style.display = 'none';
-                          e.target.parentElement.innerHTML = '<div class="w-full h-full bg-gradient-to-br from-teal-400 to-emerald-400 flex items-center justify-center text-white text-sm font-bold">A</div>';
+                          e.target.parentElement.innerHTML = '<div class="w-full h-full bg-okaimy-gradient flex items-center justify-center text-white text-sm font-bold">A</div>';
                         }}
                       />
                     </div>
-                    <h4 className="text-lg font-bold text-gray-800">💬 Chat with Aimy</h4>
+                    <Icon name="chat" size="lg" className="text-primary" />
+                    <h4 className="text-lg font-bold text-gray-800">Chat with Aimy</h4>
                     <span className="text-xs text-gray-500 ml-auto">Ask about your day, clarify tasks, or get advice</span>
                   </div>
                   
                   <div className="space-y-3">
                     {/* Chat messages would go here */}
-                    <div className="bg-white rounded-lg p-4 shadow-sm">
-                      <p className="text-sm text-gray-600 italic">
-                        💡 Quick tip: You can ask me to explain any task, suggest alternatives, or help prioritize your day.
+                    <div className="bg-white rounded-lg p-4 shadow-sm border border-okaimy-mint-100">
+                      <p className="text-sm text-gray-600 italic flex items-start gap-2">
+                        <Icon name="star" size="sm" className="text-primary mt-0.5" />
+                        <span>Quick tip: You can ask me to explain any task, suggest alternatives, or help prioritize your day.</span>
                       </p>
                     </div>
                     
@@ -756,14 +758,14 @@ function MainDashboard({ user, onLogout }) {
                       <input
                         type="text"
                         placeholder="Ask Aimy anything about your day..."
-                        className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-teal-500 focus:outline-none"
+                        className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all"
                       />
-                      <button className="px-6 py-3 bg-teal-600 text-white rounded-lg font-medium hover:bg-teal-700 transition-colors">
+                      <Button variant="primary">
                         Send
-                      </button>
+                      </Button>
                     </div>
                   </div>
-                </div>
+                </Card>
               </div>
             </div>
           </div>
@@ -773,10 +775,13 @@ function MainDashboard({ user, onLogout }) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Active Projects */}
           <section className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 h-full">
+            <Card variant="elevated" padding="none" className="h-full">
               <div className="p-6 border-b border-gray-200">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-bold text-gray-900">📁 Active Projects</h3>
+                  <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                    <Icon name="note" size="lg" className="text-primary" />
+                    Active Projects
+                  </h3>
                   <button
                     onClick={() => window.location.href = '/projects'}
                     className="text-teal-600 hover:text-teal-700 text-sm font-medium"
@@ -804,19 +809,20 @@ function MainDashboard({ user, onLogout }) {
                       <div
                         key={project.id}
                         onClick={() => window.location.href = '/projects'}
-                        className="p-4 rounded-lg border-2 border-gray-200 bg-gradient-to-br from-gray-50 to-white hover:border-teal-300 hover:shadow-md transition-all cursor-pointer"
+                        className="p-4 rounded-lg border-2 border-gray-200 bg-gradient-to-br from-gray-50 to-white hover:border-okaimy-mint-300 hover:shadow-md transition-all cursor-pointer"
                       >
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex items-center gap-2">
                             <div 
                               className="w-3 h-3 rounded-full"
-                              style={{ backgroundColor: project.color || '#3b82f6' }}
+                              style={{ backgroundColor: project.color || '#14b8a6' }}
                             ></div>
                             <h4 className="font-semibold text-gray-900">{project.name}</h4>
                           </div>
                           {project.is_primary && (
-                            <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
-                              ⭐ Primary
+                            <span className="text-xs bg-okaimy-mint-100 text-okaimy-mint-800 px-2 py-1 rounded-full flex items-center gap-1">
+                              <Icon name="star" size="sm" className="text-primary" />
+                              Primary
                             </span>
                           )}
                         </div>
@@ -825,8 +831,9 @@ function MainDashboard({ user, onLogout }) {
                         )}
                         {project.goals && project.goals.length > 0 && (
                           <div className="mt-3 pt-3 border-t border-gray-200 ml-5">
-                            <p className="text-xs text-gray-500">
-                              🎯 {project.goals.length} goal{project.goals.length !== 1 ? 's' : ''} 
+                            <p className="text-xs text-gray-500 flex items-center gap-2">
+                              <Icon name="target" size="sm" className="text-primary" />
+                              {project.goals.length} goal{project.goals.length !== 1 ? 's' : ''} 
                               {project.goals.some(g => g.sub_tasks?.length > 0) && (
                                 <span className="ml-2">
                                   • {project.goals.reduce((sum, g) => sum + (g.sub_tasks?.length || 0), 0)} sub-tasks
@@ -839,14 +846,17 @@ function MainDashboard({ user, onLogout }) {
                     ))
                 )}
               </div>
-            </div>
+            </Card>
           </section>
 
           {/* Calendar Events */}
           <section className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 h-full">
+            <Card variant="elevated" padding="none" className="h-full">
               <div className="p-6 border-b border-gray-200">
-                <h3 className="text-lg font-bold text-gray-900">📅 Upcoming Events</h3>
+                <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                  <Icon name="calendar" size="lg" className="text-primary" />
+                  Upcoming Events
+                </h3>
                 <p className="text-sm text-gray-500 mt-1">Next 7 days</p>
               </div>
               <div className="p-6 space-y-3 max-h-96 overflow-y-auto">
@@ -856,7 +866,7 @@ function MainDashboard({ user, onLogout }) {
                   </div>
                 ) : (
                   calendarEvents.slice(0, 10).map((event, idx) => (
-                    <div key={idx} className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <div key={idx} className="p-4 bg-okaimy-mint-50 rounded-lg border border-okaimy-mint-200">
                       <div className="flex items-start gap-3">
                         <div className="text-2xl">📆</div>
                         <div className="flex-1">
@@ -874,7 +884,7 @@ function MainDashboard({ user, onLogout }) {
                   ))
                 )}
               </div>
-            </div>
+            </Card>
           </section>
         </div>
 
@@ -895,34 +905,43 @@ function MainDashboard({ user, onLogout }) {
 
         {/* Quick Actions */}
         <section className="mb-8">
-          <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4">⚡ Quick Actions</h3>
+          <Card variant="elevated" padding="lg">
+            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <Icon name="star" size="lg" className="text-primary" />
+              Quick Actions
+            </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <button className="p-4 bg-gradient-to-br from-teal-50 to-blue-50 rounded-lg border-2 border-teal-200 hover:border-teal-400 transition-all text-left">
-                <div className="text-2xl mb-2">📧</div>
+              <button className="p-4 bg-gradient-to-br from-okaimy-mint-50 to-okaimy-emerald-50 rounded-lg border-2 border-okaimy-mint-200 hover:border-okaimy-mint-400 hover:shadow-glow transition-all text-left">
+                <div className="mb-2">
+                  <Icon name="Mail" size="2xl" className="text-primary" />
+                </div>
                 <div className="font-semibold text-gray-900">Compose Email</div>
                 <div className="text-xs text-gray-600 mt-1">Draft with AI</div>
               </button>
-              <button className="p-4 bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg border-2 border-purple-200 hover:border-purple-400 transition-all text-left">
-                <div className="text-2xl mb-2">📅</div>
+              <button className="p-4 bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg border-2 border-purple-200 hover:border-purple-400 hover:shadow-md transition-all text-left">
+                <div className="mb-2">
+                  <Icon name="calendar" size="2xl" className="text-purple-500" />
+                </div>
                 <div className="font-semibold text-gray-900">Schedule Meeting</div>
                 <div className="text-xs text-gray-600 mt-1">Find best time</div>
               </button>
-              <button className="p-4 bg-gradient-to-br from-orange-50 to-yellow-50 rounded-lg border-2 border-orange-200 hover:border-orange-400 transition-all text-left">
-                <div className="text-2xl mb-2">📊</div>
+              <button className="p-4 bg-gradient-to-br from-orange-50 to-yellow-50 rounded-lg border-2 border-orange-200 hover:border-orange-400 hover:shadow-md transition-all text-left">
+                <div className="mb-2">
+                  <Icon name="check" size="2xl" className="text-orange-500" />
+                </div>
                 <div className="font-semibold text-gray-900">View Insights</div>
                 <div className="text-xs text-gray-600 mt-1">Analytics & trends</div>
               </button>
               <button 
                 onClick={() => setShowProfileSettings(true)}
-                className="p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border-2 border-green-200 hover:border-green-400 transition-all text-left"
+                className="p-4 bg-gradient-to-br from-okaimy-emerald-50 to-okaimy-mint-50 rounded-lg border-2 border-okaimy-emerald-200 hover:border-okaimy-emerald-400 hover:shadow-glow transition-all text-left"
               >
                 <div className="text-2xl mb-2">⚙️</div>
                 <div className="font-semibold text-gray-900">Settings</div>
                 <div className="text-xs text-gray-600 mt-1">Manage account</div>
               </button>
             </div>
-          </div>
+          </Card>
         </section>
       </div>
 
