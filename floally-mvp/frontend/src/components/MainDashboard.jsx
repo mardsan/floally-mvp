@@ -3,6 +3,9 @@ import ProfileSettings from './ProfileSettings';
 import ProfileHub from './ProfileHub';
 import UniversalCalendar from './UniversalCalendar';
 import EnhancedMessages from './EnhancedMessages';
+import Button from './Button';
+import Card from './Card';
+import Icon from './Icon';
 
 function MainDashboard({ user, onLogout }) {
   const [loading, setLoading] = useState(true);
@@ -339,9 +342,9 @@ function MainDashboard({ user, onLogout }) {
     }
   };  if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-emerald-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mx-auto mb-4"></div>
+      <div className="min-h-screen bg-gradient-to-br from-okaimy-mint-50 via-white to-okaimy-emerald-50 flex items-center justify-center">
+        <div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-gray-600">Loading your dashboard...</p>
         </div>
       </div>
@@ -349,7 +352,7 @@ function MainDashboard({ user, onLogout }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-emerald-50">
+    <div className="min-h-screen bg-gradient-to-br from-okaimy-mint-50 via-white to-okaimy-emerald-50">
       {/* Header */}
       <header className="bg-white/90 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-6 py-4">
@@ -364,41 +367,46 @@ function MainDashboard({ user, onLogout }) {
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <button
+              <Button
+                variant="ghost"
                 onClick={() => window.location.href = '/projects'}
-                className="px-4 py-2 text-teal-600 hover:bg-teal-50 rounded-lg transition-colors font-medium"
+                className="gap-2"
               >
-                📁 Projects
-              </button>
+                <Icon name="note" size="sm" />
+                Projects
+              </Button>
               
               {/* User Profile Section */}
               <div className="flex items-center gap-3 pl-4 border-l border-gray-300">
                 {/* Profile Hub Button */}
-                <button
+                <Button
+                  variant="ghost"
                   onClick={() => setShowProfileHub(true)}
-                  className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
+                  className="gap-2"
                   title="Profile Hub - Trusted Contacts & More"
                 >
-                  <span className="text-xl">👤</span>
+                  <Icon name="contacts" size="sm" />
                   <span className="text-sm font-medium">Profile</span>
-                </button>
+                </Button>
                 
                 {/* Settings Button */}
-                <button
+                <Button
+                  variant="ghost"
                   onClick={() => setShowProfileSettings(true)}
-                  className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
+                  className="gap-2"
                   title="Settings"
                 >
                   <span className="text-xl">⚙️</span>
                   <span className="text-sm font-medium">Settings</span>
-                </button>
+                </Button>
                 
-                <button
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={onLogout}
-                  className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
                 >
                   Logout
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -408,20 +416,24 @@ function MainDashboard({ user, onLogout }) {
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Daily Standup - Redesigned Split-Panel Layout */}
         <section className="mb-8">
-          <div className="bg-gradient-to-r from-teal-500 to-blue-600 rounded-2xl shadow-xl overflow-hidden">
+          <div className="bg-okaimy-gradient rounded-2xl shadow-glow-lg overflow-hidden">
             {/* Header */}
             <div className="px-8 py-6 text-white flex items-start justify-between">
               <div>
-                <h2 className="text-2xl font-bold mb-2">📊 Your Daily Standup</h2>
-                <p className="text-teal-100">AI-powered partnership for your most productive day</p>
+                <h2 className="text-2xl font-bold mb-2 flex items-center gap-2">
+                  <Icon name="target" size="md" className="brightness-0 invert" />
+                  Your Daily Standup
+                </h2>
+                <p className="text-okaimy-mint-100">AI-powered partnership for your most productive day</p>
               </div>
-              <button
+              <Button
+                variant="ghost"
                 onClick={() => loadStandup(true)}
                 disabled={loadingStandup}
-                className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-white/20 hover:bg-white/30 text-white border-0"
               >
                 {loadingStandup ? '⏳ Loading...' : '🔄 Refresh'}
-              </button>
+              </Button>
             </div>
 
             {/* Main Content - Split Panel */}
@@ -432,11 +444,11 @@ function MainDashboard({ user, onLogout }) {
                 <div className="space-y-6">
                   {/* User Avatar Header */}
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="w-16 h-16 rounded-full overflow-hidden ring-4 ring-blue-200 bg-gradient-to-br from-blue-400 to-purple-400 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                    <div className="w-16 h-16 rounded-full overflow-hidden ring-4 ring-okaimy-mint-200 bg-okaimy-gradient flex items-center justify-center text-white text-2xl font-bold shadow-glow">
                       {currentUser?.avatar_url ? (
                         <img src={currentUser.avatar_url} alt={currentUser.display_name} className="w-full h-full object-cover" />
                       ) : (
-                        currentUser?.display_name?.charAt(0).toUpperCase() || '👤'
+                        currentUser?.display_name?.charAt(0).toUpperCase() || <Icon name="contacts" size="lg" className="brightness-0 invert" />
                       )}
                     </div>
                     <div>
@@ -446,17 +458,17 @@ function MainDashboard({ user, onLogout }) {
                   </div>
 
                   {/* The One Thing */}
-                  <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 shadow-md border-2 border-blue-300">
+                  <Card variant="gradient" padding="lg" className="shadow-lg border-2 border-okaimy-mint-300">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-2">
-                        <span className="text-2xl">🎯</span>
-                        <h4 className="text-lg font-bold text-blue-900">The One Thing</h4>
+                        <Icon name="target" size="lg" className="text-primary" />
+                        <h4 className="text-lg font-bold text-okaimy-mint-900">The One Thing</h4>
                       </div>
                       {/* Status Dropdown */}
                       <select
                         value={oneThingStatus}
                         onChange={(e) => handleStatusChange(e.target.value)}
-                        className="px-3 py-1.5 text-sm border-2 border-blue-300 rounded-lg bg-white font-medium focus:outline-none focus:border-blue-500"
+                        className="px-3 py-1.5 text-sm border-2 border-okaimy-mint-300 rounded-lg bg-white font-medium focus:outline-none focus:border-primary"
                       >
                         <option value="preparing">⚪ Preparing</option>
                         <option value="in_progress">🟡 In Progress</option>
@@ -477,8 +489,8 @@ function MainDashboard({ user, onLogout }) {
                     
                     {/* Expandable Details */}
                     {expandedOneThingDetails && standup?.task_details && (
-                      <div className="mb-4 p-4 bg-white/70 rounded-lg border border-blue-200">
-                        <h6 className="text-sm font-semibold text-blue-900 mb-2">Details from Aimy:</h6>
+                      <div className="mb-4 p-4 bg-white/70 rounded-lg border border-okaimy-mint-200">
+                        <h6 className="text-sm font-semibold text-okaimy-mint-900 mb-2">Details from Aimy:</h6>
                         <div className="text-sm text-gray-700 whitespace-pre-wrap max-h-60 overflow-y-auto">
                           {(() => {
                             const currentTask = standup.one_thing;
@@ -494,23 +506,24 @@ function MainDashboard({ user, onLogout }) {
                     )}
                     
                     <div className="flex gap-2">
-                      <button 
+                      <Button
+                        variant="secondary"
                         onClick={() => setExpandedOneThingDetails(!expandedOneThingDetails)}
-                        className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium hover:bg-blue-200 transition-colors"
                       >
                         {expandedOneThingDetails ? '▼ Hide Details' : '▶ Show Details'}
-                      </button>
-                      <button 
+                      </Button>
+                      <Button
+                        variant="primary"
+                        className="flex-1"
                         onClick={() => {
                           handleStatusChange('in_progress');
                           setExpandedOneThingDetails(true);
                         }}
-                        className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors"
                       >
                         ✅ Start Working
-                      </button>
+                      </Button>
                     </div>
-                  </div>
+                  </Card>
 
                   {/* Other Priorities */}
                   <div className="bg-gray-50 rounded-xl p-6">
@@ -579,14 +592,14 @@ function MainDashboard({ user, onLogout }) {
                 <div className="space-y-6">
                   {/* Aimy Avatar Header */}
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="w-16 h-16 rounded-full overflow-hidden ring-4 ring-teal-200 bg-white shadow-lg">
+                    <div className="w-16 h-16 rounded-full overflow-hidden ring-4 ring-okaimy-mint-200 bg-white shadow-glow">
                       <img 
                         src="/okaimy-pfp-01.png" 
                         alt="Aimy" 
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           e.target.style.display = 'none';
-                          e.target.parentElement.innerHTML = '<div class="w-full h-full bg-gradient-to-br from-teal-400 to-emerald-400 flex items-center justify-center text-white text-2xl font-bold">A</div>';
+                          e.target.parentElement.innerHTML = '<div class="w-full h-full bg-okaimy-gradient flex items-center justify-center text-white text-2xl font-bold">A</div>';
                         }}
                       />
                     </div>
@@ -597,17 +610,17 @@ function MainDashboard({ user, onLogout }) {
                   </div>
 
                   {/* Daily Summary */}
-                  <div className="bg-gradient-to-br from-teal-50 to-emerald-50 rounded-xl p-6 shadow-md border-2 border-teal-300">
+                  <Card variant="gradient" padding="lg" className="shadow-lg border-2 border-okaimy-mint-300">
                     <div className="flex items-center gap-2 mb-4">
-                      <span className="text-2xl">📈</span>
-                      <h4 className="text-lg font-bold text-teal-900">Daily Summary</h4>
+                      <Icon name="check" size="lg" className="text-primary" />
+                      <h4 className="text-lg font-bold text-okaimy-mint-900">Daily Summary</h4>
                     </div>
                     <div className="grid grid-cols-2 gap-3 mb-4">
                       <div className="bg-white/60 rounded-lg p-3 text-center">
-                        <div className="text-2xl font-bold text-teal-700">
+                        <div className="text-2xl font-bold text-primary">
                           {standup?.summary?.total_emails || 0}
                         </div>
-                        <div className="text-xs text-teal-600">Items Monitored</div>
+                        <div className="text-xs text-okaimy-mint-600">Items Monitored</div>
                       </div>
                       <div className="bg-white/60 rounded-lg p-3 text-center">
                         <div className="text-2xl font-bold text-orange-600">
@@ -616,47 +629,49 @@ function MainDashboard({ user, onLogout }) {
                         <div className="text-xs text-orange-600">Urgent Items</div>
                       </div>
                     </div>
-                    <div className="text-sm text-teal-800 space-y-2">
+                    <div className="text-sm text-okaimy-mint-800 space-y-2">
                       {standup?.daily_plan && standup.daily_plan.length > 0 ? (
                         standup.daily_plan.map((item, idx) => (
                           <p key={idx} className="flex items-start gap-2">
-                            <span className="text-teal-600">•</span>
+                            <Icon name="check" size="sm" className="text-primary mt-0.5" />
                             <span><strong>{item.time}:</strong> {item.task} ({item.duration})</span>
                           </p>
                         ))
                       ) : (
                         <>
                           <p className="flex items-start gap-2">
-                            <span className="text-teal-600">•</span>
+                            <Icon name="check" size="sm" className="text-primary mt-0.5" />
                             <span>Monitoring your inbox for urgent items</span>
                           </p>
                           <p className="flex items-start gap-2">
-                            <span className="text-teal-600">•</span>
+                            <Icon name="check" size="sm" className="text-primary mt-0.5" />
                             <span>Calendar is organized for today</span>
                           </p>
                           <p className="flex items-start gap-2">
-                            <span className="text-teal-600">•</span>
+                            <Icon name="check" size="sm" className="text-primary mt-0.5" />
                             <span>Ready to assist with email responses</span>
                           </p>
                         </>
                       )}
                     </div>
-                  </div>
+                  </Card>
 
                   {/* Things Aimy is Working On */}
-                  <div className="bg-white rounded-xl border-2 border-gray-200 overflow-hidden">
-                    <div className="bg-gradient-to-r from-teal-500 to-emerald-500 px-6 py-4 flex items-center justify-between">
+                  <Card variant="bordered" padding="none" className="overflow-hidden">
+                    <div className="bg-okaimy-gradient px-6 py-4 flex items-center justify-between">
                       <div className="flex items-center gap-2 text-white">
-                        <span className="text-xl">🔄</span>
+                        <Icon name="check" size="md" className="brightness-0 invert" />
                         <h4 className="font-bold">Things I'm Working On</h4>
                       </div>
-                      <button
+                      <Button
+                        variant="ghost"
+                        size="sm"
                         onClick={loadStandup}
                         disabled={loadingStandup}
-                        className="text-sm bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg transition-colors text-white"
+                        className="bg-white/20 hover:bg-white/30 text-white border-0"
                       >
                         {loadingStandup ? '⏳' : '🔄 Regenerate'}
-                      </button>
+                      </Button>
                     </div>
                     
                     <div className="p-6 space-y-4">
@@ -674,9 +689,9 @@ function MainDashboard({ user, onLogout }) {
                                 <div className="flex-1">
                                   <p className="text-gray-800 font-medium mb-1">{taskText}</p>
                                   <span className={`text-xs px-2 py-1 rounded ${
-                                    taskStatus === 'monitoring' ? 'text-blue-600 bg-blue-50' :
+                                    taskStatus === 'monitoring' ? 'text-primary bg-okaimy-mint-50' :
                                     taskStatus === 'drafting' ? 'text-purple-600 bg-purple-50' :
-                                    'text-teal-600 bg-teal-50'
+                                    'text-accent bg-okaimy-emerald-50'
                                   }`}>
                                     {taskStatus === 'monitoring' ? '👀 Monitoring' :
                                      taskStatus === 'drafting' ? '✍️ Drafting' :
@@ -685,15 +700,15 @@ function MainDashboard({ user, onLogout }) {
                                 </div>
                               </div>
                               <div className="flex gap-2">
-                                <button className="flex-1 bg-green-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">
+                                <Button size="sm" variant="primary" className="flex-1">
                                   ✅ Go
-                                </button>
-                                <button className="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+                                </Button>
+                                <Button size="sm" variant="secondary" className="flex-1">
                                   👀 Let me check
-                                </button>
-                                <button className="flex-1 bg-red-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors">
+                                </Button>
+                                <Button size="sm" variant="danger" className="flex-1">
                                   ❌ Don't do this
-                                </button>
+                                </Button>
                               </div>
                             </div>
                           );
@@ -705,7 +720,7 @@ function MainDashboard({ user, onLogout }) {
                         </div>
                       )}
                     </div>
-                  </div>
+                  </Card>
                 </div>
               </div>
 
