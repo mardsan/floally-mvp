@@ -615,15 +615,18 @@ function MainDashboard({ user, onLogout }) {
                       </div>
                     )}
                     
-                    <div className="flex gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <Button
                         variant="secondary"
+                        size="sm"
                         onClick={() => setExpandedOneThingDetails(!expandedOneThingDetails)}
+                        className="sm:flex-initial"
                       >
                         {expandedOneThingDetails ? '▼ Hide Details' : '▶ Show Details'}
                       </Button>
                       <Button
                         variant="primary"
+                        size="sm"
                         className="flex-1"
                         onClick={() => {
                           handleStatusChange('in_progress');
@@ -809,15 +812,15 @@ function MainDashboard({ user, onLogout }) {
                                   </span>
                                 </div>
                               </div>
-                              <div className="flex gap-2">
-                                <Button size="sm" variant="primary" className="flex-1">
+                              <div className="flex gap-1.5 md:gap-2">
+                                <Button size="sm" variant="primary" className="flex-1 text-xs md:text-sm py-1.5 md:py-2">
                                   ✅ Go
                                 </Button>
-                                <Button size="sm" variant="secondary" className="flex-1">
-                                  👀 Let me check
+                                <Button size="sm" variant="secondary" className="flex-1 text-xs md:text-sm py-1.5 md:py-2">
+                                  👀 Check
                                 </Button>
-                                <Button size="sm" variant="danger" className="flex-1">
-                                  ❌ Don't do this
+                                <Button size="sm" variant="danger" className="flex-1 text-xs md:text-sm py-1.5 md:py-2">
+                                  ❌ Skip
                                 </Button>
                               </div>
                             </div>
@@ -919,28 +922,28 @@ function MainDashboard({ user, onLogout }) {
                       <div
                         key={project.id}
                         onClick={() => window.location.href = '/projects'}
-                        className="p-4 rounded-lg border-2 border-gray-200 bg-gradient-to-br from-gray-50 to-white hover:border-okaimy-mint-300 hover:shadow-md transition-all cursor-pointer"
+                        className="p-3 md:p-4 rounded-lg border-2 border-gray-200 bg-gradient-to-br from-gray-50 to-white hover:border-okaimy-mint-300 hover:shadow-md transition-all cursor-pointer"
                       >
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex items-center gap-2">
                             <div 
-                              className="w-3 h-3 rounded-full"
+                              className="w-3 h-3 rounded-full flex-shrink-0"
                               style={{ backgroundColor: project.color || '#14b8a6' }}
                             ></div>
-                            <h4 className="font-semibold text-gray-900">{project.name}</h4>
+                            <h4 className="font-semibold text-gray-900 text-sm md:text-base">{project.name}</h4>
                           </div>
                           {project.is_primary && (
-                            <span className="text-xs bg-okaimy-mint-100 text-okaimy-mint-800 px-2 py-1 rounded-full flex items-center gap-1">
+                            <span className="text-xs bg-okaimy-mint-100 text-okaimy-mint-800 px-2 py-1 rounded-full flex items-center gap-1 flex-shrink-0">
                               <Icon name="star" size="sm" className="text-primary" />
                               Primary
                             </span>
                           )}
                         </div>
                         {project.description && (
-                          <p className="text-sm text-gray-600 line-clamp-2 ml-5">{project.description}</p>
+                          <p className="text-xs md:text-sm text-gray-600 line-clamp-2 ml-5">{project.description}</p>
                         )}
                         {project.goals && project.goals.length > 0 && (
-                          <div className="mt-3 pt-3 border-t border-gray-200 ml-5">
+                          <div className="mt-2 md:mt-3 pt-2 md:pt-3 border-t border-gray-200 ml-5">
                             <p className="text-xs text-gray-500 flex items-center gap-2">
                               <Icon name="target" size="sm" className="text-primary" />
                               {project.goals.length} goal{project.goals.length !== 1 ? 's' : ''} 
@@ -976,17 +979,17 @@ function MainDashboard({ user, onLogout }) {
                   </div>
                 ) : (
                   calendarEvents.slice(0, 10).map((event, idx) => (
-                    <div key={idx} className="p-4 bg-okaimy-mint-50 rounded-lg border border-okaimy-mint-200">
+                    <div key={idx} className="p-3 md:p-4 bg-okaimy-mint-50 rounded-lg border border-okaimy-mint-200">
                       <div className="flex items-start gap-3">
-                        <div className="text-2xl">📆</div>
-                        <div className="flex-1">
-                          <h4 className="font-semibold text-gray-900">{event.summary || 'Untitled Event'}</h4>
-                          <p className="text-sm text-gray-600 mt-1">
+                        <div className="text-xl md:text-2xl flex-shrink-0">📆</div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-semibold text-gray-900 text-sm md:text-base">{event.summary || 'Untitled Event'}</h4>
+                          <p className="text-xs md:text-sm text-gray-600 mt-1">
                             {new Date(event.start).toLocaleDateString()} at{' '}
                             {new Date(event.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </p>
                           {event.location && (
-                            <p className="text-xs text-gray-500 mt-1">📍 {event.location}</p>
+                            <p className="text-xs text-gray-500 mt-1 truncate">📍 {event.location}</p>
                           )}
                         </div>
                       </div>
@@ -1021,34 +1024,34 @@ function MainDashboard({ user, onLogout }) {
               Quick Actions
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-              <button className="p-4 bg-gradient-to-br from-okaimy-mint-50 to-okaimy-emerald-50 rounded-lg border-2 border-okaimy-mint-200 hover:border-okaimy-mint-400 hover:shadow-glow transition-all text-left">
-                <div className="mb-2">
-                  <Icon name="Mail" size="2xl" className="text-primary" />
+              <button className="p-3 md:p-4 aspect-square md:aspect-auto bg-gradient-to-br from-okaimy-mint-50 to-okaimy-emerald-50 rounded-lg border-2 border-okaimy-mint-200 hover:border-okaimy-mint-400 hover:shadow-glow transition-all text-left flex flex-col justify-center">
+                <div className="mb-1 md:mb-2">
+                  <Icon name="Mail" size="xl" className="text-primary" />
                 </div>
-                <div className="font-semibold text-gray-900">Compose Email</div>
-                <div className="text-xs text-gray-600 mt-1">Draft with AI</div>
+                <div className="font-semibold text-gray-900 text-sm md:text-base">Compose Email</div>
+                <div className="text-xs text-gray-600 mt-0.5 md:mt-1">Draft with AI</div>
               </button>
-              <button className="p-4 bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg border-2 border-purple-200 hover:border-purple-400 hover:shadow-md transition-all text-left">
-                <div className="mb-2">
-                  <Icon name="calendar" size="2xl" className="text-purple-500" />
+              <button className="p-3 md:p-4 aspect-square md:aspect-auto bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg border-2 border-purple-200 hover:border-purple-400 hover:shadow-md transition-all text-left flex flex-col justify-center">
+                <div className="mb-1 md:mb-2">
+                  <Icon name="calendar" size="xl" className="text-purple-500" />
                 </div>
-                <div className="font-semibold text-gray-900">Schedule Meeting</div>
-                <div className="text-xs text-gray-600 mt-1">Find best time</div>
+                <div className="font-semibold text-gray-900 text-sm md:text-base">Schedule Meeting</div>
+                <div className="text-xs text-gray-600 mt-0.5 md:mt-1">Find best time</div>
               </button>
-              <button className="p-4 bg-gradient-to-br from-orange-50 to-yellow-50 rounded-lg border-2 border-orange-200 hover:border-orange-400 hover:shadow-md transition-all text-left">
-                <div className="mb-2">
-                  <Icon name="check" size="2xl" className="text-orange-500" />
+              <button className="p-3 md:p-4 aspect-square md:aspect-auto bg-gradient-to-br from-orange-50 to-yellow-50 rounded-lg border-2 border-orange-200 hover:border-orange-400 hover:shadow-md transition-all text-left flex flex-col justify-center">
+                <div className="mb-1 md:mb-2">
+                  <Icon name="check" size="xl" className="text-orange-500" />
                 </div>
-                <div className="font-semibold text-gray-900">View Insights</div>
-                <div className="text-xs text-gray-600 mt-1">Analytics & trends</div>
+                <div className="font-semibold text-gray-900 text-sm md:text-base">View Insights</div>
+                <div className="text-xs text-gray-600 mt-0.5 md:mt-1">Analytics & trends</div>
               </button>
               <button 
                 onClick={() => setShowProfileSettings(true)}
-                className="p-4 bg-gradient-to-br from-okaimy-emerald-50 to-okaimy-mint-50 rounded-lg border-2 border-okaimy-emerald-200 hover:border-okaimy-emerald-400 hover:shadow-glow transition-all text-left"
+                className="p-3 md:p-4 aspect-square md:aspect-auto bg-gradient-to-br from-okaimy-emerald-50 to-okaimy-mint-50 rounded-lg border-2 border-okaimy-emerald-200 hover:border-okaimy-emerald-400 hover:shadow-glow transition-all text-left flex flex-col justify-center"
               >
-                <div className="text-2xl mb-2">⚙️</div>
-                <div className="font-semibold text-gray-900">Settings</div>
-                <div className="text-xs text-gray-600 mt-1">Manage account</div>
+                <div className="text-xl md:text-2xl mb-1 md:mb-2">⚙️</div>
+                <div className="font-semibold text-gray-900 text-sm md:text-base">Settings</div>
+                <div className="text-xs text-gray-600 mt-0.5 md:mt-1">Manage account</div>
               </button>
             </div>
           </Card>
