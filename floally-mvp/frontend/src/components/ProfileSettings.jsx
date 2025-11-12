@@ -215,27 +215,27 @@ function ProfileSettings({ user, onClose, onProfileUpdate, onSave }) {
   ];
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+    <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 p-0 sm:p-4">
+      <div className="bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl w-full sm:max-w-4xl h-[95vh] sm:max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-gradient-to-r from-teal-50 to-emerald-50">
-          <h2 className="text-2xl font-bold text-gray-900">Profile Settings</h2>
+        <div className="px-4 md:px-6 py-3 md:py-4 border-b border-gray-200 flex items-center justify-between bg-gradient-to-r from-teal-50 to-emerald-50 flex-shrink-0">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900">Profile Settings</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-2xl leading-none"
+            className="text-gray-400 hover:text-gray-600 text-2xl leading-none p-1"
           >
             ×
           </button>
         </div>
 
         {/* Tabs */}
-        <div className="px-6 pt-4 border-b border-gray-200 bg-gray-50">
-          <div className="flex gap-2">
+        <div className="px-3 md:px-6 pt-3 md:pt-4 border-b border-gray-200 bg-gray-50 flex-shrink-0 overflow-x-auto">
+          <div className="flex gap-1 md:gap-2 min-w-max">
             {tabs.map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-4 py-2 rounded-t-lg font-medium transition-all ${
+                className={`px-3 md:px-4 py-2 rounded-t-lg font-medium transition-all text-sm md:text-base whitespace-nowrap ${
                   activeTab === tab.id
                     ? 'bg-white text-teal-600 border-t-2 border-teal-500'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
@@ -249,39 +249,39 @@ function ProfileSettings({ user, onClose, onProfileUpdate, onSave }) {
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-4 md:p-6">
           {/* Profile Tab */}
           {activeTab === 'profile' && (
-            <div className="space-y-6">
-              <div className="flex items-center gap-6 pb-6 border-b border-gray-200">
-                <div className="relative">
+            <div className="space-y-4 md:space-y-6">
+              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 md:gap-6 pb-4 md:pb-6 border-b border-gray-200">
+                <div className="relative flex-shrink-0">
                   <img
                     src={profileData.avatar_url || 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23e5e7eb%22 width=%22100%22 height=%22100%22/%3E%3Ctext fill=%22%239ca3af%22 font-family=%22sans-serif%22 font-size=%2240%22 text-anchor=%22middle%22 x=%2250%22 y=%2265%22%3E' + (profileData.display_name?.charAt(0) || profileData.email?.charAt(0) || '?').toUpperCase() + '%3C/text%3E%3C/svg%3E'}
                     alt="Profile"
-                    className="w-24 h-24 rounded-full object-cover ring-4 ring-teal-100"
+                    className="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover ring-4 ring-teal-100"
                   />
                   <button 
                     onClick={() => setShowAvatarSelector(true)}
-                    className="absolute bottom-0 right-0 bg-teal-500 text-white rounded-full p-2 hover:bg-teal-600 shadow-lg transition-colors"
+                    className="absolute bottom-0 right-0 bg-teal-500 text-white rounded-full p-1.5 md:p-2 hover:bg-teal-600 shadow-lg transition-colors text-sm md:text-base"
                   >
                     📷
                   </button>
                 </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900">{profileData.display_name}</h3>
-                  <p className="text-gray-600">{profileData.email}</p>
-                  <p className="text-sm text-gray-500 mt-1">{profileData.role} {profileData.company && `at ${profileData.company}`}</p>
+                <div className="text-center sm:text-left min-w-0">
+                  <h3 className="text-lg md:text-xl font-semibold text-gray-900 truncate">{profileData.display_name}</h3>
+                  <p className="text-sm md:text-base text-gray-600 truncate">{profileData.email}</p>
+                  <p className="text-xs md:text-sm text-gray-500 mt-1">{profileData.role} {profileData.company && `at ${profileData.company}`}</p>
                 </div>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Display Name</label>
                   <input
                     type="text"
                     value={profileData.display_name}
                     onChange={(e) => setProfileData({ ...profileData, display_name: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                    className="w-full px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-sm md:text-base"
                   />
                 </div>
 
@@ -291,7 +291,7 @@ function ProfileSettings({ user, onClose, onProfileUpdate, onSave }) {
                     type="email"
                     value={profileData.email}
                     disabled
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed"
+                    className="w-full px-3 md:px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed text-sm md:text-base"
                   />
                 </div>
 
@@ -301,7 +301,7 @@ function ProfileSettings({ user, onClose, onProfileUpdate, onSave }) {
                     type="text"
                     value={profileData.role}
                     onChange={(e) => setProfileData({ ...profileData, role: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                    className="w-full px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-sm md:text-base"
                   />
                 </div>
 
@@ -514,17 +514,17 @@ function ProfileSettings({ user, onClose, onProfileUpdate, onSave }) {
 
         {/* Footer */}
         {activeTab === 'profile' && (
-          <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end gap-3">
+          <div className="px-4 md:px-6 py-3 md:py-4 border-t border-gray-200 bg-gray-50 flex justify-end gap-2 md:gap-3 flex-shrink-0">
             <button
               onClick={onClose}
-              className="px-6 py-2 text-gray-700 hover:bg-gray-200 rounded-lg transition-colors"
+              className="px-4 md:px-6 py-2 text-gray-700 hover:bg-gray-200 rounded-lg transition-colors text-sm md:text-base"
             >
               Cancel
             </button>
             <button
               onClick={handleSaveProfile}
               disabled={saving}
-              className="px-6 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-4 md:px-6 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm md:text-base"
             >
               {saving ? 'Saving...' : 'Save Changes'}
             </button>

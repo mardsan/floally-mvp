@@ -301,22 +301,23 @@ export default function ProjectsPage({ user, onLogout }) {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-gradient-to-r from-teal-500 to-blue-600 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold">📁 Projects</h1>
-              <p className="text-teal-100 mt-1">Manage your projects and goals</p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6">
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <h1 className="text-xl md:text-2xl lg:text-3xl font-bold truncate">📁 Projects</h1>
+              <p className="text-teal-100 mt-1 text-xs sm:text-sm md:text-base">Manage your projects and goals</p>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
               <button
                 onClick={() => window.location.href = '/dashboard'}
-                className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors"
+                className="px-3 md:px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors text-sm md:text-base whitespace-nowrap"
               >
-                ← Back to Dashboard
+                <span className="hidden sm:inline">← Back to Dashboard</span>
+                <span className="sm:hidden">← Back</span>
               </button>
               <button
                 onClick={onLogout}
-                className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors"
+                className="px-3 md:px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors text-sm md:text-base"
               >
                 Logout
               </button>
@@ -326,28 +327,28 @@ export default function ProjectsPage({ user, onLogout }) {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
         {/* Toolbar */}
-        <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            {/* Search */}
-            <div className="flex-1 max-w-md">
+        <div className="bg-white rounded-lg shadow-sm p-3 md:p-4 mb-4 md:mb-6">
+          <div className="flex flex-col gap-3 md:gap-4">
+            {/* Search - Full Width on Mobile */}
+            <div className="w-full md:max-w-md">
               <input
                 type="text"
                 placeholder="Search projects..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                className="w-full px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm md:text-base"
               />
             </div>
 
-            {/* Filters and Actions */}
-            <div className="flex items-center gap-4">
+            {/* Filters and Actions Row */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 md:gap-4">
               {/* Status Filter */}
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                className="px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm md:text-base"
               >
                 <option value="all">All Statuses</option>
                 <option value="active">Active</option>
@@ -360,13 +361,13 @@ export default function ProjectsPage({ user, onLogout }) {
               <div className="flex border border-gray-300 rounded-lg overflow-hidden">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`px-3 py-2 ${viewMode === 'grid' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+                  className={`flex-1 sm:flex-initial px-3 py-2 text-sm md:text-base ${viewMode === 'grid' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
                 >
                   Grid
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`px-3 py-2 ${viewMode === 'list' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+                  className={`flex-1 sm:flex-initial px-3 py-2 text-sm md:text-base ${viewMode === 'list' ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
                 >
                   List
                 </button>
@@ -375,7 +376,7 @@ export default function ProjectsPage({ user, onLogout }) {
               {/* Create Button */}
               <button
                 onClick={handleCreateProject}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                className="px-4 md:px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors text-sm md:text-base"
               >
                 + New Project
               </button>
@@ -406,8 +407,8 @@ export default function ProjectsPage({ user, onLogout }) {
           </div>
         ) : (
           <div className={viewMode === 'grid' 
-            ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
-            : 'space-y-4'
+            ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6'
+            : 'space-y-3 md:space-y-4'
           }>
             {filteredProjects.map(project => (
               <div
@@ -416,26 +417,26 @@ export default function ProjectsPage({ user, onLogout }) {
               >
                 {/* Color Bar */}
                 <div 
-                  className="h-2"
+                  className="h-1.5 md:h-2"
                   style={{ backgroundColor: project.color }}
                 />
 
-                <div className="p-6">
+                <div className="p-4 md:p-6">
                   {/* Header */}
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <h3 className="text-lg font-bold text-gray-900 mb-1">
+                  <div className="flex items-start justify-between mb-3 gap-2">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2 truncate">
                         {project.name}
                       </h3>
-                      <div className="flex items-center gap-2">
-                        <span className={`text-xs px-2 py-1 rounded-full ${getStatusBadge(project.status).color}`}>
+                      <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
+                        <span className={`text-xs px-2 py-0.5 md:py-1 rounded-full ${getStatusBadge(project.status).color} whitespace-nowrap`}>
                           {getStatusBadge(project.status).label}
                         </span>
-                        <span className={`text-xs px-2 py-1 rounded-full border ${getPriorityColor(project.priority)}`}>
+                        <span className={`text-xs px-2 py-0.5 md:py-1 rounded-full border ${getPriorityColor(project.priority)} whitespace-nowrap`}>
                           {project.priority}
                         </span>
                         {project.is_primary && (
-                          <span className="text-xs px-2 py-1 rounded-full bg-purple-100 text-purple-700 border border-purple-300">
+                          <span className="text-xs px-2 py-0.5 md:py-1 rounded-full bg-purple-100 text-purple-700 border border-purple-300 whitespace-nowrap">
                             ⭐ Primary
                           </span>
                         )}
@@ -445,18 +446,18 @@ export default function ProjectsPage({ user, onLogout }) {
 
                   {/* Description */}
                   {project.description && (
-                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                    <p className="text-xs md:text-sm text-gray-600 mb-3 md:mb-4 line-clamp-2">
                       {project.description}
                     </p>
                   )}
 
                   {/* Goals with Progress */}
                   {project.goals && project.goals.length > 0 && (
-                    <div className="mb-4">
+                    <div className="mb-3 md:mb-4">
                       <div className="text-xs font-semibold text-gray-500 mb-2">
                         Goals ({project.goals.length})
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1.5 md:space-y-2">
                         {project.goals.slice(0, 2).map((goal, idx) => {
                           const hasSubTasks = goal.sub_tasks && goal.sub_tasks.length > 0;
                           const completedCount = hasSubTasks 
@@ -467,7 +468,7 @@ export default function ProjectsPage({ user, onLogout }) {
                           return (
                             <div key={idx} className="text-xs">
                               <div className="text-gray-700 font-medium flex items-start gap-1">
-                                <span className="text-gray-400">•</span>
+                                <span className="text-gray-400 flex-shrink-0">•</span>
                                 <span className="line-clamp-1 flex-1">{goal.goal || goal}</span>
                               </div>
                               {hasSubTasks && (
@@ -488,16 +489,16 @@ export default function ProjectsPage({ user, onLogout }) {
                   )}
 
                   {/* Actions */}
-                  <div className="flex items-center gap-2 pt-4 border-t border-gray-100">
+                  <div className="flex items-center gap-2 pt-3 md:pt-4 border-t border-gray-100">
                     <button
                       onClick={() => handleEditProject(project)}
-                      className="flex-1 px-3 py-2 text-sm bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors font-medium"
+                      className="flex-1 px-3 py-1.5 md:py-2 text-xs md:text-sm bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors font-medium"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDeleteProject(project.id)}
-                      className="px-3 py-2 text-sm bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors font-medium"
+                      className="px-3 py-1.5 md:py-2 text-xs md:text-sm bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors font-medium"
                     >
                       Delete
                     </button>
@@ -511,14 +512,29 @@ export default function ProjectsPage({ user, onLogout }) {
 
       {/* Create/Edit Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                {editingProject ? 'Edit Project' : 'Create New Project'}
-              </h2>
+        <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center p-0 sm:p-4 z-50">
+          <div className="bg-white rounded-t-2xl sm:rounded-lg w-full sm:max-w-2xl h-[90vh] sm:max-h-[90vh] overflow-hidden flex flex-col">
+            {/* Sticky Header */}
+            <div className="p-4 md:p-6 border-b border-gray-200 flex-shrink-0">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl md:text-2xl font-bold text-gray-900">
+                  {editingProject ? 'Edit Project' : 'Create New Project'}
+                </h2>
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="text-gray-500 hover:text-gray-700 p-1"
+                  type="button"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
 
-              <form onSubmit={handleSaveProject} className="space-y-4">
+            {/* Scrollable Content */}
+            <div className="flex-1 overflow-y-auto p-4 md:p-6">
+              <form onSubmit={handleSaveProject} className="space-y-4" id="project-form">
                 {/* Project Name */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -529,7 +545,7 @@ export default function ProjectsPage({ user, onLogout }) {
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                    className="w-full px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm md:text-base"
                     placeholder="e.g., Website Redesign"
                   />
                 </div>
@@ -543,13 +559,13 @@ export default function ProjectsPage({ user, onLogout }) {
                     value={formData.description}
                     onChange={(e) => setFormData({...formData, description: e.target.value})}
                     rows={3}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                    className="w-full px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm md:text-base"
                     placeholder="What is this project about?"
                   />
                 </div>
 
                 {/* Status and Priority */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Status
@@ -557,7 +573,7 @@ export default function ProjectsPage({ user, onLogout }) {
                     <select
                       value={formData.status}
                       onChange={(e) => setFormData({...formData, status: e.target.value})}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                      className="w-full px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm md:text-base"
                     >
                       <option value="active">Active</option>
                       <option value="on_hold">On Hold</option>
@@ -573,7 +589,7 @@ export default function ProjectsPage({ user, onLogout }) {
                     <select
                       value={formData.priority}
                       onChange={(e) => setFormData({...formData, priority: e.target.value})}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                      className="w-full px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm md:text-base"
                     >
                       <option value="low">Low</option>
                       <option value="medium">Medium</option>
@@ -625,24 +641,27 @@ export default function ProjectsPage({ user, onLogout }) {
                     </p>
                   </div>
                 )}
-
-                {/* Actions */}
-                <div className="flex items-center gap-3 pt-4">
-                  <button
-                    type="button"
-                    onClick={() => setShowModal(false)}
-                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-                  >
-                    {editingProject ? 'Save Changes' : 'Create Project'}
-                  </button>
-                </div>
               </form>
+            </div>
+
+            {/* Sticky Footer */}
+            <div className="p-4 md:p-6 border-t border-gray-200 bg-gray-50 flex-shrink-0">
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm md:text-base"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  form="project-form"
+                  className="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm md:text-base"
+                >
+                  {editingProject ? 'Save Changes' : 'Create Project'}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -650,13 +669,13 @@ export default function ProjectsPage({ user, onLogout }) {
 
       {/* Aimy Wizard - Initial Description Step */}
       {showWizard && wizardStep === 'input' && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-xl w-full">
-            <div className="p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+        <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center p-0 sm:p-4 z-50">
+          <div className="bg-white rounded-t-2xl sm:rounded-lg w-full sm:max-w-xl">
+            <div className="p-4 md:p-6">
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
                 🪄 Create Project with Aimy
               </h2>
-              <p className="text-gray-600 mb-6">
+              <p className="text-sm md:text-base text-gray-600 mb-4 md:mb-6">
                 Tell Aimy what you're working on, and she'll help you plan it out!
               </p>
 
@@ -670,7 +689,7 @@ export default function ProjectsPage({ user, onLogout }) {
                     onChange={(e) => setProjectDescription(e.target.value)}
                     rows={4}
                     placeholder="e.g., Website redesign with modern UI, or Launch new product feature, or Research market competitors..."
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                    className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm md:text-base"
                     autoFocus
                   />
                   <p className="text-xs text-gray-500 mt-1">
@@ -678,7 +697,7 @@ export default function ProjectsPage({ user, onLogout }) {
                   </p>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                   <button
                     onClick={() => {
                       setShowWizard(false);
