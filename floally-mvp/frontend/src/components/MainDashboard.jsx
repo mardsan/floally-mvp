@@ -19,6 +19,7 @@ function MainDashboard({ user, onLogout }) {
   const [expandedOneThingDetails, setExpandedOneThingDetails] = useState(false);
   const [oneThingStatus, setOneThingStatus] = useState('preparing');
   const [standupStatusId, setStandupStatusId] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     loadDashboardData();
@@ -355,49 +356,53 @@ function MainDashboard({ user, onLogout }) {
     <div className="min-h-screen bg-gradient-to-br from-okaimy-mint-50 via-white to-okaimy-emerald-50">
       {/* Header */}
       <header className="bg-white/90 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <img src="/okaimy-logo-01.png" alt="OkAimy" className="h-8" />
-              <div>
-                <h1 className="text-xl font-bold text-gray-900">
-                  {getGreeting()}, {user.display_name || user.email.split('@')[0]}! 👋
+            {/* Left: Logo & Greeting */}
+            <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
+              <img src="/okaimy-logo-01.png" alt="OkAimy" className="h-6 sm:h-8 flex-shrink-0" />
+              <div className="min-w-0">
+                <h1 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 truncate">
+                  {getGreeting()}, {user.display_name || user.email.split('@')[0]}!
                 </h1>
-                <p className="text-sm text-gray-600">Here's what's happening today</p>
+                <p className="text-xs sm:text-sm text-gray-600 hidden sm:block">Here's what's happening today</p>
               </div>
             </div>
-            <div className="flex items-center gap-4">
+            
+            {/* Right: Desktop Nav (hidden on mobile) */}
+            <div className="hidden md:flex items-center gap-3 lg:gap-4">
               <Button
                 variant="ghost"
+                size="sm"
                 onClick={() => window.location.href = '/projects'}
                 className="gap-2"
               >
                 <Icon name="note" size="sm" />
-                Projects
+                <span className="hidden lg:inline">Projects</span>
               </Button>
               
-              {/* User Profile Section */}
-              <div className="flex items-center gap-3 pl-4 border-l border-gray-300">
-                {/* Profile Hub Button */}
+              {/* Desktop Profile & Settings */}
+              <div className="flex items-center gap-2 lg:gap-3 pl-3 lg:pl-4 border-l border-gray-300">
                 <Button
                   variant="ghost"
+                  size="sm"
                   onClick={() => setShowProfileHub(true)}
                   className="gap-2"
-                  title="Profile Hub - Trusted Contacts & More"
+                  title="Profile Hub"
                 >
                   <Icon name="contacts" size="sm" />
-                  <span className="text-sm font-medium">Profile</span>
+                  <span className="hidden lg:inline">Profile</span>
                 </Button>
                 
-                {/* Settings Button */}
                 <Button
                   variant="ghost"
+                  size="sm"
                   onClick={() => setShowProfileSettings(true)}
-                  className="gap-2"
+                  className="gap-1"
                   title="Settings"
                 >
-                  <span className="text-xl">⚙️</span>
-                  <span className="text-sm font-medium">Settings</span>
+                  <span className="text-lg">⚙️</span>
+                  <span className="hidden lg:inline text-sm">Settings</span>
                 </Button>
                 
                 <Button
@@ -409,22 +414,127 @@ function MainDashboard({ user, onLogout }) {
                 </Button>
               </div>
             </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              aria-label="Open menu"
+            >
+              <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* Daily Standup - Redesigned Split-Panel Layout */}
-        <section className="mb-8">
-          <div className="bg-okaimy-gradient rounded-2xl shadow-glow-lg overflow-hidden">
+      {/* Mobile Menu Drawer */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 md:hidden">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/50" 
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          
+          {/* Drawer */}
+          <div className="absolute top-0 right-0 h-full w-64 bg-white shadow-xl flex flex-col">
             {/* Header */}
-            <div className="px-8 py-6 text-white flex items-start justify-between">
-              <div>
-                <h2 className="text-2xl font-bold mb-2 flex items-center gap-2">
+            <div className="flex items-center justify-between p-4 border-b border-gray-200">
+              <h2 className="font-bold text-gray-900">Menu</h2>
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2 hover:bg-gray-100 rounded-lg"
+                aria-label="Close menu"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Menu Items */}
+            <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+              <button
+                onClick={() => {
+                  window.location.href = '/projects';
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 text-left text-gray-700 hover:bg-okaimy-mint-50 rounded-lg transition-colors"
+              >
+                <Icon name="note" size="md" />
+                <span className="font-medium">Projects</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowProfileHub(true);
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 text-left text-gray-700 hover:bg-okaimy-mint-50 rounded-lg transition-colors"
+              >
+                <Icon name="contacts" size="md" />
+                <span className="font-medium">Profile Hub</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowProfileSettings(true);
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 text-left text-gray-700 hover:bg-okaimy-mint-50 rounded-lg transition-colors"
+              >
+                <span className="text-xl">⚙️</span>
+                <span className="font-medium">Settings</span>
+              </button>
+
+              <div className="border-t border-gray-200 my-2" />
+
+              <button
+                onClick={() => {
+                  onLogout();
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 text-left text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <span className="font-medium">Logout</span>
+              </button>
+            </nav>
+
+            {/* Footer */}
+            <div className="p-4 border-t border-gray-200 bg-gray-50">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-okaimy-gradient flex items-center justify-center text-white font-semibold">
+                  {(currentUser.display_name || currentUser.email).charAt(0).toUpperCase()}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-gray-900 text-sm truncate">
+                    {currentUser.display_name || currentUser.email.split('@')[0]}
+                  </p>
+                  <p className="text-xs text-gray-500 truncate">{currentUser.email}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
+        {/* Daily Standup - Redesigned Split-Panel Layout */}
+        <section className="mb-6 md:mb-8">
+          <div className="bg-okaimy-gradient rounded-xl md:rounded-2xl shadow-glow-lg overflow-hidden">
+            {/* Header */}
+            <div className="px-4 sm:px-6 md:px-8 py-4 md:py-6 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="flex-1">
+                <h2 className="text-xl md:text-2xl font-bold mb-1 md:mb-2 flex items-center gap-2">
                   <Icon name="target" size="md" className="brightness-0 invert" />
                   Your Daily Standup
                 </h2>
-                <p className="text-okaimy-mint-100">AI-powered partnership for your most productive day</p>
+                <p className="text-sm md:text-base text-okaimy-mint-100">AI-powered partnership for your most productive day</p>
               </div>
               <Button
                 variant="ghost"
@@ -437,8 +547,8 @@ function MainDashboard({ user, onLogout }) {
             </div>
 
             {/* Main Content - Split Panel */}
-            <div className="bg-white p-8">
-              <div className="grid lg:grid-cols-2 gap-8 mb-8">
+            <div className="bg-white p-4 md:p-6 lg:p-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 mb-6 md:mb-8">
                 
                 {/* LEFT PANEL: USER'S FOCUS */}
                 <div className="space-y-6">
@@ -772,13 +882,13 @@ function MainDashboard({ user, onLogout }) {
         </section>
 
         {/* Projects + Calendar Grid (2 columns instead of 3) */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
           {/* Active Projects */}
           <section className="lg:col-span-1">
             <Card variant="elevated" padding="none" className="h-full">
-              <div className="p-6 border-b border-gray-200">
+              <div className="p-4 md:p-6 border-b border-gray-200">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                  <h3 className="text-base md:text-lg font-bold text-gray-900 flex items-center gap-2">
                     <Icon name="note" size="lg" className="text-primary" />
                     Active Projects
                   </h3>
@@ -790,7 +900,7 @@ function MainDashboard({ user, onLogout }) {
                   </button>
                 </div>
               </div>
-              <div className="p-6 space-y-3 max-h-96 overflow-y-auto">
+              <div className="p-4 md:p-6 space-y-3 max-h-96 overflow-y-auto">
                 {projects.length === 0 ? (
                   <div className="text-center py-8">
                     <p className="text-gray-500 mb-3">No projects yet</p>
@@ -852,14 +962,14 @@ function MainDashboard({ user, onLogout }) {
           {/* Calendar Events */}
           <section className="lg:col-span-1">
             <Card variant="elevated" padding="none" className="h-full">
-              <div className="p-6 border-b border-gray-200">
-                <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+              <div className="p-4 md:p-6 border-b border-gray-200">
+                <h3 className="text-base md:text-lg font-bold text-gray-900 flex items-center gap-2">
                   <Icon name="calendar" size="lg" className="text-primary" />
                   Upcoming Events
                 </h3>
                 <p className="text-sm text-gray-500 mt-1">Next 7 days</p>
               </div>
-              <div className="p-6 space-y-3 max-h-96 overflow-y-auto">
+              <div className="p-4 md:p-6 space-y-3 max-h-96 overflow-y-auto">
                 {calendarEvents.length === 0 ? (
                   <div className="text-center py-8">
                     <p className="text-gray-500">No upcoming events</p>
@@ -889,12 +999,12 @@ function MainDashboard({ user, onLogout }) {
         </div>
 
         {/* Smart Messages - Full Width */}
-        <section className="mb-8">
+        <section className="mb-6 md:mb-8">
           <EnhancedMessages user={user} />
         </section>
 
         {/* Universal Calendar */}
-        <section className="mb-8">
+        <section className="mb-6 md:mb-8">
           <UniversalCalendar 
             projects={projects}
             calendarEvents={calendarEvents}
@@ -904,13 +1014,13 @@ function MainDashboard({ user, onLogout }) {
         </section>
 
         {/* Quick Actions */}
-        <section className="mb-8">
+        <section className="mb-6 md:mb-8">
           <Card variant="elevated" padding="lg">
-            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <h3 className="text-base md:text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
               <Icon name="star" size="lg" className="text-primary" />
               Quick Actions
             </h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
               <button className="p-4 bg-gradient-to-br from-okaimy-mint-50 to-okaimy-emerald-50 rounded-lg border-2 border-okaimy-mint-200 hover:border-okaimy-mint-400 hover:shadow-glow transition-all text-left">
                 <div className="mb-2">
                   <Icon name="Mail" size="2xl" className="text-primary" />
