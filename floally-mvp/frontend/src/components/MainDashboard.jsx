@@ -547,38 +547,38 @@ function MainDashboard({ user, onLogout }) {
             </div>
 
             {/* Main Content - Split Panel */}
-            <div className="bg-white p-4 md:p-6 lg:p-8">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 mb-6 md:mb-8">
+            <div className="bg-white p-3 md:p-6 lg:p-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8 mb-4 md:mb-6 lg:mb-8">
                 
                 {/* LEFT PANEL: USER'S FOCUS */}
-                <div className="space-y-6">
+                <div className="space-y-4 md:space-y-6">
                   {/* User Avatar Header */}
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="w-16 h-16 rounded-full overflow-hidden ring-4 ring-okaimy-mint-200 bg-okaimy-gradient flex items-center justify-center text-white text-2xl font-bold shadow-glow">
+                  <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
+                    <div className="w-12 h-12 md:w-16 md:h-16 rounded-full overflow-hidden ring-2 md:ring-4 ring-okaimy-mint-200 bg-okaimy-gradient flex items-center justify-center text-white text-xl md:text-2xl font-bold shadow-glow flex-shrink-0">
                       {currentUser?.avatar_url ? (
                         <img src={currentUser.avatar_url} alt={currentUser.display_name} className="w-full h-full object-cover" />
                       ) : (
                         currentUser?.display_name?.charAt(0).toUpperCase() || <Icon name="contacts" size="lg" className="brightness-0 invert" />
                       )}
                     </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-800">Your Focus Today</h3>
-                      <p className="text-sm text-gray-600">{currentUser?.display_name || 'You'}</p>
+                    <div className="min-w-0">
+                      <h3 className="text-lg md:text-xl font-bold text-gray-800">Your Focus Today</h3>
+                      <p className="text-xs md:text-sm text-gray-600 truncate">{currentUser?.display_name || 'You'}</p>
                     </div>
                   </div>
 
                   {/* The One Thing */}
-                  <Card variant="gradient" padding="lg" className="shadow-lg border-2 border-okaimy-mint-300">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-2">
-                        <Icon name="target" size="lg" className="text-primary" />
-                        <h4 className="text-lg font-bold text-okaimy-mint-900">The One Thing</h4>
+                  <Card variant="gradient" padding="md" className="shadow-lg border-2 border-okaimy-mint-300">
+                    <div className="flex items-center justify-between mb-3 md:mb-4 gap-2">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <Icon name="target" size="md" className="text-primary flex-shrink-0" />
+                        <h4 className="text-base md:text-lg font-bold text-okaimy-mint-900 truncate">The One Thing</h4>
                       </div>
                       {/* Status Dropdown */}
                       <select
                         value={oneThingStatus}
                         onChange={(e) => handleStatusChange(e.target.value)}
-                        className="px-3 py-1.5 text-sm border-2 border-okaimy-mint-300 rounded-lg bg-white font-medium focus:outline-none focus:border-primary"
+                        className="px-2 md:px-3 py-1 md:py-1.5 text-xs md:text-sm border-2 border-okaimy-mint-300 rounded-lg bg-white font-medium focus:outline-none focus:border-primary flex-shrink-0"
                       >
                         <option value="preparing">⚪ Preparing</option>
                         <option value="in_progress">🟡 In Progress</option>
@@ -588,20 +588,20 @@ function MainDashboard({ user, onLogout }) {
                     </div>
                     
                     {/* Main task - bold and prominent */}
-                    <div className="mb-4">
-                      <h5 className="text-xl font-bold text-gray-900 mb-2">
+                    <div className="mb-3 md:mb-4">
+                      <h5 className="text-base md:text-xl font-bold text-gray-900 mb-1 md:mb-2">
                         {standup?.one_thing || "Review Q4 budget priorities"}
                       </h5>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-xs md:text-sm text-gray-600">
                         {standup?.subtitle || "From Aimy: High priority deadline today · 2-3 hours"}
                       </p>
                     </div>
                     
                     {/* Expandable Details */}
                     {expandedOneThingDetails && standup?.task_details && (
-                      <div className="mb-4 p-4 bg-white/70 rounded-lg border border-okaimy-mint-200">
-                        <h6 className="text-sm font-semibold text-okaimy-mint-900 mb-2">Details from Aimy:</h6>
-                        <div className="text-sm text-gray-700 whitespace-pre-wrap max-h-60 overflow-y-auto">
+                      <div className="mb-3 md:mb-4 p-3 md:p-4 bg-white/70 rounded-lg border border-okaimy-mint-200">
+                        <h6 className="text-xs md:text-sm font-semibold text-okaimy-mint-900 mb-2">Details from Aimy:</h6>
+                        <div className="text-xs md:text-sm text-gray-700 whitespace-pre-wrap max-h-60 overflow-y-auto">
                           {(() => {
                             const currentTask = standup.one_thing;
                             const details = standup.task_details[currentTask] || {};
@@ -620,14 +620,14 @@ function MainDashboard({ user, onLogout }) {
                         variant="secondary"
                         size="sm"
                         onClick={() => setExpandedOneThingDetails(!expandedOneThingDetails)}
-                        className="sm:flex-initial"
+                        className="sm:flex-initial text-xs md:text-sm"
                       >
                         {expandedOneThingDetails ? '▼ Hide Details' : '▶ Show Details'}
                       </Button>
                       <Button
                         variant="primary"
                         size="sm"
-                        className="flex-1"
+                        className="flex-1 text-xs md:text-sm"
                         onClick={() => {
                           handleStatusChange('in_progress');
                           setExpandedOneThingDetails(true);
@@ -639,9 +639,9 @@ function MainDashboard({ user, onLogout }) {
                   </Card>
 
                   {/* Other Priorities */}
-                  <div className="bg-gray-50 rounded-xl p-6">
-                    <h4 className="text-lg font-bold text-gray-800 mb-4">📋 Other Priorities</h4>
-                    <div className="space-y-3">
+                  <div className="bg-gray-50 rounded-xl p-3 md:p-4 lg:p-6">
+                    <h4 className="text-base md:text-lg font-bold text-gray-800 mb-3 md:mb-4">📋 Other Priorities</h4>
+                    <div className="space-y-2 md:space-y-3">
                       {standup?.decisions && standup.decisions.length > 0 ? (
                         standup.decisions.map((decision, idx) => (
                           <button
@@ -674,20 +674,20 @@ function MainDashboard({ user, onLogout }) {
                               setOneThingStatus('preparing');
                               setExpandedOneThingDetails(false);
                             }}
-                            className="w-full text-left bg-white rounded-lg p-4 hover:bg-blue-50 hover:border-blue-300 border-2 border-gray-200 transition-all group"
+                            className="w-full text-left bg-white rounded-lg p-2.5 md:p-3 lg:p-4 hover:bg-blue-50 hover:border-blue-300 border-2 border-gray-200 transition-all group"
                           >
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <p className="text-gray-800 font-medium group-hover:text-blue-900">
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm md:text-base text-gray-800 font-medium group-hover:text-blue-900">
                                   {decision.decision}
                                 </p>
                                 {decision.action && (
-                                  <p className="text-sm text-gray-500 mt-1">
+                                  <p className="text-xs md:text-sm text-gray-500 mt-1">
                                     {decision.action}
                                   </p>
                                 )}
                               </div>
-                              <span className="text-gray-400 group-hover:text-blue-600 ml-3">→</span>
+                              <span className="text-gray-400 group-hover:text-blue-600 flex-shrink-0">→</span>
                             </div>
                           </button>
                         ))
@@ -702,10 +702,10 @@ function MainDashboard({ user, onLogout }) {
                 </div>
 
                 {/* RIGHT PANEL: AIMY'S WORK */}
-                <div className="space-y-6">
+                <div className="space-y-4 md:space-y-6">
                   {/* Aimy Avatar Header */}
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="w-16 h-16 rounded-full overflow-hidden ring-4 ring-okaimy-mint-200 bg-white shadow-glow">
+                  <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
+                    <div className="w-12 h-12 md:w-16 md:h-16 rounded-full overflow-hidden ring-2 md:ring-4 ring-okaimy-mint-200 bg-white shadow-glow flex-shrink-0">
                       <img 
                         src="/okaimy-pfp-01.png" 
                         alt="Aimy" 
@@ -716,33 +716,33 @@ function MainDashboard({ user, onLogout }) {
                         }}
                       />
                     </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-800">Aimy's Work Today</h3>
-                      <p className="text-sm text-gray-600">Your AI Partner</p>
+                    <div className="min-w-0">
+                      <h3 className="text-lg md:text-xl font-bold text-gray-800">Aimy's Work Today</h3>
+                      <p className="text-xs md:text-sm text-gray-600">Your AI Partner</p>
                     </div>
                   </div>
 
                   {/* Daily Summary */}
-                  <Card variant="gradient" padding="lg" className="shadow-lg border-2 border-okaimy-mint-300">
-                    <div className="flex items-center gap-2 mb-4">
-                      <Icon name="check" size="lg" className="text-primary" />
-                      <h4 className="text-lg font-bold text-okaimy-mint-900">Daily Summary</h4>
+                  <Card variant="gradient" padding="md" className="shadow-lg border-2 border-okaimy-mint-300">
+                    <div className="flex items-center gap-2 mb-3 md:mb-4">
+                      <Icon name="check" size="md" className="text-primary flex-shrink-0" />
+                      <h4 className="text-base md:text-lg font-bold text-okaimy-mint-900">Daily Summary</h4>
                     </div>
-                    <div className="grid grid-cols-2 gap-3 mb-4">
-                      <div className="bg-white/60 rounded-lg p-3 text-center">
-                        <div className="text-2xl font-bold text-primary">
+                    <div className="grid grid-cols-2 gap-2 md:gap-3 mb-3 md:mb-4">
+                      <div className="bg-white/60 rounded-lg p-2 md:p-3 text-center">
+                        <div className="text-xl md:text-2xl font-bold text-primary">
                           {standup?.summary?.total_emails || 0}
                         </div>
-                        <div className="text-xs text-okaimy-mint-600">Items Monitored</div>
+                        <div className="text-xs text-okaimy-mint-600">Monitored</div>
                       </div>
-                      <div className="bg-white/60 rounded-lg p-3 text-center">
-                        <div className="text-2xl font-bold text-orange-600">
+                      <div className="bg-white/60 rounded-lg p-2 md:p-3 text-center">
+                        <div className="text-xl md:text-2xl font-bold text-orange-600">
                           {standup?.summary?.urgent_items || 0}
                         </div>
-                        <div className="text-xs text-orange-600">Urgent Items</div>
+                        <div className="text-xs text-orange-600">Urgent</div>
                       </div>
                     </div>
-                    <div className="text-sm text-okaimy-mint-800 space-y-2">
+                    <div className="text-xs md:text-sm text-okaimy-mint-800 space-y-1.5 md:space-y-2">
                       {standup?.daily_plan && standup.daily_plan.length > 0 ? (
                         standup.daily_plan.map((item, idx) => (
                           <p key={idx} className="flex items-start gap-2">
@@ -771,23 +771,23 @@ function MainDashboard({ user, onLogout }) {
 
                   {/* Things Aimy is Working On */}
                   <Card variant="bordered" padding="none" className="overflow-hidden">
-                    <div className="bg-okaimy-gradient px-6 py-4 flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-white">
-                        <Icon name="check" size="md" className="brightness-0 invert" />
-                        <h4 className="font-bold">Things I'm Working On</h4>
+                    <div className="bg-okaimy-gradient px-3 md:px-4 lg:px-6 py-3 md:py-4 flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 text-white min-w-0">
+                        <Icon name="check" size="sm" className="brightness-0 invert flex-shrink-0" />
+                        <h4 className="font-bold text-sm md:text-base truncate">Things I'm Working On</h4>
                       </div>
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={loadStandup}
                         disabled={loadingStandup}
-                        className="bg-white/20 hover:bg-white/30 text-white border-0"
+                        className="bg-white/20 hover:bg-white/30 text-white border-0 text-xs md:text-sm flex-shrink-0"
                       >
-                        {loadingStandup ? '⏳' : '🔄 Regenerate'}
+                        {loadingStandup ? '⏳' : '🔄'}
                       </Button>
                     </div>
                     
-                    <div className="p-6 space-y-4">
+                    <div className="p-3 md:p-4 lg:p-6 space-y-3 md:space-y-4">
                       {standup?.autonomous_tasks && standup.autonomous_tasks.length > 0 ? (
                         standup.autonomous_tasks.map((task, idx) => {
                           // Parse task if it's a string with status in parentheses
@@ -797,11 +797,11 @@ function MainDashboard({ user, onLogout }) {
                             : (task.status || 'ready');
                           
                           return (
-                            <div key={idx} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                              <div className="flex items-start justify-between mb-3">
-                                <div className="flex-1">
-                                  <p className="text-gray-800 font-medium mb-1">{taskText}</p>
-                                  <span className={`text-xs px-2 py-1 rounded ${
+                            <div key={idx} className="bg-gray-50 rounded-lg p-2.5 md:p-3 lg:p-4 border border-gray-200">
+                              <div className="flex items-start justify-between mb-2 md:mb-3 gap-2">
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm md:text-base text-gray-800 font-medium mb-1">{taskText}</p>
+                                  <span className={`inline-block text-xs px-2 py-0.5 md:py-1 rounded ${
                                     taskStatus === 'monitoring' ? 'text-primary bg-okaimy-mint-50' :
                                     taskStatus === 'drafting' ? 'text-purple-600 bg-purple-50' :
                                     'text-accent bg-okaimy-emerald-50'
