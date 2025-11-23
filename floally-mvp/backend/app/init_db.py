@@ -12,6 +12,7 @@ def init_database():
     """
     Initialize all database tables
     Creates tables if they don't exist
+    FORCE RECREATES trusted_senders if schema is wrong
     """
     if not engine:
         logger.warning("No database engine available - skipping table creation")
@@ -35,6 +36,17 @@ def init_database():
         existing_tables = inspector.get_table_names()
         logger.info(f"📋 Existing tables: {existing_tables}")
         
+        # FORCE DROP AND RECREATE trusted_senders if it exists (to fix schema)
+        if 'trusted_senders' in existing_tables:
+            logger.info("🔨 Dropping existing trusted_senders table to fix schema...")
+            try:
+                with engine.connect() as conn:
+                    conn.execute(text("DROP TABLE IF EXISTS trusted_senders CASCADE"))
+                    conn.commit()
+                logger.info("✅ Old trusted_senders table dropped")
+            except Exception as e:
+                logger.warning(f"Could not drop trusted_senders: {e}")
+        
         # Create all tables
         logger.info("🔨 Creating database tables...")
         Base.metadata.create_all(bind=engine)
@@ -44,10 +56,15 @@ def init_database():
         updated_tables = inspector.get_table_names()
         
         if 'trusted_senders' in updated_tables:
-            logger.info("✅ trusted_senders table verified")
+            # Verify it has the trust_level column
+            columns = [col['name'] for col in inspector.get_columns('trusted_senders')]
+            if 'trust_level' in columns:
+                logger.info("✅ trusted_senders table verified with trust_level column")
+            else:
+                logger.error("❌ trusted_senders table missing trust_level column")
+                create_trusted_senders_manually()
         else:
             logger.error("❌ trusted_senders table NOT created - attempting manual creation")
-            # Manual creation as fallback
             create_trusted_senders_manually()
         
         logger.info(f"✅ Database initialized with tables: {updated_tables}")
