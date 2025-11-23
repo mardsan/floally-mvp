@@ -3,6 +3,7 @@ Trusted Sender Model
 Tracks senders and their trust level for attachment processing
 """
 from sqlalchemy import Column, String, Integer, DateTime, Boolean, ForeignKey, Enum
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from datetime import datetime, timezone
 import enum
@@ -21,7 +22,7 @@ class TrustedSender(Base):
     __tablename__ = "trusted_senders"
     
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     sender_email = Column(String, nullable=False, index=True)
     sender_name = Column(String)
     
