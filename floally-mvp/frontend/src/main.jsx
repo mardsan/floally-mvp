@@ -1,4 +1,4 @@
-// Build: FORCE_DEPLOY_20251107_181102 - Trusted Contacts deployment
+// Build: FORCE_DEPLOY_20251123_234500 - Mobile Responsive + Schema Fix
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'

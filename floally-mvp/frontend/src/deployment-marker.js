@@ -1,9 +1,9 @@
 // DEPLOYMENT MARKER - DO NOT REMOVE
-// Deployed: 20251107_181102
-// Version: 0.0.4
-// Feature: Trusted Contacts Management UI
+// Deployed: 20251123_234500
+// Version: 1.3.1
+// Feature: Mobile Responsive Design (5/8 components complete)
 export const DEPLOYMENT_INFO = {
-  timestamp: '20251107_181102',
-  version: '0.0.4',
-  feature: 'Trusted Contacts Tab in Profile Hub'
+  timestamp: '20251123_234500',
+  version: '1.3.1',
+  feature: 'Mobile Responsive: TrustedContacts + Calendar + EventDetails'
 };
