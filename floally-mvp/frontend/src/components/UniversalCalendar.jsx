@@ -211,24 +211,26 @@ const UniversalCalendar = ({ projects, calendarEvents, user, onOpenProject }) =>
   return (
     <div className="bg-white rounded-xl shadow-lg border border-gray-200">
       {/* Header */}
-      <div className="p-6 border-b border-gray-200">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-2xl font-bold text-gray-900">📆 Universal Calendar</h3>
-          <div className="flex items-center gap-2">
+      <div className="p-3 md:p-6 border-b border-gray-200">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+          <h3 className="text-lg md:text-2xl font-bold text-gray-900">📆 Universal Calendar</h3>
+          <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-start">
             <button
               onClick={() => changeMonth(-1)}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors touch-target"
+              aria-label="Previous month"
             >
               <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
-            <div className="text-lg font-semibold text-gray-800 min-w-[180px] text-center">
+            <div className="text-base md:text-lg font-semibold text-gray-800 min-w-[140px] md:min-w-[180px] text-center">
               {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
             </div>
             <button
               onClick={() => changeMonth(1)}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors touch-target"
+              aria-label="Next month"
             >
               <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -238,11 +240,11 @@ const UniversalCalendar = ({ projects, calendarEvents, user, onOpenProject }) =>
         </div>
 
         {/* Filters */}
-        <div className="flex items-center gap-3 flex-wrap">
-          <span className="text-sm text-gray-600">Filter:</span>
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-xs md:text-sm text-gray-600">Filter:</span>
           <button
             onClick={() => setSelectedProject(null)}
-            className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+            className={`px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-medium transition-colors ${
               selectedProject === null
                 ? 'bg-teal-500 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -254,49 +256,54 @@ const UniversalCalendar = ({ projects, calendarEvents, user, onOpenProject }) =>
             <button
               key={project.id}
               onClick={() => setSelectedProject(project.id === selectedProject ? null : project.id)}
-              className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+              className={`px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-medium transition-colors truncate max-w-[120px] sm:max-w-none ${
                 selectedProject === project.id
                   ? 'bg-teal-500 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
+              title={project.name}
             >
               {project.name}
             </button>
           ))}
         </div>
 
-        {/* Legend */}
-        <div className="mt-4 flex items-center gap-4 text-xs">
+        {/* Legend - More compact on mobile */}
+        <div className="mt-3 md:mt-4 flex flex-wrap items-center gap-2 md:gap-4 text-xs">
           <div className="flex items-center gap-1">
             <div className="w-3 h-3 bg-purple-100 border border-purple-300 rounded"></div>
-            <span className="text-gray-600">Calendar Events</span>
+            <span className="text-gray-600 hidden sm:inline">Calendar Events</span>
+            <span className="text-gray-600 sm:hidden">Calendar</span>
           </div>
           <div className="flex items-center gap-1">
             <div className="w-3 h-3 bg-blue-100 border border-blue-300 rounded"></div>
-            <span className="text-gray-600">Project Goals</span>
+            <span className="text-gray-600 hidden sm:inline">Project Goals</span>
+            <span className="text-gray-600 sm:hidden">Projects</span>
           </div>
           <div className="flex items-center gap-1">
-            <span className="text-gray-600">✅ Completed</span>
+            <span className="text-gray-600">✅ Done</span>
           </div>
           <div className="flex items-center gap-1">
-            <span className="text-gray-600">🔄 In Progress</span>
+            <span className="text-gray-600">🔄 Active</span>
           </div>
         </div>
       </div>
 
       {/* Calendar Grid */}
-      <div className="p-4">
-        {/* Day Headers */}
-        <div className="grid grid-cols-7 gap-1 mb-2">
-          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-            <div key={day} className="text-center text-sm font-semibold text-gray-600 py-2">
-              {day}
+      <div className="p-2 md:p-4">
+        {/* Day Headers - Abbreviated on mobile */}
+        <div className="grid grid-cols-7 gap-0.5 md:gap-1 mb-2">
+          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, idx) => (
+            <div key={day} className="text-center text-xs md:text-sm font-semibold text-gray-600 py-1 md:py-2">
+              {/* Show single letter on smallest screens, full on md+ */}
+              <span className="hidden sm:inline">{day}</span>
+              <span className="sm:hidden">{day.charAt(0)}</span>
             </div>
           ))}
         </div>
 
         {/* Calendar Days */}
-        <div className="grid grid-cols-7 gap-1">
+        <div className="grid grid-cols-7 gap-0.5 md:gap-1">
           {days.map((day, index) => {
             const dayEvents = getEventsForDate(day.date);
             const isTodayDate = isToday(day.date);
@@ -304,7 +311,7 @@ const UniversalCalendar = ({ projects, calendarEvents, user, onOpenProject }) =>
             return (
               <div
                 key={index}
-                className={`min-h-[100px] border rounded-lg p-2 transition-all ${
+                className={`min-h-[60px] sm:min-h-[80px] md:min-h-[100px] border rounded p-1 md:p-2 transition-all ${
                   day.isCurrentMonth
                     ? isTodayDate
                       ? 'bg-teal-50 border-teal-400 border-2'
@@ -312,7 +319,7 @@ const UniversalCalendar = ({ projects, calendarEvents, user, onOpenProject }) =>
                     : 'bg-gray-50 border-gray-100'
                 }`}
               >
-                <div className={`text-sm font-medium mb-2 ${
+                <div className={`text-xs md:text-sm font-medium mb-1 md:mb-2 ${
                   day.isCurrentMonth
                     ? isTodayDate
                       ? 'text-teal-700 font-bold'
@@ -323,18 +330,24 @@ const UniversalCalendar = ({ projects, calendarEvents, user, onOpenProject }) =>
                 </div>
 
                 {/* Events for this day */}
-                <div className="space-y-1">
-                  {dayEvents.map((event, idx) => (
+                <div className="space-y-0.5 md:space-y-1">
+                  {dayEvents.slice(0, 2).map((event, idx) => (
                     <div
                       key={idx}
                       onClick={() => setSelectedEvent(event)}
-                      className={`text-xs p-1 rounded border ${getEventColor(event)} truncate cursor-pointer hover:shadow-md transition-shadow`}
+                      className={`text-[10px] sm:text-xs p-0.5 md:p-1 rounded border ${getEventColor(event)} truncate cursor-pointer hover:shadow-md transition-shadow`}
                       title={`${event.title} - ${event.source}`}
                     >
-                      <span className="mr-1">{getEventIcon(event)}</span>
-                      {event.title}
+                      <span className="mr-0.5 md:mr-1">{getEventIcon(event)}</span>
+                      <span className="hidden sm:inline">{event.title}</span>
+                      <span className="sm:hidden">{event.title.substring(0, 4)}</span>
                     </div>
                   ))}
+                  {dayEvents.length > 2 && (
+                    <div className="text-[9px] sm:text-[10px] text-gray-500 text-center">
+                      +{dayEvents.length - 2} more
+                    </div>
+                  )}
                 </div>
               </div>
             );
@@ -343,21 +356,21 @@ const UniversalCalendar = ({ projects, calendarEvents, user, onOpenProject }) =>
       </div>
 
       {/* Summary Stats */}
-      <div className="p-4 border-t border-gray-200 bg-gray-50 rounded-b-xl">
-        <div className="flex items-center justify-between text-sm">
+      <div className="p-3 md:p-4 border-t border-gray-200 bg-gray-50 rounded-b-xl">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs md:text-sm">
           <div className="text-gray-600">
             <span className="font-semibold">{events.length}</span> total events this month
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 md:gap-4">
             <div className="text-gray-600">
               <span className="font-semibold">
                 {events.filter(e => e.type === 'project_goal').length}
-              </span> project goals
+              </span> <span className="hidden sm:inline">project</span> goals
             </div>
             <div className="text-gray-600">
               <span className="font-semibold">
                 {events.filter(e => e.type === 'calendar_event').length}
-              </span> calendar events
+              </span> <span className="hidden sm:inline">calendar</span> events
             </div>
           </div>
         </div>
