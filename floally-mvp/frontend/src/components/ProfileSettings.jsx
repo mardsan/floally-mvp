@@ -229,20 +229,21 @@ function ProfileSettings({ user, onClose, onProfileUpdate, onSave }) {
         </div>
 
         {/* Tabs */}
-        <div className="px-3 md:px-6 pt-3 md:pt-4 border-b border-gray-200 bg-gray-50 flex-shrink-0 overflow-x-auto">
-          <div className="flex gap-1 md:gap-2 min-w-max">
+        <div className="border-b border-gray-200 bg-gray-50 flex-shrink-0 overflow-x-auto scrollbar-hide -mx-0">
+          <div className="flex gap-1 md:gap-2 px-3 md:px-6 pt-3 md:pt-4">
             {tabs.map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-3 md:px-4 py-2 rounded-t-lg font-medium transition-all text-sm md:text-base whitespace-nowrap ${
+                className={`px-3 md:px-4 py-2 rounded-t-lg font-medium transition-all text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
                   activeTab === tab.id
                     ? 'bg-white text-teal-600 border-t-2 border-teal-500'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                 }`}
               >
                 <span className="mr-2">{tab.icon}</span>
-                {tab.label}
+                <span className="hidden sm:inline">{tab.label}</span>
+                <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
               </button>
             ))}
           </div>
