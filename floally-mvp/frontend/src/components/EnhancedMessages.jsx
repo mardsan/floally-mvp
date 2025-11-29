@@ -128,21 +128,21 @@ function EnhancedMessages({ user }) {
   return (
     <div className="bg-white rounded-xl shadow-lg border border-gray-200">
       {/* Header */}
-      <div className="p-6 border-b border-gray-200">
-        <div className="flex items-center justify-between mb-4">
+      <div className="p-4 md:p-6 border-b border-gray-200">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
           <div>
-            <h3 className="text-lg font-bold text-gray-900">✉️ Smart Messages</h3>
-            <p className="text-sm text-gray-500 mt-1">
+            <h3 className="text-lg md:text-xl font-bold text-gray-900">✉️ Smart Messages</h3>
+            <p className="text-xs md:text-sm text-gray-500 mt-1">
               {aiAnalysisEnabled ? 'AI-curated by your teammate Aimy' : 'Recent messages'}
             </p>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-shrink-0">
             {/* Analyze Button */}
             <button
               onClick={loadMessages}
               disabled={loading}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${
+              className={`px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition-all flex items-center gap-2 ${
                 loading
                   ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                   : 'bg-gradient-to-r from-teal-500 to-blue-500 text-white hover:shadow-lg hover:scale-105'
@@ -151,12 +151,14 @@ function EnhancedMessages({ user }) {
               {loading ? (
                 <>
                   <span className="animate-spin">⚙️</span>
-                  Analyzing...
+                  <span className="hidden sm:inline">Analyzing...</span>
+                  <span className="sm:hidden">...</span>
                 </>
               ) : (
                 <>
                   <span>🔍</span>
-                  {hasAnalyzed ? 'Refresh' : 'Analyze Messages'}
+                  <span className="hidden sm:inline">{hasAnalyzed ? 'Refresh' : 'Analyze Messages'}</span>
+                  <span className="sm:hidden">{hasAnalyzed ? 'Refresh' : 'Analyze'}</span>
                 </>
               )}
             </button>
@@ -169,7 +171,7 @@ function EnhancedMessages({ user }) {
                   setTimeout(() => loadMessages(), 100);
                 }
               }}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+              className={`px-2 md:px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all ${
                 aiAnalysisEnabled
                   ? 'bg-purple-100 text-purple-700 border border-purple-300'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -182,34 +184,35 @@ function EnhancedMessages({ user }) {
         </div>
         
         {/* Category Tabs */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-2">
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
           {CATEGORY_TABS.map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveCategory(tab.id)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
+              className={`px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium whitespace-nowrap transition-all flex-shrink-0 ${
                 activeCategory === tab.id
                   ? `bg-${tab.color}-50 text-${tab.color}-700 border-2 border-${tab.color}-300 shadow-sm`
                   : 'bg-gray-50 text-gray-600 border border-gray-200 hover:bg-gray-100'
               }`}
             >
-              <span className="mr-2">{tab.icon}</span>
-              {tab.label}
+              <span className="mr-1 md:mr-2">{tab.icon}</span>
+              <span className="hidden sm:inline">{tab.label}</span>
+              <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
             </button>
           ))}
         </div>
       </div>
 
       {/* Messages List */}
-      <div className="max-h-[600px] overflow-y-auto">
+      <div className="max-h-[500px] md:max-h-[600px] overflow-y-auto">
         {!hasAnalyzed ? (
-          <div className="text-center py-16 px-4">
-            <div className="text-6xl mb-4">📬</div>
-            <h4 className="text-lg font-semibold text-gray-900 mb-2">Ready to analyze your inbox</h4>
-            <p className="text-gray-600 mb-6">
+          <div className="text-center py-12 md:py-16 px-4">
+            <div className="text-5xl md:text-6xl mb-4">📬</div>
+            <h4 className="text-base md:text-lg font-semibold text-gray-900 mb-2">Ready to analyze your inbox</h4>
+            <p className="text-sm md:text-base text-gray-600 mb-4 md:mb-6">
               Click <strong>"Analyze Messages"</strong> to let Aimy review and curate your emails
             </p>
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-teal-50 border border-teal-200 rounded-lg text-sm text-teal-800">
+            <div className="inline-flex items-center gap-2 px-3 md:px-4 py-2 bg-teal-50 border border-teal-200 rounded-lg text-xs md:text-sm text-teal-800">
               <span>💡</span>
               <span>AI analysis runs on-demand to save resources</span>
             </div>
@@ -217,11 +220,11 @@ function EnhancedMessages({ user }) {
         ) : loading ? (
           <div className="text-center py-12">
             <div className="animate-spin text-4xl mb-3">📧</div>
-            <p className="text-gray-600">Analyzing messages with AI...</p>
+            <p className="text-sm md:text-base text-gray-600">Analyzing messages with AI...</p>
           </div>
         ) : messages.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500">No messages in this category</p>
+            <p className="text-sm md:text-base text-gray-500">No messages in this category</p>
           </div>
         ) : (
           <div className="divide-y divide-gray-100">
@@ -231,12 +234,12 @@ function EnhancedMessages({ user }) {
               return (
                 <div
                   key={message.id || idx}
-                  className="p-4 hover:bg-gray-50 transition-colors group relative"
+                  className="p-3 md:p-4 hover:bg-gray-50 transition-colors group relative"
                 >
-                  <div className="flex items-start gap-3">
+                  <div className="flex items-start gap-2 md:gap-3">
                     {/* Importance Indicator */}
                     <div className="flex-shrink-0 pt-1">
-                      <div className={`text-2xl ${importance.color}`} title={importance.label}>
+                      <div className={`text-xl md:text-2xl ${importance.color}`} title={importance.label}>
                         {importance.icon}
                       </div>
                     </div>
@@ -249,53 +252,54 @@ function EnhancedMessages({ user }) {
                       <div className="flex items-start justify-between gap-2 mb-1">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <h4 className={`font-semibold ${message.unread ? 'text-gray-900' : 'text-gray-700'} truncate`}>
+                            <h4 className={`text-sm md:text-base font-semibold ${message.unread ? 'text-gray-900' : 'text-gray-700'} truncate`}>
                               {message.from}
                             </h4>
                             {/* Attachment Indicator */}
                             {message.attachmentCount > 0 && (
                               <span className="flex items-center gap-1 text-xs text-gray-500" title={`${message.attachmentCount} attachment(s)`}>
                                 <span>📎</span>
-                                <span>{message.attachmentCount}</span>
+                                <span className="hidden sm:inline">{message.attachmentCount}</span>
                               </span>
                             )}
                           </div>
-                          <p className={`text-sm ${message.unread ? 'font-semibold text-gray-900' : 'text-gray-700'} truncate mt-0.5`}>
+                          <p className={`text-xs md:text-sm ${message.unread ? 'font-semibold text-gray-900' : 'text-gray-700'} truncate mt-0.5`}>
                             {message.subject}
                           </p>
                         </div>
                         
-                        <div className="flex items-center gap-2 flex-shrink-0">
+                        <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
                           {/* Category Badge */}
                           {message.category && message.category !== 'all' && (
-                            <span className={`text-xs px-2 py-1 rounded-full border ${getCategoryBadgeColor(message.category)}`}>
-                              {message.category}
+                            <span className={`text-[10px] md:text-xs px-1.5 md:px-2 py-0.5 md:py-1 rounded-full border ${getCategoryBadgeColor(message.category)}`}>
+                              <span className="hidden sm:inline">{message.category}</span>
+                              <span className="sm:hidden">{message.category.charAt(0).toUpperCase()}</span>
                             </span>
                           )}
                           
                           {/* Gmail Flags */}
-                          {message.isStarred && <span className="text-yellow-500">⭐</span>}
-                          {message.isImportant && <span className="text-red-500">❗</span>}
+                          {message.isStarred && <span className="text-yellow-500 text-sm md:text-base">⭐</span>}
+                          {message.isImportant && <span className="text-red-500 text-sm md:text-base">❗</span>}
                         </div>
                       </div>
                       
-                      <p className="text-xs text-gray-500 line-clamp-2 mt-1">
+                      <p className="text-[11px] md:text-xs text-gray-500 line-clamp-2 mt-1">
                         {message.snippet}
                       </p>
                       
                       {/* AI Insight */}
                       {message.aiReason && (
-                        <div className="mt-2 flex items-start gap-2 text-xs bg-teal-50 border border-teal-200 rounded-lg p-2">
-                          <span className="text-teal-600">💡</span>
-                          <span className="text-teal-700">{message.aiReason}</span>
+                        <div className="mt-2 flex items-start gap-2 text-[11px] md:text-xs bg-teal-50 border border-teal-200 rounded-lg p-2">
+                          <span className="text-teal-600 flex-shrink-0">💡</span>
+                          <span className="text-teal-700 line-clamp-2">{message.aiReason}</span>
                         </div>
                       )}
                       
                       {/* Suggested Action */}
                       {message.suggestedAction && (
-                        <div className="mt-2 flex items-center gap-2">
-                          <span className="text-xs text-gray-500">Suggested:</span>
-                          <span className={`text-xs px-2 py-0.5 rounded-full ${
+                        <div className="mt-2 flex items-center gap-2 flex-wrap">
+                          <span className="text-[10px] md:text-xs text-gray-500">Suggested:</span>
+                          <span className={`text-[10px] md:text-xs px-2 py-0.5 rounded-full ${
                             message.suggestedAction === 'read_now' ? 'bg-red-100 text-red-700' :
                             message.suggestedAction === 'read_later' ? 'bg-yellow-100 text-yellow-700' :
                             message.suggestedAction === 'archive' ? 'bg-gray-100 text-gray-700' :
@@ -314,7 +318,7 @@ function EnhancedMessages({ user }) {
                           e.stopPropagation();
                           setShowFeedback(showFeedback === message.id ? null : message.id);
                         }}
-                        className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                        className="p-1.5 md:p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors opacity-100 md:opacity-0 md:group-hover:opacity-100 text-lg md:text-xl"
                         title="Train Aimy"
                       >
                         🎓
@@ -322,8 +326,8 @@ function EnhancedMessages({ user }) {
                       
                       {/* Feedback Dropdown */}
                       {showFeedback === message.id && (
-                        <div className="absolute right-0 top-10 bg-white border border-gray-200 rounded-lg shadow-xl z-10 p-2 min-w-[180px]">
-                          <div className="text-xs font-semibold text-gray-600 mb-2 px-2">
+                        <div className="absolute right-0 top-10 bg-white border border-gray-200 rounded-lg shadow-xl z-10 p-2 min-w-[160px] md:min-w-[180px]">
+                          <div className="text-[10px] md:text-xs font-semibold text-gray-600 mb-2 px-2">
                             Train Aimy:
                           </div>
                           {FEEDBACK_OPTIONS.map(option => (
@@ -333,9 +337,9 @@ function EnhancedMessages({ user }) {
                                 e.stopPropagation();
                                 handleFeedback(message, option.value);
                               }}
-                              className={`w-full text-left px-3 py-2 rounded-md text-sm hover:bg-${option.color}-50 transition-colors flex items-center gap-2`}
+                              className={`w-full text-left px-2 md:px-3 py-2 rounded-md text-xs md:text-sm hover:bg-${option.color}-50 transition-colors flex items-center gap-2`}
                             >
-                              <span>{option.icon}</span>
+                              <span className="text-sm md:text-base">{option.icon}</span>
                               <span>{option.label}</span>
                             </button>
                           ))}

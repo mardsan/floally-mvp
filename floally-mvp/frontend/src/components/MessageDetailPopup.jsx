@@ -341,21 +341,21 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 p-0 sm:p-4">
+      <div className="bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="bg-gradient-to-r from-teal-500 to-blue-600 text-white p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div className="flex-1">
-              <h3 className="text-xl font-bold mb-2">{message.subject || 'No Subject'}</h3>
-              <div className="text-sm text-teal-100 space-y-1">
-                <div><strong>From:</strong> {message.from}</div>
+        <div className="bg-gradient-to-r from-teal-500 to-blue-600 text-white p-4 md:p-6 sticky top-0 z-10">
+          <div className="flex items-start justify-between mb-3 md:mb-4">
+            <div className="flex-1 min-w-0 pr-2">
+              <h3 className="text-lg md:text-xl font-bold mb-2 line-clamp-2">{message.subject || 'No Subject'}</h3>
+              <div className="text-xs md:text-sm text-teal-100 space-y-1">
+                <div className="truncate"><strong>From:</strong> {message.from}</div>
                 <div><strong>Date:</strong> {message.date}</div>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="text-white hover:bg-white/20 rounded-lg p-2 transition-colors"
+              className="text-white hover:bg-white/20 rounded-lg p-2 transition-colors flex-shrink-0"
             >
               ✕
             </button>
@@ -365,48 +365,63 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
           <div className="flex items-center gap-2 flex-wrap">
             <button
               onClick={handleOpenInGmail}
-              className="px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-colors"
+              className="px-2 md:px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-xs md:text-sm font-medium transition-colors"
             >
-              📧 Open in Gmail
+              <span className="hidden sm:inline">📧 Open in Gmail</span>
+              <span className="sm:hidden">📧 Gmail</span>
             </button>
             <button
               onClick={() => setShowReply(!showReply)}
-              className="px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-colors"
+              className="px-2 md:px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-xs md:text-sm font-medium transition-colors"
             >
-              ↩️ Reply
+              <span className="hidden sm:inline">↩️ Reply</span>
+              <span className="sm:hidden">↩️</span>
             </button>
             <button
               onClick={handleLetAimyRespond}
               disabled={aiDrafting}
-              className="px-3 py-1.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-sm font-medium transition-colors shadow-md"
+              className="px-2 md:px-3 py-1.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-xs md:text-sm font-medium transition-colors shadow-md"
             >
-              {aiDrafting ? '✨ Drafting...' : '✨ Let Aimy (teammate) respond'}
+              {aiDrafting ? (
+                <>
+                  <span className="hidden sm:inline">✨ Drafting...</span>
+                  <span className="sm:hidden">✨...</span>
+                </>
+              ) : (
+                <>
+                  <span className="hidden sm:inline">✨ Let Aimy (teammate) respond</span>
+                  <span className="sm:hidden">✨ Aimy</span>
+                </>
+              )}
             </button>
             <button
               onClick={handleArchive}
-              className="px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-colors"
+              className="px-2 md:px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-xs md:text-sm font-medium transition-colors"
             >
-              📥 Archive
+              <span className="hidden sm:inline">📥 Archive</span>
+              <span className="sm:hidden">📥</span>
             </button>
             {message.hasUnsubscribeLink && (
               <button
                 onClick={handleUnsubscribe}
-                className="px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-colors"
+                className="px-2 md:px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-xs md:text-sm font-medium transition-colors"
               >
-                🚫 Unsubscribe
+                <span className="hidden sm:inline">🚫 Unsubscribe</span>
+                <span className="sm:hidden">🚫</span>
               </button>
             )}
             <button
               onClick={handleTrash}
-              className="px-3 py-1.5 bg-red-500/30 hover:bg-red-500/50 rounded-lg text-sm font-medium transition-colors"
+              className="px-2 md:px-3 py-1.5 bg-red-500/30 hover:bg-red-500/50 rounded-lg text-xs md:text-sm font-medium transition-colors"
             >
-              🗑️ Delete
+              <span className="hidden sm:inline">🗑️ Delete</span>
+              <span className="sm:hidden">🗑️</span>
             </button>
           </div>
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-4 md:p-6">
           {loading ? (
             <div className="text-center py-12">
               <div className="animate-spin text-4xl mb-3">📧</div>
