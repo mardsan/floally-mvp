@@ -52,8 +52,8 @@ const OnboardingFlow = ({ userEmail, onComplete }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" style={{background: 'linear-gradient(to bottom right, #ffffff, #f0fefb)'}}>
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 p-0 sm:p-4">
+      <div className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto" style={{background: 'linear-gradient(to bottom right, #ffffff, #f0fefb)'}}>
         
         {/* Header */}
         <div className="p-8 border-b" style={{borderColor: '#dafef4'}}>

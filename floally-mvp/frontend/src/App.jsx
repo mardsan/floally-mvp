@@ -951,8 +951,52 @@ function App() {
         <div className="grid md:grid-cols-2 gap-6">
           {/* Messages Card */}
           <div className="bg-white/95 backdrop-blur rounded-2xl shadow-lg p-6" style={{borderWidth: '1px', borderColor: '#dafef4'}}>
-            {/* Gmail Category Tabs */}
-            <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-2 border-b" style={{borderColor: '#dafef4'}}>
+            {/* Gmail Category Filter - Mobile Dropdown */}
+            <div className="md:hidden mb-4">
+              <label htmlFor="gmail-category-select" className="sr-only">Select Gmail Category</label>
+              <select
+                id="gmail-category-select"
+                value={activeCategory}
+                onChange={async (e) => {
+                  const cat = e.target.value;
+                  setActiveCategory(cat);
+                  setLoading(true);
+                  try {
+                    const messagesRes = await gmail.getMessages(50, cat);
+                    setData(prev => ({ ...prev, messages: messagesRes.data.messages }));
+                  } catch (error) {
+                    console.error('Failed to load category:', error);
+                    const categoryLabels = {
+                      'primary': '📧 Primary',
+                      'social': '👥 Social',
+                      'promotions': '🏷️ Promotions',
+                      'updates': '📬 Updates',
+                      'forums': '💬 Forums'
+                    };
+                    setError(`Failed to load ${categoryLabels[cat] || cat}`);
+                  } finally {
+                    setLoading(false);
+                  }
+                }}
+                className="w-full px-4 py-2.5 text-sm font-medium border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white appearance-none cursor-pointer"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E")`,
+                  backgroundPosition: 'right 0.5rem center',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundSize: '1.5em 1.5em',
+                  paddingRight: '2.5rem'
+                }}
+              >
+                <option value="primary">📧 Primary</option>
+                <option value="social">👥 Social</option>
+                <option value="promotions">🏷️ Promotions</option>
+                <option value="updates">📬 Updates</option>
+                <option value="forums">💬 Forums</option>
+              </select>
+            </div>
+
+            {/* Gmail Category Tabs - Desktop */}
+            <div className="hidden md:flex items-center gap-2 mb-4 pb-2 border-b" style={{borderColor: '#dafef4'}}>
               {[
                 { id: 'primary', label: '📧 Primary', icon: '👤' },
                 { id: 'social', label: '👥 Social', icon: '💬' },

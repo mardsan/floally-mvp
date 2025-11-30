@@ -46,8 +46,8 @@ const Profile = ({ userEmail, onClose }) => {
   ];
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-6xl w-full my-8">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 p-0 sm:p-4 overflow-y-auto">
+      <div className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl max-w-6xl w-full my-0 sm:my-8">
         
         {/* Header */}
         <div className="p-8 border-b" style={{borderColor: '#dafef4', background: 'linear-gradient(to right, #dafef4, #e8fef9)'}}>
@@ -101,8 +101,32 @@ const Profile = ({ userEmail, onClose }) => {
           )}
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="border-b" style={{borderColor: '#dafef4'}}>
+        {/* Navigation Tabs - Mobile Dropdown */}
+        <div className="md:hidden border-b p-3" style={{borderColor: '#dafef4'}}>
+          <label htmlFor="profile-tab-select" className="sr-only">Select Tab</label>
+          <select
+            id="profile-tab-select"
+            value={activeTab}
+            onChange={(e) => setActiveTab(e.target.value)}
+            className="w-full px-4 py-3 text-base font-medium border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white appearance-none cursor-pointer"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E")`,
+              backgroundPosition: 'right 0.5rem center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: '1.5em 1.5em',
+              paddingRight: '2.5rem'
+            }}
+          >
+            {tabs.map(tab => (
+              <option key={tab.id} value={tab.id}>
+                {tab.icon} {tab.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Navigation Tabs - Desktop */}
+        <div className="hidden md:block border-b" style={{borderColor: '#dafef4'}}>
           <div className="flex">
             {tabs.map(tab => (
               <button
