@@ -183,8 +183,32 @@ function EnhancedMessages({ user }) {
           </div>
         </div>
         
-        {/* Category Tabs */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
+        {/* Category Filter - Mobile Dropdown */}
+        <div className="md:hidden px-4">
+          <label htmlFor="category-select" className="sr-only">Select Category</label>
+          <select
+            id="category-select"
+            value={activeCategory}
+            onChange={(e) => setActiveCategory(e.target.value)}
+            className="w-full px-4 py-2.5 text-sm font-medium border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white appearance-none cursor-pointer"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E")`,
+              backgroundPosition: 'right 0.5rem center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: '1.5em 1.5em',
+              paddingRight: '2.5rem'
+            }}
+          >
+            {CATEGORY_TABS.map(tab => (
+              <option key={tab.id} value={tab.id}>
+                {tab.icon} {tab.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Category Tabs - Desktop */}
+        <div className="hidden md:flex items-center gap-2 overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
           {CATEGORY_TABS.map(tab => (
             <button
               key={tab.id}
@@ -196,8 +220,7 @@ function EnhancedMessages({ user }) {
               }`}
             >
               <span className="mr-1 md:mr-2">{tab.icon}</span>
-              <span className="hidden sm:inline">{tab.label}</span>
-              <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
+              {tab.label}
             </button>
           ))}
         </div>
