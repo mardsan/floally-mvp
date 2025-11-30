@@ -70,7 +70,7 @@ const EventDetailsPopup = ({ event, onClose, onOpenProject, onStatusUpdate }) =>
         {/* Header */}
         <div className={`p-4 md:p-6 rounded-t-2xl sm:rounded-t-xl ${
           isProjectGoal 
-            ? 'bg-gradient-to-r from-teal-500 to-blue-500' 
+            ? 'bg-gradient-to-r from-teal-600 to-blue-500' 
             : 'bg-gradient-to-r from-purple-500 to-pink-500'
         } text-white sticky top-0 z-10`}>
           <div className="flex items-start justify-between">
@@ -99,7 +99,7 @@ const EventDetailsPopup = ({ event, onClose, onOpenProject, onStatusUpdate }) =>
         <div className="p-4 md:p-6">
           {/* Date */}
           <div className="mb-4">
-            <div className="flex items-center gap-2 text-gray-600 mb-1">
+            <div className="flex items-center gap-2 text-gray-700 mb-1">
               <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
@@ -111,7 +111,7 @@ const EventDetailsPopup = ({ event, onClose, onOpenProject, onStatusUpdate }) =>
           {/* Status (for project goals) */}
           {isProjectGoal && currentStatus && (
             <div className="mb-4">
-              <div className="flex items-center gap-2 text-gray-600 mb-1">
+              <div className="flex items-center gap-2 text-gray-700 mb-1">
                 <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -119,7 +119,9 @@ const EventDetailsPopup = ({ event, onClose, onOpenProject, onStatusUpdate }) =>
                 {updating && <span className="text-xs text-blue-600 animate-pulse">Updating...</span>}
               </div>
               <div className="ml-6 md:ml-7">
+                <label htmlFor="event-status-select" className="sr-only">Change event status</label>
                 <select
+                  id="event-status-select"
                   value={currentStatus}
                   onChange={(e) => handleStatusChange(e.target.value)}
                   disabled={updating}
@@ -137,7 +139,7 @@ const EventDetailsPopup = ({ event, onClose, onOpenProject, onStatusUpdate }) =>
           {/* Project Info (for project goals) */}
           {isProjectGoal && event.project && (
             <div className="mb-4">
-              <div className="flex items-center gap-2 text-gray-600 mb-1">
+              <div className="flex items-center gap-2 text-gray-700 mb-1">
                 <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
                 </svg>
@@ -152,7 +154,7 @@ const EventDetailsPopup = ({ event, onClose, onOpenProject, onStatusUpdate }) =>
                 )}
               </div>
               {event.project.description && (
-                <p className="text-xs md:text-sm text-gray-600 ml-6 md:ml-7 mt-1 line-clamp-2">
+                <p className="text-xs md:text-sm text-gray-700 ml-6 md:ml-7 mt-1 line-clamp-2">
                   {event.project.description}
                 </p>
               )}
@@ -162,7 +164,7 @@ const EventDetailsPopup = ({ event, onClose, onOpenProject, onStatusUpdate }) =>
           {/* Location (for calendar events) */}
           {event.location && (
             <div className="mb-4">
-              <div className="flex items-center gap-2 text-gray-600 mb-1">
+              <div className="flex items-center gap-2 text-gray-700 mb-1">
                 <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -176,7 +178,7 @@ const EventDetailsPopup = ({ event, onClose, onOpenProject, onStatusUpdate }) =>
           {/* Description (for calendar events) */}
           {event.description && (
             <div className="mb-4">
-              <div className="flex items-center gap-2 text-gray-600 mb-1">
+              <div className="flex items-center gap-2 text-gray-700 mb-1">
                 <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
                 </svg>
@@ -202,7 +204,7 @@ const EventDetailsPopup = ({ event, onClose, onOpenProject, onStatusUpdate }) =>
                   // Navigate to Projects page with project ID to auto-open it
                   window.location.href = `/projects?open=${event.project.id}`;
                 }}
-                className="px-4 py-2 text-sm md:text-base bg-gradient-to-r from-teal-500 to-blue-500 text-white rounded-lg hover:from-teal-600 hover:to-blue-600 transition-all shadow-md flex items-center justify-center gap-2"
+                className="px-4 py-2 text-sm md:text-base bg-gradient-to-r from-teal-600 to-blue-500 text-white rounded-lg hover:from-teal-700 hover:to-blue-600 transition-all shadow-md flex items-center justify-center gap-2"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />

@@ -73,14 +73,14 @@ const OnboardingFlow = ({ userEmail, onComplete }) => {
               <h2 className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">
                 Meet Aimy
               </h2>
-              <p className="text-sm text-slate-600">Your AI operational partner</p>
+              <p className="text-sm text-slate-700">Your AI operational partner</p>
             </div>
           </div>
           
           {/* Progress */}
           <div className="flex gap-2">
             {[0,1,2,3,4,5].map(i => (
-              <div key={i} className={`h-2 flex-1 rounded-full transition-all ${i <= step ? 'bg-gradient-to-r from-teal-500 to-emerald-500' : 'bg-slate-200'}`} />
+              <div key={i} className={`h-2 flex-1 rounded-full transition-all ${i <= step ? 'bg-gradient-to-r from-teal-600 to-emerald-600' : 'bg-slate-200'}`} />
             ))}
           </div>
           <p className="text-xs text-slate-500 mt-2">Step {step + 1} of {totalSteps}</p>
@@ -93,7 +93,7 @@ const OnboardingFlow = ({ userEmail, onComplete }) => {
               <h3 className="text-xl font-semibold text-slate-900 mb-2">
                 👋 Hi there! What should I call you?
               </h3>
-              <p className="text-sm text-slate-600 mb-4">
+              <p className="text-sm text-slate-700 mb-4">
                 This helps me personalize our interactions and make our conversations feel more natural.
               </p>
               <input
@@ -116,7 +116,7 @@ const OnboardingFlow = ({ userEmail, onComplete }) => {
               <h3 className="text-xl font-semibold text-slate-900 mb-2">
                 👋 Nice to meet you{answers.display_name ? `, ${answers.display_name}` : ''}! What do you do?
               </h3>
-              <p className="text-sm text-slate-600 mb-4">
+              <p className="text-sm text-slate-700 mb-4">
                 Help me understand your role so I can prioritize what matters to you.
               </p>
               <input
@@ -136,7 +136,7 @@ const OnboardingFlow = ({ userEmail, onComplete }) => {
               <h3 className="text-xl font-semibold text-slate-900 mb-2">
                 🎯 What matters most in your day?
               </h3>
-              <p className="text-sm text-slate-600 mb-4">
+              <p className="text-sm text-slate-700 mb-4">
                 Pick up to 3 priorities (I'll use these to filter what's important)
               </p>
               <div className="grid grid-cols-2 gap-3">
@@ -175,7 +175,7 @@ const OnboardingFlow = ({ userEmail, onComplete }) => {
               <h3 className="text-xl font-semibold text-slate-900 mb-2">
                 🤔 How do you like to make decisions?
               </h3>
-              <p className="text-sm text-slate-600 mb-4">
+              <p className="text-sm text-slate-700 mb-4">
                 This helps me present information in your preferred style
               </p>
               <div className="space-y-3">
@@ -209,7 +209,7 @@ const OnboardingFlow = ({ userEmail, onComplete }) => {
               <h3 className="text-xl font-semibold text-slate-900 mb-2">
                 ✍️ When drafting emails, you prefer...
               </h3>
-              <p className="text-sm text-slate-600 mb-4">
+              <p className="text-sm text-slate-700 mb-4">
                 I'll match your communication style in generated responses
               </p>
               <div className="space-y-3">
@@ -243,7 +243,7 @@ const OnboardingFlow = ({ userEmail, onComplete }) => {
               <h3 className="text-xl font-semibold text-slate-900 mb-2">
                 📧 Newsletters and promotional emails...
               </h3>
-              <p className="text-sm text-slate-600 mb-4">
+              <p className="text-sm text-slate-700 mb-4">
                 How should I handle subscriptions you're not reading?
               </p>
               <div className="space-y-3">
@@ -278,14 +278,14 @@ const OnboardingFlow = ({ userEmail, onComplete }) => {
           <button
             onClick={handleBack}
             disabled={step === 0}
-            className="px-6 py-3 text-slate-600 hover:text-slate-900 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            className="px-6 py-3 text-slate-700 hover:text-slate-900 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
           >
             ← Back
           </button>
           <button
             onClick={handleNext}
             disabled={!canProceed()}
-            className="px-8 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-full font-semibold hover:from-teal-600 hover:to-emerald-600 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-8 py-3 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-full font-semibold hover:from-teal-700 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {step === totalSteps - 1 ? '✨ Complete Setup' : 'Next →'}
           </button>

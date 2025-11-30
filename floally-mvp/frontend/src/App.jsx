@@ -562,7 +562,7 @@ function App() {
   if (!authenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{background: 'linear-gradient(to bottom right, #dafef4, #e8fef9, #d0fdf2)'}}>
-        <div className="text-center max-w-md mx-auto p-8">
+        <main className="text-center max-w-md mx-auto p-8">
           {/* Aimy's Animated Avatar - Circular Frame with Glow */}
           <div className="flex justify-center mb-8">
             <div className="relative">
@@ -606,7 +606,7 @@ function App() {
           <p className="text-xl text-slate-700 mb-2 font-semibold">
             Stay in flow. Never drop the ball.
           </p>
-          <p className="text-base text-slate-600 mb-8">
+          <p className="text-base text-slate-700 mb-8">
             Your AI partner for focusing on what matters while keeping everything else running smoothly.
           </p>
           {error && (
@@ -616,14 +616,14 @@ function App() {
           )}
           <button
             onClick={handleLogin}
-            className="px-8 py-4 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-full font-semibold text-lg hover:from-teal-600 hover:to-emerald-600 transition-all shadow-lg hover:shadow-xl"
+            className="px-8 py-4 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-full font-semibold text-lg hover:from-teal-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl"
           >
             Connect Google Account
           </button>
-          <p className="mt-6 text-sm text-slate-600">
+          <p className="mt-6 text-sm text-slate-700">
             We'll access your Gmail and Calendar to help you focus on what matters.
           </p>
-        </div>
+        </main>
       </div>
     );
   }
@@ -644,7 +644,7 @@ function App() {
               <>
                 <button
                   onClick={() => setShowProfileHub(true)}
-                  className="flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
+                  className="flex items-center gap-2 px-4 py-2 text-slate-700 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
                   title="Profile Hub - Your dashboard"
                 >
                   <span className="text-xl">👤</span>
@@ -652,7 +652,7 @@ function App() {
                 </button>
                 <button
                   onClick={handleOpenSettings}
-                  className="flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
+                  className="flex items-center gap-2 px-4 py-2 text-slate-700 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
                   title="Settings"
                 >
                   <span className="text-xl">⚙️</span>
@@ -708,7 +708,7 @@ function App() {
             <button
               onClick={handleGenerateStandup}
               disabled={generatingStandup}
-              className="px-8 py-4 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-full font-semibold text-lg hover:from-teal-600 hover:to-emerald-600 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-8 py-4 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-full font-semibold text-lg hover:from-teal-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {generatingStandup ? '✨ Generating...' : '🚀 Generate Stand-Up'}
             </button>
@@ -739,14 +739,14 @@ function App() {
               <h3 className="text-xl font-semibold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent mb-2">
                 ⭐ Important Emails
               </h3>
-              <p className="text-sm text-slate-600">
+              <p className="text-sm text-slate-700">
                 Let Aimy identify emails that need your attention and action (analyzes your 10 most recent emails)
               </p>
             </div>
             <button
               onClick={handleAnalyzeEmails}
               disabled={analyzingEmails || data.messages.length === 0}
-              className="px-6 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-full font-semibold hover:from-teal-600 hover:to-emerald-600 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-3 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-full font-semibold hover:from-teal-700 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {analyzingEmails ? '🔍 Analyzing...' : '🔍 Analyze Emails (10)'}
             </button>
@@ -789,12 +789,12 @@ function App() {
                               {item.priority} Priority
                             </span>
                             {item.urgency && (
-                              <span className="text-xs text-slate-600">
+                              <span className="text-xs text-slate-700">
                                 {urgencyIcons[item.urgency]} {item.urgency}
                               </span>
                             )}
                             {item.actionType && (
-                              <span className="text-xs text-slate-600">
+                              <span className="text-xs text-slate-700">
                                 {actionIcons[item.actionType]} {item.actionType}
                               </span>
                             )}
@@ -817,7 +817,7 @@ function App() {
                           <div className="font-medium text-slate-900 mb-1">
                             {email.subject}
                           </div>
-                          <div className="text-sm text-slate-600 mb-2">
+                          <div className="text-sm text-slate-700 mb-2">
                             From: {email.from.split('<')[0].trim()}
                           </div>
                           {item.reason && (
@@ -851,7 +851,7 @@ function App() {
                                   href={`https://mail.google.com/mail/u/0/#inbox/${email.id}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="px-4 py-2 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-lg text-sm font-medium hover:from-teal-600 hover:to-emerald-600 transition-all shadow-sm"
+                                  className="px-4 py-2 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-lg text-sm font-medium hover:from-teal-700 hover:to-emerald-700 transition-all shadow-sm"
                                 >
                                   📧 Open in Gmail
                                 </a>
@@ -889,7 +889,7 @@ function App() {
                                   setDraftResponse(null);
                                   setSelectedEmailForResponse(null);
                                 }}
-                                className="text-slate-400 hover:text-slate-600"
+                                className="text-slate-400 hover:text-slate-700"
                               >
                                 ✕
                               </button>
@@ -911,7 +911,7 @@ function App() {
                                   navigator.clipboard.writeText(textarea.value);
                                   alert('Draft copied to clipboard! You can paste it in Gmail.');
                                 }}
-                                className="px-4 py-2 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-lg text-sm font-medium hover:from-teal-600 hover:to-emerald-600 transition-all shadow-sm"
+                                className="px-4 py-2 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-lg text-sm font-medium hover:from-teal-700 hover:to-emerald-700 transition-all shadow-sm"
                               >
                                 ✅ Copy to Clipboard
                               </button>
@@ -1021,8 +1021,8 @@ function App() {
                   }}
                   className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all whitespace-nowrap ${
                     activeCategory === cat.id
-                      ? 'bg-teal-500 text-white shadow-md'
-                      : 'text-slate-600 hover:bg-teal-50'
+                      ? 'bg-teal-600 text-white shadow-md'
+                      : 'text-slate-700 hover:bg-teal-50'
                   }`}
                 >
                   {cat.label}
@@ -1101,12 +1101,12 @@ function App() {
                               <span className="px-1.5 py-0.5 bg-blue-100 text-blue-600 text-xs rounded">Social</span>
                             )}
                             {msg.unread && (
-                            <span className="px-2 py-1 bg-gradient-to-r from-teal-500 to-emerald-500 text-white text-xs rounded-full shadow-sm flex-shrink-0">
+                            <span className="px-2 py-1 bg-gradient-to-r from-teal-600 to-emerald-600 text-white text-xs rounded-full shadow-sm flex-shrink-0">
                               New
                             </span>
                           )}
                         </div>
-                        <div className="text-xs text-slate-600 truncate">
+                        <div className="text-xs text-slate-700 truncate">
                           From: {msg.from.split('<')[0].trim()}
                         </div>
                         {!expandedEmail || expandedEmail !== msg.id ? (
@@ -1132,7 +1132,7 @@ function App() {
                           href={`https://mail.google.com/mail/u/0/#inbox/${msg.id}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="px-3 py-1.5 bg-gradient-to-r from-teal-500 to-emerald-500 text-white text-xs rounded-lg hover:from-teal-600 hover:to-emerald-600 transition-all shadow-sm"
+                          className="px-3 py-1.5 bg-gradient-to-r from-teal-600 to-emerald-600 text-white text-xs rounded-lg hover:from-teal-700 hover:to-emerald-700 transition-all shadow-sm"
                         >
                           Open in Gmail
                         </a>
@@ -1147,7 +1147,7 @@ function App() {
                         </button>
                         <button
                           onClick={() => handleArchiveEmail(msg.id)}
-                          className="px-3 py-1.5 bg-slate-50 text-slate-600 text-xs rounded-lg hover:bg-slate-100 transition-all border border-slate-200"
+                          className="px-3 py-1.5 bg-slate-50 text-slate-700 text-xs rounded-lg hover:bg-slate-100 transition-all border border-slate-200"
                         >
                           📦 Archive
                         </button>
@@ -1185,16 +1185,16 @@ function App() {
             {/* Stats Summary */}
             <div className="mt-4 pt-4 border-t" style={{borderColor: '#dafef4'}}>
               <div className="grid grid-cols-2 gap-2 text-xs">
-                <div className="text-slate-600">
+                <div className="text-slate-700">
                   <span className="font-medium">⭐ Starred:</span> {data.messages.filter(m => m.isStarred).length}
                 </div>
-                <div className="text-slate-600">
+                <div className="text-slate-700">
                   <span className="font-medium">‼️ Important:</span> {data.messages.filter(m => m.isImportant).length}
                 </div>
-                <div className="text-slate-600">
+                <div className="text-slate-700">
                   <span className="font-medium">👤 Contacts:</span> {data.messages.filter(m => m.isPrimary).length}
                 </div>
-                <div className="text-slate-600">
+                <div className="text-slate-700">
                   <span className="font-medium">📧 Promo:</span> {data.messages.filter(m => m.isPromotional).length}
                 </div>
               </div>
@@ -1240,7 +1240,7 @@ function App() {
                         <div className="text-sm font-medium text-slate-900">
                           {event.summary}
                         </div>
-                        <div className="text-xs text-slate-600 mt-1 flex items-center gap-2">
+                        <div className="text-xs text-slate-700 mt-1 flex items-center gap-2">
                           <span>
                             {new Date(event.start).toLocaleTimeString([], {
                               hour: '2-digit',

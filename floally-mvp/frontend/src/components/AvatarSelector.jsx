@@ -71,7 +71,7 @@ function AvatarSelector({ currentAvatar, onSelect, onClose }) {
           <h3 className="text-xl font-bold text-gray-900">Choose Your Avatar</h3>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-2xl leading-none"
+            className="text-gray-400 hover:text-gray-700 text-2xl leading-none"
           >
             ×
           </button>
@@ -85,7 +85,7 @@ function AvatarSelector({ currentAvatar, onSelect, onClose }) {
               className={`px-4 py-2 rounded-t-lg font-medium transition-all ${
                 activeTab === 'defaults'
                   ? 'bg-white text-teal-600 border-t-2 border-teal-500'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
               }`}
             >
               🎨 Default Avatars
@@ -95,7 +95,7 @@ function AvatarSelector({ currentAvatar, onSelect, onClose }) {
               className={`px-4 py-2 rounded-t-lg font-medium transition-all ${
                 activeTab === 'upload'
                   ? 'bg-white text-teal-600 border-t-2 border-teal-500'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
               }`}
             >
               📤 Upload Custom
@@ -122,7 +122,7 @@ function AvatarSelector({ currentAvatar, onSelect, onClose }) {
                     alt={avatar.name}
                     className="w-full h-auto rounded-lg mb-2"
                   />
-                  <p className="text-xs text-gray-600 text-center">{avatar.name}</p>
+                  <p className="text-xs text-gray-700 text-center">{avatar.name}</p>
                 </button>
               ))}
             </div>
@@ -152,7 +152,7 @@ function AvatarSelector({ currentAvatar, onSelect, onClose }) {
                     onChange={handleFileUpload}
                     className="hidden"
                   />
-                  <span className="px-6 py-3 bg-teal-500 text-white rounded-lg hover:bg-teal-600 cursor-pointer inline-block transition-colors">
+                  <span className="px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 cursor-pointer inline-block transition-colors">
                     {uploading ? 'Uploading...' : uploadedImage ? 'Change Image' : 'Choose Image'}
                   </span>
                 </label>
@@ -164,7 +164,7 @@ function AvatarSelector({ currentAvatar, onSelect, onClose }) {
 
               <div className="border-t border-gray-200 pt-6">
                 <h4 className="font-semibold text-gray-900 mb-3">Guidelines:</h4>
-                <ul className="space-y-2 text-sm text-gray-600">
+                <ul className="space-y-2 text-sm text-gray-700">
                   <li className="flex items-start gap-2">
                     <span className="text-green-500">✓</span>
                     <span>Use a clear, professional photo</span>
@@ -198,7 +198,7 @@ function AvatarSelector({ currentAvatar, onSelect, onClose }) {
           <button
             onClick={handleSave}
             disabled={!selectedAvatar}
-            className="px-6 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             Save Avatar
           </button>

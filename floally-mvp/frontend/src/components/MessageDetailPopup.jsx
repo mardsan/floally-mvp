@@ -344,7 +344,7 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 p-0 sm:p-4">
       <div className="bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="bg-gradient-to-r from-teal-500 to-blue-600 text-white p-4 md:p-6 sticky top-0 z-10">
+        <div className="bg-gradient-to-r from-teal-600 to-blue-600 text-white p-4 md:p-6 sticky top-0 z-10">
           <div className="flex items-start justify-between mb-3 md:mb-4">
             <div className="flex-1 min-w-0 pr-2">
               <h3 className="text-lg md:text-xl font-bold mb-2 line-clamp-2">{message.subject || 'No Subject'}</h3>
@@ -425,7 +425,7 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
           {loading ? (
             <div className="text-center py-12">
               <div className="animate-spin text-4xl mb-3">📧</div>
-              <p className="text-gray-600">Loading message...</p>
+              <p className="text-gray-700">Loading message...</p>
             </div>
           ) : (
             <>
@@ -521,7 +521,7 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
                   <span>🎓</span>
                   <span>Teach Your Teammate</span>
                 </h4>
-                <p className="text-sm text-gray-600 mb-3">
+                <p className="text-sm text-gray-700 mb-3">
                   Help Aimy learn how your team operates by rating this message:
                 </p>
                 <div className="flex gap-2 flex-wrap">

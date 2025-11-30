@@ -139,7 +139,7 @@ const EmailActions = ({ email, userEmail, onActionComplete, onRespond }) => {
         <button
           onClick={handleMarkUnimportant}
           disabled={loading !== null}
-          className="flex items-center gap-1 px-3 py-1.5 bg-slate-50 text-slate-600 rounded-lg text-sm font-medium hover:bg-slate-100 transition-all disabled:opacity-50"
+          className="flex items-center gap-1 px-3 py-1.5 bg-slate-50 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-100 transition-all disabled:opacity-50"
           title="Not Interested"
         >
           {loading === 'unimportant' ? '...' : '❌'} Not Interested
@@ -157,7 +157,7 @@ const EmailActions = ({ email, userEmail, onActionComplete, onRespond }) => {
         <button
           onClick={handleArchive}
           disabled={loading !== null}
-          className="flex items-center gap-1 px-3 py-1.5 bg-slate-50 text-slate-600 rounded-lg text-sm font-medium hover:bg-slate-100 transition-all disabled:opacity-50"
+          className="flex items-center gap-1 px-3 py-1.5 bg-slate-50 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-100 transition-all disabled:opacity-50"
           title="Archive Email"
         >
           {loading === 'archive' ? '...' : '📥'} Archive
@@ -194,7 +194,7 @@ const EmailActions = ({ email, userEmail, onActionComplete, onRespond }) => {
             <p className="text-slate-700 mb-4">
               Ready to unsubscribe from <strong>{email.from}</strong>?
             </p>
-            <p className="text-sm text-slate-600 mb-6">
+            <p className="text-sm text-slate-700 mb-6">
               This will open the unsubscribe page in a new tab. After unsubscribing, this email will be archived automatically.
             </p>
             <div className="flex gap-3">

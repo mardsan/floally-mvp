@@ -53,7 +53,7 @@ function AimyWizard({ projectDescription, onGenerated, onClose }) {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end sm:items-center justify-center z-50 p-0 sm:p-4">
       <div className="bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl max-w-3xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="bg-gradient-to-r from-teal-500 to-blue-500 p-4 md:p-6 rounded-t-2xl sticky top-0 z-10">
+        <div className="bg-gradient-to-r from-teal-600 to-blue-500 p-4 md:p-6 rounded-t-2xl sticky top-0 z-10">
           <div className="flex items-center justify-between">
             <div className="flex-1 min-w-0 pr-2">
               <h2 className="text-lg md:text-2xl font-bold text-white flex items-center gap-2">
@@ -81,7 +81,7 @@ function AimyWizard({ projectDescription, onGenerated, onClose }) {
               </div>
 
               <div className="bg-teal-50 border border-teal-200 rounded-lg p-3 md:p-4">
-                <p className="text-xs md:text-sm text-gray-600">
+                <p className="text-xs md:text-sm text-gray-700">
                   💡 <strong>What Aimy will generate:</strong>
                 </p>
                 <ul className="mt-2 space-y-1 text-xs md:text-sm text-gray-700 ml-4">
@@ -99,7 +99,7 @@ function AimyWizard({ projectDescription, onGenerated, onClose }) {
                 className={`w-full py-3 px-4 md:px-6 rounded-lg text-sm md:text-base font-semibold transition-all ${
                   loading
                     ? 'bg-gray-400 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white shadow-lg'
+                    : 'bg-gradient-to-r from-teal-600 to-blue-500 hover:from-teal-700 hover:to-blue-600 text-white shadow-lg'
                 }`}
               >
                 {loading ? (
@@ -151,7 +151,7 @@ function AimyWizard({ projectDescription, onGenerated, onClose }) {
                       <div key={index} className="bg-teal-50 border border-teal-200 rounded-lg p-2 md:p-3">
                         <p className="text-sm md:text-base font-medium text-gray-900">{goal.goal}</p>
                         {goal.deadline && (
-                          <p className="text-xs md:text-sm text-gray-600 mt-1">📆 {goal.deadline}</p>
+                          <p className="text-xs md:text-sm text-gray-700 mt-1">📆 {goal.deadline}</p>
                         )}
                       </div>
                     ))}
@@ -200,7 +200,7 @@ function AimyWizard({ projectDescription, onGenerated, onClose }) {
                 </button>
                 <button
                   onClick={handleAccept}
-                  className="flex-1 bg-gradient-to-r from-teal-500 to-blue-500 text-white py-3 px-4 md:px-6 rounded-lg text-sm md:text-base font-semibold hover:from-teal-600 hover:to-blue-600 transition-all shadow-lg"
+                  className="flex-1 bg-gradient-to-r from-teal-600 to-blue-500 text-white py-3 px-4 md:px-6 rounded-lg text-sm md:text-base font-semibold hover:from-teal-700 hover:to-blue-600 transition-all shadow-lg"
                 >
                   ✨ Accept & Use This Plan
                 </button>

@@ -127,7 +127,7 @@ export default function TrustedContactsManager({ userEmail }) {
       <div className="flex items-center justify-center py-12">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading trusted contacts...</p>
+          <p className="text-gray-700">Loading trusted contacts...</p>
         </div>
       </div>
     );
@@ -157,7 +157,7 @@ export default function TrustedContactsManager({ userEmail }) {
               <Icon name="contacts" size="md" className="inline-block mr-2 text-primary" />
               Trusted Contacts
             </CardTitle>
-            <p className="text-sm md:text-base text-gray-600">
+            <p className="text-sm md:text-base text-gray-700">
               Manage which senders can have their email attachments automatically processed by Aimy.
             </p>
           </div>
@@ -228,7 +228,9 @@ export default function TrustedContactsManager({ userEmail }) {
             </div>
 
             {/* Filter */}
+            <label htmlFor="trust-level-filter" className="sr-only">Filter contacts by trust level</label>
             <select
+              id="trust-level-filter"
               value={filterLevel}
               onChange={(e) => setFilterLevel(e.target.value)}
               className="px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm md:text-base"
@@ -302,7 +304,9 @@ export default function TrustedContactsManager({ userEmail }) {
                         </div>
                       </td>
                       <td className="px-6 py-4">
+                        <label htmlFor={`trust-level-${contact.sender_email}`} className="sr-only">Trust level for {contact.sender_name || contact.sender_email}</label>
                         <select
+                          id={`trust-level-${contact.sender_email}`}
                           value={contact.trust_level}
                           onChange={(e) => handleUpdateTrustLevel(contact.sender_email, e.target.value)}
                           className="px-3 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
@@ -364,7 +368,9 @@ export default function TrustedContactsManager({ userEmail }) {
 
                     {/* Actions Row */}
                     <div className="flex items-center gap-2">
+                      <label htmlFor={`trust-level-mobile-${contact.sender_email}`} className="sr-only">Trust level for {contact.sender_name || contact.sender_email}</label>
                       <select
+                        id={`trust-level-mobile-${contact.sender_email}`}
                         value={contact.trust_level}
                         onChange={(e) => handleUpdateTrustLevel(contact.sender_email, e.target.value)}
                         className="flex-1 px-2 py-1.5 border border-gray-300 rounded text-xs focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
@@ -402,7 +408,7 @@ export default function TrustedContactsManager({ userEmail }) {
                 </CardTitle>
                 <button
                   onClick={() => setShowAddModal(false)}
-                  className="text-gray-400 hover:text-gray-600 p-1"
+                  className="text-gray-400 hover:text-gray-700 p-1"
                   type="button"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

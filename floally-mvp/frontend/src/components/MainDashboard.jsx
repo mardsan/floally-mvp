@@ -346,7 +346,7 @@ function MainDashboard({ user, onLogout }) {
       <div className="min-h-screen bg-gradient-to-br from-okaimy-mint-50 via-white to-okaimy-emerald-50 flex items-center justify-center">
         <div>
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your dashboard...</p>
+          <p className="text-gray-700">Loading your dashboard...</p>
         </div>
       </div>
     );
@@ -365,7 +365,7 @@ function MainDashboard({ user, onLogout }) {
                 <h1 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 truncate">
                   {getGreeting()}, {user.display_name || user.email.split('@')[0]}!
                 </h1>
-                <p className="text-xs sm:text-sm text-gray-600 hidden sm:block">Here's what's happening today</p>
+                <p className="text-xs sm:text-sm text-gray-700 hidden sm:block">Here's what's happening today</p>
               </div>
             </div>
             
@@ -563,7 +563,7 @@ function MainDashboard({ user, onLogout }) {
                     </div>
                     <div className="min-w-0">
                       <h3 className="text-lg md:text-xl font-bold text-gray-800">Your Focus Today</h3>
-                      <p className="text-xs md:text-sm text-gray-600 truncate">{currentUser?.display_name || 'You'}</p>
+                      <p className="text-xs md:text-sm text-gray-700 truncate">{currentUser?.display_name || 'You'}</p>
                     </div>
                   </div>
 
@@ -575,7 +575,9 @@ function MainDashboard({ user, onLogout }) {
                         <h4 className="text-base md:text-lg font-bold text-okaimy-mint-900 truncate">The One Thing</h4>
                       </div>
                       {/* Status Dropdown */}
+                      <label htmlFor="one-thing-status" className="sr-only">Change One Thing status</label>
                       <select
+                        id="one-thing-status"
                         value={oneThingStatus}
                         onChange={(e) => handleStatusChange(e.target.value)}
                         className="px-2 md:px-3 py-1 md:py-1.5 text-xs md:text-sm border-2 border-okaimy-mint-300 rounded-lg bg-white font-medium focus:outline-none focus:border-primary flex-shrink-0"
@@ -592,7 +594,7 @@ function MainDashboard({ user, onLogout }) {
                       <h5 className="text-base md:text-xl font-bold text-gray-900 mb-1 md:mb-2">
                         {standup?.one_thing || "Review Q4 budget priorities"}
                       </h5>
-                      <p className="text-xs md:text-sm text-gray-600">
+                      <p className="text-xs md:text-sm text-gray-700">
                         {standup?.subtitle || "From Aimy: High priority deadline today · 2-3 hours"}
                       </p>
                     </div>
@@ -718,7 +720,7 @@ function MainDashboard({ user, onLogout }) {
                     </div>
                     <div className="min-w-0">
                       <h3 className="text-lg md:text-xl font-bold text-gray-800">Aimy's Work Today</h3>
-                      <p className="text-xs md:text-sm text-gray-600">Your AI Partner</p>
+                      <p className="text-xs md:text-sm text-gray-700">Your AI Partner</p>
                     </div>
                   </div>
 
@@ -860,7 +862,7 @@ function MainDashboard({ user, onLogout }) {
                   <div className="space-y-3">
                     {/* Chat messages would go here */}
                     <div className="bg-white rounded-lg p-4 shadow-sm border border-okaimy-mint-100">
-                      <p className="text-sm text-gray-600 italic flex items-start gap-2">
+                      <p className="text-sm text-gray-700 italic flex items-start gap-2">
                         <Icon name="star" size="sm" className="text-primary mt-0.5" />
                         <span>Quick tip: You can ask me to explain any task, suggest alternatives, or help prioritize your day.</span>
                       </p>
@@ -940,7 +942,7 @@ function MainDashboard({ user, onLogout }) {
                           )}
                         </div>
                         {project.description && (
-                          <p className="text-xs md:text-sm text-gray-600 line-clamp-2 ml-5">{project.description}</p>
+                          <p className="text-xs md:text-sm text-gray-700 line-clamp-2 ml-5">{project.description}</p>
                         )}
                         {project.goals && project.goals.length > 0 && (
                           <div className="mt-2 md:mt-3 pt-2 md:pt-3 border-t border-gray-200 ml-5">
@@ -984,7 +986,7 @@ function MainDashboard({ user, onLogout }) {
                         <div className="text-xl md:text-2xl flex-shrink-0">📆</div>
                         <div className="flex-1 min-w-0">
                           <h4 className="font-semibold text-gray-900 text-sm md:text-base">{event.summary || 'Untitled Event'}</h4>
-                          <p className="text-xs md:text-sm text-gray-600 mt-1">
+                          <p className="text-xs md:text-sm text-gray-700 mt-1">
                             {new Date(event.start).toLocaleDateString()} at{' '}
                             {new Date(event.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </p>
@@ -1029,21 +1031,21 @@ function MainDashboard({ user, onLogout }) {
                   <Icon name="Mail" size="xl" className="text-primary" />
                 </div>
                 <div className="font-semibold text-gray-900 text-sm md:text-base">Compose Email</div>
-                <div className="text-xs text-gray-600 mt-0.5 md:mt-1">Draft with AI</div>
+                <div className="text-xs text-gray-700 mt-0.5 md:mt-1">Draft with AI</div>
               </button>
               <button className="p-3 md:p-4 aspect-square md:aspect-auto bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg border-2 border-purple-200 hover:border-purple-400 hover:shadow-md transition-all text-left flex flex-col justify-center">
                 <div className="mb-1 md:mb-2">
                   <Icon name="calendar" size="xl" className="text-purple-500" />
                 </div>
                 <div className="font-semibold text-gray-900 text-sm md:text-base">Schedule Meeting</div>
-                <div className="text-xs text-gray-600 mt-0.5 md:mt-1">Find best time</div>
+                <div className="text-xs text-gray-700 mt-0.5 md:mt-1">Find best time</div>
               </button>
               <button className="p-3 md:p-4 aspect-square md:aspect-auto bg-gradient-to-br from-orange-50 to-yellow-50 rounded-lg border-2 border-orange-200 hover:border-orange-400 hover:shadow-md transition-all text-left flex flex-col justify-center">
                 <div className="mb-1 md:mb-2">
                   <Icon name="check" size="xl" className="text-orange-500" />
                 </div>
                 <div className="font-semibold text-gray-900 text-sm md:text-base">View Insights</div>
-                <div className="text-xs text-gray-600 mt-0.5 md:mt-1">Analytics & trends</div>
+                <div className="text-xs text-gray-700 mt-0.5 md:mt-1">Analytics & trends</div>
               </button>
               <button 
                 onClick={() => setShowProfileSettings(true)}
@@ -1051,7 +1053,7 @@ function MainDashboard({ user, onLogout }) {
               >
                 <div className="text-xl md:text-2xl mb-1 md:mb-2">⚙️</div>
                 <div className="font-semibold text-gray-900 text-sm md:text-base">Settings</div>
-                <div className="text-xs text-gray-600 mt-0.5 md:mt-1">Manage account</div>
+                <div className="text-xs text-gray-700 mt-0.5 md:mt-1">Manage account</div>
               </button>
             </div>
           </Card>

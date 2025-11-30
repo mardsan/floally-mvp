@@ -111,7 +111,7 @@ function EnhancedMessages({ user }) {
       updates: 'from-green-500 to-teal-500',
       forums: 'from-gray-500 to-slate-500'
     };
-    return colors[category] || 'from-teal-500 to-blue-500';
+    return colors[category] || 'from-teal-600 to-blue-500';
   };
 
   const getCategoryBadgeColor = (category) => {
@@ -174,7 +174,7 @@ function EnhancedMessages({ user }) {
               className={`px-2 md:px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all ${
                 aiAnalysisEnabled
                   ? 'bg-purple-100 text-purple-700 border border-purple-300'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
               title={aiAnalysisEnabled ? 'AI curation enabled' : 'AI curation disabled'}
             >
@@ -216,7 +216,7 @@ function EnhancedMessages({ user }) {
               className={`px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium whitespace-nowrap transition-all flex-shrink-0 ${
                 activeCategory === tab.id
                   ? `bg-${tab.color}-50 text-${tab.color}-700 border-2 border-${tab.color}-300 shadow-sm`
-                  : 'bg-gray-50 text-gray-600 border border-gray-200 hover:bg-gray-100'
+                  : 'bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100'
               }`}
             >
               <span className="mr-1 md:mr-2">{tab.icon}</span>
@@ -232,7 +232,7 @@ function EnhancedMessages({ user }) {
           <div className="text-center py-12 md:py-16 px-4">
             <div className="text-5xl md:text-6xl mb-4">📬</div>
             <h4 className="text-base md:text-lg font-semibold text-gray-900 mb-2">Ready to analyze your inbox</h4>
-            <p className="text-sm md:text-base text-gray-600 mb-4 md:mb-6">
+            <p className="text-sm md:text-base text-gray-700 mb-4 md:mb-6">
               Click <strong>"Analyze Messages"</strong> to let Aimy review and curate your emails
             </p>
             <div className="inline-flex items-center gap-2 px-3 md:px-4 py-2 bg-teal-50 border border-teal-200 rounded-lg text-xs md:text-sm text-teal-800">
@@ -243,7 +243,7 @@ function EnhancedMessages({ user }) {
         ) : loading ? (
           <div className="text-center py-12">
             <div className="animate-spin text-4xl mb-3">📧</div>
-            <p className="text-sm md:text-base text-gray-600">Analyzing messages with AI...</p>
+            <p className="text-sm md:text-base text-gray-700">Analyzing messages with AI...</p>
           </div>
         ) : messages.length === 0 ? (
           <div className="text-center py-12">
@@ -341,7 +341,7 @@ function EnhancedMessages({ user }) {
                           e.stopPropagation();
                           setShowFeedback(showFeedback === message.id ? null : message.id);
                         }}
-                        className="p-1.5 md:p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors opacity-100 md:opacity-0 md:group-hover:opacity-100 text-lg md:text-xl"
+                        className="p-1.5 md:p-2 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors opacity-100 md:opacity-0 md:group-hover:opacity-100 text-lg md:text-xl"
                         title="Train Aimy"
                       >
                         🎓
@@ -350,7 +350,7 @@ function EnhancedMessages({ user }) {
                       {/* Feedback Dropdown */}
                       {showFeedback === message.id && (
                         <div className="absolute right-0 top-10 bg-white border border-gray-200 rounded-lg shadow-xl z-10 p-2 min-w-[160px] md:min-w-[180px]">
-                          <div className="text-[10px] md:text-xs font-semibold text-gray-600 mb-2 px-2">
+                          <div className="text-[10px] md:text-xs font-semibold text-gray-700 mb-2 px-2">
                             Train Aimy:
                           </div>
                           {FEEDBACK_OPTIONS.map(option => (

@@ -59,7 +59,7 @@ function LandingPage() {
   if (submitted) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-okaimy-mint-50 via-white to-okaimy-emerald-50 flex items-center justify-center px-4">
-        <div className="max-w-2xl text-center animate-fade-in">
+        <main className="max-w-2xl text-center animate-fade-in">
           <div className="mb-8">
             <div className="inline-block animate-bounce">
               <span className="text-6xl">✨</span>
@@ -73,7 +73,7 @@ function LandingPage() {
               {signupNote}
             </p>
           )}
-          <p className="text-xl text-gray-600 mb-8">
+          <p className="text-xl text-gray-700 mb-8">
             Thanks {name}! We'll email you at <strong className="text-gray-900">{email}</strong> when early access opens.
           </p>
           <p className="text-gray-500 mb-8">
@@ -83,7 +83,7 @@ function LandingPage() {
             <h2 className="text-xl font-bold text-gray-900 mb-4">
               What happens next?
             </h2>
-            <ul className="text-left text-gray-600 space-y-3">
+            <ul className="text-left text-gray-700 space-y-3">
               <li className="flex items-start">
                 <span className="text-primary text-xl mr-3">✓</span>
                 <span>We'll send you updates on our progress</span>
@@ -104,7 +104,7 @@ function LandingPage() {
           >
             ← Back to homepage
           </button>
-        </div>
+        </main>
       </div>
     );
   }
@@ -129,7 +129,7 @@ function LandingPage() {
       </div>
 
       {/* Hero Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-16">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-16">
         <div className="text-center mb-16">
           {/* Animated Aimy - Larger size for emotional impact */}
           <div className="mb-8 flex justify-center">
@@ -166,7 +166,7 @@ function LandingPage() {
           </h1>
 
           {/* Subheadline */}
-          <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl text-gray-700 mb-12 max-w-3xl mx-auto">
             I'm your AI partner for focusing on what matters while keeping everything else running smoothly.
           </p>
 
@@ -175,7 +175,7 @@ function LandingPage() {
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
               Join Early Access
             </h2>
-            <p className="text-gray-600 mb-8">
+            <p className="text-gray-700 mb-8">
               Be among the first to experience OkAimy
             </p>
 
@@ -201,7 +201,9 @@ function LandingPage() {
                 />
               </div>
               <div>
+                <label htmlFor="struggle-select" className="sr-only">How can Aimy help you most?</label>
                 <select
+                  id="struggle-select"
                   value={struggle}
                   onChange={(e) => setStruggle(e.target.value)}
                   required
@@ -247,7 +249,7 @@ function LandingPage() {
             <h3 className="text-2xl font-bold text-gray-900 mb-3">
               "The One Thing"
             </h3>
-            <p className="text-gray-600 leading-relaxed">
+            <p className="text-gray-700 leading-relaxed">
               Every morning, Aimy analyzes your inbox and tells you exactly what matters most. 
               No more decision fatigue. Just clarity.
             </p>
@@ -260,7 +262,7 @@ function LandingPage() {
             <h3 className="text-2xl font-bold text-gray-900 mb-3">
               Daily Standup Partnership
             </h3>
-            <p className="text-gray-600 leading-relaxed">
+            <p className="text-gray-700 leading-relaxed">
               You and Aimy sync up each day. You focus on creating. 
               Aimy handles the follow-ups, reminders, and coordination.
             </p>
@@ -273,7 +275,7 @@ function LandingPage() {
             <h3 className="text-2xl font-bold text-gray-900 mb-3">
               Nothing Falls Through
             </h3>
-            <p className="text-gray-600 leading-relaxed">
+            <p className="text-gray-700 leading-relaxed">
               Sleep peacefully knowing Aimy's got your back. 
               She tracks everything, so you can stay in flow.
             </p>
@@ -306,7 +308,7 @@ function LandingPage() {
                         Finalize brand proposal for Acme Corp
                       </div>
                     </div>
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-gray-700">
                       Status: In Progress
                     </div>
                   </div>
@@ -321,7 +323,7 @@ function LandingPage() {
                       <div className="text-sm text-gray-500">Handling Everything Else</div>
                     </div>
                   </div>
-                  <div className="space-y-2 text-sm text-gray-600">
+                  <div className="space-y-2 text-sm text-gray-700">
                     <div className="flex items-center">
                       <Icon name="check" size="sm" className="text-okaimy-mint-500 mr-2" />
                       Following up with John about timeline
@@ -349,7 +351,7 @@ function LandingPage() {
 
         {/* Social Proof */}
         <div className="text-center mb-20">
-          <p className="text-gray-600 text-lg mb-8">
+          <p className="text-gray-700 text-lg mb-8">
             Trusted by creative professionals who refuse to drop the ball
           </p>
           <div className="flex justify-center items-center space-x-2">
@@ -361,7 +363,7 @@ function LandingPage() {
                 ></div>
               ))}
             </div>
-            <span className="text-gray-600 ml-4">50+ on the waitlist</span>
+            <span className="text-gray-700 ml-4">50+ on the waitlist</span>
           </div>
         </div>
 
@@ -390,7 +392,7 @@ function LandingPage() {
         </div>
 
         {/* Footer */}
-        <div className="mt-16 text-center text-gray-500 text-sm">
+        <div className="mt-16 text-center text-gray-700 text-sm">
           <p>© 2025 OkAimy. We respect your privacy. No spam, ever.</p>
           <p className="mt-2">
             Questions? Email us at{' '}
@@ -399,7 +401,7 @@ function LandingPage() {
             </a>
           </p>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

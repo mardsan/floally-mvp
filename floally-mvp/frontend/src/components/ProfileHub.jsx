@@ -65,7 +65,7 @@ const ProfileHub = ({ userEmail }) => {
       <div className="min-h-screen bg-gradient-to-br from-okaimy-mint-50 via-white to-okaimy-emerald-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your profile...</p>
+          <p className="text-gray-700">Loading your profile...</p>
         </div>
       </div>
     );
@@ -84,7 +84,7 @@ const ProfileHub = ({ userEmail }) => {
             />
             <div className="text-left">
               <h1 className="text-3xl font-bold text-gray-800">Profile Hub</h1>
-              <p className="text-gray-600">Manage your OkAimy experience</p>
+              <p className="text-gray-700">Manage your OkAimy experience</p>
             </div>
           </div>
         </div>
@@ -96,7 +96,7 @@ const ProfileHub = ({ userEmail }) => {
             alt="Aimy" 
             className="w-10 h-10 rounded-full shadow-glow"
           />
-          <p className="text-sm text-gray-600">Manage your OkAimy experience</p>
+          <p className="text-sm text-gray-700">Manage your OkAimy experience</p>
         </div>
 
         {/* Tab Navigation */}
@@ -134,7 +134,7 @@ const ProfileHub = ({ userEmail }) => {
                 className={`flex-1 px-6 py-4 text-center font-medium transition-all ${
                   activeTab === tab.id
                     ? 'bg-okaimy-mint-50 text-primary border-b-2 border-primary'
-                    : 'text-gray-600 hover:bg-gray-50'
+                    : 'text-gray-700 hover:bg-gray-50'
                 }`}
               >
                 <div className="flex items-center justify-center gap-2">
@@ -301,7 +301,7 @@ const InsightsTab = ({ data, userEmail }) => {
             <div className="text-4xl font-bold text-teal-600">
               {Math.round(insightsData.confidence_score)}%
             </div>
-            <p className="text-sm text-gray-600">Confidence</p>
+            <p className="text-sm text-gray-700">Confidence</p>
           </div>
         </div>
       </div>
@@ -329,16 +329,16 @@ const InsightsTab = ({ data, userEmail }) => {
             <p className="text-3xl font-bold text-teal-600">
               {insightsData.response_patterns.focus_rate?.toFixed(1)}%
             </p>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-gray-700 mt-1">
               of {insightsData.response_patterns.total_decisions} decisions
             </p>
           </div>
           <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
             <h4 className="font-semibold text-gray-800 mb-2">Archive Rate</h4>
-            <p className="text-3xl font-bold text-gray-600">
+            <p className="text-3xl font-bold text-gray-700">
               {insightsData.response_patterns.archive_rate?.toFixed(1)}%
             </p>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-gray-700 mt-1">
               of {insightsData.response_patterns.total_decisions} decisions
             </p>
           </div>
@@ -376,14 +376,14 @@ const InsightsTab = ({ data, userEmail }) => {
                 return (
                   <div key={date} className="flex-1 flex flex-col items-center">
                     <div 
-                      className="w-full bg-teal-500 rounded-t hover:bg-teal-600 transition-colors relative group"
+                      className="w-full bg-teal-600 rounded-t hover:bg-teal-700 transition-colors relative group"
                       style={{ height: `${height}%`, minHeight: count > 0 ? '8px' : '0' }}
                     >
                       <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                         {count} actions
                       </div>
                     </div>
-                    <span className="text-xs text-gray-600 mt-2">{new Date(date).getDate()}</span>
+                    <span className="text-xs text-gray-700 mt-2">{new Date(date).getDate()}</span>
                   </div>
                 );
               })}
@@ -437,7 +437,7 @@ const IntegrationsTab = ({ data, userEmail }) => {
     <div className="space-y-4">
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-800 mb-2">Connected Services</h2>
-        <p className="text-gray-600">Manage which services OkAimy can access</p>
+        <p className="text-gray-700">Manage which services OkAimy can access</p>
       </div>
 
       {integrations.map((integration) => (
@@ -461,7 +461,7 @@ const IntegrationsTab = ({ data, userEmail }) => {
                     </span>
                   )}
                 </h3>
-                <p className="text-gray-600 mb-3">{integration.description}</p>
+                <p className="text-gray-700 mb-3">{integration.description}</p>
                 <div className="flex flex-wrap gap-2">
                   {integration.scopes.map((scope) => (
                     <span 
@@ -484,7 +484,7 @@ const IntegrationsTab = ({ data, userEmail }) => {
                 </button>
               ) : (
                 <button 
-                  className="px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600 transition-colors"
+                  className="px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700 transition-colors"
                   disabled={integration.comingSoon}
                 >
                   {integration.comingSoon ? 'Coming Soon' : 'Connect'}
@@ -504,7 +504,7 @@ const SettingsTab = ({ userProfile, userEmail, onUpdate }) => {
     <div className="space-y-6">
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-800 mb-2">Settings & Preferences</h2>
-        <p className="text-gray-600">Customize how Aimy works for you</p>
+        <p className="text-gray-700">Customize how Aimy works for you</p>
       </div>
 
       {/* Embed AimySettings component */}
@@ -520,15 +520,15 @@ const SettingsTab = ({ userProfile, userEmail, onUpdate }) => {
         <div className="space-y-3">
           <button className="w-full text-left px-4 py-3 bg-white rounded border border-gray-300 hover:border-teal-400 transition-colors">
             <span className="font-medium text-gray-800">🔔 Notification Preferences</span>
-            <p className="text-sm text-gray-600 mt-1">Configure how and when you receive notifications</p>
+            <p className="text-sm text-gray-700 mt-1">Configure how and when you receive notifications</p>
           </button>
           <button className="w-full text-left px-4 py-3 bg-white rounded border border-gray-300 hover:border-teal-400 transition-colors">
             <span className="font-medium text-gray-800">🔒 Privacy & Data</span>
-            <p className="text-sm text-gray-600 mt-1">Manage your data and privacy settings</p>
+            <p className="text-sm text-gray-700 mt-1">Manage your data and privacy settings</p>
           </button>
           <button className="w-full text-left px-4 py-3 bg-white rounded border border-gray-300 hover:border-red-400 transition-colors">
             <span className="font-medium text-red-600">⚠️ Delete Account</span>
-            <p className="text-sm text-gray-600 mt-1">Permanently delete your account and all data</p>
+            <p className="text-sm text-gray-700 mt-1">Permanently delete your account and all data</p>
           </button>
         </div>
       </div>
@@ -590,7 +590,7 @@ const ActionBar = ({ action, count, total }) => {
           <Icon name={actionIcons[action] || 'check'} size="sm" />
           {actionLabels[action] || action}
         </span>
-        <span className="text-gray-600">{count} ({percentage.toFixed(1)}%)</span>
+        <span className="text-gray-700">{count} ({percentage.toFixed(1)}%)</span>
       </div>
       <div className="w-full bg-gray-200 rounded-lg h-3 overflow-hidden">
         <div 

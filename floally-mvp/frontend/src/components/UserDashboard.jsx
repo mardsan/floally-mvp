@@ -191,19 +191,19 @@ function UserDashboard({ user, onLogout }) {
             </span>
           </div>
           <div className="flex items-center gap-4">
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-gray-700">
               👋 Welcome, <span className="font-medium">{user.display_name || user.email}</span>
             </div>
             <button
               onClick={() => setShowProfileSettings(true)}
-              className="px-4 py-2 text-sm text-gray-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-colors flex items-center gap-2"
+              className="px-4 py-2 text-sm text-gray-700 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-colors flex items-center gap-2"
             >
               <span>⚙️</span>
               <span>Settings</span>
             </button>
             <button
               onClick={onLogout}
-              className="px-4 py-2 text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+              className="px-4 py-2 text-sm text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
             >
               Sign Out
             </button>
@@ -237,7 +237,7 @@ function UserDashboard({ user, onLogout }) {
         )}
 
         {googleConnected && (
-          <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg shadow-lg p-6 mb-8">
+          <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg shadow-lg p-6 mb-8">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="text-3xl">✅</div>
@@ -272,7 +272,7 @@ function UserDashboard({ user, onLogout }) {
             </div>
             <button
               onClick={handleCreateProject}
-              className="px-6 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-lg hover:from-teal-600 hover:to-emerald-600 transition-all shadow-md font-semibold"
+              className="px-6 py-3 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-lg hover:from-teal-700 hover:to-emerald-700 transition-all shadow-md font-semibold"
             >
               + New Project
             </button>
@@ -289,13 +289,13 @@ function UserDashboard({ user, onLogout }) {
               <h4 className="text-xl font-semibold text-gray-900 mb-2">
                 Create your first project
               </h4>
-              <p className="text-gray-600 mb-6 max-w-md mx-auto">
+              <p className="text-gray-700 mb-6 max-w-md mx-auto">
                 Projects help Aimy understand your work and provide smarter assistance by
                 categorizing emails, meetings, and tasks.
               </p>
               <button
                 onClick={handleCreateProject}
-                className="px-8 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-lg hover:from-teal-600 hover:to-emerald-600 transition-all shadow-md font-semibold"
+                className="px-8 py-3 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-lg hover:from-teal-700 hover:to-emerald-700 transition-all shadow-md font-semibold"
               >
                 Get Started →
               </button>
@@ -317,7 +317,7 @@ function UserDashboard({ user, onLogout }) {
                         {project.priority === 'low' && <span className="text-green-500">🟢</span>}
                       </div>
                       {project.description && (
-                        <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+                        <p className="text-sm text-gray-700 line-clamp-2 mb-3">
                           {project.description}
                         </p>
                       )}
@@ -375,7 +375,7 @@ function UserDashboard({ user, onLogout }) {
                       })()}
                       
                       {!project.deadline && (
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold bg-gray-50 text-gray-600 border-gray-200">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold bg-gray-50 text-gray-700 border-gray-200">
                           <span>⏳</span>
                           <span>Ongoing</span>
                         </div>
@@ -407,13 +407,13 @@ function UserDashboard({ user, onLogout }) {
                     
                     return hasStatus ? (
                       <div className="mb-4">
-                        <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
+                        <div className="flex items-center justify-between text-xs text-gray-700 mb-1">
                           <span>Progress</span>
                           <span className="font-semibold">{completionPercentage}% ({completedCount}/{project.goals.length} tasks)</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2.5">
                           <div 
-                            className="bg-gradient-to-r from-teal-500 to-emerald-500 h-2.5 rounded-full transition-all duration-300"
+                            className="bg-gradient-to-r from-teal-600 to-emerald-600 h-2.5 rounded-full transition-all duration-300"
                             style={{ width: `${completionPercentage}%` }}
                           ></div>
                         </div>
@@ -460,7 +460,7 @@ function UserDashboard({ user, onLogout }) {
                         </span>
                       ))}
                       {project.keywords.length > 3 && (
-                        <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">
+                        <span className="text-xs px-2 py-1 bg-gray-100 text-gray-700 rounded-full">
                           +{project.keywords.length - 3}
                         </span>
                       )}

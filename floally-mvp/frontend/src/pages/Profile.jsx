@@ -69,12 +69,12 @@ const Profile = ({ userEmail, onClose }) => {
                     {profileData.profile.company && ` @ ${profileData.profile.company}`}
                   </p>
                 )}
-                <p className="text-sm text-slate-600 mt-1">{userEmail}</p>
+                <p className="text-sm text-slate-700 mt-1">{userEmail}</p>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="text-slate-400 hover:text-slate-600 text-3xl"
+              className="text-slate-400 hover:text-slate-700 text-3xl"
             >
               ✕
             </button>
@@ -135,7 +135,7 @@ const Profile = ({ userEmail, onClose }) => {
                 className={`flex-1 px-6 py-4 font-semibold transition-all ${
                   activeTab === tab.id
                     ? 'text-teal-600 border-b-2 border-teal-500 bg-teal-50/50'
-                    : 'text-slate-600 hover:text-teal-600 hover:bg-slate-50'
+                    : 'text-slate-700 hover:text-teal-600 hover:bg-slate-50'
                 }`}
               >
                 <span className="mr-2">{tab.icon}</span>
@@ -150,7 +150,7 @@ const Profile = ({ userEmail, onClose }) => {
           {loading ? (
             <div className="text-center py-12">
               <div className="text-4xl mb-4">🔄</div>
-              <p className="text-slate-600">Loading your profile...</p>
+              <p className="text-slate-700">Loading your profile...</p>
             </div>
           ) : (
             <>
@@ -196,7 +196,7 @@ const Profile = ({ userEmail, onClose }) => {
         <div className="p-6 border-t" style={{borderColor: '#dafef4', background: 'linear-gradient(to right, #fafffe, #f0fefb)'}}>
           <button
             onClick={onClose}
-            className="w-full px-6 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-full font-semibold hover:from-teal-600 hover:to-emerald-600 transition-all shadow-md"
+            className="w-full px-6 py-3 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-full font-semibold hover:from-teal-700 hover:to-emerald-700 transition-all shadow-md"
           >
             Done
           </button>

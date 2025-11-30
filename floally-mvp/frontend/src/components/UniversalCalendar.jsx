@@ -220,7 +220,7 @@ const UniversalCalendar = ({ projects, calendarEvents, user, onOpenProject }) =>
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors touch-target"
               aria-label="Previous month"
             >
-              <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
@@ -232,7 +232,7 @@ const UniversalCalendar = ({ projects, calendarEvents, user, onOpenProject }) =>
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors touch-target"
               aria-label="Next month"
             >
-              <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </button>
@@ -241,12 +241,12 @@ const UniversalCalendar = ({ projects, calendarEvents, user, onOpenProject }) =>
 
         {/* Filters */}
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-xs md:text-sm text-gray-600">Filter:</span>
+          <span className="text-xs md:text-sm text-gray-700">Filter:</span>
           <button
             onClick={() => setSelectedProject(null)}
             className={`px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-medium transition-colors ${
               selectedProject === null
-                ? 'bg-teal-500 text-white'
+                ? 'bg-teal-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
@@ -258,7 +258,7 @@ const UniversalCalendar = ({ projects, calendarEvents, user, onOpenProject }) =>
               onClick={() => setSelectedProject(project.id === selectedProject ? null : project.id)}
               className={`px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-medium transition-colors truncate max-w-[120px] sm:max-w-none ${
                 selectedProject === project.id
-                  ? 'bg-teal-500 text-white'
+                  ? 'bg-teal-600 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
               title={project.name}
@@ -272,19 +272,19 @@ const UniversalCalendar = ({ projects, calendarEvents, user, onOpenProject }) =>
         <div className="mt-3 md:mt-4 flex flex-wrap items-center gap-2 md:gap-4 text-xs">
           <div className="flex items-center gap-1">
             <div className="w-3 h-3 bg-purple-100 border border-purple-300 rounded"></div>
-            <span className="text-gray-600 hidden sm:inline">Calendar Events</span>
-            <span className="text-gray-600 sm:hidden">Calendar</span>
+            <span className="text-gray-700 hidden sm:inline">Calendar Events</span>
+            <span className="text-gray-700 sm:hidden">Calendar</span>
           </div>
           <div className="flex items-center gap-1">
             <div className="w-3 h-3 bg-blue-100 border border-blue-300 rounded"></div>
-            <span className="text-gray-600 hidden sm:inline">Project Goals</span>
-            <span className="text-gray-600 sm:hidden">Projects</span>
+            <span className="text-gray-700 hidden sm:inline">Project Goals</span>
+            <span className="text-gray-700 sm:hidden">Projects</span>
           </div>
           <div className="flex items-center gap-1">
-            <span className="text-gray-600">✅ Done</span>
+            <span className="text-gray-700">✅ Done</span>
           </div>
           <div className="flex items-center gap-1">
-            <span className="text-gray-600">🔄 Active</span>
+            <span className="text-gray-700">🔄 Active</span>
           </div>
         </div>
       </div>
@@ -294,7 +294,7 @@ const UniversalCalendar = ({ projects, calendarEvents, user, onOpenProject }) =>
         {/* Day Headers - Abbreviated on mobile */}
         <div className="grid grid-cols-7 gap-0.5 md:gap-1 mb-2">
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, idx) => (
-            <div key={day} className="text-center text-xs md:text-sm font-semibold text-gray-600 py-1 md:py-2">
+            <div key={day} className="text-center text-xs md:text-sm font-semibold text-gray-700 py-1 md:py-2">
               {/* Show single letter on smallest screens, full on md+ */}
               <span className="hidden sm:inline">{day}</span>
               <span className="sm:hidden">{day.charAt(0)}</span>
@@ -358,16 +358,16 @@ const UniversalCalendar = ({ projects, calendarEvents, user, onOpenProject }) =>
       {/* Summary Stats */}
       <div className="p-3 md:p-4 border-t border-gray-200 bg-gray-50 rounded-b-xl">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs md:text-sm">
-          <div className="text-gray-600">
+          <div className="text-gray-700">
             <span className="font-semibold">{events.length}</span> total events this month
           </div>
           <div className="flex items-center gap-3 md:gap-4">
-            <div className="text-gray-600">
+            <div className="text-gray-700">
               <span className="font-semibold">
                 {events.filter(e => e.type === 'project_goal').length}
               </span> <span className="hidden sm:inline">project</span> goals
             </div>
-            <div className="text-gray-600">
+            <div className="text-gray-700">
               <span className="font-semibold">
                 {events.filter(e => e.type === 'calendar_event').length}
               </span> <span className="hidden sm:inline">calendar</span> events

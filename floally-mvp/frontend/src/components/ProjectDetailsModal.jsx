@@ -187,7 +187,7 @@ const ProjectDetailsModal = ({ project, onClose, onUpdate }) => {
   };
 
   const goalStatusColors = {
-    not_started: 'bg-gray-100 text-gray-600',
+    not_started: 'bg-gray-100 text-gray-700',
     in_progress: 'bg-blue-100 text-blue-600',
     completed: 'bg-green-100 text-green-600',
     blocked: 'bg-red-100 text-red-600'
@@ -197,7 +197,7 @@ const ProjectDetailsModal = ({ project, onClose, onUpdate }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end sm:items-center justify-center z-50 p-0 sm:p-4">
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-teal-500 to-blue-500 text-white p-6 rounded-t-xl">
+        <div className="sticky top-0 bg-gradient-to-r from-teal-600 to-blue-500 text-white p-6 rounded-t-xl">
           <div className="flex items-start justify-between">
             <div className="flex-1">
               {editMode ? (
@@ -215,29 +215,36 @@ const ProjectDetailsModal = ({ project, onClose, onUpdate }) => {
               <div className="flex items-center gap-3 mt-3">
                 <span className={`px-3 py-1 rounded-full text-sm font-medium ${statusColors[editMode ? formData.status : project.status] || 'bg-gray-100 text-gray-800'}`}>
                   {editMode ? (
-                    <select
-                      name="status"
-                      value={formData.status}
-                      onChange={handleInputChange}
-                      className="bg-transparent border-none outline-none cursor-pointer"
-                    >
-                      <option value="active">Active</option>
-                      <option value="planning">Planning</option>
-                      <option value="on_hold">On Hold</option>
-                      <option value="completed">Completed</option>
-                    </select>
+                    <>
+                      <label htmlFor="project-status-inline" className="sr-only">Project status</label>
+                      <select
+                        id="project-status-inline"
+                        name="status"
+                        value={formData.status}
+                        onChange={handleInputChange}
+                        className="bg-transparent border-none outline-none cursor-pointer"
+                      >
+                        <option value="active">Active</option>
+                        <option value="planning">Planning</option>
+                        <option value="on_hold">On Hold</option>
+                        <option value="completed">Completed</option>
+                      </select>
+                    </>
                   ) : (
                     project.status.replace('_', ' ').charAt(0).toUpperCase() + project.status.slice(1).replace('_', ' ')
                   )}
                 </span>
                 <span className={`px-3 py-1 rounded-full text-sm font-medium ${priorityColors[editMode ? formData.priority : project.priority] || 'bg-gray-100 text-gray-800'}`}>
                   {editMode ? (
-                    <select
-                      name="priority"
-                      value={formData.priority}
-                      onChange={handleInputChange}
-                      className="bg-transparent border-none outline-none cursor-pointer"
-                    >
+                    <>
+                      <label htmlFor="project-priority-inline" className="sr-only">Project priority</label>
+                      <select
+                        id="project-priority-inline"
+                        name="priority"
+                        value={formData.priority}
+                        onChange={handleInputChange}
+                        className="bg-transparent border-none outline-none cursor-pointer"
+                      >
                       <option value="low">Low</option>
                       <option value="medium">Medium</option>
                       <option value="high">High</option>
@@ -340,7 +347,9 @@ const ProjectDetailsModal = ({ project, onClose, onUpdate }) => {
                           onChange={(e) => handleGoalChange(index, 'deadline', e.target.value)}
                           className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
                         />
+                        <label htmlFor={`goal-status-${index}`} className="sr-only">Status for goal {index + 1}</label>
                         <select
+                          id={`goal-status-${index}`}
                           value={goal.status}
                           onChange={(e) => handleGoalChange(index, 'status', e.target.value)}
                           className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
@@ -356,7 +365,7 @@ const ProjectDetailsModal = ({ project, onClose, onUpdate }) => {
                     <>
                       <div className="flex items-start justify-between mb-2">
                         <p className="text-gray-800 font-medium flex-1">{goal.goal}</p>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ml-2 ${goalStatusColors[goal.status] || 'bg-gray-100 text-gray-600'}`}>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ml-2 ${goalStatusColors[goal.status] || 'bg-gray-100 text-gray-700'}`}>
                           {goal.status.replace('_', ' ').charAt(0).toUpperCase() + goal.status.slice(1).replace('_', ' ')}
                         </span>
                       </div>
@@ -418,7 +427,7 @@ const ProjectDetailsModal = ({ project, onClose, onUpdate }) => {
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="px-6 py-2 bg-gradient-to-r from-teal-500 to-blue-500 text-white rounded-lg hover:from-teal-600 hover:to-blue-600 transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-6 py-2 bg-gradient-to-r from-teal-600 to-blue-500 text-white rounded-lg hover:from-teal-700 hover:to-blue-600 transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {saving ? 'Saving...' : 'Save Changes'}
               </button>
@@ -426,7 +435,7 @@ const ProjectDetailsModal = ({ project, onClose, onUpdate }) => {
           ) : (
             <button
               onClick={() => setEditMode(true)}
-              className="px-6 py-2 bg-gradient-to-r from-teal-500 to-blue-500 text-white rounded-lg hover:from-teal-600 hover:to-blue-600 transition-all shadow-md"
+              className="px-6 py-2 bg-gradient-to-r from-teal-600 to-blue-500 text-white rounded-lg hover:from-teal-700 hover:to-blue-600 transition-all shadow-md"
             >
               Edit Project
             </button>

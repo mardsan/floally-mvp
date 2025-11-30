@@ -129,14 +129,14 @@ function AddProjectModal({ user, onClose, onProjectAdded, isFirstProject = false
               {isFirstProject ? '🎯 Create Your First Project' : '📁 New Project'}
             </h3>
             {isFirstProject && (
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-gray-700 mt-1">
                 Projects help Aimy understand your goals and provide better assistance
               </p>
             )}
           </div>
           <button
             onClick={handleSkip}
-            className="text-gray-400 hover:text-gray-600 text-2xl leading-none"
+            className="text-gray-400 hover:text-gray-700 text-2xl leading-none"
           >
             ×
           </button>
@@ -170,7 +170,7 @@ function AddProjectModal({ user, onClose, onProjectAdded, isFirstProject = false
                   <button
                     type="button"
                     onClick={() => setShowAimyWizard(true)}
-                    className="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-teal-500 to-blue-500 text-white text-sm font-semibold rounded-lg hover:from-teal-600 hover:to-blue-600 transition-all shadow-sm"
+                    className="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-teal-600 to-blue-500 text-white text-sm font-semibold rounded-lg hover:from-teal-700 hover:to-blue-600 transition-all shadow-sm"
                   >
                     <span>🪄</span>
                     <span>Ask Aimy to Plan This</span>

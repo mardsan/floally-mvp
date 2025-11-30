@@ -5,7 +5,7 @@ const ProfileOverview = ({ profileData, userEmail, onRefresh }) => {
     return (
       <div className="text-center py-12">
         <div className="text-4xl mb-4">👋</div>
-        <p className="text-slate-600">Complete onboarding to see your profile</p>
+        <p className="text-slate-700">Complete onboarding to see your profile</p>
       </div>
     );
   }
@@ -44,22 +44,22 @@ const ProfileOverview = ({ profileData, userEmail, onRefresh }) => {
           <div className="bg-gradient-to-br from-teal-50 to-emerald-50 rounded-xl p-4 border" style={{borderColor: '#dafef4'}}>
             <div className="text-2xl mb-2">⭐</div>
             <div className="text-2xl font-bold text-teal-700">{quick_stats.emails_marked_important}</div>
-            <div className="text-xs text-slate-600">Marked Important</div>
+            <div className="text-xs text-slate-700">Marked Important</div>
           </div>
           <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-4 border border-blue-100">
             <div className="text-2xl mb-2">📥</div>
             <div className="text-2xl font-bold text-blue-700">{quick_stats.emails_archived}</div>
-            <div className="text-xs text-slate-600">Emails Archived</div>
+            <div className="text-xs text-slate-700">Emails Archived</div>
           </div>
           <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100">
             <div className="text-2xl mb-2">📧</div>
             <div className="text-2xl font-bold text-purple-700">{quick_stats.responses_drafted}</div>
-            <div className="text-xs text-slate-600">Responses Drafted</div>
+            <div className="text-xs text-slate-700">Responses Drafted</div>
           </div>
           <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-xl p-4 border border-orange-100">
             <div className="text-2xl mb-2">🚫</div>
             <div className="text-2xl font-bold text-orange-700">{quick_stats.newsletters_unsubscribed}</div>
-            <div className="text-xs text-slate-600">Unsubscribed</div>
+            <div className="text-xs text-slate-700">Unsubscribed</div>
           </div>
         </div>
       )}
@@ -164,7 +164,7 @@ const ProfileOverview = ({ profileData, userEmail, onRefresh }) => {
               )}
             </p>
             {learning_status && (
-              <p className="text-xs text-slate-600 mt-2">
+              <p className="text-xs text-slate-700 mt-2">
                 💭 {learning_status.confidence_message}
               </p>
             )}
@@ -187,14 +187,14 @@ const ProfileOverview = ({ profileData, userEmail, onRefresh }) => {
                     <span className="text-sm font-medium text-slate-900">
                       {isComplete ? '✅' : '🔄'} {goal.goal_text}
                     </span>
-                    <span className="text-sm text-slate-600">
+                    <span className="text-sm text-slate-700">
                       {current || 0} / {target || 0} {goal.unit || ''}
                     </span>
                   </div>
                   <div className="w-full bg-slate-100 rounded-full h-2">
                     <div
                       className={`h-2 rounded-full transition-all ${
-                        isComplete ? 'bg-green-500' : 'bg-teal-500'
+                        isComplete ? 'bg-green-500' : 'bg-teal-600'
                       }`}
                       style={{ width: `${Math.min(progress_percent, 100)}%` }}
                     />
@@ -213,10 +213,10 @@ const ProfileOverview = ({ profileData, userEmail, onRefresh }) => {
       {(!goals_progress || goals_progress.length === 0) && (
         <div className="bg-slate-50 rounded-xl p-6 text-center">
           <div className="text-3xl mb-2">🎯</div>
-          <p className="text-slate-600 text-sm">
+          <p className="text-slate-700 text-sm">
             Set goals to track your progress with Aime
           </p>
-          <button className="mt-3 px-4 py-2 bg-teal-500 text-white rounded-lg text-sm font-medium hover:bg-teal-600 transition-all">
+          <button className="mt-3 px-4 py-2 bg-teal-600 text-white rounded-lg text-sm font-medium hover:bg-teal-700 transition-all">
             + Add Goal
           </button>
         </div>

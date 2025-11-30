@@ -5,7 +5,7 @@ const BehavioralInsights = ({ insights, profileData, userEmail }) => {
     return (
       <div className="text-center py-12">
         <div className="text-4xl mb-4">📊</div>
-        <p className="text-slate-600 mb-2">Not enough data yet</p>
+        <p className="text-slate-700 mb-2">Not enough data yet</p>
         <p className="text-sm text-slate-500">
           Keep using Aime's quick actions to build behavioral insights!
         </p>
@@ -29,17 +29,17 @@ const BehavioralInsights = ({ insights, profileData, userEmail }) => {
             <span className="text-3xl">🧠</span>
             <div>
               <h3 className="font-semibold text-slate-900">Learning Status</h3>
-              <p className="text-sm text-slate-600">{learning_status.confidence_message}</p>
+              <p className="text-sm text-slate-700">{learning_status.confidence_message}</p>
             </div>
           </div>
           <div className="grid grid-cols-3 gap-4">
             <div>
               <div className="text-2xl font-bold text-purple-700">{learning_status.total_actions}</div>
-              <div className="text-xs text-slate-600">Total Actions</div>
+              <div className="text-xs text-slate-700">Total Actions</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-purple-700">{learning_status.days_active}</div>
-              <div className="text-xs text-slate-600">Days Active</div>
+              <div className="text-xs text-slate-700">Days Active</div>
             </div>
             <div>
               <div className={`text-2xl font-bold ${
@@ -49,7 +49,7 @@ const BehavioralInsights = ({ insights, profileData, userEmail }) => {
                 {learning_status.confidence_level === 'high' ? '⭐⭐⭐' :
                  learning_status.confidence_level === 'medium' ? '⭐⭐' : '⭐'}
               </div>
-              <div className="text-xs text-slate-600">Confidence</div>
+              <div className="text-xs text-slate-700">Confidence</div>
             </div>
           </div>
         </div>
@@ -87,7 +87,7 @@ const BehavioralInsights = ({ insights, profileData, userEmail }) => {
                         <div className="flex items-center gap-2">
                           <div className="w-24 bg-slate-200 rounded-full h-2">
                             <div
-                              className="bg-teal-500 h-2 rounded-full"
+                              className="bg-teal-600 h-2 rounded-full"
                               style={{ width: `${detail.score * 100}%` }}
                             />
                           </div>
@@ -130,7 +130,7 @@ const BehavioralInsights = ({ insights, profileData, userEmail }) => {
                   <p className="text-sm text-slate-700">{rec.message}</p>
                 </div>
                 <div className="flex gap-2">
-                  <button className="px-3 py-1.5 bg-teal-500 text-white rounded-lg text-sm font-medium hover:bg-teal-600 transition-all">
+                  <button className="px-3 py-1.5 bg-teal-600 text-white rounded-lg text-sm font-medium hover:bg-teal-700 transition-all">
                     Apply
                   </button>
                   <button className="px-3 py-1.5 bg-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-300 transition-all">
@@ -153,7 +153,7 @@ const BehavioralInsights = ({ insights, profileData, userEmail }) => {
               const percentage = (count / total) * 100;
               
               const actionConfig = {
-                important: { label: 'Marked Important', color: 'bg-teal-500', icon: '⭐' },
+                important: { label: 'Marked Important', color: 'bg-teal-600', icon: '⭐' },
                 unimportant: { label: 'Not Interested', color: 'bg-slate-400', icon: '❌' },
                 archive: { label: 'Archived', color: 'bg-blue-500', icon: '📥' },
                 respond: { label: 'Responded', color: 'bg-purple-500', icon: '📧' },
@@ -195,13 +195,13 @@ const BehavioralInsights = ({ insights, profileData, userEmail }) => {
               <div className="text-2xl font-bold text-slate-700">
                 {behavioral_insights.newsletter_stats.total_newsletters}
               </div>
-              <div className="text-xs text-slate-600">Total Newsletters</div>
+              <div className="text-xs text-slate-700">Total Newsletters</div>
             </div>
             <div className="bg-orange-50 rounded-lg p-4">
               <div className="text-2xl font-bold text-orange-700">
                 {behavioral_insights.newsletter_stats.unsubscribed}
               </div>
-              <div className="text-xs text-slate-600">Unsubscribed</div>
+              <div className="text-xs text-slate-700">Unsubscribed</div>
             </div>
           </div>
         </div>

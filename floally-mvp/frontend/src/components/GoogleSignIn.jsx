@@ -32,7 +32,7 @@ function GoogleSignIn() {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Welcome to OkAimy
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-700">
             Sign in with your Google account to get started
           </p>
         </div>
@@ -102,7 +102,7 @@ function GoogleSignIn() {
         {/* What happens next */}
         <div className="mt-8 bg-white rounded-lg shadow-sm p-6">
           <h3 className="font-semibold text-gray-900 mb-3">What happens next?</h3>
-          <ul className="space-y-2 text-sm text-gray-600">
+          <ul className="space-y-2 text-sm text-gray-700">
             <li className="flex items-start">
               <span className="text-teal-500 mr-2">✓</span>
               <span>You'll authorize OkAimy to access your Gmail and Calendar</span>

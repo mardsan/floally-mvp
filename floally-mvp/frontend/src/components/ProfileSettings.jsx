@@ -222,7 +222,7 @@ function ProfileSettings({ user, onClose, onProfileUpdate, onSave }) {
           <h2 className="text-xl md:text-2xl font-bold text-gray-900">Profile Settings</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-2xl leading-none p-1"
+            className="text-gray-400 hover:text-gray-700 text-2xl leading-none p-1"
           >
             ×
           </button>
@@ -262,7 +262,7 @@ function ProfileSettings({ user, onClose, onProfileUpdate, onSave }) {
                 className={`px-3 md:px-4 py-2 rounded-t-lg font-medium transition-all text-sm md:text-base whitespace-nowrap flex-shrink-0 ${
                   activeTab === tab.id
                     ? 'bg-white text-teal-600 border-t-2 border-teal-500'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
                 }`}
               >
                 <span className="mr-2">{tab.icon}</span>
@@ -286,14 +286,14 @@ function ProfileSettings({ user, onClose, onProfileUpdate, onSave }) {
                   />
                   <button 
                     onClick={() => setShowAvatarSelector(true)}
-                    className="absolute bottom-0 right-0 bg-teal-500 text-white rounded-full p-1.5 md:p-2 hover:bg-teal-600 shadow-lg transition-colors text-sm md:text-base"
+                    className="absolute bottom-0 right-0 bg-teal-600 text-white rounded-full p-1.5 md:p-2 hover:bg-teal-700 shadow-lg transition-colors text-sm md:text-base"
                   >
                     📷
                   </button>
                 </div>
                 <div className="text-center sm:text-left min-w-0">
                   <h3 className="text-lg md:text-xl font-semibold text-gray-900 truncate">{profileData.display_name}</h3>
-                  <p className="text-sm md:text-base text-gray-600 truncate">{profileData.email}</p>
+                  <p className="text-sm md:text-base text-gray-700 truncate">{profileData.email}</p>
                   <p className="text-xs md:text-sm text-gray-500 mt-1">{profileData.role} {profileData.company && `at ${profileData.company}`}</p>
                 </div>
               </div>
@@ -388,20 +388,20 @@ function ProfileSettings({ user, onClose, onProfileUpdate, onSave }) {
           {/* Connected Accounts Tab */}
           {activeTab === 'accounts' && (
             <div className="space-y-4">
-              <p className="text-gray-600 mb-4">
+              <p className="text-gray-700 mb-4">
                 Manage your connected accounts and services. These integrations allow OkAimy to help you stay organized.
               </p>
               
               {loading ? (
                 <div className="text-center py-8">
                   <div className="text-4xl mb-2">🔄</div>
-                  <p className="text-gray-600">Loading connected accounts...</p>
+                  <p className="text-gray-700">Loading connected accounts...</p>
                 </div>
               ) : connectedAccounts.length === 0 ? (
                 <div className="text-center py-8 bg-gray-50 rounded-lg">
                   <div className="text-4xl mb-2">🔗</div>
-                  <p className="text-gray-600 mb-4">No accounts connected yet</p>
-                  <button className="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600">
+                  <p className="text-gray-700 mb-4">No accounts connected yet</p>
+                  <button className="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700">
                     Connect Google Account
                   </button>
                 </div>
@@ -415,7 +415,7 @@ function ProfileSettings({ user, onClose, onProfileUpdate, onSave }) {
                         </div>
                         <div>
                           <h4 className="font-semibold text-gray-900 capitalize">{account.provider}</h4>
-                          <p className="text-sm text-gray-600">{account.email}</p>
+                          <p className="text-sm text-gray-700">{account.email}</p>
                           <p className="text-xs text-gray-500 mt-1">
                             Connected {new Date(account.created_at).toLocaleDateString()}
                           </p>
@@ -448,9 +448,10 @@ function ProfileSettings({ user, onClose, onProfileUpdate, onSave }) {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-medium text-gray-900">AI Tone</p>
-                      <p className="text-sm text-gray-600">How Aimy should communicate with you</p>
+                      <p className="text-sm text-gray-700">How Aimy should communicate with you</p>
                     </div>
-                    <select className="px-4 py-2 border border-gray-300 rounded-lg">
+                    <label htmlFor="ai-tone-select" className="sr-only">Select AI communication tone</label>
+                    <select id="ai-tone-select" className="px-4 py-2 border border-gray-300 rounded-lg">
                       <option>Warm & Friendly</option>
                       <option>Professional</option>
                       <option>Casual</option>
@@ -460,9 +461,10 @@ function ProfileSettings({ user, onClose, onProfileUpdate, onSave }) {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-medium text-gray-900">Response Length</p>
-                      <p className="text-sm text-gray-600">Preferred detail level for AI responses</p>
+                      <p className="text-sm text-gray-700">Preferred detail level for AI responses</p>
                     </div>
-                    <select className="px-4 py-2 border border-gray-300 rounded-lg">
+                    <label htmlFor="response-length-select" className="sr-only">Select AI response length</label>
+                    <select id="response-length-select" className="px-4 py-2 border border-gray-300 rounded-lg">
                       <option>Concise</option>
                       <option>Balanced</option>
                       <option>Detailed</option>
@@ -509,7 +511,7 @@ function ProfileSettings({ user, onClose, onProfileUpdate, onSave }) {
                   <div className="flex items-center justify-between py-3">
                     <div>
                       <p className="font-medium text-gray-900">Delete Account</p>
-                      <p className="text-sm text-gray-600">Permanently remove your account and all data</p>
+                      <p className="text-sm text-gray-700">Permanently remove your account and all data</p>
                     </div>
                     <button
                       onClick={() => setShowDeleteModal(true)}
@@ -528,7 +530,7 @@ function ProfileSettings({ user, onClose, onProfileUpdate, onSave }) {
             <div className="text-center py-12">
               <div className="text-6xl mb-4">💳</div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">Billing & Subscription</h3>
-              <p className="text-gray-600 mb-6">Manage your subscription and payment methods</p>
+              <p className="text-gray-700 mb-6">Manage your subscription and payment methods</p>
               <div className="inline-block px-6 py-3 bg-gray-100 text-gray-500 rounded-lg">
                 Coming Soon
               </div>
@@ -548,7 +550,7 @@ function ProfileSettings({ user, onClose, onProfileUpdate, onSave }) {
             <button
               onClick={handleSaveProfile}
               disabled={saving}
-              className="px-4 md:px-6 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm md:text-base"
+              className="px-4 md:px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm md:text-base"
             >
               {saving ? 'Saving...' : 'Save Changes'}
             </button>

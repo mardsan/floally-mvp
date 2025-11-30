@@ -327,7 +327,7 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
             <h2 className="text-2xl font-bold text-gray-900">
               {isEditing ? '✏️ Edit Project' : '🚀 Create New Project'}
             </h2>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-gray-700 mt-1">
               {step === 1 && 'Define your project basics'}
               {step === 2 && 'Set goals and success criteria'}
               {step === 3 && 'Add context for Aimy'}
@@ -335,7 +335,7 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-2xl"
+            className="text-gray-400 hover:text-gray-700 text-2xl"
           >
             ×
           </button>
@@ -348,7 +348,7 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
               <div
                 key={i}
                 className={`h-1.5 flex-1 rounded-full transition-all ${
-                  i <= step ? 'bg-gradient-to-r from-teal-500 to-emerald-500' : 'bg-gray-200'
+                  i <= step ? 'bg-gradient-to-r from-teal-600 to-emerald-600' : 'bg-gray-200'
                 }`}
               />
             ))}
@@ -614,7 +614,7 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
                 <label className="block text-sm font-semibold text-gray-900 mb-2">
                   Project Goals *
                 </label>
-                <p className="text-sm text-gray-600 mb-4">
+                <p className="text-sm text-gray-700 mb-4">
                   What specific outcomes do you want to achieve?
                 </p>
                 {formData.goals.map((goal, index) => (
@@ -648,7 +648,7 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
                 <label className="block text-sm font-semibold text-gray-900 mb-2">
                   Success Criteria
                 </label>
-                <p className="text-sm text-gray-600 mb-3">
+                <p className="text-sm text-gray-700 mb-3">
                   How will you know this project is successful?
                 </p>
                 <textarea
@@ -734,7 +734,7 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
                 <label className="block text-sm font-semibold text-gray-900 mb-2">
                   Keywords & Topics
                 </label>
-                <p className="text-sm text-gray-600 mb-3">
+                <p className="text-sm text-gray-700 mb-3">
                   Words or phrases Aimy should look for in emails and calendar events
                 </p>
                 {formData.keywords.map((keyword, index) => (
@@ -768,7 +768,7 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
                 <label className="block text-sm font-semibold text-gray-900 mb-2">
                   Key People & Stakeholders
                 </label>
-                <p className="text-sm text-gray-600 mb-3">
+                <p className="text-sm text-gray-700 mb-3">
                   Names or email addresses of important people for this project
                 </p>
                 {formData.stakeholders.map((person, index) => (
@@ -821,7 +821,7 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
             disabled={!canProceed() || loading}
             className={`px-8 py-3 rounded-lg font-semibold transition-all ${
               canProceed() && !loading
-                ? 'bg-gradient-to-r from-teal-500 to-emerald-500 text-white hover:from-teal-600 hover:to-emerald-600 shadow-md'
+                ? 'bg-gradient-to-r from-teal-600 to-emerald-600 text-white hover:from-teal-700 hover:to-emerald-700 shadow-md'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
           >

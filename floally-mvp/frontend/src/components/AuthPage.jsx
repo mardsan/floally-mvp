@@ -54,7 +54,7 @@ function AuthPage({ onAuthSuccess }) {
           <h1 className="text-2xl font-bold text-gray-900">
             {isLogin ? 'Welcome back!' : 'Get started with OkAimy'}
           </h1>
-          <p className="text-gray-600 mt-2">
+          <p className="text-gray-700 mt-2">
             {isLogin 
               ? 'Sign in to your account' 
               : 'Create your account to start staying in flow'}
@@ -123,7 +123,7 @@ function AuthPage({ onAuthSuccess }) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-teal-500 to-emerald-500 text-white py-3 rounded-lg font-semibold hover:from-teal-600 hover:to-emerald-600 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gradient-to-r from-teal-600 to-emerald-600 text-white py-3 rounded-lg font-semibold hover:from-teal-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Please wait...' : isLogin ? 'Sign In' : 'Create Account'}
             </button>

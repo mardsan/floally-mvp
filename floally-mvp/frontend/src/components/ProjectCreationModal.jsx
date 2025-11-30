@@ -215,13 +215,13 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
             <h2 className="text-2xl font-bold text-gray-900">
               {isEditing ? '✏️ Edit Project' : '🚀 Create New Project'}
             </h2>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-gray-700 mt-1">
               {aiEnhanced ? '✨ Enhanced by Aimy - Edit as needed' : 'Fill in the basics, then let Aimy help'}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-2xl"
+            className="text-gray-400 hover:text-gray-700 text-2xl"
           >
             ×
           </button>
@@ -366,7 +366,7 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
                 <div>
                   <h3 className="text-lg font-bold text-gray-900">🎯 Goals & Tasks</h3>
                   {formData.goals.length > 0 && (
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-gray-700 mt-1">
                       {completionPercentage()}% complete ({formData.goals.filter(g => g.status === 'completed').length} of {formData.goals.length})
                     </p>
                   )}
@@ -384,7 +384,9 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
                 <div className="space-y-3">
                   {formData.goals.map((goal, index) => (
                     <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                      <label htmlFor={`goal-status-${index}`} className="sr-only">Status for goal {index + 1}</label>
                       <select
+                        id={`goal-status-${index}`}
                         value={goal.status}
                         onChange={(e) => updateGoal(index, 'status', e.target.value)}
                         className="px-2 py-1 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-teal-500"

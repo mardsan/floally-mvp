@@ -135,7 +135,7 @@ function WaitlistAdmin() {
               <h1 className="text-3xl font-bold text-gray-900">
                 Waitlist Dashboard
               </h1>
-              <p className="text-gray-600 mt-1">
+              <p className="text-gray-700 mt-1">
                 Total Signups: <span className="font-semibold text-teal-600">{total}</span>
               </p>
             </div>
@@ -165,7 +165,7 @@ function WaitlistAdmin() {
           {loading ? (
             <div className="text-center py-12">
               <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600"></div>
-              <p className="text-gray-600 mt-4">Loading signups...</p>
+              <p className="text-gray-700 mt-4">Loading signups...</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -190,7 +190,7 @@ function WaitlistAdmin() {
                   ) : (
                     signups.map((signup, index) => (
                       <tr key={signup.signupId} className="border-b border-gray-100 hover:bg-gray-50">
-                        <td className="py-3 px-4 text-gray-600">
+                        <td className="py-3 px-4 text-gray-700">
                           {signups.length - index}
                         </td>
                         <td className="py-3 px-4 font-medium text-gray-900">
@@ -204,7 +204,7 @@ function WaitlistAdmin() {
                             {getStruggleLabel(signup.struggle)}
                           </span>
                         </td>
-                        <td className="py-3 px-4 text-gray-600 text-sm">
+                        <td className="py-3 px-4 text-gray-700 text-sm">
                           {formatDate(signup.timestamp)}
                         </td>
                         <td className="py-3 px-4 text-right">

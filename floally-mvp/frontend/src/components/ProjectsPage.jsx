@@ -23,7 +23,7 @@ function GoalWithSubTasks({ goal, goalIndex, onToggleSubTask }) {
           <div className="font-medium text-gray-900">{goal.goal}</div>
           <div className="flex items-center gap-3 mt-1">
             {goal.deadline && (
-              <div className="text-xs text-gray-600">📅 {goal.deadline}</div>
+              <div className="text-xs text-gray-700">📅 {goal.deadline}</div>
             )}
             {hasSubTasks && (
               <div className="text-xs text-gray-500">
@@ -291,7 +291,7 @@ export default function ProjectsPage({ user, onLogout }) {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <div className="text-4xl mb-4">⏳</div>
-          <div className="text-gray-600">Loading projects...</div>
+          <div className="text-gray-700">Loading projects...</div>
         </div>
       </div>
     );
@@ -300,7 +300,7 @@ export default function ProjectsPage({ user, onLogout }) {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-teal-500 to-blue-600 text-white">
+      <div className="bg-gradient-to-r from-teal-600 to-blue-600 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6">
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0 flex-1">
@@ -345,7 +345,9 @@ export default function ProjectsPage({ user, onLogout }) {
             {/* Filters and Actions Row */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 md:gap-4">
               {/* Status Filter */}
+              <label htmlFor="projects-status-filter" className="sr-only">Filter projects by status</label>
               <select
+                id="projects-status-filter"
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
                 className="px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 text-sm md:text-base"
@@ -446,7 +448,7 @@ export default function ProjectsPage({ user, onLogout }) {
 
                   {/* Description */}
                   {project.description && (
-                    <p className="text-xs md:text-sm text-gray-600 mb-3 md:mb-4 line-clamp-2">
+                    <p className="text-xs md:text-sm text-gray-700 mb-3 md:mb-4 line-clamp-2">
                       {project.description}
                     </p>
                   )}
@@ -675,7 +677,7 @@ export default function ProjectsPage({ user, onLogout }) {
               <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
                 🪄 Create Project with Aimy
               </h2>
-              <p className="text-sm md:text-base text-gray-600 mb-4 md:mb-6">
+              <p className="text-sm md:text-base text-gray-700 mb-4 md:mb-6">
                 Tell Aimy what you're working on, and she'll help you plan it out!
               </p>
 
@@ -717,7 +719,7 @@ export default function ProjectsPage({ user, onLogout }) {
                       setWizardStep('generating');
                     }}
                     disabled={projectDescription.trim().length < 10}
-                    className="flex-1 px-4 py-2 bg-gradient-to-r from-teal-500 to-blue-500 text-white rounded-lg hover:from-teal-600 hover:to-blue-600 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 px-4 py-2 bg-gradient-to-r from-teal-600 to-blue-500 text-white rounded-lg hover:from-teal-700 hover:to-blue-600 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     ✨ Let Aimy Plan It
                   </button>

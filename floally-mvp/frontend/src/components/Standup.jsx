@@ -212,7 +212,7 @@ const Standup = ({ user, onClose }) => {
         <div className="bg-white rounded-lg p-8">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading your standup...</p>
+            <p className="mt-4 text-gray-700">Loading your standup...</p>
           </div>
         </div>
       </div>
@@ -264,20 +264,20 @@ const Standup = ({ user, onClose }) => {
                 </div>
                 <div className="flex items-center gap-2">
                   {getStatusIcon(userFocusStatus)}
-                  <span className="text-sm font-medium text-gray-600">{getStatusLabel(userFocusStatus)}</span>
+                  <span className="text-sm font-medium text-gray-700">{getStatusLabel(userFocusStatus)}</span>
                 </div>
               </div>
 
               <h3 className="text-2xl font-bold text-gray-900 mb-3">{selectedFocus.title}</h3>
 
               <div className="space-y-2 mb-4">
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-gray-700">
                   <span className="font-medium">From:</span> {selectedFocus.source}
                 </div>
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-gray-700">
                   <span className="font-medium">Due:</span> {selectedFocus.dueTime}
                 </div>
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-gray-700">
                   <span className="font-medium">Estimate:</span> {selectedFocus.timeEstimate}
                 </div>
               </div>
@@ -336,7 +336,7 @@ const Standup = ({ user, onClose }) => {
                   <div className="text-center py-4">
                     <div className="text-5xl mb-2">🎉</div>
                     <p className="text-lg font-bold text-green-700">Great work!</p>
-                    <p className="text-sm text-gray-600 mt-1">Aimy will summarize your day at 5pm</p>
+                    <p className="text-sm text-gray-700 mt-1">Aimy will summarize your day at 5pm</p>
                   </div>
                 )}
               </div>
@@ -346,7 +346,7 @@ const Standup = ({ user, onClose }) => {
             {showAlternatives && (
               <div className="bg-white rounded-lg p-6 shadow-lg border-2 border-yellow-300">
                 <h3 className="text-xl font-bold text-gray-800 mb-4">Alternative Focus Options</h3>
-                <p className="text-sm text-gray-600 mb-4">
+                <p className="text-sm text-gray-700 mb-4">
                   These are also important. Want to switch your focus?
                 </p>
                 <div className="space-y-3">
@@ -359,7 +359,7 @@ const Standup = ({ user, onClose }) => {
                             <span className="text-lg">{alt.rank === 2 ? '2️⃣' : '3️⃣'}</span>
                             <h4 className="font-semibold text-gray-800">{alt.title}</h4>
                           </div>
-                          <p className="text-sm text-gray-600 italic ml-7">{alt.reasoning}</p>
+                          <p className="text-sm text-gray-700 italic ml-7">{alt.reasoning}</p>
                           <div className="text-xs text-gray-500 ml-7 mt-1">
                             Importance: {alt.importance}/100
                           </div>
@@ -418,14 +418,14 @@ const Standup = ({ user, onClose }) => {
                     <div className="flex items-center justify-between mb-2">
                       <div>
                         <h4 className="font-semibold text-gray-800">{task.category}</h4>
-                        <p className="text-sm text-gray-600">{task.description} ({task.count})</p>
+                        <p className="text-sm text-gray-700">{task.description} ({task.count})</p>
                       </div>
                       <span className={`text-2xl ${
                         task.status === 'completed' ? '✅' :
                         task.status === 'in_progress' ? '🔄' : '⏸️'
                       }`}></span>
                     </div>
-                    <details className="text-xs text-gray-600">
+                    <details className="text-xs text-gray-700">
                       <summary className="cursor-pointer hover:text-gray-800">View details</summary>
                       <ul className="mt-2 ml-4 space-y-1">
                         {task.details.map((detail, detailIdx) => (
@@ -449,10 +449,10 @@ const Standup = ({ user, onClose }) => {
                   {aimyWork.approvals.map((approval) => (
                     <div key={approval.id} className="bg-white rounded-lg p-4">
                       <h4 className="font-semibold text-gray-800 mb-2">{approval.title}</h4>
-                      <p className="text-sm text-gray-600 italic mb-2">{approval.reasoning}</p>
+                      <p className="text-sm text-gray-700 italic mb-2">{approval.reasoning}</p>
                       <p className="text-sm text-teal-700 mb-3">💡 {approval.impact}</p>
                       
-                      <details className="text-xs text-gray-600 mb-3">
+                      <details className="text-xs text-gray-700 mb-3">
                         <summary className="cursor-pointer hover:text-gray-800 font-medium">
                           View {approval.items.length} items
                         </summary>
@@ -503,7 +503,7 @@ const Standup = ({ user, onClose }) => {
                           <span className="text-xs text-gray-500">{item.scheduledTime}</span>
                         )}
                       </div>
-                      <p className="text-sm text-gray-600">{item.description}</p>
+                      <p className="text-sm text-gray-700">{item.description}</p>
                     </div>
                   </div>
                 ))}
@@ -521,7 +521,7 @@ const Standup = ({ user, onClose }) => {
                   {aimyWork.needsFromYou.map((need, idx) => (
                     <div key={idx} className="bg-white rounded-lg p-4">
                       <p className="font-medium text-gray-800 mb-2">{need.question}</p>
-                      <p className="text-sm text-gray-600 mb-3">{need.context}</p>
+                      <p className="text-sm text-gray-700 mb-3">{need.context}</p>
                       <button className="text-teal-600 hover:text-teal-700 font-medium text-sm">
                         Respond →
                       </button>
@@ -535,7 +535,7 @@ const Standup = ({ user, onClose }) => {
 
         {/* Footer */}
         <div className="sticky bottom-0 bg-gray-100 px-6 py-4 rounded-b-lg flex justify-between items-center border-t">
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-gray-700">
             ⏰ Last sync: <span className="font-medium">2 minutes ago</span>
           </div>
           <button

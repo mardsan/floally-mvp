@@ -59,7 +59,7 @@ function DeleteProfileModal({ user, onClose, onDelete }) {
           <h3 className="text-xl font-bold text-red-900">Delete Account</h3>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-2xl leading-none"
+            className="text-gray-400 hover:text-gray-700 text-2xl leading-none"
           >
             ×
           </button>
@@ -74,7 +74,7 @@ function DeleteProfileModal({ user, onClose, onDelete }) {
                 <h4 className="text-2xl font-bold text-gray-900 mb-2">
                   Are you sure you want to delete your account?
                 </h4>
-                <p className="text-gray-600">
+                <p className="text-gray-700">
                   This action will permanently delete your OkAimy account and all associated data.
                 </p>
               </div>
@@ -125,7 +125,7 @@ function DeleteProfileModal({ user, onClose, onDelete }) {
                 <h4 className="text-xl font-bold text-gray-900 mb-2">
                   Help us improve
                 </h4>
-                <p className="text-gray-600 mb-6">
+                <p className="text-gray-700 mb-6">
                   We're sorry to see you go. Your feedback helps us make OkAimy better for everyone.
                 </p>
               </div>
@@ -197,7 +197,7 @@ function DeleteProfileModal({ user, onClose, onDelete }) {
                 <h4 className="text-2xl font-bold text-gray-900 mb-2">
                   Final Confirmation
                 </h4>
-                <p className="text-gray-600">
+                <p className="text-gray-700">
                   This action cannot be undone. All your data will be permanently deleted.
                 </p>
               </div>
