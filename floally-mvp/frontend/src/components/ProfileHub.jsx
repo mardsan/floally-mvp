@@ -72,10 +72,10 @@ const ProfileHub = ({ userEmail }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-okaimy-mint-50 via-white to-okaimy-emerald-50 py-8 px-4">
+    <div className="min-h-full bg-gradient-to-br from-okaimy-mint-50 via-white to-okaimy-emerald-50 py-4 sm:py-8 px-3 sm:px-4">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-8 text-center">
+        {/* Header - Hidden on mobile since modal already has title */}
+        <div className="hidden sm:block mb-8 text-center">
           <div className="flex items-center justify-center mb-4">
             <img 
               src="/okaimy-pfp-01.png" 
@@ -89,9 +89,44 @@ const ProfileHub = ({ userEmail }) => {
           </div>
         </div>
 
+        {/* Mobile header - compact version */}
+        <div className="sm:hidden mb-4 flex items-center gap-3 px-2">
+          <img 
+            src="/okaimy-pfp-01.png" 
+            alt="Aimy" 
+            className="w-10 h-10 rounded-full shadow-glow"
+          />
+          <p className="text-sm text-gray-600">Manage your OkAimy experience</p>
+        </div>
+
         {/* Tab Navigation */}
         <Card variant="elevated" padding="none" className="mb-6 overflow-hidden">
-          <div className="flex border-b border-gray-200">
+          {/* Mobile Dropdown (< md breakpoint) */}
+          <div className="md:hidden border-b border-gray-200 p-3">
+            <label htmlFor="mobile-tab-select" className="sr-only">Select Tab</label>
+            <select
+              id="mobile-tab-select"
+              value={activeTab}
+              onChange={(e) => setActiveTab(e.target.value)}
+              className="w-full px-4 py-3 text-base font-medium border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white appearance-none cursor-pointer"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E")`,
+                backgroundPosition: 'right 0.5rem center',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: '1.5em 1.5em',
+                paddingRight: '2.5rem'
+              }}
+            >
+              {tabs.map((tab) => (
+                <option key={tab.id} value={tab.id}>
+                  {tab.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Desktop Tabs (md+ breakpoint) */}
+          <div className="hidden md:flex border-b border-gray-200">
             {tabs.map((tab) => (
               <button
                 key={tab.id}

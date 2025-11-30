@@ -1070,18 +1070,18 @@ function MainDashboard({ user, onLogout }) {
 
       {/* Profile Hub Modal */}
       {showProfileHub && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl max-h-[90vh] overflow-hidden">
-            <div className="flex justify-between items-center p-6 border-b border-gray-200">
-              <h2 className="text-2xl font-bold text-gray-900">Profile Hub</h2>
+        <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 p-0 sm:p-4">
+          <div className="bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl w-full sm:max-w-6xl h-[95vh] sm:max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="flex justify-between items-center p-4 sm:p-6 border-b border-gray-200 flex-shrink-0">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Profile Hub</h2>
               <button
                 onClick={() => setShowProfileHub(false)}
-                className="text-gray-500 hover:text-gray-700 text-2xl"
+                className="text-gray-500 hover:text-gray-700 text-2xl leading-none"
               >
                 ×
               </button>
             </div>
-            <div className="overflow-y-auto max-h-[calc(90vh-80px)]">
+            <div className="flex-1 overflow-y-auto">
               <ProfileHub userEmail={currentUser.email} />
             </div>
           </div>
