@@ -636,7 +636,7 @@ function App() {
             <img src="/okaimy-logo-01.png" alt="OkAimy" className="h-8" />
             <h1 className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">OkAimy</h1>
             {data.profile && (
-              <p className="text-sm text-slate-600 ml-2">{data.profile.email}</p>
+              <p className="text-sm text-slate-700 ml-2">{data.profile.email}</p>
             )}
           </div>
           <div className="flex items-center gap-4">
@@ -660,7 +660,7 @@ function App() {
                 </button>
               </>
             )}
-            <div className="text-sm text-slate-600">
+            <div className="text-sm text-slate-700 font-medium">
               Good morning{profile?.display_name ? `, ${profile.display_name}` : ''} 🌞
             </div>
           </div>

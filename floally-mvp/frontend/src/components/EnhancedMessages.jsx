@@ -145,7 +145,7 @@ function EnhancedMessages({ user }) {
               className={`px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition-all flex items-center gap-2 ${
                 loading
                   ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-teal-500 to-blue-500 text-white hover:shadow-lg hover:scale-105'
+                  : 'bg-gradient-to-r from-teal-600 to-blue-600 text-white hover:shadow-lg hover:scale-105'
               }`}
             >
               {loading ? (

@@ -217,10 +217,43 @@ xl: 1280px+  /* Large desktops */
 - Use `focus:ring-2 focus:ring-primary`
 - Manage focus in modals (trap focus, return on close)
 
-### 4. **Color Contrast**
-- **Minimum contrast ratio:** 4.5:1 for text
-- **Touch targets:** Clearly distinguishable
+### 4. **Color Contrast (WCAG AA Standards)**
+- **Normal text** (< 18pt): 4.5:1 contrast ratio minimum
+- **Large text** (≥ 18pt or bold ≥ 14pt): 3:1 contrast ratio minimum
+- **UI components & borders**: 3:1 contrast ratio minimum
+- **Primary buttons**: Use `bg-teal-600` or darker (not `bg-teal-500`)
+- **Secondary text**: Use `text-slate-700` minimum (not `text-slate-600`)
+- **Disabled states**: Minimum 3:1 contrast with background
+- **Link text**: Must be distinguishable from surrounding text
 - Don't rely solely on color to convey information
+
+**Recommended Text Colors:**
+- Primary text: `text-slate-900` or `text-gray-900`
+- Secondary text: `text-slate-700` or `text-gray-700`
+- Tertiary text: `text-slate-600` (18pt+ only)
+- On dark backgrounds: `text-white` or `text-gray-100`
+
+**Recommended Button Colors:**
+- Primary: `bg-teal-600` (sufficient contrast)
+- Success: `bg-green-600`
+- Danger: `bg-red-600`
+- Avoid: `bg-teal-400`, `bg-blue-400` (too light)
+
+### 5. **Form Labels (Required)**
+All form inputs MUST have associated labels:
+```jsx
+{/* Visible label */}
+<label htmlFor="email-input" className="block text-sm font-medium text-slate-700">
+  Email Address
+</label>
+<input id="email-input" type="email" ... />
+
+{/* Screen reader only label */}
+<label htmlFor="dropdown-id" className="sr-only">
+  Select Category
+</label>
+<select id="dropdown-id" ... />
+```
 
 ---
 
