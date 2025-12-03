@@ -581,16 +581,16 @@ function App() {
                     console.error('Video failed to load, switching to static fallback');
                     // Replace video with image fallback
                     const img = document.createElement('img');
-                    img.src = '/okaimy-static-01.png';
+                    img.src = '/AiMy_LUMO_01.png';
                     img.alt = 'Aimy - Your AI Assistant';
                     img.className = 'w-full h-full object-cover';
                     e.target.parentNode.replaceChild(img, e.target);
                   }}
                 >
-                  <source src="/opaimy-video-loop-720-01.mp4" type="video/mp4" />
+                  <source src="/Aimy_LUMO_v5.mp4" type="video/mp4" />
                   {/* Fallback for browsers that don't support video */}
                   <img 
-                    src="/okaimy-static-01.png" 
+                    src="/AiMy_LUMO_01.png" 
                     alt="Aimy - Your AI Assistant" 
                     className="w-full h-full object-cover"
                   />
@@ -689,7 +689,7 @@ function App() {
             <div className="flex justify-center mb-8">
               <div className="w-64 h-64 rounded-full overflow-hidden shadow-2xl ring-8 ring-teal-200/70 ring-offset-8 ring-offset-white/80 hover:ring-teal-300/80 hover:scale-105 transition-all duration-500">
                 <img 
-                  src="/okaimy-pfp-01.png" 
+                  src="/AiMy_LUMO_01.png" 
                   alt="Aimy" 
                   className="w-full h-full object-cover"
                   onError={(e) => {

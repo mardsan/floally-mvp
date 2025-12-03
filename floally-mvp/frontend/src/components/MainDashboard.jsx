@@ -709,7 +709,7 @@ function MainDashboard({ user, onLogout }) {
                   <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
                     <div className="w-12 h-12 md:w-16 md:h-16 rounded-full overflow-hidden ring-2 md:ring-4 ring-okaimy-mint-200 bg-white shadow-glow flex-shrink-0">
                       <img 
-                        src="/okaimy-pfp-01.png" 
+                        src="/AiMy_LUMO_01.png" 
                         alt="Aimy" 
                         className="w-full h-full object-cover"
                         onError={(e) => {
@@ -845,7 +845,7 @@ function MainDashboard({ user, onLogout }) {
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-10 h-10 rounded-full overflow-hidden bg-white shadow-glow">
                       <img 
-                        src="/okaimy-pfp-01.png" 
+                        src="/AiMy_LUMO_01.png" 
                         alt="Aimy" 
                         className="w-full h-full object-cover"
                         onError={(e) => {

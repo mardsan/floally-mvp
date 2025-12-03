@@ -514,7 +514,7 @@ const StandupDashboard = ({ user, userAvatar, userName, messages, events, userPr
           <div className="flex items-center gap-4 mb-6">
             <div className="w-16 h-16 rounded-full overflow-hidden ring-4 ring-teal-200 bg-white shadow-lg">
               <img 
-                src="/okaimy-pfp-01.png" 
+                src="/AiMy_LUMO_01.png" 
                 alt="Aimy" 
                 className="w-full h-full object-cover"
                 onError={(e) => {

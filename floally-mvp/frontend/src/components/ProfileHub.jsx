@@ -78,7 +78,7 @@ const ProfileHub = ({ userEmail }) => {
         <div className="hidden sm:block mb-8 text-center">
           <div className="flex items-center justify-center mb-4">
             <img 
-              src="/okaimy-pfp-01.png" 
+              src="/AiMy_LUMO_01.png" 
               alt="Aimy" 
               className="w-16 h-16 rounded-full mr-4 shadow-glow"
             />
@@ -92,7 +92,7 @@ const ProfileHub = ({ userEmail }) => {
         {/* Mobile header - compact version */}
         <div className="sm:hidden mb-4 flex items-center gap-3 px-2">
           <img 
-            src="/okaimy-pfp-01.png" 
+            src="/AiMy_LUMO_01.png" 
             alt="Aimy" 
             className="w-10 h-10 rounded-full shadow-glow"
           />
@@ -217,7 +217,7 @@ const OverviewTab = ({ data, userProfile }) => {
         {aimy_understanding && (
           <div className="mt-4 p-4 bg-white rounded-lg border border-okaimy-mint-200">
             <h3 className="font-semibold text-primary mb-2 flex items-center">
-              <img src="/okaimy-pfp-01.png" alt="Aimy" className="w-6 h-6 rounded-full mr-2" />
+              <img src="/AiMy_LUMO_01.png" alt="Aimy" className="w-6 h-6 rounded-full mr-2" />
               Aimy's Understanding of You
             </h3>
             <p className="text-gray-700 italic">{aimy_understanding}</p>
