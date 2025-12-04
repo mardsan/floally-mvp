@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import MessageDetailPopup from './MessageDetailPopup';
+import { useActivityLogger, EVENT_TYPES, ENTITY_TYPES, ACTIONS } from '../hooks/useActivityLogger';
 
 const CATEGORY_TABS = [
   { id: 'all', label: 'All Messages', icon: '📬', color: 'teal' },
@@ -24,6 +25,9 @@ function EnhancedMessages({ user }) {
   const [showFeedback, setShowFeedback] = useState(null);
   const [aiAnalysisEnabled, setAiAnalysisEnabled] = useState(true);
   const [hasAnalyzed, setHasAnalyzed] = useState(false);
+
+  // Activity logging
+  const { logActivity } = useActivityLogger(user?.email);
 
   const loadMessages = useCallback(async () => {
     setLoading(true);
@@ -92,6 +96,19 @@ function EnhancedMessages({ user }) {
 
   const handleOpenMessage = async (message) => {
     setSelectedMessage(message);
+    
+    // Log email open activity
+    logActivity(
+      EVENT_TYPES.EMAIL_OPENED,
+      ENTITY_TYPES.EMAIL,
+      message.id,
+      { 
+        subject: message.subject?.substring(0, 100),
+        category: message.category || 'primary',
+        importance_score: message.aiImportanceScore || message.compositeScore
+      },
+      ACTIONS.VIEWED
+    );
   };
 
   const getImportanceIcon = (message) => {
@@ -212,7 +229,17 @@ function EnhancedMessages({ user }) {
           {CATEGORY_TABS.map(tab => (
             <button
               key={tab.id}
-              onClick={() => setActiveCategory(tab.id)}
+              onClick={() => {
+                setActiveCategory(tab.id);
+                // Log category filter change
+                logActivity(
+                  EVENT_TYPES.FILTER_CHANGED,
+                  ENTITY_TYPES.EMAIL,
+                  'email_category',
+                  { category: tab.id, previous: activeCategory },
+                  ACTIONS.VIEWED
+                );
+              }}
               className={`px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-medium whitespace-nowrap transition-all flex-shrink-0 ${
                 activeCategory === tab.id
                   ? `bg-${tab.color}-50 text-${tab.color}-700 border-2 border-${tab.color}-300 shadow-sm`

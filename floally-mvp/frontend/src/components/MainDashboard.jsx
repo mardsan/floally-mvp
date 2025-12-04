@@ -6,6 +6,7 @@ import EnhancedMessages from './EnhancedMessages';
 import Button from './Button';
 import Card from './Card';
 import Icon from './Icon';
+import { useActivityLogger, EVENT_TYPES, ENTITY_TYPES, ACTIONS } from '../hooks/useActivityLogger';
 
 function MainDashboard({ user, onLogout }) {
   const [loading, setLoading] = useState(true);
@@ -20,6 +21,9 @@ function MainDashboard({ user, onLogout }) {
   const [oneThingStatus, setOneThingStatus] = useState('preparing');
   const [standupStatusId, setStandupStatusId] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Activity logging
+  const { logActivity } = useActivityLogger(user?.email);
 
   useEffect(() => {
     loadDashboardData();
@@ -117,6 +121,15 @@ function MainDashboard({ user, onLogout }) {
   const handleStatusChange = async (newStatus) => {
     setOneThingStatus(newStatus);
     await saveStandupStatus(newStatus);
+    
+    // Log activity
+    logActivity(
+      EVENT_TYPES.STATUS_CHANGED,
+      ENTITY_TYPES.STANDUP,
+      standup?.one_thing || 'one_thing',
+      { status: newStatus, one_thing: standup?.one_thing },
+      ACTIONS.UPDATED
+    );
   };
 
 
@@ -196,6 +209,19 @@ function MainDashboard({ user, onLogout }) {
       console.log('✅ AI Standup analysis:', analysis);
       
       buildStandupState(analysis);
+      
+      // Log standup generation activity
+      logActivity(
+        EVENT_TYPES.STANDUP_GENERATED,
+        ENTITY_TYPES.STANDUP,
+        'daily_standup',
+        { 
+          forced_refresh: forceRefresh,
+          one_thing: analysis.the_one_thing?.title,
+          secondary_count: analysis.secondary_priorities?.length || 0
+        },
+        ACTIONS.CREATED
+      );
       
     } catch (error) {
       console.error('Failed to load standup:', error);
