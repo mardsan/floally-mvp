@@ -92,7 +92,7 @@ export default async function handler(req, res) {
       ].join('\n');
       
       res.setHeader('Content-Type', 'text/csv');
-      res.setHeader('Content-Disposition', 'attachment; filename="okaimy-waitlist.csv"');
+      res.setHeader('Content-Disposition', 'attachment; filename="aimi-waitlist.csv"');
       return res.status(200).send(csv);
     }
     

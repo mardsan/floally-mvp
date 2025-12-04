@@ -12,7 +12,7 @@ from app.database import Base
 
 class TrustLevel(str, enum.Enum):
     """Trust level for sender attachments"""
-    TRUSTED = "trusted"      # Always allow Aimy to read attachments
+    TRUSTED = "trusted"      # Always allow Aimi to read attachments
     BLOCKED = "blocked"      # Never allow - potential threat
     ONE_TIME = "one_time"    # Ask each time (default for new senders)
 

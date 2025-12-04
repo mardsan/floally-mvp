@@ -8,7 +8,7 @@ The Smart Messages module is an AI-powered communication hub that learns your pr
 ## 🎯 Key Features
 
 ### 1. **AI-Powered Curation**
-- **Aimy analyzes** each message for importance and relevance
+- **Aimi analyzes** each message for importance and relevance
 - **Composite scoring** combines:
   - AI analysis (50%)
   - Your sender behavior history (30%)
@@ -30,14 +30,14 @@ Every message shows an importance icon:
 - 🔵 **Medium** (40-59%): Normal priority
 - ⚪ **Low** (0-39%): Can wait or archive
 
-### 4. **Train Aimy**
-Click the 🎓 icon on any message to teach Aimy your preferences:
+### 4. **Train Aimi**
+Click the 🎓 icon on any message to teach Aimi your preferences:
 - **🔴 Critical**: Highly important, always prioritize this sender
 - **🟡 Interesting**: Worth reading but not urgent
 - **⚪ Unimportant**: Can ignore/archive
 - **🗑️ Junk**: Spam/trash
 
-Aimy learns from your feedback and improves over time!
+Aimi learns from your feedback and improves over time!
 
 ---
 
@@ -52,7 +52,7 @@ Click any message to open the full preview popup with:
 - Full email content
 - AI reasoning for importance score
 - Quick actions (Reply, Archive, Delete, etc.)
-- Train Aimy section
+- Train Aimi section
 
 ### **Quick Actions in Popup**
 - **📧 Open in Gmail**: View in your Gmail inbox
@@ -65,7 +65,7 @@ Click any message to open the full preview popup with:
 
 ## 🤖 How AI Scoring Works
 
-Aimy analyzes each message considering:
+Aimi analyzes each message considering:
 
 1. **User Context**
    - Your role and job title
@@ -107,7 +107,7 @@ Aimy analyzes each message considering:
 - Can be disabled in Settings
 
 ### **How It Improves**
-The more you use the feedback system, the better Aimy becomes at:
+The more you use the feedback system, the better Aimi becomes at:
 - Predicting which messages you'll care about
 - Filtering out noise automatically
 - Prioritizing time-sensitive communications
@@ -134,7 +134,7 @@ The more you use the feedback system, the better Aimy becomes at:
 
 ## 🚀 Pro Tips
 
-1. **Use Feedback Regularly**: The first 20-30 feedback ratings teach Aimy your preferences quickly
+1. **Use Feedback Regularly**: The first 20-30 feedback ratings teach Aimi your preferences quickly
 2. **Check Primary First**: Most critical messages appear here
 3. **Archive Promotions**: Use the Archive button to keep promotions out of your way
 4. **Unsubscribe Newsletters**: One-click unsubscribe from unwanted newsletters
@@ -168,7 +168,7 @@ The more you use the feedback system, the better Aimy becomes at:
 - Try different category tabs
 
 ### **Wrong importance scores?**
-- Use the 🎓 Train Aimy button to provide feedback
+- Use the 🎓 Train Aimi button to provide feedback
 - Give it 10-20 ratings to calibrate
 - Importance improves over time with usage
 
@@ -195,7 +195,7 @@ Coming soon:
 1. Open Messages module
 2. Check **Primary** tab for critical emails
 3. Quickly scan importance indicators (🔴/🟡)
-4. Train Aimy on any misclassified messages
+4. Train Aimi on any misclassified messages
 5. Archive or delete low-priority items
 6. Open important ones in Gmail for full response
 
@@ -204,11 +204,11 @@ Coming soon:
 2. Scan for newsletters you don't read
 3. Click message → **🚫 Unsubscribe**
 4. Mark good newsletters as **🟡 Interesting**
-5. Aimy learns which newsletters matter to you
+5. Aimi learns which newsletters matter to you
 
 ### **Client Communication**
-1. Train Aimy to mark client emails as **🔴 Critical**
-2. Aimy automatically prioritizes all future emails from that client
+1. Train Aimi to mark client emails as **🔴 Critical**
+2. Aimi automatically prioritizes all future emails from that client
 3. Never miss an important client message
 4. Quick access via **Primary** tab
 
@@ -221,8 +221,8 @@ You'll know it's working when:
 - ✅ Newsletters and promotions are deprioritized
 - ✅ You spend less time sorting your inbox
 - ✅ Important messages never get buried
-- ✅ Aimy's suggestions match your intuition
+- ✅ Aimi's suggestions match your intuition
 
 ---
 
-**Built with ❤️ by OkAimy - Your AI-Powered Strategic Partner**
+**Built with ❤️ by Hey Aimi - Your AI-Powered Strategic Partner**

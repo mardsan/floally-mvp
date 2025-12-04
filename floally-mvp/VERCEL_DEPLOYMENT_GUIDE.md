@@ -1,4 +1,4 @@
-# Vercel Deployment - OkAimy v1.3.0
+# Vercel Deployment - Hey Aimi v1.3.0
 
 **Status:** ✅ Deployment triggered  
 **Site:** https://floally-mvp.vercel.app  
@@ -12,7 +12,7 @@
 1. ✅ Pushed commit `25992f4` to GitHub main branch
 2. ✅ Vercel webhook should auto-detect the push
 3. ⏳ Vercel is now building and deploying the updated code
-4. 🎯 New deployment will include all OkAimy rebranding
+4. 🎯 New deployment will include all Hey Aimi rebranding
 
 ### Monitoring the Deployment:
 
@@ -32,12 +32,12 @@
 ## 🎨 What to Expect After Deployment
 
 ### ✅ You SHOULD See:
-- **Page Title:** "OkAimy - Your AI Strategic Partner"
-- **Logo:** New OkAimy logo (not OpAime)
-- **Header:** "OkAimy" branding
-- **Onboarding:** "Meet Aimy" with new avatar
-- **Settings:** "Aimy Settings" (not "Aime Settings")
-- **All Text:** References to "Aimy" everywhere
+- **Page Title:** "Hey Aimi - Your AI Strategic Partner"
+- **Logo:** New Hey Aimi logo (not OpAime)
+- **Header:** "Hey Aimi" branding
+- **Onboarding:** "Meet Aimi" with new avatar
+- **Settings:** "Aimi Settings" (not "Aime Settings")
+- **All Text:** References to "Aimi" everywhere
 
 ### ❌ You Should NOT See:
 - "OpAime" anywhere
@@ -83,7 +83,7 @@ Once deployed, check the browser console on https://floally-mvp.vercel.app
 
 Look for:
 ```
-OkAimy App loaded - Version 1.3.0 - Built: ...
+Hey Aimi App loaded - Version 1.3.0 - Built: ...
 ```
 
 ### Check API Connection:
@@ -131,11 +131,11 @@ https://floally-mvp.vercel.app
 
 ### 3. Verify All Features:
 - [ ] Login with Google OAuth
-- [ ] See OkAimy branding everywhere
-- [ ] Complete onboarding → "Meet Aimy"
+- [ ] See Hey Aimi branding everywhere
+- [ ] Complete onboarding → "Meet Aimi"
 - [ ] Generate daily stand-up
-- [ ] Open settings → "Aimy Settings"
-- [ ] Email actions → "Help Aimy learn"
+- [ ] Open settings → "Aimi Settings"
+- [ ] Email actions → "Help Aimi learn"
 
 ### 4. Check Railway Backend:
 Visit: https://railway.app/dashboard
@@ -193,7 +193,7 @@ Make sure Vercel has these set:
 - [ ] Wait 2-3 minutes for deployment
 - [ ] Visit https://floally-mvp.vercel.app
 - [ ] Hard refresh browser (Cmd+Shift+R / Ctrl+Shift+R)
-- [ ] Verify OkAimy branding appears
+- [ ] Verify Hey Aimi branding appears
 - [ ] Test OAuth login
 - [ ] Check Railway backend is also updated
 

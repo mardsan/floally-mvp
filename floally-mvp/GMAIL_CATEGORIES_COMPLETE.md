@@ -2,7 +2,7 @@
 
 **Date:** October 20, 2025  
 **Commit:** `d784c4b`  
-**Feature:** Full Gmail category access in OkAimy
+**Feature:** Full Gmail category access in Hey Aimi
 
 ---
 
@@ -10,7 +10,7 @@
 
 ### Gmail Category Tabs - Just Like Gmail!
 
-OkAimy now exposes **all of Gmail's intelligent categories** directly in the app:
+Hey Aimi now exposes **all of Gmail's intelligent categories** directly in the app:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -154,7 +154,7 @@ Every email includes:
 
 **2. Consistent Experience**
 - Same categories in Gmail app
-- Same categories in OkAimy
+- Same categories in Hey Aimi
 - No confusion or re-learning
 
 **3. Automatic Updates**
@@ -291,7 +291,7 @@ await loadEmailsByCategory('social');
 
 **The Best of Both Worlds:**
 - Gmail's world-class categorization
-- OkAimy's intelligent actions and insights
+- Hey Aimi's intelligent actions and insights
 - Your productivity, supercharged! 🚀
 
 ---
@@ -308,4 +308,4 @@ await loadEmailsByCategory('social');
 
 ---
 
-**Now you have the full power of Gmail's AI categorization, right inside OkAimy!** 📧✨
+**Now you have the full power of Gmail's AI categorization, right inside Hey Aimi!** 📧✨

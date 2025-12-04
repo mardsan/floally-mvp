@@ -86,7 +86,7 @@ Fix iPhone and mobile display issues by implementing comprehensive responsive de
 ```
 
 #### Daily Standup Section (Lines ~418-750)
-**Issue:** Two-column layout (User Focus | Aimy's Work) doesn't stack on mobile
+**Issue:** Two-column layout (User Focus | Aimi's Work) doesn't stack on mobile
 
 **Solution:**
 ```jsx
@@ -95,7 +95,7 @@ Fix iPhone and mobile display issues by implementing comprehensive responsive de
   {/* User Focus Panel */}
   <div className="space-y-4 md:space-y-6">...</div>
   
-  {/* Aimy's Work Panel */}
+  {/* Aimi's Work Panel */}
   <div className="space-y-4 md:space-y-6">...</div>
 </div>
 ```

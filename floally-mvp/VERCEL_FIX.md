@@ -72,7 +72,7 @@ Once deployment shows "Ready" (green checkmark):
 1. Open **Incognito browser**
 2. Visit https://www.okaimy.com
 3. Open DevTools (F12) → Console
-4. Look for: `🚀 OkAimy Deployment Info: {version: "0.0.4"}`
+4. Look for: `🚀 Hey Aimi Deployment Info: {version: "0.0.4"}`
 5. Login → Profile Hub → Should see 5 tabs
 
 ---

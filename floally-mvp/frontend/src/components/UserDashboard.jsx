@@ -185,7 +185,7 @@ function UserDashboard({ user, onLogout }) {
       <header className="bg-white/90 backdrop-blur-sm border-b px-6 py-4 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src="/okaimy-logo-01.png" alt="OkAimy" className="h-8" />
+            <img src="/aimi-logo-01.png" alt="Hey Aimi" className="h-8" />
             <span className="text-sm text-gray-500">
               Your AI-Powered Productivity Assistant
             </span>
@@ -267,7 +267,7 @@ function UserDashboard({ user, onLogout }) {
             <div>
               <h3 className="text-2xl font-semibold text-gray-900">Your Projects</h3>
               <p className="text-sm text-gray-500 mt-1">
-                Define projects so Aimy can organize your work and provide contextual assistance
+                Define projects so Aimi can organize your work and provide contextual assistance
               </p>
             </div>
             <button
@@ -290,7 +290,7 @@ function UserDashboard({ user, onLogout }) {
                 Create your first project
               </h4>
               <p className="text-gray-700 mb-6 max-w-md mx-auto">
-                Projects help Aimy understand your work and provide smarter assistance by
+                Projects help Aimi understand your work and provide smarter assistance by
                 categorizing emails, meetings, and tasks.
               </p>
               <button

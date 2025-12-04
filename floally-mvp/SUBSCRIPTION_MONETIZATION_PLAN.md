@@ -1,4 +1,4 @@
-# OkAimy Subscription & Monetization Plan
+# Hey Aimi Subscription & Monetization Plan
 
 **Date:** October 21, 2025  
 **Status:** Implementation Ready  
@@ -17,7 +17,7 @@
   - 50 email analyses per day
   - 7-day message history
   - Basic standup dashboard
-- **Goal:** Hook users with emotional connection to Aimy, demonstrate clear value
+- **Goal:** Hook users with emotional connection to Aimi, demonstrate clear value
 
 ### **Professional**
 - **Price:** $49/month
@@ -65,18 +65,18 @@
 ### **Supporting Messages:**
 
 **Homepage Hero:**
-"Meet Aimy, your AI partner who keeps you focused on what matters while making sure nothing slips through the cracks."
+"Meet Aimi, your AI partner who keeps you focused on what matters while making sure nothing slips through the cracks."
 
 **How It Works:**
-"Aimy learns your goals, monitors your communications, and surfaces only what needs your attention—so you can stay in flow with the work you love."
+"Aimi learns your goals, monitors your communications, and surfaces only what needs your attention—so you can stay in flow with the work you love."
 
 **For Professionals:**
-"Stop drowning in email. Start doing your best work. Aimy's got your back."
+"Stop drowning in email. Start doing your best work. Aimi's got your back."
 
 **For Executives:**
-"Lead with clarity. Aimy handles the noise, you handle what matters."
+"Lead with clarity. Aimi handles the noise, you handle what matters."
 
-### **Aimy's Personality:**
+### **Aimi's Personality:**
 
 **Voice Attributes:**
 - Supportive, not bossy
@@ -88,7 +88,7 @@
 **Example Communications:**
 
 *On Trial Start:*
-"Hey! I'm Aimy, your new AI partner. Let's get to know each other. Tell me about your current projects and I'll help you stay focused on what matters most. Ready to start?"
+"Hey! I'm Aimi, your new AI partner. Let's get to know each other. Tell me about your current projects and I'll help you stay focused on what matters most. Ready to start?"
 
 *Day 3 of Trial:*
 "Quick check-in: I've analyzed 127 emails this week and helped you focus on 8 truly important ones. You've completed your main focus task 2 days in a row—that's awesome! 🎉 Feeling the difference yet?"
@@ -426,7 +426,7 @@ const ProjectSetupStep = ({ onComplete, onSkip }) => {
       id: 'custom',
       icon: '✨',
       title: 'Something Else',
-      description: 'Tell Aimy in your own words',
+      description: 'Tell Aimi in your own words',
       example: null
     }
   ];
@@ -472,10 +472,10 @@ const ProjectSetupStep = ({ onComplete, onSkip }) => {
       {/* Header */}
       <div className="text-center">
         <h2 className="text-3xl font-bold text-gray-800 mb-3">
-          What brings you to OkAimy?
+          What brings you to Hey Aimi?
         </h2>
         <p className="text-lg text-gray-600">
-          Help Aimy understand what you want to accomplish. This context helps her 
+          Help Aimi understand what you want to accomplish. This context helps her 
           know what's important and what's just noise.
         </p>
       </div>
@@ -556,17 +556,17 @@ const ProjectSetupStep = ({ onComplete, onSkip }) => {
         </div>
       )}
 
-      {/* Aimy's Response */}
+      {/* Aimi's Response */}
       {aimyResponse && projectData.name && projectData.goal && (
         <div className="bg-white p-6 rounded-xl border-2 border-teal-300 shadow-lg">
           <div className="flex items-start gap-4">
             <img 
-              src="/okaimy-pfp-01.png" 
-              alt="Aimy" 
+              src="/aimi-pfp-01.png" 
+              alt="Aimi" 
               className="w-16 h-16 rounded-full ring-4 ring-teal-200"
             />
             <div className="flex-1">
-              <p className="font-bold text-teal-800 mb-2">Aimy says:</p>
+              <p className="font-bold text-teal-800 mb-2">Aimi says:</p>
               <p className="text-gray-800 text-lg leading-relaxed">
                 {aimyResponse}
               </p>

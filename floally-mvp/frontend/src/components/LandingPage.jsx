@@ -58,7 +58,7 @@ function LandingPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-okaimy-mint-50 via-white to-okaimy-emerald-50 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-gradient-to-br from-aimi-lumo-green-50 via-white to-aimi-glow-coral-50 flex items-center justify-center px-4">
         <main className="max-w-2xl text-center animate-fade-in">
           <div className="mb-8">
             <div className="inline-block animate-bounce">
@@ -79,7 +79,7 @@ function LandingPage() {
           <p className="text-gray-500 mb-8">
             In the meantime, we're building something special just for you.
           </p>
-          <div className="bg-white rounded-xl shadow-xl p-8 mb-8 border border-okaimy-mint-100">
+          <div className="bg-white rounded-xl shadow-xl p-8 mb-8 border border-aimi-lumo-green-100">
             <h2 className="text-xl font-bold text-gray-900 mb-4">
               What happens next?
             </h2>
@@ -110,18 +110,18 @@ function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-okaimy-mint-50 via-white to-okaimy-emerald-50">
+    <div className="min-h-screen bg-gradient-to-br from-aimi-lumo-green-50 via-white to-aimi-glow-coral-50">
       {/* Header with Logo and Sign In */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <div className="flex justify-between items-center">
           <img 
-            src="/okaimy-logo-01.png" 
-            alt="OkAimy" 
+            src="/aimi-logo-01.png" 
+            alt="Hey Aimi" 
             className="h-12 md:h-16 w-auto"
           />
           <a
             href="/auth"
-            className="bg-white text-primary font-semibold px-6 py-2.5 rounded-lg hover:bg-gray-50 transition-all border border-okaimy-mint-200 shadow-sm hover:shadow-md"
+            className="bg-white text-primary font-semibold px-6 py-2.5 rounded-lg hover:bg-gray-50 transition-all border border-aimi-lumo-green-200 shadow-sm hover:shadow-md"
           >
             Sign In
           </a>
@@ -131,12 +131,12 @@ function LandingPage() {
       {/* Hero Section */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-16">
         <div className="text-center mb-16">
-          {/* Animated Aimy - Larger size for emotional impact */}
+          {/* Animated Aimi - Larger size for emotional impact */}
           <div className="mb-8 flex justify-center">
             <div className="relative">
-              <div className="absolute inset-0 bg-okaimy-gradient rounded-full opacity-20 animate-pulse blur-3xl"></div>
+              <div className="absolute inset-0 bg-aimi-gradient rounded-full opacity-20 animate-pulse blur-3xl"></div>
               <video
-                className="relative w-64 h-64 md:w-80 md:h-80 rounded-full object-cover shadow-2xl ring-4 ring-okaimy-mint-100 hover:ring-okaimy-mint-200 transition-all"
+                className="relative w-64 h-64 md:w-80 md:h-80 rounded-full object-cover shadow-2xl ring-4 ring-aimi-lumo-green-100 hover:ring-aimi-lumo-green-200 transition-all"
                 autoPlay
                 loop
                 muted
@@ -150,17 +150,17 @@ function LandingPage() {
               </video>
               <img
                 src="/AiMy_LUMO_01.png"
-                alt="Aimy"
-                className="hidden w-64 h-64 md:w-80 md:h-80 rounded-full object-cover shadow-2xl ring-4 ring-okaimy-mint-100"
+                alt="Aimi"
+                className="hidden w-64 h-64 md:w-80 md:h-80 rounded-full object-cover shadow-2xl ring-4 ring-aimi-lumo-green-100"
               />
             </div>
           </div>
 
-          {/* Headline - Aimy speaking, smaller second line */}
+          {/* Headline - Aimi speaking, smaller second line */}
           <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
             Stay in flow.
             <br />
-            <span className="text-4xl md:text-6xl text-transparent bg-clip-text bg-okaimy-gradient">
+            <span className="text-4xl md:text-6xl text-transparent bg-clip-text bg-aimi-gradient">
               Let me handle the rest.
             </span>
           </h1>
@@ -171,12 +171,12 @@ function LandingPage() {
           </p>
 
           {/* CTA */}
-          <div className="inline-block bg-white rounded-xl shadow-2xl p-8 md:p-10 max-w-md w-full border border-okaimy-mint-100 hover:shadow-glow-lg transition-all">
+          <div className="inline-block bg-white rounded-xl shadow-2xl p-8 md:p-10 max-w-md w-full border border-aimi-lumo-green-100 hover:shadow-glow-lg transition-all">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
               Join Early Access
             </h2>
             <p className="text-gray-700 mb-8">
-              Be among the first to experience OkAimy
+              Be among the first to experience Hey Aimi
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -201,7 +201,7 @@ function LandingPage() {
                 />
               </div>
               <div>
-                <label htmlFor="struggle-select" className="sr-only">How can Aimy help you most?</label>
+                <label htmlFor="struggle-select" className="sr-only">How can Aimi help you most?</label>
                 <select
                   id="struggle-select"
                   value={struggle}
@@ -209,7 +209,7 @@ function LandingPage() {
                   required
                   className="w-full px-4 py-3.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-gray-700 transition-all text-lg"
                 >
-                  <option value="">How can Aimy help you most?</option>
+                  <option value="">How can Aimi help you most?</option>
                   <option value="too_many_emails">Managing my inbox</option>
                   <option value="losing_track">Keeping track of projects</option>
                   <option value="context_switching">Reducing context switching</option>
@@ -228,7 +228,7 @@ function LandingPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-okaimy-gradient text-white font-bold py-4 rounded-lg hover:shadow-glow transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg text-lg"
+                className="w-full bg-aimi-gradient text-white font-bold py-4 rounded-lg hover:shadow-glow transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg text-lg"
               >
                 {isSubmitting ? 'Joining...' : 'Get Early Access'}
               </button>
@@ -242,7 +242,7 @@ function LandingPage() {
 
         {/* Value Proposition - 3 Panels */}
         <div className="grid md:grid-cols-3 gap-8 mb-20">
-          <div className="bg-white rounded-lg shadow-lg p-8 hover:shadow-xl transition-all transform hover:-translate-y-1 border border-okaimy-mint-50">
+          <div className="bg-white rounded-lg shadow-lg p-8 hover:shadow-xl transition-all transform hover:-translate-y-1 border border-aimi-lumo-green-50">
             <div className="mb-4 flex justify-center">
               <Icon name="target" size="3xl" className="text-primary" />
             </div>
@@ -250,12 +250,12 @@ function LandingPage() {
               "The One Thing"
             </h3>
             <p className="text-gray-700 leading-relaxed">
-              Every morning, Aimy analyzes your inbox and tells you exactly what matters most. 
+              Every morning, Aimi analyzes your inbox and tells you exactly what matters most. 
               No more decision fatigue. Just clarity.
             </p>
           </div>
 
-          <div className="bg-white rounded-lg shadow-lg p-8 hover:shadow-xl transition-all transform hover:-translate-y-1 border border-okaimy-mint-50">
+          <div className="bg-white rounded-lg shadow-lg p-8 hover:shadow-xl transition-all transform hover:-translate-y-1 border border-aimi-lumo-green-50">
             <div className="mb-4 flex justify-center">
               <Icon name="partnership" size="3xl" className="text-primary" />
             </div>
@@ -263,12 +263,12 @@ function LandingPage() {
               Daily Standup Partnership
             </h3>
             <p className="text-gray-700 leading-relaxed">
-              You and Aimy sync up each day. You focus on creating. 
-              Aimy handles the follow-ups, reminders, and coordination.
+              You and Aimi sync up each day. You focus on creating. 
+              Aimi handles the follow-ups, reminders, and coordination.
             </p>
           </div>
 
-          <div className="bg-white rounded-lg shadow-lg p-8 hover:shadow-xl transition-all transform hover:-translate-y-1 border border-okaimy-mint-50">
+          <div className="bg-white rounded-lg shadow-lg p-8 hover:shadow-xl transition-all transform hover:-translate-y-1 border border-aimi-lumo-green-50">
             <div className="mb-4 flex justify-center">
               <Icon name="star" size="3xl" className="text-primary" />
             </div>
@@ -276,7 +276,7 @@ function LandingPage() {
               Nothing Falls Through
             </h3>
             <p className="text-gray-700 leading-relaxed">
-              Sleep peacefully knowing Aimy's got your back. 
+              Sleep peacefully knowing Aimi's got your back. 
               She tracks everything, so you can stay in flow.
             </p>
           </div>
@@ -314,26 +314,26 @@ function LandingPage() {
                   </div>
                 </div>
 
-                {/* Right Side - Aimy */}
+                {/* Right Side - Aimi */}
                 <div className="bg-white rounded-xl shadow-lg p-6">
                   <div className="flex items-center mb-4">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-400 to-emerald-400 mr-3"></div>
                     <div>
-                      <div className="font-bold text-gray-900">Aimy</div>
+                      <div className="font-bold text-gray-900">Aimi</div>
                       <div className="text-sm text-gray-500">Handling Everything Else</div>
                     </div>
                   </div>
                   <div className="space-y-2 text-sm text-gray-700">
                     <div className="flex items-center">
-                      <Icon name="check" size="sm" className="text-okaimy-mint-500 mr-2" />
+                      <Icon name="check" size="sm" className="text-aimi-lumo-green-500 mr-2" />
                       Following up with John about timeline
                     </div>
                     <div className="flex items-center">
-                      <Icon name="check" size="sm" className="text-okaimy-mint-500 mr-2" />
+                      <Icon name="check" size="sm" className="text-aimi-lumo-green-500 mr-2" />
                       Tracking 3 pending approvals
                     </div>
                     <div className="flex items-center">
-                      <Icon name="check" size="sm" className="text-okaimy-mint-500 mr-2" />
+                      <Icon name="check" size="sm" className="text-aimi-lumo-green-500 mr-2" />
                       Reminder scheduled for Friday
                     </div>
                   </div>
@@ -343,7 +343,7 @@ function LandingPage() {
 
             <div className="p-8 bg-gray-50 text-center">
               <p className="text-gray-700 text-lg">
-                <strong>You stay focused.</strong> Aimy keeps everything running smoothly.
+                <strong>You stay focused.</strong> Aimi keeps everything running smoothly.
               </p>
             </div>
           </div>
@@ -368,7 +368,7 @@ function LandingPage() {
         </div>
 
         {/* Final CTA */}
-        <div className="text-center bg-okaimy-gradient rounded-xl shadow-2xl p-12 text-white">
+        <div className="text-center bg-aimi-gradient rounded-xl shadow-2xl p-12 text-white">
           <h2 className="text-3xl md:text-5xl font-bold mb-4">
             Ready to stay in flow?
           </h2>
@@ -384,7 +384,7 @@ function LandingPage() {
             </button>
             <a
               href="/app"
-              className="bg-okaimy-mint-700 text-white font-bold px-8 py-4 rounded-lg hover:bg-okaimy-mint-800 transition-all transform hover:scale-105 shadow-xl text-center"
+              className="bg-aimi-lumo-green-700 text-white font-bold px-8 py-4 rounded-lg hover:bg-aimi-lumo-green-800 transition-all transform hover:scale-105 shadow-xl text-center"
             >
               Try Demo (No Login) →
             </a>
@@ -393,7 +393,7 @@ function LandingPage() {
 
         {/* Footer */}
         <div className="mt-16 text-center text-gray-700 text-sm">
-          <p>© 2025 OkAimy. We respect your privacy. No spam, ever.</p>
+          <p>© 2025 Hey Aimi. We respect your privacy. No spam, ever.</p>
           <p className="mt-2">
             Questions? Email us at{' '}
             <a href="mailto:hello@okaimy.com" className="text-primary hover:text-primary-dark">

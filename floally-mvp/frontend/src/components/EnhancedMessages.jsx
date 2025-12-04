@@ -86,7 +86,7 @@ function EnhancedMessages({ user }) {
       setShowFeedback(null);
       
       // Show confirmation
-      alert(`✅ Feedback recorded! Your teammate Aimy will learn from this.`);
+      alert(`✅ Feedback recorded! Your teammate Aimi will learn from this.`);
       
     } catch (error) {
       console.error('Failed to record feedback:', error);
@@ -150,7 +150,7 @@ function EnhancedMessages({ user }) {
           <div>
             <h3 className="text-lg md:text-xl font-bold text-gray-900">✉️ Smart Messages</h3>
             <p className="text-xs md:text-sm text-gray-500 mt-1">
-              {aiAnalysisEnabled ? 'AI-curated by your teammate Aimy' : 'Recent messages'}
+              {aiAnalysisEnabled ? 'AI-curated by your teammate Aimi' : 'Recent messages'}
             </p>
           </div>
           
@@ -260,7 +260,7 @@ function EnhancedMessages({ user }) {
             <div className="text-5xl md:text-6xl mb-4">📬</div>
             <h4 className="text-base md:text-lg font-semibold text-gray-900 mb-2">Ready to analyze your inbox</h4>
             <p className="text-sm md:text-base text-gray-700 mb-4 md:mb-6">
-              Click <strong>"Analyze Messages"</strong> to let Aimy review and curate your emails
+              Click <strong>"Analyze Messages"</strong> to let Aimi review and curate your emails
             </p>
             <div className="inline-flex items-center gap-2 px-3 md:px-4 py-2 bg-teal-50 border border-teal-200 rounded-lg text-xs md:text-sm text-teal-800">
               <span>💡</span>
@@ -369,7 +369,7 @@ function EnhancedMessages({ user }) {
                           setShowFeedback(showFeedback === message.id ? null : message.id);
                         }}
                         className="p-1.5 md:p-2 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors opacity-100 md:opacity-0 md:group-hover:opacity-100 text-lg md:text-xl"
-                        title="Train Aimy"
+                        title="Train Aimi"
                       >
                         🎓
                       </button>
@@ -378,7 +378,7 @@ function EnhancedMessages({ user }) {
                       {showFeedback === message.id && (
                         <div className="absolute right-0 top-10 bg-white border border-gray-200 rounded-lg shadow-xl z-10 p-2 min-w-[160px] md:min-w-[180px]">
                           <div className="text-[10px] md:text-xs font-semibold text-gray-700 mb-2 px-2">
-                            Train Aimy:
+                            Train Aimi:
                           </div>
                           {FEEDBACK_OPTIONS.map(option => (
                             <button

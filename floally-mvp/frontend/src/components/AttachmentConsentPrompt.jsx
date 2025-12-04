@@ -5,7 +5,7 @@ import { AlertCircle, FileText, Shield, Check, Ban } from 'lucide-react';
  * AttachmentConsentPrompt
  * 
  * 3-Tier Trust System for Attachment Processing:
- * 1. TRUSTED - Always allow Aimy to read attachments from this sender
+ * 1. TRUSTED - Always allow Aimi to read attachments from this sender
  * 2. ONE_TIME - Process attachments just this time (no preference saved)
  * 3. BLOCKED - Never allow - potential security threat
  */
@@ -118,7 +118,7 @@ const AttachmentConsentPrompt = ({
         <div className="consent-message">
           <AlertCircle size={16} className="info-icon" />
           <p>
-            Would you like Aimy to read {attachments.length > 1 ? 'these attachments' : 'this attachment'}?
+            Would you like Aimi to read {attachments.length > 1 ? 'these attachments' : 'this attachment'}?
           </p>
           <p className="security-note">
             Choose how to handle attachments from this sender:

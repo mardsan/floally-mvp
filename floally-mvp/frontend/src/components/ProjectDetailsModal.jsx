@@ -135,7 +135,7 @@ const ProjectDetailsModal = ({ project, onClose, onUpdate }) => {
   const handleGenerateDates = async () => {
     setGeneratingDates(true);
     try {
-      // Use Aimy to suggest dates for goals
+      // Use Aimi to suggest dates for goals
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/ai/generate-goal-dates`, {
         method: 'POST',
         headers: {
@@ -301,7 +301,7 @@ const ProjectDetailsModal = ({ project, onClose, onUpdate }) => {
                     onClick={handleGenerateDates}
                     disabled={generatingDates || formData.goals.length === 0}
                     className="text-purple-600 hover:text-purple-700 text-sm font-medium flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
-                    title="Let Aimy suggest dates for your goals"
+                    title="Let Aimi suggest dates for your goals"
                   >
                     <span>🪄</span>
                     {generatingDates ? 'Generating...' : 'Suggest Dates'}

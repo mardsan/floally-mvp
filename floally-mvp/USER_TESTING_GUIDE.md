@@ -73,15 +73,15 @@ _______________________________________________________
 2. This time, click **"AI Wizard"** (the magic wand)
 3. Type this description:
    ```
-   Launch a new feature for OkAimy that helps users
+   Launch a new feature for Hey Aimi that helps users
    track their daily habits and build better routines
    ```
 4. Click **"Generate Project Plan"**
-5. Wait for Aimy to generate goals and sub-tasks
+5. Wait for Aimi to generate goals and sub-tasks
 6. Review what was generated
 
 **✅ What to Check:**
-- [ ] Aimy generates 3-5 goals
+- [ ] Aimi generates 3-5 goals
 - [ ] Each goal has sub-tasks underneath
 - [ ] Sub-tasks have estimated hours
 - [ ] Everything looks organized and makes sense
@@ -196,7 +196,7 @@ Visual feedback clear? Yes / No
 1. Look for a **"Regenerate"** or **"Refresh Standup"** button
 2. If you see it, click it
 3. Wait for new standup to generate
-4. Review the new "One Thing" Aimy suggests
+4. Review the new "One Thing" Aimi suggests
 
 **✅ What to Check:**
 - [ ] Button works (if present)

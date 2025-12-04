@@ -14,7 +14,7 @@
 
 ## 🎯 Your Action Items (30-60 minutes)
 
-### 1. Configure Custom Domain (OkAimy.com)
+### 1. Configure Custom Domain (Hey Aimi.com)
 
 **On Vercel Dashboard:**
 
@@ -47,10 +47,10 @@
 1. Go to https://analytics.google.com
 2. Click **Admin** (gear icon, bottom left)
 3. Create Account:
-   - Account Name: "OkAimy"
+   - Account Name: "Hey Aimi"
    - Click **Next**
 4. Create Property:
-   - Property Name: "OkAimy Landing Page"
+   - Property Name: "Hey Aimi Landing Page"
    - Time Zone: Your timezone
    - Currency: USD
    - Click **Next**
@@ -101,7 +101,7 @@ Replace `G-XXXXXXXXXX` with your actual Measurement ID.
 
 1. Go to https://emailoctopus.com
 2. Sign up (Free for up to 2,500 subscribers)
-3. Create a new list: "OkAimy Waitlist"
+3. Create a new list: "Hey Aimi Waitlist"
 4. Export waitlist from your backend:
    - Visit: https://floally-mvp-production.up.railway.app/api/waitlist/export
    - Copy the JSON data
@@ -111,7 +111,7 @@ Replace `G-XXXXXXXXXX` with your actual Measurement ID.
 
 1. Go to https://convertkit.com
 2. Sign up (Free for first 1,000 subscribers)
-3. Create a form: "OkAimy Early Access"
+3. Create a form: "Hey Aimi Early Access"
 4. Get form embed code or API key
 5. Optional: Set up automated welcome email
 
@@ -145,7 +145,7 @@ Replace `G-XXXXXXXXXX` with your actual Measurement ID.
 **Email Test (if using EmailOctopus/ConvertKit):**
 
 1. Add a test email to your list
-2. Send a test campaign: "Welcome to OkAimy Early Access!"
+2. Send a test campaign: "Welcome to Hey Aimi Early Access!"
 3. Verify email delivery
 
 ---
@@ -157,7 +157,7 @@ Replace `G-XXXXXXXXXX` with your actual Measurement ID.
 1. Go to https://business.facebook.com/adsmanager
 2. Create new campaign:
    - **Objective:** Lead Generation
-   - **Name:** "OkAimy Early Access - Test 1"
+   - **Name:** "Hey Aimi Early Access - Test 1"
 3. Ad Set:
    - **Audience:** 
      - Location: US, UK, Canada, Australia
@@ -182,7 +182,7 @@ Creative professionals spend 2.5 hours/day managing email instead of creating.
 
 What if an AI partner handled that for you?
 
-Every morning, Aimy tells you THE ONE THING that matters.
+Every morning, Aimi tells you THE ONE THING that matters.
 You focus. She handles the rest.
 
 Join 50+ creative professionals on the waitlist for early access.
@@ -198,7 +198,7 @@ Headline: Your AI chief of staff for creative work
 Primary Text:
 Never miss a deadline. Never drop the ball.
 
-Aimy is your AI partner who:
+Aimi is your AI partner who:
 → Analyzes your inbox and tells you what matters
 → Handles follow-ups and scheduling
 → Keeps everything running while you create
@@ -273,7 +273,7 @@ Create a simple spreadsheet to track:
 
 **Email Nurture Sequence (Set up in EmailOctopus/ConvertKit):**
 1. **Day 0 (Immediate):** Welcome! You're on the list.
-2. **Day 3:** Here's what Aimy does differently (education)
+2. **Day 3:** Here's what Aimi does differently (education)
 3. **Day 7:** Want to see a demo? (calendar link)
 4. **Day 14:** We're getting close to launch! (urgency)
 

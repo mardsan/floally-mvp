@@ -38,7 +38,7 @@
 **Implementation:**
 - **Split-Panel Layout:**
   - LEFT (User): "The One Thing" + "Other Priorities" + "Start Working" button
-  - RIGHT (Aimy): "Daily Summary" cards + "Things I'm Working On" + "Chat with Aimy"
+  - RIGHT (Aimi): "Daily Summary" cards + "Things I'm Working On" + "Chat with Aimi"
 
 **API Endpoints:**
 ```javascript
@@ -52,7 +52,7 @@
 ```javascript
 {
   one_thing: "Review Q4 budget priorities",
-  subtitle: "From Aimy: High priority deadline today · 2-3 hours",
+  subtitle: "From Aimi: High priority deadline today · 2-3 hours",
   full_text: "Full AI analysis text for expandable details...",
   decisions: [
     { decision: "Prepare presentation slides", confidence: 0.85 },
@@ -103,7 +103,7 @@
 ```jsx
 {expandedOneThingDetails && standup?.full_text && (
   <div className="mb-4 p-4 bg-white/70 rounded-lg">
-    <h6 className="text-sm font-semibold text-blue-900">Details from Aimy:</h6>
+    <h6 className="text-sm font-semibold text-blue-900">Details from Aimi:</h6>
     <div className="text-sm text-gray-700 whitespace-pre-wrap max-h-60 overflow-y-auto">
       {standup.full_text}
     </div>
@@ -226,8 +226,8 @@ onClick={() => {
 
 ### Placeholders in Current Code:
 1. **"Start Working" button** - Currently just UI, needs action handler
-2. **Aimy's "Go/Check/Deny" buttons** - UI only, needs backend integration
-3. **"Chat with Aimy"** - Placeholder text, needs real chat functionality
+2. **Aimi's "Go/Check/Deny" buttons** - UI only, needs backend integration
+3. **"Chat with Aimi"** - Placeholder text, needs real chat functionality
 4. **Status persistence** - Status changes are client-side only (not saved to backend)
 5. **Full text content** - May need better formatting/parsing from AI
 
@@ -235,8 +235,8 @@ onClick={() => {
 1. **Thorough Testing** - Test all three new features on live site
 2. **Status Persistence** - Save oneThingStatus to backend/database
 3. **Button Actions** - Implement "Start Working" timer or action
-4. **Aimy Task Actions** - Wire up Go/Check/Deny buttons to backend
-5. **Chat Functionality** - Build real chat interface with Aimy
+4. **Aimi Task Actions** - Wire up Go/Check/Deny buttons to backend
+5. **Chat Functionality** - Build real chat interface with Aimi
 6. **Mobile Responsive** - Verify split-panel layout works on mobile
 7. **Performance** - Monitor API call times, optimize if needed
 
@@ -258,7 +258,7 @@ onClick={() => {
 - ✅ User can expand details to see full AI analysis
 - ✅ User can track task status (Preparing → In Progress → Complete)
 - ✅ User can switch priorities without losing tasks
-- ✅ Aimy's insights are visible and helpful
+- ✅ Aimi's insights are visible and helpful
 - ✅ Refresh works without full page reload
 - ✅ No console errors or broken functionality
 - ⏳ Users prefer this over manual task planning (needs user testing)

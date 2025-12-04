@@ -1,4 +1,4 @@
-# Next Steps - OkAimy Development Roadmap
+# Next Steps - Hey Aimi Development Roadmap
 
 **Last Updated:** November 30, 2025  
 **Current Status:** Accessibility improvements deployed, pending verification
@@ -200,7 +200,7 @@
   - Verify feature detection fallbacks
 
 ### 3. Progressive Web App (PWA) Implementation
-**Goal:** Make OkAimy installable on mobile devices
+**Goal:** Make Hey Aimi installable on mobile devices
 
 **Action Items:**
 - [ ] **Service Worker**
@@ -237,7 +237,7 @@
 ## 🚀 FUTURE ENHANCEMENTS (Next Month)
 
 ### 1. Daily Activity Event Log
-**Purpose:** Foundation for Aimy's learning system
+**Purpose:** Foundation for Aimi's learning system
 
 **Design:**
 - Track user actions (email opens, project updates, task completions)
@@ -251,7 +251,7 @@
 - Build analytics dashboard for insights
 - Privacy: User data never leaves their account
 
-### 2. Aimy's Memory System
+### 2. Aimi's Memory System
 **Purpose:** Persistent context for AI decision-making
 
 **Features:**

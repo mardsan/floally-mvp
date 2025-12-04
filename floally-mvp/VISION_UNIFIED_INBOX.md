@@ -1,4 +1,4 @@
-# OkAimy Vision: AI-Powered Unified Inbox
+# Hey Aimi Vision: AI-Powered Unified Inbox
 
 **Date:** October 20, 2025  
 **Strategic Direction Document**
@@ -8,11 +8,11 @@
 ## 🎯 The Big Picture
 
 ### Core Concept
-**OkAimy = Your AI-Powered Communication Command Center**
+**Hey Aimi = Your AI-Powered Communication Command Center**
 
 Not just an email client, but an **intelligent aggregator** that:
 - Connects to ALL your communication channels
-- Uses AI (Aimy) to read, analyze, and prioritize everything
+- Uses AI (Aimi) to read, analyze, and prioritize everything
 - Surfaces only what's truly important
 - Gives you oversight without overwhelm
 - Saves hours of inbox management daily
@@ -21,7 +21,7 @@ Not just an email client, but an **intelligent aggregator** that:
 
 ## 🌟 Vision Statement
 
-> "Aimy reads everything so you don't have to. Connect all your channels, and get a unified view of what actually matters - with AI doing the heavy lifting of prioritization, categorization, and surfacing critical items. Miss nothing important, skip everything that isn't."
+> "Aimi reads everything so you don't have to. Connect all your channels, and get a unified view of what actually matters - with AI doing the heavy lifting of prioritization, categorization, and surfacing critical items. Miss nothing important, skip everything that isn't."
 
 ---
 
@@ -56,9 +56,9 @@ Not just an email client, but an **intelligent aggregator** that:
 
 ---
 
-## 🧠 Aimy's Role: The AI Filter
+## 🧠 Aimi's Role: The AI Filter
 
-### What Aimy Does
+### What Aimi Does
 
 **1. Reads Everything**
 - Monitors all connected channels 24/7
@@ -100,7 +100,7 @@ Not just an email client, but an **intelligent aggregator** that:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  🏠 OkAimy                    [Search]    👤 Profile ⚙️      │
+│  🏠 Hey Aimi                    [Search]    👤 Profile ⚙️      │
 ├─────────────────────────────────────────────────────────────┤
 │                                                               │
 │  ┌───────────────────┐  ┌─────────────────────────────────┐ │
@@ -140,7 +140,7 @@ Not just an email client, but an **intelligent aggregator** that:
 │                                                         │
 │ Subject: Q4 Campaign Review - Need Feedback by EOD     │
 │                                                         │
-│ Aimy's Summary:                                         │
+│ Aimi's Summary:                                         │
 │ "Marissa needs your feedback on the Q4 campaign deck   │
 │  by end of day. She's asking about budget allocation   │
 │  and timeline adjustments. Priority: High."            │
@@ -163,7 +163,7 @@ Not just an email client, but an **intelligent aggregator** that:
 ```
 Slack: @you in #marketing
   ↓
-Aimy receives notification
+Aimi receives notification
   ↓
 Analyzes: sender, channel, content, urgency
   ↓
@@ -178,7 +178,7 @@ You see: [Slack] @mention in #marketing (🟠 Important)
   ↓
 Click to expand
   ↓
-See Aimy's summary + full message
+See Aimi's summary + full message
   ↓
 Choose action: Reply / Snooze / Archive
   ↓
@@ -195,7 +195,7 @@ Slack message from Sarah about Project X
   +
 Notion update on Project X
   ↓
-Aimy groups them: "3 updates on Project X"
+Aimi groups them: "3 updates on Project X"
   ↓
 Single consolidated view with all context
 ```
@@ -238,7 +238,7 @@ Single consolidated view with all context
 
 ## 📊 Intelligence Layer
 
-### Aimy's Learning
+### Aimi's Learning
 - **Patterns** - Who you respond to quickly
 - **Priorities** - What matters most to you
 - **Scheduling** - When you handle different types
@@ -313,19 +313,19 @@ Single consolidated view with all context
 
 ### vs. Traditional Email Clients
 - ❌ Gmail/Outlook: Single channel only
-- ✅ OkAimy: ALL channels unified
+- ✅ Hey Aimi: ALL channels unified
 
 ### vs. Unified Inbox Apps (Spark, Edison)
 - ❌ Those: Basic email consolidation
-- ✅ OkAimy: AI-powered prioritization + multi-channel
+- ✅ Hey Aimi: AI-powered prioritization + multi-channel
 
 ### vs. Team Tools (Slack, Teams)
 - ❌ Those: Team-focused, no personal email
-- ✅ OkAimy: Personal + team communications unified
+- ✅ Hey Aimi: Personal + team communications unified
 
 ### vs. AI Assistants (Assistant.ai, Superhuman)
 - ❌ Those: Email-only, expensive
-- ✅ OkAimy: Multi-channel, affordable, smarter AI
+- ✅ Hey Aimi: Multi-channel, affordable, smarter AI
 
 ---
 
@@ -358,13 +358,13 @@ Single consolidated view with all context
 - **Mobile Apps** - iOS & Android native
 - **Desktop Apps** - Mac & Windows
 - **Browser Extension** - Quick access anywhere
-- **API** - Build on OkAimy platform
+- **API** - Build on Hey Aimi platform
 
 ---
 
 ## 📝 Current State vs. Vision
 
-### Today (OkAimy v1.3.0)
+### Today (Hey Aimi v1.3.0)
 - ✅ Gmail connected
 - ✅ AI email analysis
 - ✅ Gmail categories
@@ -373,7 +373,7 @@ Single consolidated view with all context
 
 ### Tomorrow (The Vision)
 - 🎯 10+ channels unified
-- 🧠 Aimy reads everything
+- 🧠 Aimi reads everything
 - 📊 Smart prioritization
 - ⚡ Quick actions
 - 🎨 Beautiful, simple interface
@@ -405,7 +405,7 @@ Single consolidated view with all context
 
 **The North Star:** 
 
-> "Open OkAimy, see only what matters, take action in seconds, close with confidence you missed nothing important. Every channel, every message, one intelligent interface." 
+> "Open Hey Aimi, see only what matters, take action in seconds, close with confidence you missed nothing important. Every channel, every message, one intelligent interface." 
 
 🎯✨
 

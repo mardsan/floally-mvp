@@ -75,7 +75,7 @@ function DeleteProfileModal({ user, onClose, onDelete }) {
                   Are you sure you want to delete your account?
                 </h4>
                 <p className="text-gray-700">
-                  This action will permanently delete your OkAimy account and all associated data.
+                  This action will permanently delete your Hey Aimi account and all associated data.
                 </p>
               </div>
 
@@ -126,7 +126,7 @@ function DeleteProfileModal({ user, onClose, onDelete }) {
                   Help us improve
                 </h4>
                 <p className="text-gray-700 mb-6">
-                  We're sorry to see you go. Your feedback helps us make OkAimy better for everyone.
+                  We're sorry to see you go. Your feedback helps us make Hey Aimi better for everyone.
                 </p>
               </div>
 
@@ -162,7 +162,7 @@ function DeleteProfileModal({ user, onClose, onDelete }) {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Would you recommend OkAimy to others?
+                  Would you recommend Hey Aimi to others?
                 </label>
                 <div className="flex gap-4">
                   <button

@@ -13,7 +13,7 @@
 **Conversion-optimized waitlist capture page with:**
 
 ✅ **Hero Section:**
-- Animated Aimy video (reuses existing MP4)
+- Animated Aimi video (reuses existing MP4)
 - Headline: "Stay in flow. Never drop the ball."
 - Clear value proposition
 - Email capture form
@@ -26,11 +26,11 @@
 
 ✅ **Value Proposition (3-Panel):**
 - 🎯 "The One Thing" - Clarity on what matters
-- 🤝 Daily Standup Partnership - You focus, Aimy handles
+- 🤝 Daily Standup Partnership - You focus, Aimi handles
 - ✨ Nothing Falls Through - Security & reliability
 
 ✅ **How It Works:**
-- Split-view mockup (You | Aimy)
+- Split-view mockup (You | Aimi)
 - Visual demonstration of partnership
 - Clear explanation of daily flow
 
@@ -102,7 +102,7 @@
   "secondary_priorities": [...],
   "aimy_handling": [...],
   "daily_plan": [...],
-  "reasoning": "Why Aimy chose this focus"
+  "reasoning": "Why Aimi chose this focus"
 }
 ```
 
@@ -170,7 +170,7 @@ app.include_router(standup.router, prefix="/api", tags=["standup"])
 
 1. **User visits okaimy.com** (or sees ad, clicks)
 2. **Lands on conversion-optimized page**
-   - Sees animated Aimy
+   - Sees animated Aimi
    - Reads value proposition
    - Fills out form (name, email, struggle)
 3. **Submits form**
@@ -367,8 +367,8 @@ While you're running ads and gathering feedback, I'll continue building:
    - Store in `user_profiles/{email}_projects.json`
 
 **Next Week:**
-3. **Aimy's Work Panel Backend**
-   - Show what Aimy is currently processing
+3. **Aimi's Work Panel Backend**
+   - Show what Aimi is currently processing
    - Generate daily plan
    - Approval system for actions
    - Real-time status updates
@@ -442,4 +442,4 @@ You're not guessing - you're learning from real users with real problems. Let's 
 - Technical issues
 - Next development steps
 
-Let's make OkAimy successful! 💪
+Let's make Hey Aimi successful! 💪

@@ -12,7 +12,7 @@
 - Each task has independent status tracking
 - Status persists across page refreshes
 - Subtitle updates when swapping tasks
-- "Details from Aimy" shows task-specific urgency
+- "Details from Aimi" shows task-specific urgency
 - **Start Working button** - Auto-sets status to "In Progress" and expands details
 
 **Files modified:**
@@ -56,7 +56,7 @@
 ### 3. Multiple UX Bug Fixes ✅
 - Fixed urgency score mismatches between display and details
 - Removed confusing urgency scales from "Other Priorities" list
-- Simplified UI - urgency only shown in expanded "Details from Aimy"
+- Simplified UI - urgency only shown in expanded "Details from Aimi"
 - Fixed subtitle not updating when swapping tasks
 - Fixed secondary priorities loading from cache
 - Standardized urgency format (0-100 scale everywhere)
@@ -72,7 +72,7 @@
 - Go to https://www.okaimy.com/projects
 - Click "New Project"
 - Enter brief description (e.g., "Build a mobile app for task tracking")
-- Click "✨ Let Aimy Plan It"
+- Click "✨ Let Aimi Plan It"
 - Verify AI generates:
   - Enhanced 2-3 sentence description
   - Realistic timeline estimate
@@ -186,7 +186,7 @@ DELETE /api/contacts/{id}
 ### Latest Commits
 ```
 29567c4 - 📝 Add comprehensive session notes for Oct 31, 2025
-673e6df - 🪄 Integrate Aimy Wizard for AI-powered project planning
+673e6df - 🪄 Integrate Aimi Wizard for AI-powered project planning
 427fc62 - ✨ Implement Start Working button
 11c82b9 - ✨ Simplify Other Priorities - remove urgency scale
 ```

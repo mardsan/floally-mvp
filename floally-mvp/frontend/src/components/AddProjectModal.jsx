@@ -130,7 +130,7 @@ function AddProjectModal({ user, onClose, onProjectAdded, isFirstProject = false
             </h3>
             {isFirstProject && (
               <p className="text-sm text-gray-700 mt-1">
-                Projects help Aimy understand your goals and provide better assistance
+                Projects help Aimi understand your goals and provide better assistance
               </p>
             )}
           </div>
@@ -173,7 +173,7 @@ function AddProjectModal({ user, onClose, onProjectAdded, isFirstProject = false
                     className="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-teal-600 to-blue-500 text-white text-sm font-semibold rounded-lg hover:from-teal-700 hover:to-blue-600 transition-all shadow-sm"
                   >
                     <span>🪄</span>
-                    <span>Ask Aimy to Plan This</span>
+                    <span>Ask Aimi to Plan This</span>
                   </button>
                 )}
               </div>
@@ -186,7 +186,7 @@ function AddProjectModal({ user, onClose, onProjectAdded, isFirstProject = false
               />
               {formData.description && formData.description.length >= 10 && (
                 <p className="text-xs text-teal-600 mt-1">
-                  💡 Tip: Click "Ask Aimy to Plan This" to generate goals, timeline, and success metrics!
+                  💡 Tip: Click "Ask Aimi to Plan This" to generate goals, timeline, and success metrics!
                 </p>
               )}
             </div>
@@ -289,7 +289,7 @@ function AddProjectModal({ user, onClose, onProjectAdded, isFirstProject = false
                   <div className="flex-1">
                     <h4 className="font-semibold text-teal-900 mb-1">Why add a project?</h4>
                     <p className="text-sm text-teal-800">
-                      Projects give Aimy context about what you're working on. This helps her prioritize your emails,
+                      Projects give Aimi context about what you're working on. This helps her prioritize your emails,
                       suggest relevant tasks, and generate more personalized daily stand-ups aligned with your goals.
                     </p>
                   </div>
@@ -317,7 +317,7 @@ function AddProjectModal({ user, onClose, onProjectAdded, isFirstProject = false
         </div>
       </div>
 
-      {/* Aimy Wizard Modal */}
+      {/* Aimi Wizard Modal */}
       {showAimyWizard && (
         <AimyWizard
           projectDescription={formData.description}

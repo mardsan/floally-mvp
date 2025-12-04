@@ -282,11 +282,11 @@ const Standup = ({ user, onClose }) => {
                 </div>
               </div>
 
-              {/* Aimy's Reasoning */}
+              {/* Aimi's Reasoning */}
               <div className="bg-white bg-opacity-70 rounded-lg p-4 mb-4">
                 <div className="flex items-start gap-2 mb-2">
                   <span className="text-lg">🤖</span>
-                  <span className="text-sm font-semibold text-teal-700">Why Aimy picked this:</span>
+                  <span className="text-sm font-semibold text-teal-700">Why Aimi picked this:</span>
                 </div>
                 <ul className="space-y-1 ml-7">
                   {selectedFocus.reasoning.map((reason, idx) => (
@@ -336,7 +336,7 @@ const Standup = ({ user, onClose }) => {
                   <div className="text-center py-4">
                     <div className="text-5xl mb-2">🎉</div>
                     <p className="text-lg font-bold text-green-700">Great work!</p>
-                    <p className="text-sm text-gray-700 mt-1">Aimy will summarize your day at 5pm</p>
+                    <p className="text-sm text-gray-700 mt-1">Aimi will summarize your day at 5pm</p>
                   </div>
                 )}
               </div>
@@ -403,7 +403,7 @@ const Standup = ({ user, onClose }) => {
           <div className="space-y-6">
             <div className="flex items-center gap-2 mb-4">
               <span className="text-2xl">🤖</span>
-              <h2 className="text-2xl font-bold text-gray-800">Aimy's Work Today</h2>
+              <h2 className="text-2xl font-bold text-gray-800">Aimi's Work Today</h2>
             </div>
 
             {/* Currently Handling */}
@@ -483,11 +483,11 @@ const Standup = ({ user, onClose }) => {
               </div>
             )}
 
-            {/* Aimy's Daily Plan */}
+            {/* Aimi's Daily Plan */}
             <div className="bg-gray-50 rounded-lg p-6">
               <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
                 <span className="text-xl">📋</span>
-                Aimy's Daily Plan
+                Aimi's Daily Plan
               </h3>
               <div className="space-y-3">
                 {aimyWork.plan.map((item, idx) => (

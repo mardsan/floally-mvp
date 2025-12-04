@@ -389,7 +389,7 @@ function ProfileSettings({ user, onClose, onProfileUpdate, onSave }) {
           {activeTab === 'accounts' && (
             <div className="space-y-4">
               <p className="text-gray-700 mb-4">
-                Manage your connected accounts and services. These integrations allow OkAimy to help you stay organized.
+                Manage your connected accounts and services. These integrations allow Hey Aimi to help you stay organized.
               </p>
               
               {loading ? (
@@ -448,7 +448,7 @@ function ProfileSettings({ user, onClose, onProfileUpdate, onSave }) {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-medium text-gray-900">AI Tone</p>
-                      <p className="text-sm text-gray-700">How Aimy should communicate with you</p>
+                      <p className="text-sm text-gray-700">How Aimi should communicate with you</p>
                     </div>
                     <label htmlFor="ai-tone-select" className="sr-only">Select AI communication tone</label>
                     <select id="ai-tone-select" className="px-4 py-2 border border-gray-300 rounded-lg">

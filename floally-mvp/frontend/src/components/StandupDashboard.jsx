@@ -181,7 +181,7 @@ const StandupDashboard = ({ user, userAvatar, userName, messages, events, userPr
       const aimyHandling = analysis.aimy_handling || [];
       
       setSelectedFocus({
-        title: theOneThing.title || "Check in with Aimy",
+        title: theOneThing.title || "Check in with Aimi",
         description: theOneThing.description || "Your inbox is clear!",
         context: `Category: ${theOneThing.project || 'general'}\nUrgency: ${theOneThing.urgency || 0}/100\n\n${analysis.reasoning || ''}`,
         urgency: theOneThing.urgency || 0,
@@ -311,13 +311,13 @@ const StandupDashboard = ({ user, userAvatar, userName, messages, events, userPr
         </div>
       )}
       
-      {/* Aimy's Standup Text Banner */}
+      {/* Aimi's Standup Text Banner */}
       {standupData && standupData.standup && (
         <div className="bg-gradient-to-r from-teal-50 to-emerald-50 border-b border-teal-200 px-6 py-4">
           <div className="flex items-start gap-3">
             <span className="text-2xl">🤖</span>
             <div className="flex-1">
-              <h4 className="font-bold text-teal-900 mb-2">Aimy's Daily Brief:</h4>
+              <h4 className="font-bold text-teal-900 mb-2">Aimi's Daily Brief:</h4>
               <div className="text-sm text-teal-800 whitespace-pre-wrap max-h-48 overflow-y-auto pr-2">
                 {standupData.standup}
               </div>
@@ -391,11 +391,11 @@ const StandupDashboard = ({ user, userAvatar, userName, messages, events, userPr
               </div>
             </div>
 
-            {/* Aimy's Reasoning */}
+            {/* Aimi's Reasoning */}
             <div className="bg-white bg-opacity-70 rounded-lg p-4 mb-4">
               <div className="flex items-start gap-2 mb-2">
                 <span className="text-lg">🤖</span>
-                <span className="text-sm font-semibold text-teal-700">Why Aimy picked this:</span>
+                <span className="text-sm font-semibold text-teal-700">Why Aimi picked this:</span>
               </div>
               <ul className="space-y-1 ml-7">
                 {selectedFocus.reasoning.map((reason, idx) => (
@@ -445,7 +445,7 @@ const StandupDashboard = ({ user, userAvatar, userName, messages, events, userPr
                 <div className="text-center py-4">
                   <div className="text-5xl mb-2">🎉</div>
                   <p className="text-lg font-bold text-green-700">Great work!</p>
-                  <p className="text-sm text-gray-700 mt-1">Aimy will summarize your day at 5pm</p>
+                  <p className="text-sm text-gray-700 mt-1">Aimi will summarize your day at 5pm</p>
                 </div>
               )}
             </div>
@@ -510,12 +510,12 @@ const StandupDashboard = ({ user, userAvatar, userName, messages, events, userPr
 
         {/* RIGHT PANEL: AIMY'S WORK TODAY */}
         <div className="space-y-6">
-          {/* Aimy Avatar & Header */}
+          {/* Aimi Avatar & Header */}
           <div className="flex items-center gap-4 mb-6">
             <div className="w-16 h-16 rounded-full overflow-hidden ring-4 ring-teal-200 bg-white shadow-lg">
               <img 
                 src="/AiMy_LUMO_01.png" 
-                alt="Aimy" 
+                alt="Aimi" 
                 className="w-full h-full object-cover"
                 onError={(e) => {
                   e.target.style.display = 'none';
@@ -524,7 +524,7 @@ const StandupDashboard = ({ user, userAvatar, userName, messages, events, userPr
               />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-gray-800">Aimy's Work Today</h3>
+              <h3 className="text-xl font-bold text-gray-800">Aimi's Work Today</h3>
               <p className="text-sm text-gray-700">Your AI Partner</p>
             </div>
           </div>
@@ -606,11 +606,11 @@ const StandupDashboard = ({ user, userAvatar, userName, messages, events, userPr
             </div>
           )}
 
-          {/* Aimy's Daily Plan */}
+          {/* Aimi's Daily Plan */}
           <div className="bg-gray-50 rounded-lg p-6">
             <h4 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
               <span className="text-xl">📋</span>
-              Aimy's Daily Plan
+              Aimi's Daily Plan
             </h4>
             <div className="space-y-3">
               {aimyWork.plan.map((item, idx) => (

@@ -158,7 +158,7 @@ export default function TrustedContactsManager({ userEmail }) {
               Trusted Contacts
             </CardTitle>
             <p className="text-sm md:text-base text-gray-700">
-              Manage which senders can have their email attachments automatically processed by Aimy.
+              Manage which senders can have their email attachments automatically processed by Aimi.
             </p>
           </div>
           <Button
@@ -270,7 +270,7 @@ export default function TrustedContactsManager({ userEmail }) {
             {/* Desktop Table View */}
             <div className="hidden md:block overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-okaimy-mint-50">
+                <thead className="bg-aimi-lumo-green-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-primary uppercase tracking-wider">
                       Contact
@@ -291,7 +291,7 @@ export default function TrustedContactsManager({ userEmail }) {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {filteredContacts.map((contact) => (
-                    <tr key={contact.id} className="hover:bg-okaimy-mint-50 transition-colors">
+                    <tr key={contact.id} className="hover:bg-aimi-lumo-green-50 transition-colors">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
                           <Icon name="Mail" size="md" className="text-primary" />

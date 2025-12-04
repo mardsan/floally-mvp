@@ -28,7 +28,7 @@
   - Preserve formatting
 
 - [ ] **AI Message Summary** (Manual Trigger)
-  - "Summarize with Aimy" button
+  - "Summarize with Aimi" button
   - Shows loading state
   - Displays AI-generated summary
   - Summary appears above message body
@@ -37,20 +37,20 @@
 - [ ] **Attachment Preview Section**
   - List all attachments with icons
   - File name, type, size
-  - "Review with Aimy" button per attachment
+  - "Review with Aimi" button per attachment
   - Custom context input field
   - AI generates attachment summary
 
 ### Phase 4: Attachment Review Workflow
 **New Flow:**
 1. User opens message → sees attachments listed
-2. User clicks "Review with Aimy" on specific attachment
+2. User clicks "Review with Aimi" on specific attachment
 3. Modal appears with:
    - Attachment name/preview
-   - Text input: "Add context for Aimy..." (optional)
+   - Text input: "Add context for Aimi..." (optional)
    - Example: "This is fiction, not real events"
    - "Generate Summary" button
-4. Aimy processes attachment with custom context
+4. Aimi processes attachment with custom context
 5. Summary appears in modal
 6. User can copy summary or add to draft context
 
@@ -88,7 +88,7 @@
 
 2. **components/MessageDetailPopup.jsx**
    - Add message body display section
-   - Add "Summarize with Aimy" button
+   - Add "Summarize with Aimi" button
    - Add AI summary display area
    - Add attachment list with review buttons
    - Add custom context input field
@@ -111,7 +111,7 @@
    │ From: friend@email.com              │
    │ Subject: Check this out!            │
    ├─────────────────────────────────────┤
-   │ [Summarize with Aimy] 🤖           │
+   │ [Summarize with Aimi] 🤖           │
    │                                     │
    │ Message Body:                       │
    │ Hey! I wrote this short story...    │
@@ -119,23 +119,23 @@
    │                                     │
    │ Attachments:                        │
    │ 📄 short_story.pdf (245 KB)        │
-   │    [Review with Aimy]               │
+   │    [Review with Aimi]               │
    │                                     │
-   │ [Let Aimy (teammate) respond]       │
+   │ [Let Aimi (teammate) respond]       │
    └─────────────────────────────────────┘
 ```
 
 ### Review Attachment with Custom Context
 ```
-1. Click "Review with Aimy" on short_story.pdf
+1. Click "Review with Aimi" on short_story.pdf
 2. Modal appears:
    ┌─────────────────────────────────────┐
-   │ Review Attachment with Aimy         │
+   │ Review Attachment with Aimi         │
    ├─────────────────────────────────────┤
    │ File: short_story.pdf               │
    │ Size: 245 KB                        │
    │                                     │
-   │ Add context for Aimy (optional):    │
+   │ Add context for Aimi (optional):    │
    │ ┌─────────────────────────────────┐ │
    │ │ This is a work of fiction. My   │ │
    │ │ friend wants my feedback on the │ │

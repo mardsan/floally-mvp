@@ -7,13 +7,13 @@
 
 ---
 
-## 🎯 OkAimy Core Vision (Updated Understanding)
+## 🎯 Hey Aimi Core Vision (Updated Understanding)
 
-**OkAimy is an AI-powered project management partner** that:
+**Hey Aimi is an AI-powered project management partner** that:
 - Manages multiple communication channels (Gmail, Slack, Calendar, etc.)
 - Provides intelligent project organization connecting all communications to your goals
 - Protects your focus by handling noise so you can do meaningful work
-- Partners with you strategically through Aimy, not just managing your inbox
+- Partners with you strategically through Aimi, not just managing your inbox
 
 **Key Distinction:**
 - ❌ NOT: Just a smart email client or unified inbox
@@ -25,7 +25,7 @@
 
 ### Task 1: Test AI Project Creation Flow ⭐
 **Time:** 30 minutes  
-**Priority:** HIGH - This is a core feature (projects are central to OkAimy)
+**Priority:** HIGH - This is a core feature (projects are central to Hey Aimi)
 
 **Steps:**
 1. Go to https://www.okaimy.com/projects
@@ -34,7 +34,7 @@
    - "Build a mobile app for task tracking"
    - "Website redesign for client portfolio"
    - "Launch Q4 marketing campaign"
-4. Click "✨ Let Aimy Plan It"
+4. Click "✨ Let Aimi Plan It"
 5. **VERIFY AI generates:**
    - ✅ Enhanced description (2-3 detailed sentences)
    - ✅ Realistic timeline estimate (e.g., "2-3 weeks")
@@ -80,7 +80,7 @@ POST /api/ai/generate-project-plan
    - Reset status to "⚪ Preparing" if needed
    - Click "Start Working" button
    - ✅ VERIFY: Status auto-changes to "🟡 In Progress"
-   - ✅ VERIFY: "Details from Aimy" section auto-expands
+   - ✅ VERIFY: "Details from Aimi" section auto-expands
 
 6. **Test Task Swapping:**
    - Look at "Other Priorities" list
@@ -125,7 +125,7 @@ PUT /api/standup/status/{id}
 
 2. **Check Frontend (Vercel):**
    - Visit: https://www.okaimy.com
-   - ✅ VERIFY: Splash page loads with OkAimy branding
+   - ✅ VERIFY: Splash page loads with Hey Aimi branding
    - ✅ VERIFY: Logo shows correctly
    - ✅ VERIFY: "Connect Google Account" button present
 
@@ -169,7 +169,7 @@ PUT /api/standup/status/{id}
 Task 1: AI Project Creation (30 min)
   [ ] Navigate to /projects
   [ ] Create project with brief description
-  [ ] Click "Let Aimy Plan It"
+  [ ] Click "Let Aimi Plan It"
   [ ] Verify AI generates plan with real dates
   [ ] Save and confirm storage
   [ ] Check console for errors
@@ -266,7 +266,7 @@ the AI Project Creation Flow at www.okaimy.com/projects.
 ### Latest Commits (Oct 31, 2025):
 ```
 29567c4 - 📝 Add comprehensive session notes for Oct 31, 2025
-673e6df - 🪄 Integrate Aimy Wizard for AI-powered project planning
+673e6df - 🪄 Integrate Aimi Wizard for AI-powered project planning
 427fc62 - ✨ Implement Start Working button
 11c82b9 - ✨ Simplify Other Priorities - remove urgency scale
 ```

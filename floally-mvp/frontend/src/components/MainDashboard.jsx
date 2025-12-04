@@ -257,7 +257,7 @@ function MainDashboard({ user, onLogout }) {
     
     // Build task details map for easy lookup
     const taskDetails = {
-      [theOneThing.title || "Check in with Aimy"]: {
+      [theOneThing.title || "Check in with Aimi"]: {
         description: theOneThing.description || "Your inbox is clear!",
         action: theOneThing.action || "Review your priorities",
         project: theOneThing.project || "general",
@@ -280,7 +280,7 @@ function MainDashboard({ user, onLogout }) {
       
     setStandup({
       // The One Thing
-      one_thing: theOneThing.title || "Check in with Aimy",
+      one_thing: theOneThing.title || "Check in with Aimi",
       subtitle: theOneThing.description || "Your inbox is clear!",
       urgency: theOneThing.urgency || 0,
       project: theOneThing.project || "general",
@@ -302,7 +302,7 @@ function MainDashboard({ user, onLogout }) {
         };
       }),
       
-      // Aimy's autonomous tasks
+      // Aimi's autonomous tasks
       autonomous_tasks: aimyHandling.map(item => 
         `${item.task} (${item.status})`
       ),
@@ -369,7 +369,7 @@ function MainDashboard({ user, onLogout }) {
     }
   };  if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-okaimy-mint-50 via-white to-okaimy-emerald-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-aimi-lumo-green-50 via-white to-aimi-glow-coral-50 flex items-center justify-center">
         <div>
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-gray-700">Loading your dashboard...</p>
@@ -379,14 +379,14 @@ function MainDashboard({ user, onLogout }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-okaimy-mint-50 via-white to-okaimy-emerald-50">
+    <div className="min-h-screen bg-gradient-to-br from-aimi-lumo-green-50 via-white to-aimi-glow-coral-50">
       {/* Header */}
       <header className="bg-white/90 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             {/* Left: Logo & Greeting */}
             <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
-              <img src="/okaimy-logo-01.png" alt="OkAimy" className="h-6 sm:h-8 flex-shrink-0" />
+              <img src="/aimi-logo-01.png" alt="Hey Aimi" className="h-6 sm:h-8 flex-shrink-0" />
               <div className="min-w-0">
                 <h1 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 truncate">
                   {getGreeting()}, {user.display_name || user.email.split('@')[0]}!
@@ -487,7 +487,7 @@ function MainDashboard({ user, onLogout }) {
                   window.location.href = '/projects';
                   setMobileMenuOpen(false);
                 }}
-                className="w-full flex items-center gap-3 px-4 py-3 text-left text-gray-700 hover:bg-okaimy-mint-50 rounded-lg transition-colors"
+                className="w-full flex items-center gap-3 px-4 py-3 text-left text-gray-700 hover:bg-aimi-lumo-green-50 rounded-lg transition-colors"
               >
                 <Icon name="note" size="md" />
                 <span className="font-medium">Projects</span>
@@ -498,7 +498,7 @@ function MainDashboard({ user, onLogout }) {
                   setShowProfileHub(true);
                   setMobileMenuOpen(false);
                 }}
-                className="w-full flex items-center gap-3 px-4 py-3 text-left text-gray-700 hover:bg-okaimy-mint-50 rounded-lg transition-colors"
+                className="w-full flex items-center gap-3 px-4 py-3 text-left text-gray-700 hover:bg-aimi-lumo-green-50 rounded-lg transition-colors"
               >
                 <Icon name="contacts" size="md" />
                 <span className="font-medium">Profile Hub</span>
@@ -509,7 +509,7 @@ function MainDashboard({ user, onLogout }) {
                   setShowProfileSettings(true);
                   setMobileMenuOpen(false);
                 }}
-                className="w-full flex items-center gap-3 px-4 py-3 text-left text-gray-700 hover:bg-okaimy-mint-50 rounded-lg transition-colors"
+                className="w-full flex items-center gap-3 px-4 py-3 text-left text-gray-700 hover:bg-aimi-lumo-green-50 rounded-lg transition-colors"
               >
                 <span className="text-xl">⚙️</span>
                 <span className="font-medium">Settings</span>
@@ -534,7 +534,7 @@ function MainDashboard({ user, onLogout }) {
             {/* Footer */}
             <div className="p-4 border-t border-gray-200 bg-gray-50">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-okaimy-gradient flex items-center justify-center text-white font-semibold">
+                <div className="w-10 h-10 rounded-full bg-aimi-gradient flex items-center justify-center text-white font-semibold">
                   {(currentUser.display_name || currentUser.email).charAt(0).toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -552,7 +552,7 @@ function MainDashboard({ user, onLogout }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
         {/* Daily Standup - Redesigned Split-Panel Layout */}
         <section className="mb-6 md:mb-8">
-          <div className="bg-okaimy-gradient rounded-xl md:rounded-2xl shadow-glow-lg overflow-hidden">
+          <div className="bg-aimi-gradient rounded-xl md:rounded-2xl shadow-glow-lg overflow-hidden">
             {/* Header */}
             <div className="px-4 sm:px-6 md:px-8 py-4 md:py-6 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div className="flex-1">
@@ -560,7 +560,7 @@ function MainDashboard({ user, onLogout }) {
                   <Icon name="target" size="md" className="brightness-0 invert" />
                   Your Daily Standup
                 </h2>
-                <p className="text-sm md:text-base text-okaimy-mint-100">AI-powered partnership for your most productive day</p>
+                <p className="text-sm md:text-base text-aimi-lumo-green-100">AI-powered partnership for your most productive day</p>
               </div>
               <Button
                 variant="ghost"
@@ -580,7 +580,7 @@ function MainDashboard({ user, onLogout }) {
                 <div className="space-y-4 md:space-y-6">
                   {/* User Avatar Header */}
                   <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
-                    <div className="w-12 h-12 md:w-16 md:h-16 rounded-full overflow-hidden ring-2 md:ring-4 ring-okaimy-mint-200 bg-okaimy-gradient flex items-center justify-center text-white text-xl md:text-2xl font-bold shadow-glow flex-shrink-0">
+                    <div className="w-12 h-12 md:w-16 md:h-16 rounded-full overflow-hidden ring-2 md:ring-4 ring-aimi-lumo-green-200 bg-aimi-gradient flex items-center justify-center text-white text-xl md:text-2xl font-bold shadow-glow flex-shrink-0">
                       {currentUser?.avatar_url ? (
                         <img src={currentUser.avatar_url} alt={currentUser.display_name} className="w-full h-full object-cover" />
                       ) : (
@@ -594,11 +594,11 @@ function MainDashboard({ user, onLogout }) {
                   </div>
 
                   {/* The One Thing */}
-                  <Card variant="gradient" padding="md" className="shadow-lg border-2 border-okaimy-mint-300">
+                  <Card variant="gradient" padding="md" className="shadow-lg border-2 border-aimi-lumo-green-300">
                     <div className="flex items-center justify-between mb-3 md:mb-4 gap-2">
                       <div className="flex items-center gap-2 min-w-0">
                         <Icon name="target" size="md" className="text-primary flex-shrink-0" />
-                        <h4 className="text-base md:text-lg font-bold text-okaimy-mint-900 truncate">The One Thing</h4>
+                        <h4 className="text-base md:text-lg font-bold text-aimi-lumo-green-900 truncate">The One Thing</h4>
                       </div>
                       {/* Status Dropdown */}
                       <label htmlFor="one-thing-status" className="sr-only">Change One Thing status</label>
@@ -606,7 +606,7 @@ function MainDashboard({ user, onLogout }) {
                         id="one-thing-status"
                         value={oneThingStatus}
                         onChange={(e) => handleStatusChange(e.target.value)}
-                        className="px-2 md:px-3 py-1 md:py-1.5 text-xs md:text-sm border-2 border-okaimy-mint-300 rounded-lg bg-white font-medium focus:outline-none focus:border-primary flex-shrink-0"
+                        className="px-2 md:px-3 py-1 md:py-1.5 text-xs md:text-sm border-2 border-aimi-lumo-green-300 rounded-lg bg-white font-medium focus:outline-none focus:border-primary flex-shrink-0"
                       >
                         <option value="preparing">⚪ Preparing</option>
                         <option value="in_progress">🟡 In Progress</option>
@@ -621,14 +621,14 @@ function MainDashboard({ user, onLogout }) {
                         {standup?.one_thing || "Review Q4 budget priorities"}
                       </h5>
                       <p className="text-xs md:text-sm text-gray-700">
-                        {standup?.subtitle || "From Aimy: High priority deadline today · 2-3 hours"}
+                        {standup?.subtitle || "From Aimi: High priority deadline today · 2-3 hours"}
                       </p>
                     </div>
                     
                     {/* Expandable Details */}
                     {expandedOneThingDetails && standup?.task_details && (
-                      <div className="mb-3 md:mb-4 p-3 md:p-4 bg-white/70 rounded-lg border border-okaimy-mint-200">
-                        <h6 className="text-xs md:text-sm font-semibold text-okaimy-mint-900 mb-2">Details from Aimy:</h6>
+                      <div className="mb-3 md:mb-4 p-3 md:p-4 bg-white/70 rounded-lg border border-aimi-lumo-green-200">
+                        <h6 className="text-xs md:text-sm font-semibold text-aimi-lumo-green-900 mb-2">Details from Aimi:</h6>
                         <div className="text-xs md:text-sm text-gray-700 whitespace-pre-wrap max-h-60 overflow-y-auto">
                           {(() => {
                             const currentTask = standup.one_thing;
@@ -731,37 +731,37 @@ function MainDashboard({ user, onLogout }) {
 
                 {/* RIGHT PANEL: AIMY'S WORK */}
                 <div className="space-y-4 md:space-y-6">
-                  {/* Aimy Avatar Header */}
+                  {/* Aimi Avatar Header */}
                   <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
-                    <div className="w-12 h-12 md:w-16 md:h-16 rounded-full overflow-hidden ring-2 md:ring-4 ring-okaimy-mint-200 bg-white shadow-glow flex-shrink-0">
+                    <div className="w-12 h-12 md:w-16 md:h-16 rounded-full overflow-hidden ring-2 md:ring-4 ring-aimi-lumo-green-200 bg-white shadow-glow flex-shrink-0">
                       <img 
                         src="/AiMy_LUMO_01.png" 
-                        alt="Aimy" 
+                        alt="Aimi" 
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           e.target.style.display = 'none';
-                          e.target.parentElement.innerHTML = '<div class="w-full h-full bg-okaimy-gradient flex items-center justify-center text-white text-2xl font-bold">A</div>';
+                          e.target.parentElement.innerHTML = '<div class="w-full h-full bg-aimi-gradient flex items-center justify-center text-white text-2xl font-bold">A</div>';
                         }}
                       />
                     </div>
                     <div className="min-w-0">
-                      <h3 className="text-lg md:text-xl font-bold text-gray-800">Aimy's Work Today</h3>
+                      <h3 className="text-lg md:text-xl font-bold text-gray-800">Aimi's Work Today</h3>
                       <p className="text-xs md:text-sm text-gray-700">Your AI Partner</p>
                     </div>
                   </div>
 
                   {/* Daily Summary */}
-                  <Card variant="gradient" padding="md" className="shadow-lg border-2 border-okaimy-mint-300">
+                  <Card variant="gradient" padding="md" className="shadow-lg border-2 border-aimi-lumo-green-300">
                     <div className="flex items-center gap-2 mb-3 md:mb-4">
                       <Icon name="check" size="md" className="text-primary flex-shrink-0" />
-                      <h4 className="text-base md:text-lg font-bold text-okaimy-mint-900">Daily Summary</h4>
+                      <h4 className="text-base md:text-lg font-bold text-aimi-lumo-green-900">Daily Summary</h4>
                     </div>
                     <div className="grid grid-cols-2 gap-2 md:gap-3 mb-3 md:mb-4">
                       <div className="bg-white/60 rounded-lg p-2 md:p-3 text-center">
                         <div className="text-xl md:text-2xl font-bold text-primary">
                           {standup?.summary?.total_emails || 0}
                         </div>
-                        <div className="text-xs text-okaimy-mint-600">Monitored</div>
+                        <div className="text-xs text-aimi-lumo-green-600">Monitored</div>
                       </div>
                       <div className="bg-white/60 rounded-lg p-2 md:p-3 text-center">
                         <div className="text-xl md:text-2xl font-bold text-orange-600">
@@ -770,7 +770,7 @@ function MainDashboard({ user, onLogout }) {
                         <div className="text-xs text-orange-600">Urgent</div>
                       </div>
                     </div>
-                    <div className="text-xs md:text-sm text-okaimy-mint-800 space-y-1.5 md:space-y-2">
+                    <div className="text-xs md:text-sm text-aimi-lumo-green-800 space-y-1.5 md:space-y-2">
                       {standup?.daily_plan && standup.daily_plan.length > 0 ? (
                         standup.daily_plan.map((item, idx) => (
                           <p key={idx} className="flex items-start gap-2">
@@ -797,9 +797,9 @@ function MainDashboard({ user, onLogout }) {
                     </div>
                   </Card>
 
-                  {/* Things Aimy is Working On */}
+                  {/* Things Aimi is Working On */}
                   <Card variant="bordered" padding="none" className="overflow-hidden">
-                    <div className="bg-okaimy-gradient px-3 md:px-4 lg:px-6 py-3 md:py-4 flex items-center justify-between gap-2">
+                    <div className="bg-aimi-gradient px-3 md:px-4 lg:px-6 py-3 md:py-4 flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2 text-white min-w-0">
                         <Icon name="check" size="sm" className="brightness-0 invert flex-shrink-0" />
                         <h4 className="font-bold text-sm md:text-base truncate">Things I'm Working On</h4>
@@ -830,9 +830,9 @@ function MainDashboard({ user, onLogout }) {
                                 <div className="flex-1 min-w-0">
                                   <p className="text-sm md:text-base text-gray-800 font-medium mb-1">{taskText}</p>
                                   <span className={`inline-block text-xs px-2 py-0.5 md:py-1 rounded ${
-                                    taskStatus === 'monitoring' ? 'text-primary bg-okaimy-mint-50' :
+                                    taskStatus === 'monitoring' ? 'text-primary bg-aimi-lumo-green-50' :
                                     taskStatus === 'drafting' ? 'text-purple-600 bg-purple-50' :
-                                    'text-accent bg-okaimy-emerald-50'
+                                    'text-accent bg-aimi-glow-coral-50'
                                   }`}>
                                     {taskStatus === 'monitoring' ? '👀 Monitoring' :
                                      taskStatus === 'drafting' ? '✍️ Drafting' :
@@ -865,29 +865,29 @@ function MainDashboard({ user, onLogout }) {
                 </div>
               </div>
 
-              {/* Chat with Aimy - Full Width */}
-              <div className="border-t-2 border-okaimy-mint-100 pt-8">
-                <Card variant="gradient" padding="lg" className="border-2 border-okaimy-mint-200">
+              {/* Chat with Aimi - Full Width */}
+              <div className="border-t-2 border-aimi-lumo-green-100 pt-8">
+                <Card variant="gradient" padding="lg" className="border-2 border-aimi-lumo-green-200">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-10 h-10 rounded-full overflow-hidden bg-white shadow-glow">
                       <img 
                         src="/AiMy_LUMO_01.png" 
-                        alt="Aimy" 
+                        alt="Aimi" 
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           e.target.style.display = 'none';
-                          e.target.parentElement.innerHTML = '<div class="w-full h-full bg-okaimy-gradient flex items-center justify-center text-white text-sm font-bold">A</div>';
+                          e.target.parentElement.innerHTML = '<div class="w-full h-full bg-aimi-gradient flex items-center justify-center text-white text-sm font-bold">A</div>';
                         }}
                       />
                     </div>
                     <Icon name="chat" size="lg" className="text-primary" />
-                    <h4 className="text-lg font-bold text-gray-800">Chat with Aimy</h4>
+                    <h4 className="text-lg font-bold text-gray-800">Chat with Aimi</h4>
                     <span className="text-xs text-gray-500 ml-auto">Ask about your day, clarify tasks, or get advice</span>
                   </div>
                   
                   <div className="space-y-3">
                     {/* Chat messages would go here */}
-                    <div className="bg-white rounded-lg p-4 shadow-sm border border-okaimy-mint-100">
+                    <div className="bg-white rounded-lg p-4 shadow-sm border border-aimi-lumo-green-100">
                       <p className="text-sm text-gray-700 italic flex items-start gap-2">
                         <Icon name="star" size="sm" className="text-primary mt-0.5" />
                         <span>Quick tip: You can ask me to explain any task, suggest alternatives, or help prioritize your day.</span>
@@ -898,7 +898,7 @@ function MainDashboard({ user, onLogout }) {
                     <div className="flex gap-3">
                       <input
                         type="text"
-                        placeholder="Ask Aimy anything about your day..."
+                        placeholder="Ask Aimi anything about your day..."
                         className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all"
                       />
                       <Button variant="primary">
@@ -950,7 +950,7 @@ function MainDashboard({ user, onLogout }) {
                       <div
                         key={project.id}
                         onClick={() => window.location.href = `/projects?open=${project.id}`}
-                        className="p-3 md:p-4 rounded-lg border-2 border-gray-200 bg-gradient-to-br from-gray-50 to-white hover:border-okaimy-mint-300 hover:shadow-md transition-all cursor-pointer"
+                        className="p-3 md:p-4 rounded-lg border-2 border-gray-200 bg-gradient-to-br from-gray-50 to-white hover:border-aimi-lumo-green-300 hover:shadow-md transition-all cursor-pointer"
                       >
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex items-center gap-2">
@@ -961,7 +961,7 @@ function MainDashboard({ user, onLogout }) {
                             <h4 className="font-semibold text-gray-900 text-sm md:text-base">{project.name}</h4>
                           </div>
                           {project.is_primary && (
-                            <span className="text-xs bg-okaimy-mint-100 text-okaimy-mint-800 px-2 py-1 rounded-full flex items-center gap-1 flex-shrink-0">
+                            <span className="text-xs bg-aimi-lumo-green-100 text-aimi-lumo-green-800 px-2 py-1 rounded-full flex items-center gap-1 flex-shrink-0">
                               <Icon name="star" size="sm" className="text-primary" />
                               Primary
                             </span>
@@ -1007,7 +1007,7 @@ function MainDashboard({ user, onLogout }) {
                   </div>
                 ) : (
                   calendarEvents.slice(0, 10).map((event, idx) => (
-                    <div key={idx} className="p-3 md:p-4 bg-okaimy-mint-50 rounded-lg border border-okaimy-mint-200">
+                    <div key={idx} className="p-3 md:p-4 bg-aimi-lumo-green-50 rounded-lg border border-aimi-lumo-green-200">
                       <div className="flex items-start gap-3">
                         <div className="text-xl md:text-2xl flex-shrink-0">📆</div>
                         <div className="flex-1 min-w-0">
@@ -1052,7 +1052,7 @@ function MainDashboard({ user, onLogout }) {
               Quick Actions
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-              <button className="p-3 md:p-4 aspect-square md:aspect-auto bg-gradient-to-br from-okaimy-mint-50 to-okaimy-emerald-50 rounded-lg border-2 border-okaimy-mint-200 hover:border-okaimy-mint-400 hover:shadow-glow transition-all text-left flex flex-col justify-center">
+              <button className="p-3 md:p-4 aspect-square md:aspect-auto bg-gradient-to-br from-aimi-lumo-green-50 to-aimi-glow-coral-50 rounded-lg border-2 border-aimi-lumo-green-200 hover:border-aimi-lumo-green-400 hover:shadow-glow transition-all text-left flex flex-col justify-center">
                 <div className="mb-1 md:mb-2">
                   <Icon name="Mail" size="xl" className="text-primary" />
                 </div>
@@ -1075,7 +1075,7 @@ function MainDashboard({ user, onLogout }) {
               </button>
               <button 
                 onClick={() => setShowProfileHub(true)}
-                className="p-3 md:p-4 aspect-square md:aspect-auto bg-gradient-to-br from-okaimy-emerald-50 to-okaimy-mint-50 rounded-lg border-2 border-okaimy-emerald-200 hover:border-okaimy-emerald-400 hover:shadow-glow transition-all text-left flex flex-col justify-center"
+                className="p-3 md:p-4 aspect-square md:aspect-auto bg-gradient-to-br from-aimi-glow-coral-50 to-aimi-lumo-green-50 rounded-lg border-2 border-aimi-glow-coral-200 hover:border-aimi-glow-coral-400 hover:shadow-glow transition-all text-left flex flex-col justify-center"
               >
                 <div className="text-xl md:text-2xl mb-1 md:mb-2">⚙️</div>
                 <div className="font-semibold text-gray-900 text-sm md:text-base">Settings</div>

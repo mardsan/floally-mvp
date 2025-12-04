@@ -1,8 +1,8 @@
 import React from 'react';
 
 /**
- * Reusable Button component with OkAimy brand styling
- * Inspired by Prompt template patterns, customized for OkAimy design system
+ * Reusable Button component with Hey Aimi brand styling
+ * Inspired by Prompt template patterns, customized for Hey Aimi design system
  * 
  * @param {string} variant - Button style: 'primary', 'secondary', 'outline', 'ghost', 'danger'
  * @param {string} size - Size preset: 'sm', 'md', 'lg'
@@ -32,12 +32,12 @@ const Button = ({
     lg: 'px-6 py-3 text-lg'
   };
   
-  // Color/style variants using OkAimy design system
+  // Color/style variants using Hey Aimi design system
   const variantStyles = {
-    primary: 'bg-okaimy-gradient text-white shadow-glow hover:shadow-glow-lg hover:-translate-y-0.5 focus:ring-primary',
-    secondary: 'bg-white text-primary border-2 border-primary hover:bg-okaimy-mint-50 focus:ring-primary',
-    outline: 'bg-transparent text-gray-700 border-2 border-gray-300 hover:border-primary hover:text-primary hover:bg-okaimy-mint-50 focus:ring-primary',
-    ghost: 'bg-transparent text-gray-700 hover:bg-okaimy-mint-50 hover:text-primary focus:ring-primary',
+    primary: 'bg-aimi-gradient text-white shadow-glow hover:shadow-glow-lg hover:-translate-y-0.5 focus:ring-primary',
+    secondary: 'bg-white text-primary border-2 border-primary hover:bg-aimi-lumo-green-50 focus:ring-primary',
+    outline: 'bg-transparent text-gray-700 border-2 border-gray-300 hover:border-primary hover:text-primary hover:bg-aimi-lumo-green-50 focus:ring-primary',
+    ghost: 'bg-transparent text-gray-700 hover:bg-aimi-lumo-green-50 hover:text-primary focus:ring-primary',
     danger: 'bg-red-600 text-white hover:bg-red-700 shadow-md hover:shadow-lg hover:-translate-y-0.5 focus:ring-red-500'
   };
   

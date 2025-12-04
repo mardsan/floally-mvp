@@ -1,13 +1,13 @@
 # Standup: The Command Center Design Spec
 
 **Date:** October 20, 2025  
-**Purpose:** Design the daily partnership interface between User and Aimy
+**Purpose:** Design the daily partnership interface between User and Aimi
 
 ---
 
 ## 🎯 Vision: The Daily Partnership
 
-> "Every morning, you and Aimy sync up. She tells you the ONE thing that matters today, you confirm or adjust. Then you see what she's handling for you. Complete transparency. Total trust."
+> "Every morning, you and Aimi sync up. She tells you the ONE thing that matters today, you confirm or adjust. Then you see what she's handling for you. Complete transparency. Total trust."
 
 ---
 
@@ -18,9 +18,9 @@
 **Person 1: You (The User)**
 - Your one critical focus today
 - Your status/progress
-- What you need from Aimy
+- What you need from Aimi
 
-**Person 2: Aimy (Your AI Partner)**
+**Person 2: Aimi (Your AI Partner)**
 - What she's working on for you
 - What she's planning to handle
 - What she needs your approval for
@@ -38,13 +38,13 @@
 │  │  👤 YOUR FOCUS TODAY      │  🤖 AIMY'S WORK TODAY     │ │
 │  ├───────────────────────────┼───────────────────────────┤ │
 │  │                           │                           │ │
-│  │  🎯 The One Thing:        │  🔄 Aimy is handling:     │ │
+│  │  🎯 The One Thing:        │  🔄 Aimi is handling:     │ │
 │  │                           │                           │ │
 │  │  [Selected/Confirmed]     │  • 12 low-priority emails │ │
 │  │  ━━━━━━━━━━━━━━━━━━━━━━   │    (auto-archive/reply)   │ │
 │  │  📋 Finalize Q4 Budget    │                           │ │
 │  │                           │  • 3 social media DMs     │ │
-│  │  Why Aimy picked this:    │    (filter spam)          │ │
+│  │  Why Aimi picked this:    │    (filter spam)          │ │
 │  │  • Due today (5pm)        │                           │ │
 │  │  • Blocks team tomorrow   │  • 2 meeting invites      │ │
 │  │  • High stakeholder value │    (add to calendar)      │ │
@@ -55,7 +55,7 @@
 │  │  [Switch Focus]           │    promotional lists      │ │
 │  │                           │    [Approve All] [Review] │ │
 │  │  ──────────────────       │                           │ │
-│  │                           │  📋 Aimy's plan:          │ │
+│  │                           │  📋 Aimi's plan:          │ │
 │  │  📊 Your other priorities:│                           │ │
 │  │                           │  • Monitor inbox (all day)│ │
 │  │  2️⃣ Review design mockups│  • Surface urgent items   │ │
@@ -89,7 +89,7 @@
   dueTime: "Today at 5:00 PM",
   status: "not_started" | "in_progress" | "completed",
   
-  // Aimy's reasoning
+  // Aimi's reasoning
   reasoning: {
     why: [
       "Due today (5pm deadline)",
@@ -124,7 +124,7 @@
   - ⚪ Not Started (gray)
   - 🟡 In Progress (yellow glow)
   - 🟢 Completed (green checkmark)
-- **Aimy's reasoning** in italics, gentle AI avatar icon
+- **Aimi's reasoning** in italics, gentle AI avatar icon
 - **Action buttons** prominent and clear
 - **Progress indicator** if user marks "in progress"
 
@@ -285,11 +285,11 @@
 - **Reasoning always visible** - transparency
 - **Expandable details** - see full impact
 - **Urgency indicator**:
-  - 🔴 High: Blocking Aimy's work
+  - 🔴 High: Blocking Aimi's work
   - 🟡 Medium: Would be helpful today
   - 🟢 Low: Can wait
 
-#### 3. Aimy's Daily Plan (Ongoing Work)
+#### 3. Aimi's Daily Plan (Ongoing Work)
 ```javascript
 {
   component: "AimyDailyPlan",
@@ -364,13 +364,13 @@
 
 ### Flow 1: Morning Standup
 ```
-1. User opens OkAimy
+1. User opens Hey Aimi
 2. Standup loads automatically (is default view)
 3. User sees: "Your One Thing: Finalize Q4 Budget"
-4. Reads Aimy's reasoning (2 seconds)
+4. Reads Aimi's reasoning (2 seconds)
 5. Clicks "Confirm & Start"
 6. Status changes to 🟡 In Progress
-7. Aimy updates her plan to support this focus
+7. Aimi updates her plan to support this focus
 8. User goes to Inbox to tackle the task
 ```
 
@@ -380,28 +380,28 @@
 2. Sees 2 alternatives with reasoning
 3. Selects "Review design mockups" instead
 4. Confirms switch
-5. Aimy updates: "Got it! I'll keep 'Budget' warm for later"
+5. Aimi updates: "Got it! I'll keep 'Budget' warm for later"
 6. The One Thing updates to new choice
-7. Aimy adjusts her supporting work
+7. Aimi adjusts her supporting work
 ```
 
-### Flow 3: Checking Aimy's Progress
+### Flow 3: Checking Aimi's Progress
 ```
 1. User is working on their One Thing
 2. Glances at right panel
-3. Sees: "Aimy just handled: 3 promotional emails"
+3. Sees: "Aimi just handled: 3 promotional emails"
 4. Feels reassured - inbox under control
 5. Continues focused work
 6. Doesn't need to check email manually
 ```
 
-### Flow 4: Approving Aimy's Work
+### Flow 4: Approving Aimi's Work
 ```
-1. Aimy requests: "Unsubscribe from 5 lists?"
+1. Aimi requests: "Unsubscribe from 5 lists?"
 2. User clicks "Review Each"
 3. Sees list, confirms all are junk
 4. Clicks "Approve All"
-5. Aimy unsubscribes immediately
+5. Aimi unsubscribes immediately
 6. User sees confirmation: "Done! 5 lists unsubscribed"
 7. Approval request disappears
 ```
@@ -411,7 +411,7 @@
 1. User finishes the One Thing
 2. Clicks "Mark Complete"
 3. 🎉 Celebration animation
-4. Aimy: "Great work! I'll summarize your day at 5pm"
+4. Aimi: "Great work! I'll summarize your day at 5pm"
 5. User can see secondary priorities or close app
 6. At 5pm: notification with day summary
 ```
@@ -420,7 +420,7 @@
 
 ## 📊 Data Requirements
 
-### What Aimy Needs to Build Standup
+### What Aimi Needs to Build Standup
 
 ```javascript
 {
@@ -460,7 +460,7 @@
     averageTaskTime: { email: 5, docs: 30, calls: 45 }
   },
   
-  // Aimy's AI analysis
+  // Aimi's AI analysis
   aiInsights: {
     priorityScore: { task_123: 95, task_456: 78, ... },
     urgencyReasons: [...],
@@ -480,7 +480,7 @@
 
 ### Colors
 - **User focus (left)**: Cool blues/purples (calm, focused)
-- **Aimy's work (right)**: Warm teal/greens (active, supportive)
+- **Aimi's work (right)**: Warm teal/greens (active, supportive)
 - **Approvals**: Yellow/orange (attention needed)
 - **Completions**: Green (celebration)
 - **Status indicators**:
@@ -492,12 +492,12 @@
 ### Typography
 - **One Thing title**: Large, bold, 24px
 - **Reasoning**: Italic, slightly smaller, 14px
-- **Aimy's tasks**: Regular, 16px
+- **Aimi's tasks**: Regular, 16px
 - **Details**: Muted gray, 12px
 
 ### Icons
 - 👤 User
-- 🤖 Aimy
+- 🤖 Aimi
 - 🎯 The One Thing
 - 🔄 In Progress
 - ✅ Complete
@@ -517,13 +517,13 @@
 
 ### Desktop (1920px+)
 ```
-[ 50% User Focus | 50% Aimy's Work ]
+[ 50% User Focus | 50% Aimi's Work ]
 Side-by-side, equal weight
 ```
 
 ### Tablet (768px - 1920px)
 ```
-[ 60% User Focus | 40% Aimy's Work ]
+[ 60% User Focus | 40% Aimi's Work ]
 User focus slightly larger
 ```
 
@@ -537,7 +537,7 @@ User focus slightly larger
 └─────────────────┘
         ↓ Swipe/Scroll
 ┌─────────────────┐
-│  🤖 Aimy's Work │
+│  🤖 Aimi's Work │
 ├─────────────────┤
 │  [Active Tasks] │
 │  [Approvals]    │
@@ -551,31 +551,31 @@ Stacked vertically, swipe between sections
 
 ### Test 1: Clear Priority
 - **Given**: 1 urgent email, 10 low-priority
-- **Expected**: Aimy picks urgent email as One Thing
+- **Expected**: Aimi picks urgent email as One Thing
 - **Reasoning**: Due today, from boss, blocks team
 
 ### Test 2: Multiple Urgent
 - **Given**: 3 urgent emails, all due today
-- **Expected**: Aimy picks highest impact (stakeholder value)
+- **Expected**: Aimi picks highest impact (stakeholder value)
 - **Reasoning**: Shows alternatives, explains tie-breaking
 
 ### Test 3: Nothing Urgent
 - **Given**: All messages low-priority
-- **Expected**: Aimy suggests: "Catch up day! Clear backlog or take it easy"
+- **Expected**: Aimi suggests: "Catch up day! Clear backlog or take it easy"
 - **Reasoning**: Not every day needs a crisis
 
 ### Test 4: User Override
-- **Given**: Aimy picks Task A, user switches to Task B
-- **Expected**: Aimy accepts, adjusts plan accordingly
+- **Given**: Aimi picks Task A, user switches to Task B
+- **Expected**: Aimi accepts, adjusts plan accordingly
 - **Learning**: Next time, factors in user preference
 
 ### Test 5: Real-time Updates
 - **Given**: Urgent email arrives during day
-- **Expected**: Aimy alerts, offers to change One Thing
+- **Expected**: Aimi alerts, offers to change One Thing
 - **User**: Can accept or defer
 
-### Test 6: Aimy Blocked
-- **Given**: Aimy needs approval for 3 actions
+### Test 6: Aimi Blocked
+- **Given**: Aimi needs approval for 3 actions
 - **Expected**: Clear list in Approvals section
 - **User**: Can bulk approve, review individually, or reject
 
@@ -586,7 +586,7 @@ Stacked vertically, swipe between sections
 ### Phase 1: Basic Split View (Week 1)
 - [ ] Create Standup component structure
 - [ ] Implement left panel (Your Focus)
-- [ ] Implement right panel (Aimy's Work)
+- [ ] Implement right panel (Aimi's Work)
 - [ ] Mock data for testing
 - [ ] Responsive layout
 
@@ -597,7 +597,7 @@ Stacked vertically, swipe between sections
 - [ ] Alternative options logic
 - [ ] User confirmation flow
 
-### Phase 3: Aimy's Work Panel (Week 2-3)
+### Phase 3: Aimi's Work Panel (Week 2-3)
 - [ ] Active work tracking
 - [ ] Approval system
 - [ ] Daily plan scheduler
@@ -624,10 +624,10 @@ Stacked vertically, swipe between sections
 
 **We'll know Standup works when:**
 - ✅ Users check it FIRST every morning
-- ✅ 90%+ agree with Aimy's One Thing pick
-- ✅ Users feel "in control" even when Aimy handles 50+ items
-- ✅ Approval rate >80% (means Aimy's learning well)
-- ✅ Users report: "I trust Aimy completely"
+- ✅ 90%+ agree with Aimi's One Thing pick
+- ✅ Users feel "in control" even when Aimi handles 50+ items
+- ✅ Approval rate >80% (means Aimi's learning well)
+- ✅ Users report: "I trust Aimi completely"
 - ✅ Time-to-focus: <30 seconds from open to working
 - ✅ Users complete 2x more important tasks per week
 
@@ -636,12 +636,12 @@ Stacked vertically, swipe between sections
 ## 💡 Future Enhancements
 
 ### Advanced Features (Post-MVP)
-- **Voice interaction**: "Hey Aimy, what's my focus today?"
+- **Voice interaction**: "Hey Aimi, what's my focus today?"
 - **Team standup**: See team members' priorities
 - **Weekly planning**: Not just daily, but weekly goals
-- **Learning dashboard**: How Aimy's accuracy improves
+- **Learning dashboard**: How Aimi's accuracy improves
 - **Integration actions**: "Start timer for One Thing"
-- **Smart breaks**: Aimy suggests when to take breaks
+- **Smart breaks**: Aimi suggests when to take breaks
 - **Energy optimization**: Schedule hard tasks at peak energy times
 
 ---
@@ -657,6 +657,6 @@ Stacked vertically, swipe between sections
 
 ---
 
-**This is the heart of OkAimy.** Get Standup right, and everything else falls into place! 💪
+**This is the heart of Hey Aimi.** Get Standup right, and everything else falls into place! 💪
 
 Ready to start building? 🚀

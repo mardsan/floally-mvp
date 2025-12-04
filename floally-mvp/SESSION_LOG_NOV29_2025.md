@@ -76,7 +76,7 @@ Complete the remaining mobile responsive components (EnhancedMessages, AimyWizar
   - Responsive padding throughout (`p-3 md:p-4`)
   - Smaller text in info boxes (`text-xs md:text-sm`)
 - **Generate Button**:
-  - Shorter label on mobile ("Generate Plan" vs "Generate Project Plan with Aimy")
+  - Shorter label on mobile ("Generate Plan" vs "Generate Project Plan with Aimi")
   - Smaller loading spinner (`h-4 w-4 md:h-5 md:w-5`)
 - **Results Display**:
   - All section headers responsive (`text-sm md:text-base`)

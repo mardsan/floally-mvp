@@ -140,7 +140,7 @@ Consider urgency, importance, and creative flow.
 - Shows confidence/urgency as progress bars
 - Allows swapping with "The One Thing"
 
-#### Aimy's Work
+#### Aimi's Work
 - Displays `aimy_handling` tasks
 - Status badges: monitoring 👀 | drafting ✍️ | ready ✅
 - Go/Check/Deny action buttons
@@ -202,7 +202,7 @@ Consider urgency, importance, and creative flow.
 - [ ] Check urgency/confidence bars display correctly
 - [ ] Test task swapping (should preserve data)
 - [ ] Verify Daily Summary shows real counts
-- [ ] Check Aimy's Work section shows real tasks
+- [ ] Check Aimi's Work section shows real tasks
 - [ ] Verify status badges (monitoring/drafting/ready)
 - [ ] Test StandupDashboard alternatives display
 
@@ -267,7 +267,7 @@ Consider urgency, importance, and creative flow.
 ### Short-Term (Next 2 Weeks)
 1. **Status Persistence** - Save task status to database
 2. **Task Actions** - Implement "Go/Check/Deny" buttons
-3. **Chat with Aimy** - Real chat interface for clarifications
+3. **Chat with Aimi** - Real chat interface for clarifications
 4. **Calendar Integration** - Factor in meetings for daily plan
 
 ### Long-Term (Month+)

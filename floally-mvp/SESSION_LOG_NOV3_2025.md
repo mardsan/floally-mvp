@@ -8,7 +8,7 @@
 ## Major Accomplishments
 
 ### 1. ✅ Sub-tasks Feature - COMPLETE
-**Goal:** Transform OkAimy from inbox management to full project management with Trello-style simplicity
+**Goal:** Transform Hey Aimi from inbox management to full project management with Trello-style simplicity
 
 #### Backend Enhancements
 - **File:** `backend/app/routers/ai.py`
@@ -135,8 +135,8 @@
 
 ### High Priority
 1. **End-to-End Testing** - Test complete sub-tasks workflow in production
-2. **Daily Activity Event Log** - Build foundation for Aimy's learning system
-3. **Aimy's Memory System** - Persistent context storage for AI decisions
+2. **Daily Activity Event Log** - Build foundation for Aimi's learning system
+3. **Aimi's Memory System** - Persistent context storage for AI decisions
 
 ### Medium Priority
 - Polish remaining UX issues (user mentioned "minor issues")

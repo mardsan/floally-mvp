@@ -1,4 +1,4 @@
-# 🧪 OkAimy Test Checklist
+# 🧪 Hey Aimi Test Checklist
 
 **Date:** October 20, 2025  
 **Version:** 1.3.0  
@@ -15,8 +15,8 @@ URL: http://localhost:3000
 
 **What to check:**
 - [ ] Splash page appears
-- [ ] Large Aimy avatar visible (256px)
-- [ ] "OkAimy" logo and branding (NOT "OpAime")
+- [ ] Large Aimi avatar visible (256px)
+- [ ] "Hey Aimi" logo and branding (NOT "OpAime")
 - [ ] "Connect Google Account" button works
 
 ---
@@ -31,7 +31,7 @@ URL: http://localhost:3000
 
 **Onboarding (if first time):**
 - [ ] 6-step onboarding flow appears
-- [ ] Aimy's avatar shows (okaimy-pfp-01.png)
+- [ ] Aimi's avatar shows (aimi-pfp-01.png)
 - [ ] Can complete all steps
 - [ ] Lands on dashboard after completion
 
@@ -50,7 +50,7 @@ URL: http://localhost:3000
 **Content:**
 - [ ] Emails load from Gmail
 - [ ] Calendar events display
-- [ ] "Aimy" references (NOT "Aime")
+- [ ] "Aimi" references (NOT "Aime")
 - [ ] Email actions work (Focus, Archive, Respond)
 
 ---
@@ -69,7 +69,7 @@ URL: http://localhost:3000
 
 - [ ] User email displays
 - [ ] Role shows (if set in onboarding)
-- [ ] "Aimy's Understanding" card appears
+- [ ] "Aimi's Understanding" card appears
 - [ ] 4 stat cards display:
   - [ ] Total Actions
   - [ ] Recent Actions (7d)
@@ -80,14 +80,14 @@ URL: http://localhost:3000
 
 **Expected on first use:**
 - Total Actions: 0 or small number
-- Aimy's Understanding: Should be personalized based on onboarding
+- Aimi's Understanding: Should be personalized based on onboarding
 
 ---
 
 ### Tab 2: Insights 📊
 
 **If you have NO actions yet:**
-- [ ] Message: "Start using OkAimy to build your behavioral insights!"
+- [ ] Message: "Start using Hey Aimi to build your behavioral insights!"
 
 **If you have actions (take some email actions first!):**
 - [ ] Learning status banner shows (Building/Active/Confident)
@@ -163,7 +163,7 @@ URL: http://localhost:3000
 
 - [ ] Click "⚙️ Settings" in header
 - [ ] Settings modal opens (different from ProfileHub Settings tab)
-- [ ] Shows Aimy's Understanding
+- [ ] Shows Aimi's Understanding
 - [ ] Shows full profile
 - [ ] "✏️ Edit" button works
 - [ ] Can close modal
@@ -217,7 +217,7 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
 ### Fresh User (First Login):
 - **Overview:** 0 actions, basic profile info
-- **Insights:** "Start using OkAimy..." message
+- **Insights:** "Start using Hey Aimi..." message
 - **Integrations:** Gmail + Calendar connected
 - **Settings:** Complete profile from onboarding
 
@@ -237,7 +237,7 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 - ✅ Can switch between tabs smoothly
 - ✅ Close button returns to dashboard
 - ✅ Actions taken update insights immediately
-- ✅ All "Aimy" branding (not "Aime")
+- ✅ All "Aimi" branding (not "Aime")
 - ✅ Visual design is clean and professional
 
 ---
@@ -256,8 +256,8 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 - [ ] `/api/insights/behavioral` returns 200
 - [ ] `/api/user/profile` returns 200
 - [ ] `/api/user/integrations` returns 200
-- [ ] okaimy-pfp-01.png loads successfully
-- [ ] okaimy-logo-01.png loads successfully
+- [ ] aimi-pfp-01.png loads successfully
+- [ ] aimi-logo-01.png loads successfully
 
 ---
 

@@ -25,7 +25,7 @@ async function getRedisClient() {
 
 // Simple password hashing (use bcrypt in production)
 function hashPassword(password) {
-  return crypto.createHash('sha256').update(password + process.env.SALT || 'okaimy-salt').digest('hex');
+  return crypto.createHash('sha256').update(password + process.env.SALT || 'aimi-salt').digest('hex');
 }
 
 // Simple JWT-like token generation

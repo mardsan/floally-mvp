@@ -62,7 +62,7 @@ const ProfileHub = ({ userEmail }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-okaimy-mint-50 via-white to-okaimy-emerald-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-aimi-lumo-green-50 via-white to-aimi-glow-coral-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-gray-700">Loading your profile...</p>
@@ -72,19 +72,19 @@ const ProfileHub = ({ userEmail }) => {
   }
 
   return (
-    <div className="min-h-full bg-gradient-to-br from-okaimy-mint-50 via-white to-okaimy-emerald-50 py-4 sm:py-8 px-3 sm:px-4">
+    <div className="min-h-full bg-gradient-to-br from-aimi-lumo-green-50 via-white to-aimi-glow-coral-50 py-4 sm:py-8 px-3 sm:px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header - Hidden on mobile since modal already has title */}
         <div className="hidden sm:block mb-8 text-center">
           <div className="flex items-center justify-center mb-4">
             <img 
               src="/AiMy_LUMO_01.png" 
-              alt="Aimy" 
+              alt="Aimi" 
               className="w-16 h-16 rounded-full mr-4 shadow-glow"
             />
             <div className="text-left">
               <h1 className="text-3xl font-bold text-gray-800">Profile Hub</h1>
-              <p className="text-gray-700">Manage your OkAimy experience</p>
+              <p className="text-gray-700">Manage your Hey Aimi experience</p>
             </div>
           </div>
         </div>
@@ -93,10 +93,10 @@ const ProfileHub = ({ userEmail }) => {
         <div className="sm:hidden mb-4 flex items-center gap-3 px-2">
           <img 
             src="/AiMy_LUMO_01.png" 
-            alt="Aimy" 
+            alt="Aimi" 
             className="w-10 h-10 rounded-full shadow-glow"
           />
-          <p className="text-sm text-gray-700">Manage your OkAimy experience</p>
+          <p className="text-sm text-gray-700">Manage your Hey Aimi experience</p>
         </div>
 
         {/* Tab Navigation */}
@@ -133,7 +133,7 @@ const ProfileHub = ({ userEmail }) => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex-1 px-6 py-4 text-center font-medium transition-all ${
                   activeTab === tab.id
-                    ? 'bg-okaimy-mint-50 text-primary border-b-2 border-primary'
+                    ? 'bg-aimi-lumo-green-50 text-primary border-b-2 border-primary'
                     : 'text-gray-700 hover:bg-gray-50'
                 }`}
               >
@@ -207,7 +207,7 @@ const OverviewTab = ({ data, userProfile }) => {
   return (
     <div className="space-y-6">
       {/* User Info Card */}
-      <Card variant="gradient" padding="lg" className="border border-okaimy-mint-100">
+      <Card variant="gradient" padding="lg" className="border border-aimi-lumo-green-100">
         <h2 className="text-2xl font-bold text-gray-800 mb-2">{user_info.email}</h2>
         {user_info.role && (
           <p className="text-lg text-gray-700 mb-4">
@@ -215,10 +215,10 @@ const OverviewTab = ({ data, userProfile }) => {
           </p>
         )}
         {aimy_understanding && (
-          <div className="mt-4 p-4 bg-white rounded-lg border border-okaimy-mint-200">
+          <div className="mt-4 p-4 bg-white rounded-lg border border-aimi-lumo-green-200">
             <h3 className="font-semibold text-primary mb-2 flex items-center">
-              <img src="/AiMy_LUMO_01.png" alt="Aimy" className="w-6 h-6 rounded-full mr-2" />
-              Aimy's Understanding of You
+              <img src="/AiMy_LUMO_01.png" alt="Aimi" className="w-6 h-6 rounded-full mr-2" />
+              Aimi's Understanding of You
             </h3>
             <p className="text-gray-700 italic">{aimy_understanding}</p>
           </div>
@@ -284,8 +284,8 @@ const InsightsTab = ({ data, userEmail }) => {
   if (!data.insights) {
     return (
       <div className="text-center py-8">
-        <p className="text-gray-500 mb-4">Start using OkAimy to build your behavioral insights!</p>
-        <p className="text-sm text-gray-400">Take actions on emails, projects, and tasks to help Aimy learn your preferences.</p>
+        <p className="text-gray-500 mb-4">Start using Hey Aimi to build your behavioral insights!</p>
+        <p className="text-sm text-gray-400">Take actions on emails, projects, and tasks to help Aimi learn your preferences.</p>
       </div>
     );
   }
@@ -449,7 +449,7 @@ const IntegrationsTab = ({ data, userEmail }) => {
     <div className="space-y-4">
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-800 mb-2">Connected Services</h2>
-        <p className="text-gray-700">Manage which services OkAimy can access</p>
+        <p className="text-gray-700">Manage which services Hey Aimi can access</p>
       </div>
 
       {integrations.map((integration) => (
@@ -516,7 +516,7 @@ const SettingsTab = ({ userProfile, userEmail, onUpdate }) => {
     <div className="space-y-6">
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-800 mb-2">Settings & Preferences</h2>
-        <p className="text-gray-700">Customize how Aimy works for you</p>
+        <p className="text-gray-700">Customize how Aimi works for you</p>
       </div>
 
       {/* Embed AimySettings component */}
@@ -551,7 +551,7 @@ const SettingsTab = ({ userProfile, userEmail, onUpdate }) => {
 // Helper Components
 const StatCard = ({ icon, label, value, color }) => {
   const colorClasses = {
-    primary: 'bg-okaimy-mint-50 border-okaimy-mint-200 text-primary',
+    primary: 'bg-aimi-lumo-green-50 border-aimi-lumo-green-200 text-primary',
     accent: 'bg-emerald-50 border-emerald-200 text-accent',
     purple: 'bg-purple-50 border-purple-200 text-purple-700',
     orange: 'bg-orange-50 border-orange-200 text-orange-700',

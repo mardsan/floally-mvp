@@ -22,7 +22,7 @@ class EmailResponseRequest(BaseModel):
 
 @router.post("/standup")
 async def generate_standup(request: StandupRequest):
-    """Generate daily stand-up using Claude (Aimy)"""
+    """Generate daily stand-up using Claude (Aimi)"""
     try:
         # Check for API key
         api_key = os.getenv("ANTHROPIC_API_KEY")
@@ -47,7 +47,7 @@ User Profile:
         
         # Build context from messages and events
         context = f"""
-You are Aimy, the user's calm and competent AI teammate, helping them plan their day as a member of their operations team.
+You are Aimi, the user's calm and competent AI teammate, helping them plan their day as a member of their operations team.
 {user_context_text}
 
 Today's Gmail messages ({len(request.messages)} total):
@@ -116,7 +116,7 @@ async def analyze_emails(request: EmailAnalysisRequest):
         ])
         
         context = f"""
-You are Aimy, the user's intelligent email teammate. Analyze these emails and identify which ones are IMPORTANT and require action or response.
+You are Aimi, the user's intelligent email teammate. Analyze these emails and identify which ones are IMPORTANT and require action or response.
 
 **PRIORITIZATION RULES:**
 1. ALWAYS mark emails as important if they have "Already Starred: True" or "Gmail Important: True" - these are user-designated priorities
@@ -192,7 +192,7 @@ async def generate_email_response(request: EmailResponseRequest):
         
         email = request.email
         context = f"""
-You are Aimy, helping draft a professional email response.
+You are Aimi, helping draft a professional email response.
 
 Original Email:
 From: {email.get('from', 'Unknown')}
@@ -308,7 +308,7 @@ async def generate_project_plan(request: ProjectPlanRequest):
             
         client = anthropic.Anthropic(api_key=api_key)
         
-        prompt = f"""You are Aimy, an AI strategic partner helping someone plan their project.
+        prompt = f"""You are Aimi, an AI strategic partner helping someone plan their project.
 
 TODAY'S DATE: {datetime.now().strftime('%Y-%m-%d')}
 
@@ -468,7 +468,7 @@ async def generate_goal_dates(request: GoalDatesRequest):
         
         goals_list = "\n".join([f"{i+1}. {goal}" for i, goal in enumerate(request.goals)])
         
-        prompt = f"""You are Aimy, helping schedule realistic deadlines for project goals.
+        prompt = f"""You are Aimi, helping schedule realistic deadlines for project goals.
 
 TODAY'S DATE: {current_date}
 

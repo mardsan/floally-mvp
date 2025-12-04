@@ -49,7 +49,7 @@
 **Files Changed**: 1 file (61 insertions, 61 deletions)
 - Main content area: Reduced padding `p-3 md:p-6` (was `p-4 md:p-6`)
 - All gaps: Tighter spacing `gap-4 md:gap-6` (prevents awkward wrapping)
-- User/Aimy avatars: Smaller on mobile (w-12 h-12 vs w-16 h-16)
+- User/Aimi avatars: Smaller on mobile (w-12 h-12 vs w-16 h-16)
 - Avatar rings: Thinner on mobile (ring-2 vs ring-4)
 - All flex containers: Added `min-w-0` to prevent overflow
 - All text: Added `truncate` where appropriate
@@ -75,7 +75,7 @@
 - Modal structure: Sticky header + scrollable content + sticky footer
 - Form inputs: Responsive padding and text sizes
 - Grid layouts: `grid-cols-1 sm:grid-cols-2` for mobile stacking
-- Aimy Wizard modal: Mobile-optimized with bottom sheet style
+- Aimi Wizard modal: Mobile-optimized with bottom sheet style
 
 **ProfileSettings improvements**:
 - Full-screen on mobile with 95vh height
@@ -163,7 +163,7 @@
    - Success criteria and testing strategy
 
 2. **DESIGN_SYSTEM_COMPLETE.md**
-   - Documentation of OkAimy design system v0.1.2
+   - Documentation of Hey Aimi design system v0.1.2
    - Component library overview
 
 3. **CHAT_SESSION_NOV12_2025.md**
@@ -195,7 +195,7 @@
   - Bottom sheet modal for editing
   - Sticky header/footer modal structure
   - Responsive form layouts
-  - Aimy Wizard mobile optimization
+  - Aimi Wizard mobile optimization
 
 ### ProfileSettings.jsx
 - **Lines modified**: ~100 lines
@@ -217,7 +217,7 @@
 - **xl**: 1280px (large desktops)
 - **2xl**: 1536px (extra large screens)
 
-### Color Palette (OkAimy)
+### Color Palette (Hey Aimi)
 - **Primary**: `okaimy-mint` (#14b8a6)
 - **Secondary**: `okaimy-emerald`
 - **Gradients**: `from-okaimy-mint-50 to-okaimy-emerald-50`

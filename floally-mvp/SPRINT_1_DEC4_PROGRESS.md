@@ -29,6 +29,6 @@
 - **Event Types:** 50+
 - **Lines Added:** ~1,200
 
-### 🚀 Next: Sprint 2 - Aimy's Memory System + Gmail Intelligence
+### 🚀 Next: Sprint 2 - Aimi's Memory System + Gmail Intelligence
 
 See NEXT_STEPS.md for full roadmap.

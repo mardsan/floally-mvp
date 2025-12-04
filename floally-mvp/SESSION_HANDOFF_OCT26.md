@@ -27,14 +27,14 @@ railway run python create_trusted_senders_table.py
 ```
 
 ### 2. **Vercel Deployment Issues** (BLOCKING FRONTEND UPDATES)
-**Problem**: Website stuck at "Loading OkAimy..." screen on both:
+**Problem**: Website stuck at "Loading Hey Aimi..." screen on both:
 - www.okaimy.com (custom domain)
 - floally-mvp.vercel.app (Vercel domain)
 
 **Expected vs Actual**:
 - ❌ Should show: 2-column layout (Projects + Calendar), full-width Messages module
 - ❌ Should show: Manual "Analyze Messages" button (no auto-refresh)
-- ❌ Currently shows: White screen with "Loading OkAimy..." text
+- ❌ Currently shows: White screen with "Loading Hey Aimi..." text
 
 **Action Required Tomorrow**:
 1. Check Vercel build logs: https://vercel.com/mardsan/floally-mvp/deployments
@@ -58,7 +58,7 @@ railway run python create_trusted_senders_table.py
 - ✅ AI summarization with Claude Haiku (2-3 sentence summaries)
 - ✅ Full processing pipeline: download → extract → summarize → integrate
 - ✅ Sender trust management API endpoints
-- ✅ Integration with "Let Aimy respond" draft generation
+- ✅ Integration with "Let Aimi respond" draft generation
 
 **Files Changed**:
 - `backend/app/models/trusted_sender.py` (NEW)
@@ -96,7 +96,7 @@ railway run python create_trusted_senders_table.py
 
 ### Attachment Processing Flow
 ```
-User clicks "Let Aimy respond" on email with PDF
+User clicks "Let Aimi respond" on email with PDF
     ↓
 MessageDetailPopup detects attachments
     ↓
@@ -173,7 +173,7 @@ CREATE TABLE trusted_senders (
 2. Link project: `cd backend && railway link`
 3. Run migration: `railway run python create_trusted_senders_table.py`
 4. Verify: Check Railway dashboard → PostgreSQL → Data tab for `trusted_senders` table
-5. Test: Try "Let Aimy respond" with PDF attachment at www.okaimy.com
+5. Test: Try "Let Aimi respond" with PDF attachment at www.okaimy.com
 
 ### Priority 2: Fix Vercel Deployment (30 min)
 1. Check Vercel dashboard deployment logs
@@ -190,7 +190,7 @@ CREATE TABLE trusted_senders (
 Once database migration is complete:
 1. Send test email with PDF to your Gmail
 2. Open Messages module → click email
-3. Click "Let Aimy respond"
+3. Click "Let Aimi respond"
 4. Verify consent prompt appears with file list
 5. Click "Yes, Remember Choice"
 6. Confirm PDF content summarized in draft
@@ -226,7 +226,7 @@ Once Vercel is fixed:
 - Upgrade to Claude Sonnet for higher quality responses
 
 ### User Requests for Later:
-- "I'd like Aimy to review the contents of the PDF/other attachments" ✅ DONE
+- "I'd like Aimi to review the contents of the PDF/other attachments" ✅ DONE
 - "Stop auto-refreshing messages every time I reload the page" ✅ DONE
 - "Need more space for Messages module" ✅ DONE (needs deployment fix)
 
@@ -271,7 +271,7 @@ Tomorrow's session is successful when:
 - ✅ Dashboard shows 2-column layout (Projects + Calendar)
 - ✅ Messages module is full-width below Projects/Calendar
 - ✅ "Analyze Messages" button works (no auto-refresh)
-- ✅ "Let Aimy respond" works with PDF attachments
+- ✅ "Let Aimi respond" works with PDF attachments
 - ✅ Consent prompt appears for first-time senders
 - ✅ PDF content is summarized in email drafts
 - ✅ trusted_senders table exists in Railway database
@@ -285,7 +285,7 @@ Tomorrow's session is successful when:
 - Attachment processing logic is complete and working in code
 - Only blockers are infrastructure/deployment issues, not code issues
 - User preferred "teammate" language throughout UI (completed earlier)
-- "Let Aimy respond" uses user's profile context for personalized drafts
+- "Let Aimi respond" uses user's profile context for personalized drafts
 - Security features implemented: file type checks, size limits, sender trust
 
 ---

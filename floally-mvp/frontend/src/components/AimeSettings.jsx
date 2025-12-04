@@ -36,7 +36,7 @@ const AimySettings = ({ userProfile, aimeInsights, onEdit, onClose, standalone =
               <div className="w-12 h-12 rounded-full overflow-hidden shadow-md ring-2 ring-teal-100">
                 <img 
                   src="/AiMy_LUMO_01.png" 
-                  alt="Aimy" 
+                  alt="Aimi" 
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     e.target.style.display = 'none';
@@ -45,8 +45,8 @@ const AimySettings = ({ userProfile, aimeInsights, onEdit, onClose, standalone =
                 />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-slate-900">Aimy Settings</h2>
-                <p className="text-sm text-slate-700">How Aimy understands you</p>
+                <h2 className="text-2xl font-bold text-slate-900">Aimi Settings</h2>
+                <p className="text-sm text-slate-700">How Aimi understands you</p>
               </div>
             </div>
             <button
@@ -61,19 +61,19 @@ const AimySettings = ({ userProfile, aimeInsights, onEdit, onClose, standalone =
         {/* Content */}
         <div className="p-8 space-y-6">
           
-          {/* Aimy's Understanding */}
+          {/* Aimi's Understanding */}
           <div className="bg-gradient-to-br from-teal-50 to-emerald-50 rounded-xl p-6 border" style={{borderColor: '#dafef4'}}>
             <div className="flex items-start gap-3 mb-3">
               <div className="w-10 h-10 rounded-full overflow-hidden shadow-sm ring-2 ring-white flex-shrink-0">
                 <img 
                   src="/AiMy_LUMO_01.png" 
-                  alt="Aimy" 
+                  alt="Aimi" 
                   className="w-full h-full object-cover"
                   onError={(e) => e.target.style.display = 'none'}
                 />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold text-slate-900 mb-2">Aimy's Understanding</h3>
+                <h3 className="font-semibold text-slate-900 mb-2">Aimi's Understanding</h3>
                 <p className="text-sm text-slate-700 leading-relaxed">
                   {aimeInsights?.insight || "Loading..."}
                 </p>
@@ -150,7 +150,7 @@ const AimySettings = ({ userProfile, aimeInsights, onEdit, onClose, standalone =
           <div className="border-t pt-6" style={{borderColor: '#dafef4'}}>
             <h3 className="text-lg font-semibold text-slate-900 mb-3">Data & Privacy</h3>
             <p className="text-sm text-slate-700 mb-4">
-              Your profile and preferences are stored locally and used only to personalize Aimy's assistance. 
+              Your profile and preferences are stored locally and used only to personalize Aimi's assistance. 
               You can delete your data anytime.
             </p>
             <button className="text-sm text-red-600 hover:text-red-700 font-medium">

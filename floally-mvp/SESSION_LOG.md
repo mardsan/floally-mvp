@@ -36,7 +36,7 @@
 
 ### ✅ Daily Stand-up API Integration (commits 79fef78 - 0242824)
 **Features Completed:**
-- **Split-Panel Layout:** User tasks (left) + Aimy insights (right)
+- **Split-Panel Layout:** User tasks (left) + Aimi insights (right)
 - **API Endpoints:** Connected to /api/gmail/messages, /api/calendar/events, /api/ai/standup
 - **Refresh Functionality:** Fixed button to call loadStandup() instead of full page reload
 - **Data Structure:** Clean task titles, decisions array, autonomous_tasks array, daily summary cards

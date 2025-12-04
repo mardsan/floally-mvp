@@ -5,7 +5,7 @@ import './index.css'
 import App from './App.jsx'
 import { DEPLOYMENT_INFO } from './deployment-marker.js'
 
-console.log('🚀 OkAimy Deployment Info:', DEPLOYMENT_INFO);
+console.log('🚀 Hey Aimi Deployment Info:', DEPLOYMENT_INFO);
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

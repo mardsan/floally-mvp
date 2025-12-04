@@ -101,7 +101,7 @@
 - [ ] Channel badge [Gmail] at top-left
 - [ ] Importance indicator (color bar: red/orange/yellow/gray)
 - [ ] Better sender display (avatar + name + channel)
-- [ ] Aimy's summary (collapsible)
+- [ ] Aimi's summary (collapsible)
 - [ ] Quick action buttons (Reply, Archive, Snooze, More)
 - [ ] Thread indicator (if part of conversation)
 - [ ] Attachment indicator
@@ -413,7 +413,7 @@ class TeamsAdapter implements ChannelAdapter { ... }
 4. ✅ Add Gmail category tabs (done)
 5. ✅ Document vision (done)
 6. ✅ Sender Trust Management System (3-tier: TRUSTED/BLOCKED/ONE_TIME)
-7. ✅ Daily Stand-up API Integration (split-panel User/Aimy layout)
+7. ✅ Daily Stand-up API Integration (split-panel User/Aimi layout)
 8. ✅ Enhanced "The One Thing" (expandable details, status tracking, task swapping)
 9. 🔄 **Next: Test Daily Stand-up features thoroughly**
 10. 🔄 **Next: Redesign message card for universal use**
@@ -442,7 +442,7 @@ class TeamsAdapter implements ChannelAdapter { ... }
 - ✅ Keyboard shortcuts work great
 - ✅ Search finds what you need
 - ✅ Handles high volume (100+ emails)
-- ✅ You prefer using OkAimy over Gmail
+- ✅ You prefer using Hey Aimi over Gmail
 - ✅ No bugs or glitches
 - ✅ Ready to demo confidently
 

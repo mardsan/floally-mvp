@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import AttachmentConsentPrompt from './AttachmentConsentPrompt';
 
 const SIGNATURE_STYLES = [
-  { value: 'ai_assisted', label: '✨ From Me (with Aimy)', description: 'Your name with Aimy as your teammate' },
-  { value: 'as_aimy', label: '🤖 From Aimy (on my team)', description: 'Aimy responding on your behalf' },
+  { value: 'ai_assisted', label: '✨ From Me (with Aimi)', description: 'Your name with Aimi as your teammate' },
+  { value: 'as_aimy', label: '🤖 From Aimi (on my team)', description: 'Aimi responding on your behalf' },
   { value: 'no_attribution', label: '👤 From Me Only', description: 'No mention of AI' }
 ];
 
@@ -119,9 +119,9 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
       
       // Record that draft was generated
       if (processedAttachments) {
-        console.log(`✨ Aimy generated draft response with ${processedAttachments.length} attachment(s)`);
+        console.log(`✨ Aimi generated draft response with ${processedAttachments.length} attachment(s)`);
       } else {
-        console.log('✨ Aimy generated draft response');
+        console.log('✨ Aimi generated draft response');
       }
       
     } catch (error) {
@@ -177,7 +177,7 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
     console.log('🚫 Sender blocked - attachments will never be processed');
     setShowAttachmentConsent(false);
     // Don't generate draft - user blocked this sender
-    alert('🚫 Sender blocked. Aimy will never process attachments from this sender.\n\nYou can manage blocked senders in your Profile settings.');
+    alert('🚫 Sender blocked. Aimi will never process attachments from this sender.\n\nYou can manage blocked senders in your Profile settings.');
   };
 
   const handleApproveDraft = async (approved) => {
@@ -204,9 +204,9 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
       });
       
       if (approved) {
-        console.log('✅ Draft approved - Aimy is learning!');
+        console.log('✅ Draft approved - Aimi is learning!');
       } else {
-        console.log('❌ Draft rejected - Aimy will improve');
+        console.log('❌ Draft rejected - Aimi will improve');
       }
       
     } catch (error) {
@@ -389,8 +389,8 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
                 </>
               ) : (
                 <>
-                  <span className="hidden sm:inline">✨ Let Aimy (teammate) respond</span>
-                  <span className="sm:hidden">✨ Aimy</span>
+                  <span className="hidden sm:inline">✨ Let Aimi (teammate) respond</span>
+                  <span className="sm:hidden">✨ Aimi</span>
                 </>
               )}
             </button>
@@ -486,7 +486,7 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
                             }}
                             className="px-3 py-1.5 text-sm font-medium bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg transition-colors shadow-sm"
                           >
-                            ✨ Review with Aimy
+                            ✨ Review with Aimi
                           </button>
                         </div>
                       </div>
@@ -501,7 +501,7 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
                   <div className="flex items-start gap-3">
                     <span className="text-2xl">💡</span>
                     <div>
-                      <h4 className="font-semibold text-teal-900 mb-1">Aimy's Analysis</h4>
+                      <h4 className="font-semibold text-teal-900 mb-1">Aimi's Analysis</h4>
                       <p className="text-sm text-teal-800">{message.aiReason}</p>
                       {message.suggestedAction && (
                         <div className="mt-2">
@@ -522,7 +522,7 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
                   <span>Teach Your Teammate</span>
                 </h4>
                 <p className="text-sm text-gray-700 mb-3">
-                  Help Aimy learn how your team operates by rating this message:
+                  Help Aimi learn how your team operates by rating this message:
                 </p>
                 <div className="flex gap-2 flex-wrap">
                   <button
@@ -636,7 +636,7 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
                         console.log('User modified AI draft');
                       }
                     }}
-                    placeholder="Type your reply here, or click 'Let Aimy (teammate) respond' to generate a draft..."
+                    placeholder="Type your reply here, or click 'Let Aimi (teammate) respond' to generate a draft..."
                     className="w-full px-4 py-3 border border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                     rows={aiDraft ? 12 : 6}
                   />
@@ -675,7 +675,7 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
                         <button
                           onClick={() => handleApproveDraft(true)}
                           className="px-4 py-2 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg font-medium transition-colors"
-                          title="Approve draft (helps Aimy learn)"
+                          title="Approve draft (helps Aimi learn)"
                         >
                           ✅
                         </button>
@@ -686,7 +686,7 @@ function MessageDetailPopup({ message, user, onClose, onFeedback }) {
                             setReplyText('');
                           }}
                           className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg font-medium transition-colors"
-                          title="Reject draft (helps Aimy learn)"
+                          title="Reject draft (helps Aimi learn)"
                         >
                           ❌
                         </button>

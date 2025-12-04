@@ -1,7 +1,7 @@
 import React from 'react';
 
 /**
- * Reusable Card component with OkAimy brand styling
+ * Reusable Card component with Hey Aimi brand styling
  * Standardizes card patterns across the application
  * 
  * @param {string} variant - Card style: 'default', 'gradient', 'bordered', 'elevated'
@@ -29,17 +29,17 @@ const Card = ({
     lg: 'p-8'
   };
   
-  // Variant styles using OkAimy design system
+  // Variant styles using Hey Aimi design system
   const variantStyles = {
     default: 'bg-white border border-gray-200 shadow-sm',
-    gradient: 'bg-gradient-to-br from-okaimy-mint-50 to-okaimy-emerald-50 border-2 border-okaimy-mint-200',
-    bordered: 'bg-white border-2 border-okaimy-mint-200',
-    elevated: 'bg-white shadow-lg border border-okaimy-mint-100'
+    gradient: 'bg-gradient-to-br from-aimi-lumo-green-50 to-aimi-glow-coral-50 border-2 border-aimi-lumo-green-200',
+    bordered: 'bg-white border-2 border-aimi-lumo-green-200',
+    elevated: 'bg-white shadow-lg border border-aimi-lumo-green-100'
   };
   
   // Hover effects
   const hoverStyles = hover 
-    ? 'hover:shadow-xl hover:-translate-y-1 hover:border-okaimy-mint-300 cursor-pointer' 
+    ? 'hover:shadow-xl hover:-translate-y-1 hover:border-aimi-lumo-green-300 cursor-pointer' 
     : '';
   
   // Combine all styles

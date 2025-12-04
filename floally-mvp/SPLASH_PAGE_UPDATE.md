@@ -5,7 +5,7 @@
 
 ## Enhancement: Welcoming First Impression
 
-Added Aimy's profile picture to the login/splash page to create a warm, personal welcome for new users.
+Added Aimi's profile picture to the login/splash page to create a warm, personal welcome for new users.
 
 ---
 
@@ -15,7 +15,7 @@ Added Aimy's profile picture to the login/splash page to create a warm, personal
 ```
 ┌─────────────────────────────┐
 │                             │
-│      [OkAimy Logo]          │
+│      [Hey Aimi Logo]          │
 │                             │
 │   "Your AI-powered..."      │
 │                             │
@@ -29,11 +29,11 @@ Added Aimy's profile picture to the login/splash page to create a warm, personal
 ┌─────────────────────────────┐
 │                             │
 │       ╭─────────╮           │
-│       │  Aimy   │  ← Avatar │
+│       │  Aimi   │  ← Avatar │
 │       │   🤖    │    (132px)│
 │       ╰─────────╯           │
 │                             │
-│      [OkAimy Logo]          │
+│      [Hey Aimi Logo]          │
 │                             │
 │   "Your AI-powered..."      │
 │                             │
@@ -46,7 +46,7 @@ Added Aimy's profile picture to the login/splash page to create a warm, personal
 
 ## Design Details
 
-### Aimy's Avatar:
+### Aimi's Avatar:
 - **Size:** 128x128px (w-32 h-32)
 - **Shape:** Circular with rounded-full
 - **Effects:**
@@ -54,7 +54,7 @@ Added Aimy's profile picture to the login/splash page to create a warm, personal
   - Ring: 4px teal ring with 70% opacity
   - Ring offset: 4px with white background
 - **Fallback:** Gradient circle with "A" letter if image fails
-- **Image:** `/okaimy-pfp-01.png`
+- **Image:** `/aimi-pfp-01.png`
 
 ### Positioning:
 - Centered above the logo
@@ -62,22 +62,22 @@ Added Aimy's profile picture to the login/splash page to create a warm, personal
 - Creates visual hierarchy: Avatar → Logo → Description → CTA
 
 ### User Experience Impact:
-1. **Immediate personification** - Users see Aimy before anything else
+1. **Immediate personification** - Users see Aimi before anything else
 2. **Sets expectations** - "This is an AI assistant, not just a tool"
 3. **Warmth & approachability** - Avatar creates connection
-4. **Brand consistency** - Same Aimy they'll interact with throughout
+4. **Brand consistency** - Same Aimi they'll interact with throughout
 
 ---
 
 ## Technical Implementation
 
 ```jsx
-{/* Aimy's Avatar */}
+{/* Aimi's Avatar */}
 <div className="flex justify-center mb-6">
   <div className="w-32 h-32 rounded-full overflow-hidden shadow-2xl ring-4 ring-teal-200/70 ring-offset-4 ring-offset-white/80">
     <img 
-      src="/okaimy-pfp-01.png" 
-      alt="Aimy" 
+      src="/aimi-pfp-01.png" 
+      alt="Aimi" 
       className="w-full h-full object-cover"
       onError={(e) => {
         // Fallback to gradient with "A" letter
@@ -103,11 +103,11 @@ Added Aimy's profile picture to the login/splash page to create a warm, personal
 ## Combined Recent Updates
 
 All deploying together:
-1. ✅ Complete OkAimy/Aimy rebrand
+1. ✅ Complete Hey Aimi/Aimi rebrand
 2. ✅ New insights API endpoints
-3. ✅ Avatar updated to okaimy-pfp-01.png
-4. ✅ **Login splash page with Aimy welcome**
+3. ✅ Avatar updated to aimi-pfp-01.png
+4. ✅ **Login splash page with Aimi welcome**
 
 ---
 
-**Result:** New users will be greeted by Aimy immediately, setting a warm, personal tone for the entire experience. 👋
+**Result:** New users will be greeted by Aimi immediately, setting a warm, personal tone for the entire experience. 👋

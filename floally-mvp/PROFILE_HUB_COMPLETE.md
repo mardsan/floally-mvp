@@ -10,7 +10,7 @@
 
 ### ProfileHub Component - Your Command Center
 
-A comprehensive 4-tab dashboard that brings together all aspects of your OkAimy experience:
+A comprehensive 4-tab dashboard that brings together all aspects of your Hey Aimi experience:
 
 ```
 ┌─────────────────────────────────────────┐
@@ -18,7 +18,7 @@ A comprehensive 4-tab dashboard that brings together all aspects of your OkAimy 
 ├─────────────────────────────────────────┤
 │                                         │
 │   Your personalized dashboard with:     │
-│   • User profile & Aimy's understanding │
+│   • User profile & Aimi's understanding │
 │   • Behavioral analytics & insights     │
 │   • Connected services management       │
 │   • Settings & preferences              │
@@ -34,7 +34,7 @@ A comprehensive 4-tab dashboard that brings together all aspects of your OkAimy 
 
 **What it shows:**
 - User email & role
-- Aimy's personalized understanding of you
+- Aimi's personalized understanding of you
 - Quick stats grid:
   - 📧 Total actions taken
   - 📈 Recent actions (last 7 days)
@@ -267,7 +267,7 @@ confidence = min(100, (total_actions / 50) * 100)
 ### 1. Fresh User Journey:
 
 ```
-1. Visit app → See splash page with Aimy's avatar
+1. Visit app → See splash page with Aimi's avatar
 2. Click "Connect Google Account"
 3. OAuth flow → Google consent
 4. Return to app → Onboarding starts
@@ -286,7 +286,7 @@ confidence = min(100, (total_actions / 50) * 100)
 2. Dashboard loads with emails
 3. Click "Hub" in header
 4. ProfileHub opens with full data:
-   - Overview: Stats & Aimy's understanding
+   - Overview: Stats & Aimi's understanding
    - Insights: Charts & patterns
    - Integrations: Connected services
    - Settings: Full profile
@@ -297,7 +297,7 @@ confidence = min(100, (total_actions / 50) * 100)
 **Overview:**
 - ✅ Email displays correctly
 - ✅ Role shows from profile
-- ✅ Aimy's understanding is personalized
+- ✅ Aimi's understanding is personalized
 - ✅ Stats are accurate
 - ✅ Onboarding status correct
 
@@ -419,7 +419,7 @@ confidence = min(100, (total_actions / 50) * 100)
 
 ## 🙏 Summary
 
-**ProfileHub is your new home base in OkAimy!**
+**ProfileHub is your new home base in Hey Aimi!**
 
 A beautiful, functional dashboard that brings together:
 - Who you are (Overview)

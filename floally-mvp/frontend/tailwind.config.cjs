@@ -24,53 +24,80 @@ module.exports = {
           'mint-dark': '#b8f5e8',
           'mint-light': '#e8fef9',
         },
-        // New OkAimy Brand Colors
-        'okaimy': {
-          // Primary mint green palette
-          'mint': {
-            50: '#f0fdfa',
-            100: '#ccfbf1',
-            200: '#99f6e4',
-            300: '#5eead4',
-            400: '#2dd4bf',
-            500: '#14b8a6',  // Primary brand color
-            600: '#0d9488',
-            700: '#0f766e',
-            800: '#115e59',
-            900: '#134e4a',
+        // Hey Aimi LUMO Brand Colors
+        'aimi': {
+          // LUMO Green - Primary
+          'lumo-green': {
+            50: '#f0fdfb',
+            100: '#ccfbf4',
+            200: '#99f6ea',
+            300: '#65E6CF',  // Primary LUMO Green
+            400: '#3dd5bf',
+            500: '#23c4b0',
+            600: '#1a9d8f',
+            700: '#177e73',
+            800: '#14635c',
+            900: '#12514c',
           },
-          // Emerald accent
-          'emerald': {
-            50: '#ecfdf5',
-            100: '#d1fae5',
-            200: '#a7f3d0',
-            300: '#6ee7b7',
-            400: '#34d399',
-            500: '#10b981',
-            600: '#059669',
-            700: '#047857',
-            800: '#065f46',
-            900: '#064e3b',
+          // Aurora Blue - Secondary
+          'aurora-blue': {
+            50: '#f0fbff',
+            100: '#e0f6ff',
+            200: '#b9edff',
+            300: '#3DC8F6',  // Aurora Blue
+            400: '#29b6e3',
+            500: '#1a9dca',
+            600: '#147ea6',
+            700: '#116586',
+            800: '#0f526e',
+            900: '#0d435b',
           },
-          // Teal secondary
-          'teal': {
-            50: '#f0fdfa',
-            100: '#ccfbf1',
-            200: '#99f6e4',
-            300: '#5eead4',
-            400: '#2dd4bf',
-            500: '#14b8a6',
-            600: '#0d9488',
-            700: '#0f766e',
-            800: '#115e59',
-            900: '#134e4a',
+          // Glow Coral - Accent
+          'glow-coral': {
+            50: '#fff4f2',
+            100: '#ffe8e5',
+            200: '#ffc9c3',
+            300: '#FF7C72',  // Glow Coral
+            400: '#ff5b50',
+            500: '#f24438',
+            600: '#d93025',
+            700: '#b72520',
+            800: '#97201d',
+            900: '#7d1e1c',
+          },
+          // Deep Slate - Dark
+          'deep-slate': {
+            50: '#f5f8f7',
+            100: '#e6eded',
+            200: '#d0dbda',
+            300: '#adbdbc',
+            400: '#819d9c',
+            500: '#638281',
+            600: '#506968',
+            700: '#435656',
+            800: '#183A3A',  // Deep Slate
+            900: '#142e2e',
+          },
+          // Soft Ivory - Light
+          'soft-ivory': {
+            50: '#F6F8F7',  // Soft Ivory
+            100: '#f1f4f3',
+            200: '#e5ebe9',
+            300: '#d3dcd9',
+            400: '#b9c6c3',
+            500: '#9dadaa',
+            600: '#7f8f8c',
+            700: '#677572',
+            800: '#56615f',
+            900: '#495350',
           },
         },
         // Quick aliases for common uses
-        'primary': '#14b8a6',      // okaimy-mint-500
-        'primary-dark': '#0d9488',  // okaimy-mint-600
-        'primary-light': '#5eead4', // okaimy-mint-300
-        'accent': '#10b981',        // okaimy-emerald-500
+        'primary': '#65E6CF',       // LUMO Green
+        'primary-dark': '#23c4b0',  // LUMO Green 500
+        'primary-light': '#ccfbf4', // LUMO Green 100
+        'accent': '#3DC8F6',        // Aurora Blue
+        'coral': '#FF7C72',         // Glow Coral
       },
       fontFamily: {
         'sans': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
@@ -146,8 +173,9 @@ module.exports = {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'okaimy-gradient': 'linear-gradient(135deg, #14b8a6 0%, #10b981 100%)',
-        'okaimy-gradient-soft': 'linear-gradient(135deg, #f0fdfa 0%, #d1fae5 100%)',
+        'aimi-gradient': 'linear-gradient(135deg, #65E6CF 0%, #3DC8F6 100%)',
+        'aimi-gradient-soft': 'linear-gradient(135deg, #F6F8F7 0%, #ccfbf4 100%)',
+      },
       },
     },
   },

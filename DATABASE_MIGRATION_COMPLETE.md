@@ -2,7 +2,7 @@
 
 ## What We Did
 
-Successfully migrated OkAimy from file-based storage to PostgreSQL database for persistent user authentication and profiles.
+Successfully migrated Hey Aimi from file-based storage to PostgreSQL database for persistent user authentication and profiles.
 
 ## Changes Made
 

@@ -1,4 +1,4 @@
-# OkAimy UI Standards & Conventions
+# Hey Aimi UI Standards & Conventions
 
 **Last Updated:** November 30, 2025  
 **Version:** 1.0.0

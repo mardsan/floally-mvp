@@ -29,7 +29,7 @@ Icons copied from Prompt template's 650+ duotone icon library:
 | 🎯 | `target.svg` | design/Target.svg | "The One Thing" feature |
 | 🤝 | `partnership.svg` | communication/Add-user.svg | Daily Standup Partnership |
 | ✨ | `star.svg` | general/Star.svg | Nothing Falls Through |
-| ✓ | `check.svg` | navigation/Check.svg | Aimy's task checkmarks |
+| ✓ | `check.svg` | navigation/Check.svg | Aimi's task checkmarks |
 | 📧 | `Mail.svg` | communication/Mail.svg | Email/inbox features |
 | 💬 | `chat.svg` | communication/Chat#1.svg | Messaging features |
 | 📅 | `calendar.svg` | code/Time-schedule.svg | Calendar integration |
@@ -77,7 +77,7 @@ Icons copied from Prompt template's 650+ duotone icon library:
 
 1. **Professional Appearance:** SVG icons look sharper and more polished than emoji
 2. **Consistent Sizing:** All icons perfectly sized with Tailwind classes
-3. **Brand Integration:** Icons colored with OkAimy mint/teal palette using `text-primary` and `text-okaimy-mint-500`
+3. **Brand Integration:** Icons colored with Hey Aimi mint/teal palette using `text-primary` and `text-okaimy-mint-500`
 4. **Better Alignment:** Centered icons with flexbox for perfect layout
 5. **Scalability:** SVG icons remain crisp at any size (emoji can be blurry when enlarged)
 
@@ -91,7 +91,7 @@ Icons copied from Prompt template's 650+ duotone icon library:
 ### Themability
 - Duotone SVG icons support color customization
 - Can apply any Tailwind color class
-- Consistent with OkAimy design system
+- Consistent with Hey Aimi design system
 
 ### Maintainability
 - Centralized icon management in one directory
@@ -149,7 +149,7 @@ All ready to copy to `/public/icons/` as needed!
 This update is ready to deploy to production. Once deployed:
 
 1. Landing page will show professional icons instead of emoji
-2. Icons will be brand-colored with OkAimy mint/teal
+2. Icons will be brand-colored with Hey Aimi mint/teal
 3. Icon system will be available for use in all components
 4. Future icon additions are as simple as copying SVG files
 

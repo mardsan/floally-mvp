@@ -35,7 +35,7 @@
 - Updated color scheme from blue/green to primary/accent
 - Updated ActionBar component with Icon integration
 - Added icon mapping for all action types (star, note, chat, Mail, check)
-- Applied OkAimy color palette throughout
+- Applied Hey Aimi color palette throughout
 
 **Technical Details:**
 ```jsx
@@ -79,7 +79,7 @@
 
 **Deployment:**
 - Commit: 79b5e6d
-- Message: "feat: Complete UI redesign with OkAimy design system v0.1.2"
+- Message: "feat: Complete UI redesign with Hey Aimi design system v0.1.2"
 - Status: Successfully pushed to main and deployed to production
 
 ### 5. Documentation Creation
@@ -114,7 +114,7 @@
 - **Icon Component:** 9 SVG icons from Prompt template
 - **Button Component:** 5 variants with full feature set
 - **Card Component:** 4 variants with sub-components
-- **Color System:** OkAimy mint/teal palette applied throughout
+- **Color System:** Hey Aimi mint/teal palette applied throughout
 - **Effects:** shadow-glow, transitions, hover states
 
 ### Code Quality

@@ -255,4 +255,4 @@ The `/api/calendar/events` endpoint automatically handles token refresh:
 **Estimated Time to Complete Setup:** 5 minutes  
 **Estimated Time to Test:** 2 minutes  
 
-Once Calendar API is enabled, you'll have full access to both Gmail and Calendar data for building OkAimy's intelligent features! 🚀
+Once Calendar API is enabled, you'll have full access to both Gmail and Calendar data for building Hey Aimi's intelligent features! 🚀

@@ -66,7 +66,7 @@ const EmailFeedback = ({ email, userEmail, onFeedbackComplete }) => {
   if (feedbackType) {
     return (
       <div className="flex items-center gap-2 px-3 py-2 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm">
-        ✅ Thanks! Aimy is learning your preferences.
+        ✅ Thanks! Aimi is learning your preferences.
       </div>
     );
   }
@@ -76,9 +76,9 @@ const EmailFeedback = ({ email, userEmail, onFeedbackComplete }) => {
       <button
         onClick={() => setShowFeedback(true)}
         className="text-xs text-slate-500 hover:text-teal-600 transition-all"
-        title="Help Aimy learn your preferences"
+        title="Help Aimi learn your preferences"
       >
-        💡 Help Aimy learn
+        💡 Help Aimi learn
       </button>
     );
   }
@@ -89,7 +89,7 @@ const EmailFeedback = ({ email, userEmail, onFeedbackComplete }) => {
         🤔 How would you categorize this email?
       </div>
       <div className="text-xs text-amber-700 mb-3">
-        Your feedback helps Aimy learn which emails matter most to you.
+        Your feedback helps Aimi learn which emails matter most to you.
       </div>
       <div className="flex flex-col gap-2">
         <button

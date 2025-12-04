@@ -1,7 +1,7 @@
 /**
  * useActivityLogger Hook
  * 
- * Automatic activity tracking for Aimy's learning system
+ * Automatic activity tracking for Aimi's learning system
  * 
  * Usage:
  * ```

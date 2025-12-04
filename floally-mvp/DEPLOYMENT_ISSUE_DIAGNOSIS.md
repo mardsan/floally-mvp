@@ -163,7 +163,7 @@ The `--force` flag bypasses all caches.
 
 3. **Open DevTools (F12)**
    - Go to Console tab
-   - Look for: `🚀 OkAimy Deployment Info: {timestamp: "...", version: "0.0.4", feature: "..."}`
+   - Look for: `🚀 Hey Aimi Deployment Info: {timestamp: "...", version: "0.0.4", feature: "..."}`
 
 4. **Check Network Tab**
    - Reload page

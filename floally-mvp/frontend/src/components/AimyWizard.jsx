@@ -57,7 +57,7 @@ function AimyWizard({ projectDescription, onGenerated, onClose }) {
           <div className="flex items-center justify-between">
             <div className="flex-1 min-w-0 pr-2">
               <h2 className="text-lg md:text-2xl font-bold text-white flex items-center gap-2">
-                🪄 Aimy Project Wizard
+                🪄 Aimi Project Wizard
               </h2>
               <p className="text-sm md:text-base text-teal-50 mt-1">Your AI teammate is ready to plan your project</p>
             </div>
@@ -82,7 +82,7 @@ function AimyWizard({ projectDescription, onGenerated, onClose }) {
 
               <div className="bg-teal-50 border border-teal-200 rounded-lg p-3 md:p-4">
                 <p className="text-xs md:text-sm text-gray-700">
-                  💡 <strong>What Aimy will generate:</strong>
+                  💡 <strong>What Aimi will generate:</strong>
                 </p>
                 <ul className="mt-2 space-y-1 text-xs md:text-sm text-gray-700 ml-4">
                   <li>• Enhanced project description</li>
@@ -105,12 +105,12 @@ function AimyWizard({ projectDescription, onGenerated, onClose }) {
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">
                     <div className="animate-spin rounded-full h-4 w-4 md:h-5 md:w-5 border-b-2 border-white"></div>
-                    <span className="hidden sm:inline">Aimy is thinking...</span>
+                    <span className="hidden sm:inline">Aimi is thinking...</span>
                     <span className="sm:hidden">Thinking...</span>
                   </span>
                 ) : (
                   <>
-                    <span className="hidden sm:inline">✨ Generate Project Plan with Aimy</span>
+                    <span className="hidden sm:inline">✨ Generate Project Plan with Aimi</span>
                     <span className="sm:hidden">✨ Generate Plan</span>
                   </>
                 )}

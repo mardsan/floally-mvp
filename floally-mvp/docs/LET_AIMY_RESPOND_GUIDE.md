@@ -1,7 +1,7 @@
-# ✨ Let Aimy (teammate) Respond - AI Email Draft Generation
+# ✨ Let Aimi (teammate) Respond - AI Email Draft Generation
 
 ## Overview
-"Let Aimy (teammate) Respond" is an intelligent email response drafting feature that learns your communication style and helps you respond faster while maintaining authenticity. Aimy works as your AI teammate, not just an assistant.
+"Let Aimi (teammate) Respond" is an intelligent email response drafting feature that learns your communication style and helps you respond faster while maintaining authenticity. Aimi works as your AI teammate, not just an assistant.
 
 ---
 
@@ -17,7 +17,7 @@
 
 You choose how to represent your AI teammate:
 
-#### **1. ✨ From Me (with Aimy)** - DEFAULT ⭐
+#### **1. ✨ From Me (with Aimi)** - DEFAULT ⭐
 ```
 Hi [Recipient],
 
@@ -27,7 +27,7 @@ Best,
 [Your Name]
 
 ---
-Composed with Aimy - my AI teammate at OkAimy
+Composed with Aimi - my AI teammate at Hey Aimi
 ```
 
 **Perfect For:**
@@ -39,26 +39,26 @@ Composed with Aimy - my AI teammate at OkAimy
 **Why It's Great:**
 - ✅ Maintains your personal voice
 - ✅ Shows you're tech-savvy and have a great team
-- ✅ Creates curiosity about OkAimy
+- ✅ Creates curiosity about Hey Aimi
 - ✅ Doesn't distract from message content
 - ✅ Positions AI as partner, not tool
 - ✅ Easy to remove if needed
 
 ---
 
-#### **2. 🤖 From Aimy (on my team)** - OVERT DELEGATION
+#### **2. 🤖 From Aimi (on my team)** - OVERT DELEGATION
 ```
 Hi [Recipient],
 
-This is Aimy, [Your Name]'s AI teammate. [He/She] asked me to help with this.
+This is Aimi, [Your Name]'s AI teammate. [He/She] asked me to help with this.
 
 [AI-generated response content]
 
 Best regards,
-Aimy (on behalf of [Your Name])
+Aimi (on behalf of [Your Name])
 
 ---
-Sent via OkAimy - Your AI Teammate for Productivity
+Sent via Hey Aimi - Your AI Teammate for Productivity
 www.okaimy.com
 ```
 
@@ -71,7 +71,7 @@ www.okaimy.com
 **Why Use It:**
 - ✅ Maximum honesty about AI involvement
 - ✅ Clear delegation signal (trusted teammate handling it)
-- ✅ Strong OkAimy promotion
+- ✅ Strong Hey Aimi promotion
 - ✅ Sets expectations appropriately
 - ✅ Great for automated workflows
 
@@ -120,23 +120,23 @@ This is the best balance because:
 
 1. **Honest**: Recipients know AI helped, but it's not jarring
 2. **Professional**: Maintains your personal brand and voice
-3. **Curious**: "What's OkAimy?" → viral growth potential
+3. **Curious**: "What's Hey Aimi?" → viral growth potential
 4. **Flexible**: Easy to edit/remove before sending
 5. **Trend-Forward**: Shows you're embracing modern tools
 
 ### **When to Use Each Style:**
 
-**Use "From Aimy" when:**
+**Use "From Aimi" when:**
 - You're overwhelmed and need to delegate
 - It's a newsletter or promotional inquiry
-- You want maximum OkAimy exposure
+- You want maximum Hey Aimi exposure
 - Recipient won't be surprised by AI
 
 **Use "AI-assisted" when:**
 - Normal professional communications
 - You want to maintain personal connection
 - Subtle attribution is acceptable
-- Building OkAimy awareness
+- Building Hey Aimi awareness
 
 **Use "No Attribution" when:**
 - Sensitive topics or relationships
@@ -146,7 +146,7 @@ This is the best balance because:
 
 ---
 
-## 🎓 How Aimy Learns Your Style
+## 🎓 How Aimi Learns Your Style
 
 ### **Training Data Sources:**
 
@@ -177,16 +177,16 @@ This is the best balance because:
 ### **Feedback Loop:**
 
 ```
-Draft Generated → User Reviews → Approve/Reject/Edit → Aimy Learns
+Draft Generated → User Reviews → Approve/Reject/Edit → Aimi Learns
 ```
 
 - **✅ Approve**: "This is great! Use this style again for this sender"
 - **❌ Reject**: "Not quite right, try something different next time"
-- **✏️ Edit then Send**: Aimy notices what you changed and adapts
+- **✏️ Edit then Send**: Aimi notices what you changed and adapts
 
 ### **Continuous Improvement:**
 
-The more you use "Let Aimy Respond," the better it gets at:
+The more you use "Let Aimi Respond," the better it gets at:
 - Matching your exact tone and style
 - Knowing what level of detail you prefer
 - Understanding your relationship with each contact
@@ -200,7 +200,7 @@ The more you use "Let Aimy Respond," the better it gets at:
 ### **Step 1: Open Message**
 Click any message in your Smart Messages module
 
-### **Step 2: Click "✨ Let Aimy Respond"**
+### **Step 2: Click "✨ Let Aimi Respond"**
 Purple gradient button in the header
 
 ### **Step 3: Choose Signature Style** (before first generation)
@@ -214,7 +214,7 @@ Examples:
 - "Reference the project proposal"
 
 ### **Step 5: Review Generated Draft**
-Aimy generates a complete response with:
+Aimi generates a complete response with:
 - Appropriate greeting
 - Addresses all points from original email
 - Your communication style and tone
@@ -230,16 +230,16 @@ Aimy generates a complete response with:
 **Option B: Edit then Send**
 - Modify the draft text
 - Click "📤 Send Reply"
-- Aimy learns from your edits
+- Aimi learns from your edits
 
 **Option C: Approve** (without sending)
 - Click ✅ button
-- Tells Aimy "this is good"
+- Tells Aimi "this is good"
 - Improves future drafts
 
 **Option D: Reject**
 - Click ❌ button
-- Tells Aimy "try differently"
+- Tells Aimi "try differently"
 - Draft discarded
 
 **Option E: Regenerate**
@@ -259,7 +259,7 @@ Go to Profile Settings → AI Preferences → Communication Tone
 - **Concise**: Brief, to-the-point
 
 ### **2. Train Consistently**
-Use Approve/Reject buttons for the first 10-20 drafts to calibrate Aimy
+Use Approve/Reject buttons for the first 10-20 drafts to calibrate Aimi
 
 ### **3. Use Custom Context**
 Specific instructions improve quality:
@@ -268,7 +268,7 @@ Specific instructions improve quality:
 - ❌ "Make it good" (too vague)
 
 ### **4. Edit Freely**
-Aimy learns from every edit you make - don't hesitate to adjust
+Aimi learns from every edit you make - don't hesitate to adjust
 
 ### **5. Switch Signature Styles**
 You can change per message before generating the draft
@@ -286,9 +286,9 @@ Not quite right? Hit regenerate for a different approach
 **Result**: Professional reply mentioning specific discussion points, maintaining warmth
 
 ### **Case 2: Newsletter Unsubscribe Request**
-**Signature Style**: From Aimy
+**Signature Style**: From Aimi
 **Context**: None needed
-**Result**: Polite delegation, clear OkAimy branding, appropriate for low-stakes communication
+**Result**: Polite delegation, clear Hey Aimi branding, appropriate for low-stakes communication
 
 ### **Case 3: Personal Contact**
 **Signature Style**: No Attribution
@@ -296,16 +296,16 @@ Not quite right? Hit regenerate for a different approach
 **Result**: Natural response without AI mention, preserves personal relationship
 
 ### **Case 4: Busy Executive**
-**Signature Style**: From Aimy
+**Signature Style**: From Aimi
 **Context**: "I'm currently in back-to-back meetings"
-**Result**: Aimy handles response on your behalf with transparency
+**Result**: Aimi handles response on your behalf with transparency
 
 ---
 
 ## 🔒 Privacy & Ethics
 
 ### **Your Data:**
-- Drafts never leave OkAimy's secure API
+- Drafts never leave Hey Aimi's secure API
 - Not used to train public AI models
 - Stored only for your learning history
 - Can be deleted anytime from settings
@@ -398,6 +398,6 @@ We believe the future of AI is **collaborative transparency** - people working w
 
 ---
 
-**Built with ❤️ by OkAimy - Your AI-Powered Strategic Partner**
+**Built with ❤️ by Hey Aimi - Your AI-Powered Strategic Partner**
 
-*"Let Aimy help you communicate faster, better, and smarter - while staying authentically you."*
+*"Let Aimi help you communicate faster, better, and smarter - while staying authentically you."*

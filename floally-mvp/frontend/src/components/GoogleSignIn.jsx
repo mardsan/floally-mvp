@@ -28,9 +28,9 @@ function GoogleSignIn() {
       <div className="max-w-md w-full">
         {/* Logo */}
         <div className="text-center mb-8">
-          <img src="/okaimy-logo-01.png" alt="OkAimy Logo" className="w-48 mx-auto mb-4" />
+          <img src="/aimi-logo-01.png" alt="Hey Aimi Logo" className="w-48 mx-auto mb-4" />
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome to OkAimy
+            Welcome to Hey Aimi
           </h1>
           <p className="text-gray-700">
             Sign in with your Google account to get started
@@ -105,11 +105,11 @@ function GoogleSignIn() {
           <ul className="space-y-2 text-sm text-gray-700">
             <li className="flex items-start">
               <span className="text-teal-500 mr-2">✓</span>
-              <span>You'll authorize OkAimy to access your Gmail and Calendar</span>
+              <span>You'll authorize Hey Aimi to access your Gmail and Calendar</span>
             </li>
             <li className="flex items-start">
               <span className="text-teal-500 mr-2">✓</span>
-              <span>Complete a quick onboarding to personalize Aimy</span>
+              <span>Complete a quick onboarding to personalize Aimi</span>
             </li>
             <li className="flex items-start">
               <span className="text-teal-500 mr-2">✓</span>

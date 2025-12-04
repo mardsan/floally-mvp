@@ -43,7 +43,7 @@ frontend/src/components/MainDashboard.jsx - Caching logic, status management
 
 **Start Working Button:**
 - Sets status to "In Progress" automatically
-- Expands "Details from Aimy" to show full context
+- Expands "Details from Aimi" to show full context
 - One-click workflow to begin working on priority task
 
 ---
@@ -64,7 +64,7 @@ Full-featured projects management system with AI-powered planning assistance.
 **AI-Powered Creation (AimyWizard):**
 Instead of manual form filling, users can:
 1. Give brief project description (e.g., "Website redesign")
-2. Click "✨ Let Aimy Plan It"
+2. Click "✨ Let Aimi Plan It"
 3. AI generates complete project plan:
    - Enhanced description (2-3 detailed sentences)
    - Realistic timeline (e.g., "2-3 weeks")
@@ -103,7 +103,7 @@ backend/app/routers/projects.py - CRUD endpoints (already existed)
 ### Urgency Score Consistency Issue
 
 **Problem:** 
-Urgency scale showed different numbers than "Details from Aimy" for the same task.
+Urgency scale showed different numbers than "Details from Aimi" for the same task.
 
 **Root Cause:**
 - Old cached data had `confidence: 0.8` (0-1 scale)
@@ -172,11 +172,11 @@ CREATE INDEX idx_standup_status_task ON standup_status(user_id, task_title, date
 
 **Latest Commits:**
 ```
-673e6df - 🪄 Integrate Aimy Wizard for AI-powered project planning
+673e6df - 🪄 Integrate Aimi Wizard for AI-powered project planning
 427fc62 - ✨ Implement Start Working button
 11c82b9 - ✨ Simplify Other Priorities - remove urgency scale
 ed20d87 - 🐛 Fix urgency score consistency
-cf44eae - 🐛 Fix: Make 'Details from Aimy' task-specific
+cf44eae - 🐛 Fix: Make 'Details from Aimi' task-specific
 ```
 
 ---
@@ -197,7 +197,7 @@ cf44eae - 🐛 Fix: Make 'Details from Aimy' task-specific
 
 ### UX Simplifications
 - Removed urgency scales from "Other Priorities" list
-- Keep urgency info in "Details from Aimy" only
+- Keep urgency info in "Details from Aimi" only
 - Reduces visual clutter and confusion
 - Focus on task names and quick actions
 
@@ -207,7 +207,7 @@ cf44eae - 🐛 Fix: Make 'Details from Aimy' task-specific
 
 ### Immediate (High Value, Quick Wins)
 1. **Test AI Project Creation** (30 min)
-   - Create project with Aimy wizard
+   - Create project with Aimi wizard
    - Verify goals generation with actual dates
    - Check priority recommendation
    - Test manual skip option
@@ -309,7 +309,7 @@ ANTHROPIC_API_KEY=(set in Railway)
 - The One Thing (primary focus task)
   - Status dropdown (Preparing/In Progress/Complete/Blocked)
   - Start Working button
-  - Expandable "Details from Aimy"
+  - Expandable "Details from Aimi"
 - Other Priorities (secondary tasks)
   - Click to swap with main task
   - Clean list view (no urgency scales)
@@ -345,7 +345,7 @@ ANTHROPIC_API_KEY=(set in Railway)
 1. Check backend sends `urgency` (0-100) not `confidence` (0-1)
 2. Verify conversion: `confidence = urgency / 100`
 3. Check task_details map has correct urgency value
-4. Look at "Details from Aimy" for actual stored urgency
+4. Look at "Details from Aimi" for actual stored urgency
 
 ### If Projects AI Fails
 1. Verify ANTHROPIC_API_KEY set in Railway

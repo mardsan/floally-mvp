@@ -1,6 +1,6 @@
 """
 Daily Activity Event Log
-Comprehensive tracking of all user interactions for Aimy's learning system
+Comprehensive tracking of all user interactions for Aimi's learning system
 """
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
@@ -238,7 +238,7 @@ async def get_weekly_patterns(user_email: str, db: Session = Depends(get_db)):
                 "avg_daily_events": len(activities) / 7
             },
             "insights": {
-                "message": f"You're most active on {most_active_day}s around {most_active_hour}:00" if most_active_day and most_active_hour else "Keep using OkAimy to learn your patterns!"
+                "message": f"You're most active on {most_active_day}s around {most_active_hour}:00" if most_active_day and most_active_hour else "Keep using Hey Aimi to learn your patterns!"
             }
         }
     
@@ -250,7 +250,7 @@ async def get_weekly_patterns(user_email: str, db: Session = Depends(get_db)):
 @router.get("/learning-status")
 async def get_learning_status(user_email: str, db: Session = Depends(get_db)):
     """
-    Get AI learning status - how much data Aimy has learned from
+    Get AI learning status - how much data Aimi has learned from
     
     Returns:
     - Total events logged
@@ -266,7 +266,7 @@ async def get_learning_status(user_email: str, db: Session = Depends(get_db)):
                 "total_events": 0,
                 "days_active": 0,
                 "confidence": "learning",
-                "message": "Start using OkAimy to help Aimy learn your patterns!"
+                "message": "Start using Hey Aimi to help Aimi learn your patterns!"
             }
         
         from app.models import BehaviorAction
@@ -285,7 +285,7 @@ async def get_learning_status(user_email: str, db: Session = Depends(get_db)):
                 "total_events": 0,
                 "days_active": 0,
                 "confidence": "learning",
-                "message": "Start using OkAimy to help Aimy learn your patterns!"
+                "message": "Start using Hey Aimi to help Aimi learn your patterns!"
             }
         
         # Calculate days active
@@ -297,15 +297,15 @@ async def get_learning_status(user_email: str, db: Session = Depends(get_db)):
         if total_events >= 100 and days_active >= 7:
             confidence = "confident"
             status = "active"
-            message = "Aimy has a strong understanding of your work patterns!"
+            message = "Aimi has a strong understanding of your work patterns!"
         elif total_events >= 30 and days_active >= 3:
             confidence = "active"
             status = "learning"
-            message = "Aimy is actively learning your preferences!"
+            message = "Aimi is actively learning your preferences!"
         else:
             confidence = "learning"
             status = "new"
-            message = "Keep using OkAimy - Aimy is learning about you!"
+            message = "Keep using Hey Aimi - Aimi is learning about you!"
         
         return {
             "status": status,

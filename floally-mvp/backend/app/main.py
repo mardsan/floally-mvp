@@ -19,7 +19,7 @@ logging.basicConfig(level=logging.INFO)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Initialize database on startup"""
-    logger.info("🚀 Starting OkAimy API v1.3.1 - Nov 23, 2025")
+    logger.info("🚀 Starting Hey Aimi API v1.3.1 - Nov 23, 2025")
     logger.info("📅 Deployment: Mobile Responsive + Trusted Contacts")
     
     # Initialize database tables
@@ -39,7 +39,7 @@ async def lifespan(app: FastAPI):
     
     yield
     
-    logger.info("👋 Shutting down OkAimy API...")
+    logger.info("👋 Shutting down Hey Aimi API...")
 
 
 class RequestLoggingMiddleware(BaseHTTPMiddleware):
@@ -57,7 +57,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
 
 
 app = FastAPI(
-    title="OkAimy API",
+    title="Hey Aimi API",
     description="AI-powered strategic and operational partner",
     version="1.3.1",  # Updated Nov 23, 2025 - Mobile responsive + Trusted Contacts fix
     lifespan=lifespan
@@ -98,7 +98,7 @@ app.include_router(admin.router, prefix="/api", tags=["admin"])
 @app.get("/")
 async def root():
     return {
-        "message": "OkAimy API",
+        "message": "Hey Aimi API",
         "version": "1.3.0",
         "status": "running"
     }

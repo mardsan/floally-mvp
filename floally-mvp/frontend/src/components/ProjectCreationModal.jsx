@@ -61,7 +61,7 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
 
   const enhanceWithAimy = async () => {
     if (!formData.description.trim() || formData.description.trim().length < 10) {
-      setError('Please provide a description for Aimy to analyze');
+      setError('Please provide a description for Aimi to analyze');
       return;
     }
 
@@ -94,7 +94,7 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
         complexity: enhancement.complexity
       });
       
-      // Update form with all of Aimy's suggestions
+      // Update form with all of Aimi's suggestions
       setFormData(prev => ({
         ...prev,
         description: enhancement.enhancedDescription,
@@ -216,7 +216,7 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
               {isEditing ? '✏️ Edit Project' : '🚀 Create New Project'}
             </h2>
             <p className="text-sm text-gray-700 mt-1">
-              {aiEnhanced ? '✨ Enhanced by Aimy - Edit as needed' : 'Fill in the basics, then let Aimy help'}
+              {aiEnhanced ? '✨ Enhanced by Aimi - Edit as needed' : 'Fill in the basics, then let Aimi help'}
             </p>
           </div>
           <button
@@ -270,24 +270,24 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
                       {enhancing ? (
                         <>
                           <span className="animate-spin inline-block mr-2">🔄</span>
-                          Aimy is analyzing...
+                          Aimi is analyzing...
                         </>
                       ) : (
                         <>
-                          ✨ Let Aimy Plan Everything
+                          ✨ Let Aimi Plan Everything
                         </>
                       )}
                     </button>
                   )}
                 </div>
 
-                {/* Aimy's Timeframe Recommendation */}
+                {/* Aimi's Timeframe Recommendation */}
                 {timeframeInfo && aiEnhanced && (
                   <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200 rounded-xl p-4">
                     <div className="flex items-start gap-3">
                       <span className="text-2xl">⏱️</span>
                       <div className="flex-1">
-                        <h4 className="font-bold text-purple-900 mb-2">Aimy's Timeframe Recommendation</h4>
+                        <h4 className="font-bold text-purple-900 mb-2">Aimi's Timeframe Recommendation</h4>
                         <div className="space-y-2 text-sm">
                           <div className="flex items-center gap-2">
                             <span className="font-semibold text-purple-800">Estimated Duration:</span>
@@ -414,7 +414,7 @@ function ProjectCreationModal({ user, onClose, onProjectCreated, existingProject
                 </div>
               ) : (
                 <p className="text-gray-500 text-sm italic text-center py-4">
-                  No goals yet. Click "Let Aimy Plan Everything" or add manually.
+                  No goals yet. Click "Let Aimi Plan Everything" or add manually.
                 </p>
               )}
             </div>

@@ -38,7 +38,7 @@ After redirecting back to www.okaimy.com:
 
 The standup should now show:
 - ✅ `secondary_priorities`: Array with actual email-based priorities
-- ✅ `aimy_handling`: Array with tasks Aimy can help with
+- ✅ `aimy_handling`: Array with tasks Aimi can help with
 - ✅ `daily_plan`: Realistic timeline based on your emails
 - ✅ `reasoning`: Actual AI analysis (not an error message)
 

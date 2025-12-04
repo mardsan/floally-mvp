@@ -17,9 +17,9 @@ class StandupAnalysis(BaseModel):
     """The AI-generated standup analysis"""
     the_one_thing: Dict[str, Any]  # Main focus item
     secondary_priorities: List[Dict[str, Any]]  # Other important items
-    aimy_handling: List[Dict[str, Any]]  # What Aimy is managing
+    aimy_handling: List[Dict[str, Any]]  # What Aimi is managing
     daily_plan: List[Dict[str, Any]]  # Suggested timeline
-    reasoning: str  # Why Aimy chose this focus
+    reasoning: str  # Why Aimi chose this focus
 
 class StandupAnalyzeRequest(BaseModel):
     """Request body for standup analysis"""
@@ -160,13 +160,13 @@ async def generate_standup(user_email: str, db: Session = Depends(get_db)):
         return {
             'the_one_thing': {
                 'title': 'Set up your first project',
-                'description': 'Start by creating a project to help Aimy understand your priorities and provide personalized recommendations.',
+                'description': 'Start by creating a project to help Aimi understand your priorities and provide personalized recommendations.',
                 'urgency': 60,
                 'project': 'onboarding',
                 'action': 'Click "New Project" to get started'
             },
             'secondary_priorities': [
-                {'title': 'Explore your dashboard', 'urgency': 30, 'action': 'Familiarize yourself with OkAimy features'},
+                {'title': 'Explore your dashboard', 'urgency': 30, 'action': 'Familiarize yourself with Hey Aimi features'},
                 {'title': 'Connect your calendar', 'urgency': 40, 'action': 'Sync calendar for better planning'}
             ],
             'aimy_handling': [
@@ -175,7 +175,7 @@ async def generate_standup(user_email: str, db: Session = Depends(get_db)):
             'daily_plan': [
                 {'time': 'Now', 'task': 'Create your first project', 'duration': '10 min'},
                 {'time': 'Today', 'task': 'Set your goals and priorities', 'duration': '20 min'},
-                {'time': 'This week', 'task': 'Build your workflow with Aimy', 'duration': 'Ongoing'}
+                {'time': 'This week', 'task': 'Build your workflow with Aimi', 'duration': 'Ongoing'}
             ],
             'reasoning': 'Let\'s start by setting up your first project! This helps me understand what matters most to you and provide personalized daily guidance.'
         }
@@ -291,7 +291,7 @@ async def analyze_standup(request: StandupAnalyzeRequest, db: Session = Depends(
     2. Analyzes urgency, importance, and context
     3. Uses Claude to determine "The One Thing"
     4. Identifies secondary priorities
-    5. Suggests what Aimy should handle
+    5. Suggests what Aimi should handle
     6. Creates a daily plan
     
     Returns: StandupAnalysis object
@@ -339,7 +339,7 @@ async def analyze_standup(request: StandupAnalyzeRequest, db: Session = Depends(
             # No recent emails - return empty standup
             return {
                 'the_one_thing': {
-                    'title': 'Check in with Aimy',
+                    'title': 'Check in with Aimi',
                     'description': 'Your inbox is clear! Time to focus on your creative work.',
                     'urgency': 0,
                     'project': 'personal',
@@ -403,7 +403,7 @@ async def analyze_standup(request: StandupAnalyzeRequest, db: Session = Depends(
             for i, e in enumerate(emails[:10])
         ])
         
-        prompt = f"""You are Aimy, an AI partner helping a creative professional stay focused.
+        prompt = f"""You are Aimi, an AI partner helping a creative professional stay focused.
 
 Analyze these recent emails and determine "The One Thing" they should focus on today:
 
@@ -428,7 +428,7 @@ Provide your analysis in this EXACT JSON format:
     ],
     "aimy_handling": [
         {{
-            "task": "What Aimy will handle",
+            "task": "What Aimi will handle",
             "status": "monitoring/drafting/scheduling",
             "emails": ["Email X"]
         }}
@@ -447,7 +447,7 @@ Guidelines:
 - Choose ONE clear focus that has the most impact
 - Consider urgency, importance, and creative flow
 - Suggest 2-3 secondary priorities (things that also matter but not urgent)
-- Identify what Aimy can handle (follow-ups, scheduling, monitoring)
+- Identify what Aimi can handle (follow-ups, scheduling, monitoring)
 - Create a realistic daily plan
 - Be supportive and encouraging in tone"""
 
@@ -488,16 +488,16 @@ Guidelines:
         
         return {
             'the_one_thing': {
-                'title': 'Review your inbox with Aimy',
+                'title': 'Review your inbox with Aimi',
                 'description': 'Let\'s go through your emails together and identify what matters most.',
                 'urgency': 50,
                 'project': 'general',
-                'action': 'Open your inbox and let Aimy help prioritize'
+                'action': 'Open your inbox and let Aimi help prioritize'
             },
             'secondary_priorities': [],
             'aimy_handling': [],
             'daily_plan': [
-                {'time': 'Morning', 'task': 'Review inbox with Aimy', 'duration': '15 min'},
+                {'time': 'Morning', 'task': 'Review inbox with Aimi', 'duration': '15 min'},
                 {'time': 'Morning', 'task': 'Focus on priority work', 'duration': '2-3 hours'},
                 {'time': 'Afternoon', 'task': 'Handle follow-ups', 'duration': '30 min'}
             ],

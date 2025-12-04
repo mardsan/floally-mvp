@@ -23,7 +23,7 @@ async function getRedisClient() {
 }
 
 function hashPassword(password) {
-  return crypto.createHash('sha256').update(password + process.env.SALT || 'okaimy-salt').digest('hex');
+  return crypto.createHash('sha256').update(password + process.env.SALT || 'aimi-salt').digest('hex');
 }
 
 function generateToken(userId, email) {

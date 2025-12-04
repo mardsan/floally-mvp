@@ -2,14 +2,14 @@
 
 ## What We Built
 
-**Aimy now helps users think through their projects** - the first time users experience the power of our generative AI agent!
+**Aimi now helps users think through their projects** - the first time users experience the power of our generative AI agent!
 
 ### Feature Overview
 
 When creating a new project, users can now:
 1. Enter a project name and description
-2. Click **"✨ Generate Goals & Context with Aimy"**
-3. Aimy analyzes the description using Claude 3.5 Sonnet and generates:
+2. Click **"✨ Generate Goals & Context with Aimi"**
+3. Aimi analyzes the description using Claude 3.5 Sonnet and generates:
    - **Goals** (3-5 concrete objectives)
    - **Tasks** (5-8 specific action items)
    - **Keywords** (5-10 terms for filtering emails/meetings)
@@ -21,18 +21,18 @@ When creating a new project, users can now:
 
 #### Step 1: Project Basics
 - User enters name and description
-- Prominent purple/pink gradient button: **"Generate Goals & Context with Aimy"**
+- Prominent purple/pink gradient button: **"Generate Goals & Context with Aimi"**
 - Button disabled until description is 10+ characters
-- Shows loading state: "Aimy is thinking..."
+- Shows loading state: "Aimi is thinking..."
 
 #### Step 2: Goals
-- Purple banner appears: **"✨ Aimy's Suggestions Applied!"**
+- Purple banner appears: **"✨ Aimi's Suggestions Applied!"**
 - All goals pre-filled (including tasks converted to goals)
 - Success metrics auto-generated
 - User can add/edit/remove any field
 
 #### Step 3: Context
-- Purple banner: **"✨ Aimy Added Context!"**
+- Purple banner: **"✨ Aimi Added Context!"**
 - Keywords pre-filled for email filtering
 - Stakeholders pre-filled for prioritization
 - Fully editable
@@ -86,12 +86,12 @@ Already set in Vercel ✅
 
 ### Why This Matters
 
-**This is the first moment users experience Aimy's intelligence:**
-1. **Collaborative Thinking** - Aimy doesn't just track, it helps think
-2. **Reduces Friction** - Hard to define goals early? Aimy helps!
+**This is the first moment users experience Aimi's intelligence:**
+1. **Collaborative Thinking** - Aimi doesn't just track, it helps think
+2. **Reduces Friction** - Hard to define goals early? Aimi helps!
 3. **Sets Expectations** - Shows users what AI can do throughout the app
 4. **Better Context** - More detailed projects = better AI analysis later
-5. **Relationship Building** - User sees Aimy as a partner, not a tool
+5. **Relationship Building** - User sees Aimi as a partner, not a tool
 
 ### Next Steps
 
@@ -127,7 +127,7 @@ User creates "Mobile App Launch"
 Description: "Building a new iOS app for task management, 
 targeting Q1 2026 launch with beta in December"
 
-Aimy generates:
+Aimi generates:
 Goals:
 - Complete core feature development by November 30
 - Recruit 100 beta testers by December 15
@@ -152,6 +152,6 @@ Success Metrics:
 
 ---
 
-## 🎯 This Feature Embodies OkAimy's Vision
+## 🎯 This Feature Embodies Hey Aimi's Vision
 
-Aimy isn't just organizing your work - **Aimy is helping you think through it**. This is the foundation of the relationship we're building between user and AI assistant.
+Aimi isn't just organizing your work - **Aimi is helping you think through it**. This is the foundation of the relationship we're building between user and AI assistant.

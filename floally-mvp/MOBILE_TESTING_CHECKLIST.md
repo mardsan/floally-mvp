@@ -1,4 +1,4 @@
-# Mobile Testing Checklist - OkAimy
+# Mobile Testing Checklist - Hey Aimi
 **Date:** November 30, 2025  
 **URL:** https://www.okaimy.com
 
