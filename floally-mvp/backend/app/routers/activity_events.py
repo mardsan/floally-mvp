@@ -13,7 +13,7 @@ import uuid
 from app.database import get_db
 from app.models import ActivityEvent, EventTemplate
 
-router = APIRouter(prefix="/api/events", tags=["activity-events"])
+router = APIRouter(prefix="/api/activity/events", tags=["activity-events"])
 
 
 # Pydantic models for request/response
