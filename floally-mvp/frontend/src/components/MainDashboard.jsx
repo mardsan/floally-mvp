@@ -949,7 +949,7 @@ function MainDashboard({ user, onLogout }) {
                     .map(project => (
                       <div
                         key={project.id}
-                        onClick={() => window.location.href = '/projects'}
+                        onClick={() => window.location.href = `/projects?open=${project.id}`}
                         className="p-3 md:p-4 rounded-lg border-2 border-gray-200 bg-gradient-to-br from-gray-50 to-white hover:border-okaimy-mint-300 hover:shadow-md transition-all cursor-pointer"
                       >
                         <div className="flex items-start justify-between mb-2">
@@ -1074,7 +1074,7 @@ function MainDashboard({ user, onLogout }) {
                 <div className="text-xs text-gray-700 mt-0.5 md:mt-1">Analytics & trends</div>
               </button>
               <button 
-                onClick={() => setShowProfileSettings(true)}
+                onClick={() => setShowProfileHub(true)}
                 className="p-3 md:p-4 aspect-square md:aspect-auto bg-gradient-to-br from-okaimy-emerald-50 to-okaimy-mint-50 rounded-lg border-2 border-okaimy-emerald-200 hover:border-okaimy-emerald-400 hover:shadow-glow transition-all text-left flex flex-col justify-center"
               >
                 <div className="text-xl md:text-2xl mb-1 md:mb-2">⚙️</div>

@@ -269,11 +269,23 @@ const OverviewTab = ({ data, userProfile }) => {
 
 // Insights Tab Component
 const InsightsTab = ({ data, userEmail }) => {
-  if (!data || !data.insights) {
+  // Debug: Log what data we're receiving
+  console.log('InsightsTab data:', data);
+  
+  if (!data) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-gray-500 mb-4">Loading insights...</p>
+        <p className="text-sm text-gray-400">Analyzing your behavior patterns</p>
+      </div>
+    );
+  }
+  
+  if (!data.insights) {
     return (
       <div className="text-center py-8">
         <p className="text-gray-500 mb-4">Start using OkAimy to build your behavioral insights!</p>
-        <p className="text-sm text-gray-400">Take actions on emails to help Aimy learn your preferences.</p>
+        <p className="text-sm text-gray-400">Take actions on emails, projects, and tasks to help Aimy learn your preferences.</p>
       </div>
     );
   }
