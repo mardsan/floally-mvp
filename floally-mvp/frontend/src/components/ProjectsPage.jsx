@@ -629,10 +629,27 @@ export default function ProjectsPage({ user, onLogout }) {
                           onToggleSubTask={(subTaskIdx) => {
                             const updatedGoals = [...formData.goals];
                             if (updatedGoals[goalIdx].sub_tasks && updatedGoals[goalIdx].sub_tasks[subTaskIdx]) {
-                              const currentStatus = updatedGoals[goalIdx].sub_tasks[subTaskIdx].status;
-                              updatedGoals[goalIdx].sub_tasks[subTaskIdx].status = 
-                                currentStatus === 'completed' ? 'not_started' : 'completed';
+                              const subTask = updatedGoals[goalIdx].sub_tasks[subTaskIdx];
+                              const currentStatus = subTask.status;
+                              const newStatus = currentStatus === 'completed' ? 'not_started' : 'completed';
+                              
+                              updatedGoals[goalIdx].sub_tasks[subTaskIdx].status = newStatus;
                               setFormData({ ...formData, goals: updatedGoals });
+                              
+                              // Log sub-task completion activity
+                              if (newStatus === 'completed') {
+                                logActivity(
+                                  EVENT_TYPES.TASK_COMPLETED,
+                                  ENTITY_TYPES.PROJECT,
+                                  editingProject?.id || 'new_project',
+                                  { 
+                                    task: subTask.task,
+                                    goal: goal.goal,
+                                    project: formData.name || 'Unnamed Project'
+                                  },
+                                  ACTIONS.COMPLETED
+                                );
+                              }
                             }
                           }}
                         />
