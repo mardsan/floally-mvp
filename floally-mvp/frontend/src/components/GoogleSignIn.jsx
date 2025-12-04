@@ -28,7 +28,7 @@ function GoogleSignIn() {
       <div className="max-w-md w-full">
         {/* Logo */}
         <div className="text-center mb-8">
-          <img src="/aimi-logo-01.png" alt="Hey Aimi Logo" className="w-48 mx-auto mb-4" />
+          <img src="/HeyAimi-logo.png" alt="Hey Aimi Logo" className="w-48 mx-auto mb-4" />
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Welcome to Hey Aimi
           </h1>

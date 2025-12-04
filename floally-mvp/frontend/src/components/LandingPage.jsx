@@ -115,7 +115,7 @@ function LandingPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <div className="flex justify-between items-center">
           <img 
-            src="/aimi-logo-01.png" 
+            src="/HeyAimi-logo.png" 
             alt="Hey Aimi" 
             className="h-12 md:h-16 w-auto"
           />

@@ -386,7 +386,7 @@ function MainDashboard({ user, onLogout }) {
           <div className="flex items-center justify-between">
             {/* Left: Logo & Greeting */}
             <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
-              <img src="/aimi-logo-01.png" alt="Hey Aimi" className="h-6 sm:h-8 flex-shrink-0" />
+              <img src="/HeyAimi-logo.png" alt="Hey Aimi" className="h-6 sm:h-8 flex-shrink-0" />
               <div className="min-w-0">
                 <h1 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 truncate">
                   {getGreeting()}, {user.display_name || user.email.split('@')[0]}!

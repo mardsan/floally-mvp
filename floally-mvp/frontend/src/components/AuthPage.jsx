@@ -50,7 +50,7 @@ function AuthPage({ onAuthSuccess }) {
       <div className="max-w-md w-full">
         {/* Logo */}
         <div className="text-center mb-8">
-          <img src="/aimi-logo-01.png" alt="Hey Aimi Logo" className="w-48 mx-auto mb-4" />
+          <img src="/HeyAimi-logo.png" alt="Hey Aimi Logo" className="w-48 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-gray-900">
             {isLogin ? 'Welcome back!' : 'Get started with Hey Aimi'}
           </h1>

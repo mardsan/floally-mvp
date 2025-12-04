@@ -600,7 +600,7 @@ function App() {
           </div>
           
           {/* Logo */}
-          <img src="/aimi-logo-01.png" alt="Hey Aimi Logo" className="w-48 mx-auto mb-4" onError={(e) => {console.error('Logo failed to load:', e.target.src);}} />
+          <img src="/HeyAimi-logo.png" alt="Hey Aimi Logo" className="w-48 mx-auto mb-4" onError={(e) => {console.error('Logo failed to load:', e.target.src);}} />
           
           {/* Tagline */}
           <p className="text-xl text-slate-700 mb-2 font-semibold">
@@ -633,7 +633,7 @@ function App() {
       <header className="bg-white/90 backdrop-blur-sm border-b px-6 py-4 shadow-sm sticky top-0 z-40" style={{borderColor: '#dafef4'}}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src="/aimi-logo-01.png" alt="Hey Aimi" className="h-8" />
+            <img src="/HeyAimi-logo.png" alt="Hey Aimi" className="h-8" />
             <h1 className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">Hey Aimi</h1>
             {data.profile && (
               <p className="text-sm text-slate-700 ml-2">{data.profile.email}</p>
