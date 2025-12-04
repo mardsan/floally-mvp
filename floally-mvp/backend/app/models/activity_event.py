@@ -1,7 +1,7 @@
 """
 Activity Event Log model for tracking user actions and building AI context
 """
-from sqlalchemy import Column, String, DateTime, ForeignKey, Index, Text
+from sqlalchemy import Column, String, DateTime, ForeignKey, Index, Text, Integer
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
 from datetime import datetime

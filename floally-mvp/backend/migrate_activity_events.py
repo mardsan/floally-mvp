@@ -11,8 +11,8 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from sqlalchemy import text
-from app.database import engine
-from app.models import Base, ActivityEvent
+from app.database import engine, Base
+from app.models import ActivityEvent
 import logging
 
 logging.basicConfig(level=logging.INFO)
