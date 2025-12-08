@@ -1,10 +1,21 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+// Use Railway backend in production, localhost in development
+const API_BASE_URL = import.meta.env.VITE_API_URL || 
+  (import.meta.env.MODE === 'production' 
+    ? 'https://floally-mvp-production.up.railway.app' 
+    : 'http://localhost:8000');
+
+console.log('🔧 API Configuration:', {
+  mode: import.meta.env.MODE,
+  envVar: import.meta.env.VITE_API_URL,
+  finalURL: API_BASE_URL
+});
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: false,  // Set to false for CORS with allow_origins=["*"]
+  timeout: 30000, // 30 second timeout
 });
 
 export const auth = {
