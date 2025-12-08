@@ -176,7 +176,6 @@ module.exports = {
         'aimi-gradient': 'linear-gradient(135deg, #65E6CF 0%, #3DC8F6 100%)',
         'aimi-gradient-soft': 'linear-gradient(135deg, #F6F8F7 0%, #ccfbf4 100%)',
       },
-      },
     },
   },
   plugins: [
