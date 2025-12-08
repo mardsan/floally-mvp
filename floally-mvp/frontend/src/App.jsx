@@ -587,16 +587,16 @@ function App() {
                     console.error('Video failed to load, switching to static fallback');
                     // Replace video with image fallback
                     const img = document.createElement('img');
-                    img.src = '/AiMy_LUMO_01.png';
+                    img.src = '/HeyAimi-01.png';
                     img.alt = 'Aimi - Your AI Assistant';
                     img.className = 'w-full h-full object-cover';
                     e.target.parentNode.replaceChild(img, e.target);
                   }}
                 >
-                  <source src="/Aimy_LUMO_v5.mp4" type="video/mp4" />
+                  <source src="/HeyAimi-01.mp4" type="video/mp4" />
                   {/* Fallback for browsers that don't support video */}
                   <img 
-                    src="/AiMy_LUMO_01.png" 
+                    src="/HeyAimi-01.png" 
                     alt="Aimi - Your AI Assistant" 
                     className="w-full h-full object-cover"
                   />

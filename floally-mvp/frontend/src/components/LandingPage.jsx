@@ -146,10 +146,10 @@ function LandingPage() {
                   e.target.nextElementSibling.style.display = 'block';
                 }}
               >
-                <source src="/Aimy_LUMO_v5.mp4" type="video/mp4" />
+                <source src="/HeyAimi-01.mp4" type="video/mp4" />
               </video>
               <img
-                src="/AiMy_LUMO_01.png"
+                src="/HeyAimi-01.png"
                 alt="Aimi"
                 className="hidden w-64 h-64 md:w-80 md:h-80 rounded-full object-cover shadow-2xl ring-4 ring-aimi-lumo-green-100"
               />
