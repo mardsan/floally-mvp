@@ -187,6 +187,9 @@ function App() {
     } else {
       setCheckingAuth(false);
     }
+    
+    // Initialize the app by checking authentication status
+    checkAuthStatus();
   }, []);
 
   const checkAuthStatus = async () => {
