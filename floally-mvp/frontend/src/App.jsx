@@ -251,17 +251,20 @@ function App() {
     }
   };
 
-  const handleLogin = async () => {
+  const handleLogin = () => {
     setError(null);
     try {
-      console.log('Calling auth.login()...');
-      const response = await auth.login();
-      console.log('Login response:', response.data);
-      if (response.data.authorization_url) {
-        window.location.href = response.data.authorization_url;
-      } else {
-        setError('No authorization URL received');
-      }
+      console.log('Redirecting to Google OAuth...');
+      // Get the API base URL
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 
+        (import.meta.env.MODE === 'production' 
+          ? 'https://floally-mvp-production.up.railway.app' 
+          : 'http://localhost:8000');
+      
+      console.log('OAuth URL:', `${API_BASE_URL}/api/auth/login`);
+      
+      // Direct navigation to OAuth endpoint (backend will redirect to Google)
+      window.location.href = `${API_BASE_URL}/api/auth/login`;
     } catch (error) {
       console.error('Login failed:', error);
       setError(`Login failed: ${error.message}`);

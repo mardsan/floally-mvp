@@ -5,16 +5,24 @@ function GoogleSignIn() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleGoogleSignIn = async () => {
+  const handleGoogleSignIn = () => {
     setLoading(true);
     setError('');
     
     try {
       console.log('Initiating Google OAuth...');
       
-      // Directly navigate to Railway backend login endpoint
+      // Get the API base URL (same logic as api.js)
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 
+        (import.meta.env.MODE === 'production' 
+          ? 'https://floally-mvp-production.up.railway.app' 
+          : 'http://localhost:8000');
+      
+      console.log('Redirecting to:', `${API_BASE_URL}/api/auth/login`);
+      
+      // Directly navigate to backend login endpoint
       // This will redirect to Google OAuth consent screen
-      window.location.href = 'https://floally-mvp-production.up.railway.app/api/auth/login';
+      window.location.href = `${API_BASE_URL}/api/auth/login`;
       
     } catch (err) {
       console.error('Sign in error:', err);
