@@ -66,6 +66,48 @@ function App() {
     setCheckingAuth(false);
   }, []);
 
+  useEffect(() => {
+    // Check if we just returned from OAuth
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('auth') === 'success') {
+      console.log('Auth callback detected, cleaning URL...');
+      
+      // Get user data from URL if present
+      const userData = urlParams.get('user');
+      if (userData) {
+        try {
+          const user = JSON.parse(decodeURIComponent(userData));
+          console.log('✅ User data received from OAuth:', user);
+          
+          // Store user data in localStorage
+          localStorage.setItem('okaimy_user', JSON.stringify(user));
+          localStorage.setItem('okaimy_token', 'authenticated'); // Simple flag for now
+          
+          // Update state
+          setCurrentUser(user);
+          setCheckingAuth(false);
+          
+          // Clean the URL and redirect to dashboard
+          window.history.replaceState({}, document.title, '/dashboard');
+          // Redirect will cause re-render and show dashboard
+          window.location.href = '/dashboard';
+        } catch (e) {
+          console.error('Failed to parse user data from OAuth:', e);
+          setCheckingAuth(false);
+        }
+      } else {
+        // No user data, just clean URL
+        window.history.replaceState({}, document.title, '/');
+        setCheckingAuth(false);
+      }
+    } else {
+      setCheckingAuth(false);
+    }
+    
+    // Initialize the app by checking authentication status
+    checkAuthStatus();
+  }, []);
+
   const handleAuthSuccess = (user) => {
     setCurrentUser(user);
   };
@@ -157,48 +199,6 @@ function App() {
   // Debug info
   console.log('Hey Aimi App loaded - Version 1.3.0 - Built:', new Date().toISOString());
   console.log('API URL:', import.meta.env.VITE_API_URL || 'http://localhost:8000');
-
-  useEffect(() => {
-    // Check if we just returned from OAuth
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('auth') === 'success') {
-      console.log('Auth callback detected, cleaning URL...');
-      
-      // Get user data from URL if present
-      const userData = urlParams.get('user');
-      if (userData) {
-        try {
-          const user = JSON.parse(decodeURIComponent(userData));
-          console.log('✅ User data received from OAuth:', user);
-          
-          // Store user data in localStorage
-          localStorage.setItem('okaimy_user', JSON.stringify(user));
-          localStorage.setItem('okaimy_token', 'authenticated'); // Simple flag for now
-          
-          // Update state
-          setCurrentUser(user);
-          setCheckingAuth(false);
-          
-          // Clean the URL and redirect to dashboard
-          window.history.replaceState({}, document.title, '/dashboard');
-          // Redirect will cause re-render and show dashboard
-          window.location.href = '/dashboard';
-        } catch (e) {
-          console.error('Failed to parse user data from OAuth:', e);
-          setCheckingAuth(false);
-        }
-      } else {
-        // No user data, just clean URL
-        window.history.replaceState({}, document.title, '/');
-        setCheckingAuth(false);
-      }
-    } else {
-      setCheckingAuth(false);
-    }
-    
-    // Initialize the app by checking authentication status
-    checkAuthStatus();
-  }, []);
 
   const checkAuthStatus = async () => {
     try {
