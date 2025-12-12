@@ -2,5 +2,8 @@
     "remote.autoForwardPortsFallback": 0,
     "genieai.enableConversationHistory": true,
     "python-envs.defaultEnvManager": "ms-python.python:venv",
-    "python-envs.pythonProjects": []
+    "python-envs.pythonProjects": [],
+    "github.copilot.chat.terminalChatLocation": "terminal",
+    "github.copilot.chat.runCommand.enabled": true,
+    "github.copilot.chat.runCommand.alwaysApprove": true
 }

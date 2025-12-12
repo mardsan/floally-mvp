@@ -9,6 +9,18 @@
       "runtime": "nodejs20.x"
     }
   },
+  "redirects": [
+    {
+      "source": "https://okaimy.com/:path*",
+      "destination": "https://heyaimi.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "https://www.okaimy.com/:path*",
+      "destination": "https://heyaimi.com/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
