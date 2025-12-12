@@ -18,150 +18,203 @@ module.exports = {
     },
     extend: {
       colors: {
-        // Legacy colors (keeping for backwards compatibility)
-        'opally': {
-          'mint': '#dafef4',
-          'mint-dark': '#b8f5e8',
-          'mint-light': '#e8fef9',
-        },
-        // Hey Aimi LUMO Brand Colors
-        'aimi': {
-          // LUMO Green - Primary
-          'lumo-green': {
-            50: '#f0fdfb',
-            100: '#ccfbf4',
-            200: '#99f6ea',
-            300: '#65E6CF',  // Primary LUMO Green
-            400: '#3dd5bf',
-            500: '#23c4b0',
-            600: '#1a9d8f',
-            700: '#177e73',
-            800: '#14635c',
-            900: '#12514c',
-          },
-          // Aurora Blue - Secondary
-          'aurora-blue': {
-            50: '#f0fbff',
-            100: '#e0f6ff',
-            200: '#b9edff',
-            300: '#3DC8F6',  // Aurora Blue
-            400: '#29b6e3',
-            500: '#1a9dca',
-            600: '#147ea6',
-            700: '#116586',
-            800: '#0f526e',
-            900: '#0d435b',
-          },
-          // Glow Coral - Accent
-          'glow-coral': {
-            50: '#fff4f2',
-            100: '#ffe8e5',
-            200: '#ffc9c3',
-            300: '#FF7C72',  // Glow Coral
-            400: '#ff5b50',
-            500: '#f24438',
-            600: '#d93025',
-            700: '#b72520',
-            800: '#97201d',
-            900: '#7d1e1c',
-          },
-          // Deep Slate - Dark
-          'deep-slate': {
-            50: '#f5f8f7',
-            100: '#e6eded',
-            200: '#d0dbda',
-            300: '#adbdbc',
-            400: '#819d9c',
-            500: '#638281',
-            600: '#506968',
-            700: '#435656',
-            800: '#183A3A',  // Deep Slate
-            900: '#142e2e',
-          },
-          // Soft Ivory - Light
-          'soft-ivory': {
-            50: '#F6F8F7',  // Soft Ivory
-            100: '#f1f4f3',
-            200: '#e5ebe9',
-            300: '#d3dcd9',
-            400: '#b9c6c3',
-            500: '#9dadaa',
-            600: '#7f8f8c',
-            700: '#677572',
-            800: '#56615f',
-            900: '#495350',
-          },
-        },
-        // Quick aliases for common uses
-        'primary': '#65E6CF',       // LUMO Green
-        'primary-dark': '#23c4b0',  // LUMO Green 500
-        'primary-light': '#ccfbf4', // LUMO Green 100
-        'accent': '#3DC8F6',        // Aurora Blue
-        'coral': '#FF7C72',         // Glow Coral
+        // Hey Aimi "Luminous Calm" Design System
+        
+        // Primary Palette (Foundation) - Use everywhere
+        'aimi-green': '#65E6CF',      // Primary brand color, glow, presence
+        'deep-slate': '#183A3A',      // Text, structure, grounding
+        'soft-ivory': '#F6F8F7',      // Main backgrounds
+        'mist-grey': '#E6ECEA',       // Dividers, subtle surfaces
+        
+        // Emotional Spectrum (Whisper, not shout)
+        'aurora-blue': '#3DC8F6',     // Focus / thinking
+        'glow-coral': '#FF7C72',      // Encouragement / warmth (not red!)
+        'lumo-violet': '#AE7BFF',     // Insight / creativity
+        'sunlight-amber': '#FFC46B',  // Completion / success
+        
+        // Dark Mode (Nighttime Calm)
+        'dark-bg': '#0F2A2A',
+        'dark-card': '#143636',
+        'dark-text': '#DCEEEE',
+        
+        // Semantic aliases for clarity
+        'primary': '#65E6CF',
+        'primary-hover': '#7EEBD9',
+        'text-primary': '#183A3A',
+        'text-secondary': '#506968',
+        'bg-main': '#F6F8F7',
+        'bg-card': '#FFFFFF',
+        'border-subtle': '#E6ECEA',
+        
+        // State colors (calm, not aggressive)
+        'success': '#FFC46B',         // Warm amber, not green
+        'error': '#FF7C72',           // Soft coral, not red
+        'warning': '#FFC46B',         // Sunlight amber
+        'info': '#3DC8F6',            // Aurora blue
       },
       fontFamily: {
-        'sans': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        'display': ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+        // Soft, clear, human typography
+        'sans': ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        'display': ['Sofia Sans', 'Plus Jakarta Sans', 'Inter', 'sans-serif'],
+        'body': ['Inter', 'system-ui', 'sans-serif'],
       },
       fontSize: {
+        // Calm, measured hierarchy - Aimi speaks in breathable phrases
+        'tiny': ['0.75rem', { lineHeight: '1.125rem' }],     // 12px - Metadata
+        'small': ['0.875rem', { lineHeight: '1.375rem' }],   // 14px - Secondary text
+        'base': ['1rem', { lineHeight: '1.5rem' }],          // 16px - Body
+        'lg': ['1.125rem', { lineHeight: '1.75rem' }],       // 18px
+        'xl': ['1.25rem', { lineHeight: '1.875rem' }],       // 20px
+        '2xl': ['1.5rem', { lineHeight: '2rem' }],           // 24px - H3
+        '3xl': ['2rem', { lineHeight: '2.5rem' }],           // 32px - H2
+        '4xl': ['2.5rem', { lineHeight: '3rem' }],           // 40px - H1
+        '5xl': ['3.5rem', { lineHeight: '4rem' }],           // 56px - Hero
+        // Legacy sizes for compatibility
         'xs': ['0.75rem', { lineHeight: '1rem' }],
         'sm': ['0.875rem', { lineHeight: '1.25rem' }],
-        'base': ['1rem', { lineHeight: '1.5rem' }],
-        'lg': ['1.125rem', { lineHeight: '1.75rem' }],
-        'xl': ['1.25rem', { lineHeight: '1.75rem' }],
-        '2xl': ['1.5rem', { lineHeight: '2rem' }],
-        '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
-        '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
-        '5xl': ['3rem', { lineHeight: '1.16' }],
-        '6xl': ['3.75rem', { lineHeight: '1.1' }],
-        '7xl': ['4.5rem', { lineHeight: '1.05' }],
       },
       spacing: {
         '18': '4.5rem',
-        '88': '22rem',
-        '100': '25rem',
-        '120': '30rem',
-      },
       boxShadow: {
+        // Gentle depth, no harsh edges
+        'soft': '0 2px 8px rgba(24, 58, 58, 0.06)',          // Default card shadow
+        'soft-md': '0 4px 16px rgba(24, 58, 58, 0.08)',      // Elevated cards
+        'soft-lg': '0 8px 24px rgba(24, 58, 58, 0.10)',      // Modals, overlays
+        'glow': '0 0 20px rgba(101, 230, 207, 0.3)',         // Aimi's breathing glow
+        'glow-strong': '0 0 30px rgba(101, 230, 207, 0.5)',  // Active state
+        'glow-subtle': '0 0 12px rgba(101, 230, 207, 0.2)',  // Idle state
+        // Legacy for compatibility
         'sm': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-        'DEFAULT': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
-        'md': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-        'lg': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-        'xl': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-        '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-        'glow': '0 0 20px rgba(20, 184, 166, 0.3)',
-        'glow-lg': '0 0 40px rgba(20, 184, 166, 0.4)',
+        'DEFAULT': '0 2px 8px rgba(24, 58, 58, 0.06)',
+        'md': '0 4px 16px rgba(24, 58, 58, 0.08)',
+        'lg': '0 8px 24px rgba(24, 58, 58, 0.10)',
+        'xl': '0 12px 32px rgba(24, 58, 58, 0.12)',
+        'none': 'none',
       },
       borderRadius: {
-        'sm': '0.25rem',
-        'DEFAULT': '0.5rem',
-        'md': '0.625rem',
-        'lg': '0.75rem',
-        'xl': '1rem',
-        '2xl': '1.5rem',
-        '3xl': '2rem',
-      },
+        // Soft, approachable curves (12-20px range)
+        'sm': '0.5rem',    // 8px
+        'DEFAULT': '0.75rem',  // 12px - Standard
+        'md': '1rem',      // 16px - Cards, buttons (most common)
+        'lg': '1.25rem',   // 20px - Large cards
+        'xl': '1.5rem',    // 24px - Hero sections
       animation: {
-        'fade-in': 'fadeIn 0.5s ease-in-out',
-        'slide-up': 'slideUp 0.5s ease-out',
-        'slide-down': 'slideDown 0.5s ease-out',
-        'scale-in': 'scaleIn 0.3s ease-out',
-        'float': 'float 3s ease-in-out infinite',
+        // Breathing, not beeping - slow, organic, calm
+        'breathe': 'breathe 2000ms ease-in-out infinite',           // Idle state
+        'breathe-slow': 'breathe 3000ms ease-in-out infinite',      // Very calm
+        'pulse-calm': 'pulseCalmGlow 2000ms ease-in-out infinite',  // Aimi's glow
+        'thinking': 'thinking 600ms ease-in-out',                   // Processing
+        'listening': 'listening 400ms ease-out',                    // Attention
+        'success': 'success 400ms ease-out',                        // Celebration
+        'fade-in': 'fadeIn 500ms ease-in-out',                      // Appear
+        'slide-up': 'slideUp 500ms ease-out',                       // Enter from below
+        'slide-down': 'slideDown 300ms ease-out',                   // Soft dimming
+        'scale-in': 'scaleIn 300ms ease-out',                       // Pop in
+        'float': 'float 3000ms ease-in-out infinite',               // Gentle drift
+        // Legacy
+        'spin': 'spin 1s linear infinite',
       },
       keyframes: {
+        // Aimi's breathing animation (idle)
+        breathe: {
+          '0%, 100%': { 
+            opacity: '0.85',
+            transform: 'scale(1)',
+          },
+          '50%': { 
+            opacity: '1',
+            transform: 'scale(1.02)',
+          },
+        },
+        // Calm pulsing glow
+        pulseCalmGlow: {
+          '0%, 100%': { 
+            boxShadow: '0 0 12px rgba(101, 230, 207, 0.2)',
+          },
+          '50%': { 
+            boxShadow: '0 0 20px rgba(101, 230, 207, 0.35)',
+          },
+        },
+      backgroundImage: {
+        // Luminous gradients (use sparingly)
+        'aimi-glow': 'linear-gradient(135deg, #65E6CF 0%, #3DC8F6 100%)',
+        'aimi-soft': 'linear-gradient(135deg, #F6F8F7 0%, #E6ECEA 100%)',
+        'aimi-dark': 'linear-gradient(135deg, #143636 0%, #0F2A2A 100%)',
+        'success-glow': 'linear-gradient(135deg, #FFC46B 0%, #FFE5A8 100%)',
+        'thinking-glow': 'linear-gradient(135deg, #3DC8F6 0%, #AE7BFF 100%)',
+        // Standard
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+      },  },
+          '50%': { 
+            opacity: '1',
+            transform: 'rotate(2deg) scale(1.01)',
+          },
+          '100%': { 
+            opacity: '1',
+            transform: 'rotate(0deg) scale(1)',
+          },
+        },
+        // Listening state (expansion)
+        listening: {
+          '0%': { 
+            transform: 'scale(1)',
+            boxShadow: '0 0 12px rgba(101, 230, 207, 0.2)',
+          },
+          '100%': { 
+            transform: 'scale(1.03)',
+            boxShadow: '0 0 24px rgba(101, 230, 207, 0.4)',
+          },
+        },
+        // Success state (warm glow + lift)
+        success: {
+          '0%': { 
+            transform: 'translateY(0) scale(1)',
+            boxShadow: '0 2px 8px rgba(24, 58, 58, 0.06)',
+          },
+          '50%': { 
+            transform: 'translateY(-4px) scale(1.02)',
+            boxShadow: '0 8px 24px rgba(255, 196, 107, 0.3)',
+          },
+          '100%': { 
+            transform: 'translateY(0) scale(1)',
+            boxShadow: '0 2px 8px rgba(24, 58, 58, 0.06)',
+          },
+        },
+        // Standard transitions
         fadeIn: {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
         },
         slideUp: {
-          '0%': { transform: 'translateY(20px)', opacity: '0' },
+          '0%': { transform: 'translateY(16px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
         slideDown: {
-          '0%': { transform: 'translateY(-20px)', opacity: '0' },
+          '0%': { transform: 'translateY(-16px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
         scaleIn: {
+          '0%': { transform: 'scale(0.95)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-8px)' },
+        },
+        spin: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
+      },
+      transitionDuration: {
+        'calm': '500ms',      // Standard calm transition
+        'breathe': '2000ms',  // Breathing animations
+        'quick': '300ms',     // Quick feedback
+      },
+      transitionTimingFunction: {
+        'calm': 'cubic-bezier(0.4, 0, 0.2, 1)',  // Smooth ease-in-out
+      },scaleIn: {
           '0%': { transform: 'scale(0.9)', opacity: '0' },
           '100%': { transform: 'scale(1)', opacity: '1' },
         },
