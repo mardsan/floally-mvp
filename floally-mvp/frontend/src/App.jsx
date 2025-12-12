@@ -12,7 +12,6 @@ import WaitlistAdmin from './components/WaitlistAdmin';
 import AuthPage from './components/AuthPage';
 import UserDashboard from './components/UserDashboard';
 import MainDashboard from './components/MainDashboard';
-import CalmDashboard from './components/CalmDashboard'; // New "Luminous Calm" interface
 import ProjectsPage from './components/ProjectsPage';
 import GoogleSignIn from './components/GoogleSignIn';
 
@@ -98,9 +97,7 @@ function App() {
       return <AuthPage onAuthSuccess={handleAuthSuccess} />;
     }
     
-    // Use new CalmDashboard for the main app experience
-    // Old MainDashboard available at /app/legacy if needed
-    return <CalmDashboard user={currentUser} onLogout={handleLogout} />;
+    return <MainDashboard user={currentUser} onLogout={handleLogout} />;
   }
   
   // Check if we should show landing page (for waitlist mode)
