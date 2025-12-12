@@ -26,6 +26,13 @@ async function getRedisClient() {
 export default async function handler(req, res) {
   const { code, state: userId, error } = req.query;
   
+  // Force redirect to heyaimi.com if accessed from old domain
+  const host = req.headers.host || '';
+  if (host.includes('okaimy.com')) {
+    const redirectUrl = `https://heyaimi.com/api/gmail/callback?${new URLSearchParams(req.query).toString()}`;
+    return res.redirect(307, redirectUrl);
+  }
+  
   // Handle OAuth errors
   if (error) {
     return res.redirect(`/app?error=${encodeURIComponent(error)}`);
@@ -106,11 +113,11 @@ export default async function handler(req, res) {
     console.log(`   - Gmail: ${hasGmail}`);
     console.log(`   - Calendar: ${hasCalendar}`);
     
-    // Redirect back to app
-    res.redirect('/app?google=connected');
+    // Redirect back to app on correct domain
+    res.redirect('https://heyaimi.com/app?google=connected');
     
   } catch (error) {
     console.error('OAuth callback error:', error);
-    res.redirect(`/app?error=${encodeURIComponent(error.message)}`);
+    res.redirect(`https://heyaimi.com/app?error=${encodeURIComponent(error.message)}`);
   }
 }
