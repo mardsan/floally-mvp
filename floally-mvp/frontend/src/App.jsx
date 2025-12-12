@@ -19,6 +19,33 @@ import GoogleSignIn from './components/GoogleSignIn';
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [checkingAuth, setCheckingAuth] = useState(true);
+  
+  // All state hooks must be at the top - before any conditional returns
+  const [authenticated, setAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [data, setData] = useState({
+    messages: [],
+    events: [],
+    profile: null
+  });
+  const [standup, setStandup] = useState(null);
+  const [generatingStandup, setGeneratingStandup] = useState(false);
+  const [expandedEmail, setExpandedEmail] = useState(null);
+  const [expandedEvent, setExpandedEvent] = useState(null);
+  const [emailAnalysis, setEmailAnalysis] = useState(null);
+  const [analyzingEmails, setAnalyzingEmails] = useState(false);
+  const [draftResponse, setDraftResponse] = useState(null);
+  const [generatingResponse, setGeneratingResponse] = useState(false);
+  const [selectedEmailForResponse, setSelectedEmailForResponse] = useState(null);
+  const [expandedAnalysisEmail, setExpandedAnalysisEmail] = useState(null);
+  const [displayedMessagesCount, setDisplayedMessagesCount] = useState(8);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [showProfileHub, setShowProfileHub] = useState(false);
+  const [profile, setProfile] = useState(null);
+  const [aimeInsights, setAimyInsights] = useState(null);
+  const [activeCategory, setActiveCategory] = useState('primary');
 
   useEffect(() => {
     // Check if user is already logged in
@@ -127,36 +154,6 @@ function App() {
     return <AuthPage onAuthSuccess={handleAuthSuccess} />;
   }
   
-  const [authenticated, setAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [data, setData] = useState({
-    messages: [],
-    events: [],
-    profile: null
-  });
-  const [standup, setStandup] = useState(null);
-  const [generatingStandup, setGeneratingStandup] = useState(false);
-  const [expandedEmail, setExpandedEmail] = useState(null);
-  const [expandedEvent, setExpandedEvent] = useState(null);
-  const [emailAnalysis, setEmailAnalysis] = useState(null);
-  const [analyzingEmails, setAnalyzingEmails] = useState(false);
-  const [draftResponse, setDraftResponse] = useState(null);
-  const [generatingResponse, setGeneratingResponse] = useState(false);
-  const [selectedEmailForResponse, setSelectedEmailForResponse] = useState(null);
-  const [expandedAnalysisEmail, setExpandedAnalysisEmail] = useState(null);
-  const [displayedMessagesCount, setDisplayedMessagesCount] = useState(8);
-  
-  // New v1.2.0 state
-  const [showOnboarding, setShowOnboarding] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
-  const [showProfileHub, setShowProfileHub] = useState(false);
-  const [profile, setProfile] = useState(null);
-  const [aimeInsights, setAimyInsights] = useState(null);
-  
-  // Gmail category filter
-  const [activeCategory, setActiveCategory] = useState('primary');
-
   // Debug info
   console.log('Hey Aimi App loaded - Version 1.3.0 - Built:', new Date().toISOString());
   console.log('API URL:', import.meta.env.VITE_API_URL || 'http://localhost:8000');
