@@ -18,86 +18,37 @@ module.exports = {
     },
     extend: {
       colors: {
-        // Legacy colors (keeping for backwards compatibility)
-        'opally': {
-          'mint': '#dafef4',
-          'mint-dark': '#b8f5e8',
-          'mint-light': '#e8fef9',
-        },
-        // Hey Aimi LUMO Brand Colors
+        // Luminous Calm - Primary Palette
+        'aimi-green': '#65E6CF',     // Primary brand - calm, luminous
+        'deep-slate': '#183A3A',     // Text, structure
+        'soft-ivory': '#F6F8F7',     // Main background
+        'mist-grey': '#E6ECEA',      // Dividers, subtle surfaces
+        
+        // Emotional Spectrum (use sparingly)
+        'aurora-blue': '#3DC8F6',    // Focus, thinking
+        'glow-coral': '#FF7C72',     // Encouragement, warmth
+        'lumo-violet': '#AE7BFF',    // Insight, creativity
+        'sunlight-amber': '#FFC46B', // Completion, success
+        
+        // Semantic aliases
+        'primary': '#65E6CF',
+        'primary-dark': '#23c4b0',
+        'primary-light': '#ccfbf4',
+        'accent': '#3DC8F6',
+        'coral': '#FF7C72',
+        
+        // Legacy support (backward compatibility)
         'aimi': {
-          // LUMO Green - Primary
           'lumo-green': {
-            50: '#f0fdfb',
-            100: '#ccfbf4',
-            200: '#99f6ea',
-            300: '#65E6CF',  // Primary LUMO Green
-            400: '#3dd5bf',
+            300: '#65E6CF',
             500: '#23c4b0',
-            600: '#1a9d8f',
-            700: '#177e73',
-            800: '#14635c',
-            900: '#12514c',
+            100: '#ccfbf4',
           },
-          // Aurora Blue - Secondary
-          'aurora-blue': {
-            50: '#f0fbff',
-            100: '#e0f6ff',
-            200: '#b9edff',
-            300: '#3DC8F6',  // Aurora Blue
-            400: '#29b6e3',
-            500: '#1a9dca',
-            600: '#147ea6',
-            700: '#116586',
-            800: '#0f526e',
-            900: '#0d435b',
-          },
-          // Glow Coral - Accent
-          'glow-coral': {
-            50: '#fff4f2',
-            100: '#ffe8e5',
-            200: '#ffc9c3',
-            300: '#FF7C72',  // Glow Coral
-            400: '#ff5b50',
-            500: '#f24438',
-            600: '#d93025',
-            700: '#b72520',
-            800: '#97201d',
-            900: '#7d1e1c',
-          },
-          // Deep Slate - Dark
-          'deep-slate': {
-            50: '#f5f8f7',
-            100: '#e6eded',
-            200: '#d0dbda',
-            300: '#adbdbc',
-            400: '#819d9c',
-            500: '#638281',
-            600: '#506968',
-            700: '#435656',
-            800: '#183A3A',  // Deep Slate
-            900: '#142e2e',
-          },
-          // Soft Ivory - Light
-          'soft-ivory': {
-            50: '#F6F8F7',  // Soft Ivory
-            100: '#f1f4f3',
-            200: '#e5ebe9',
-            300: '#d3dcd9',
-            400: '#b9c6c3',
-            500: '#9dadaa',
-            600: '#7f8f8c',
-            700: '#677572',
-            800: '#56615f',
-            900: '#495350',
-          },
+          'aurora-blue': { 300: '#3DC8F6' },
+          'glow-coral': { 300: '#FF7C72' },
+          'deep-slate': { 800: '#183A3A' },
+          'soft-ivory': { 50: '#F6F8F7' },
         },
-        // Quick aliases for common uses
-        'primary': '#65E6CF',       // LUMO Green
-        'primary-dark': '#23c4b0',  // LUMO Green 500
-        'primary-light': '#ccfbf4', // LUMO Green 100
-        'accent': '#3DC8F6',        // Aurora Blue
-        'coral': '#FF7C72',         // Glow Coral
       },
       fontFamily: {
         'sans': ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
@@ -147,6 +98,11 @@ module.exports = {
         'slide-down': 'slideDown 0.5s ease-out',
         'scale-in': 'scaleIn 0.3s ease-out',
         'float': 'float 3s ease-in-out infinite',
+        'breathe': 'breathe 2s ease-in-out infinite',
+        'pulse-calm': 'pulseCam 3s ease-in-out infinite',
+        'thinking': 'thinking 1.5s ease-in-out infinite',
+        'listening': 'listening 2s ease-in-out infinite',
+        'success': 'success 0.6s ease-out',
       },
       keyframes: {
         fadeIn: {
@@ -168,6 +124,27 @@ module.exports = {
         float: {
           '0%, 100%': { transform: 'translateY(0px)' },
           '50%': { transform: 'translateY(-10px)' },
+        },
+        breathe: {
+          '0%, 100%': { opacity: '0.6', transform: 'scale(1)' },
+          '50%': { opacity: '1', transform: 'scale(1.05)' },
+        },
+        pulseCam: {
+          '0%, 100%': { opacity: '0.5' },
+          '50%': { opacity: '1' },
+        },
+        thinking: {
+          '0%, 100%': { transform: 'rotate(0deg) scale(1)' },
+          '50%': { transform: 'rotate(5deg) scale(1.1)' },
+        },
+        listening: {
+          '0%, 100%': { boxShadow: '0 0 0 0 rgba(101, 230, 207, 0.4)' },
+          '50%': { boxShadow: '0 0 0 10px rgba(101, 230, 207, 0)' },
+        },
+        success: {
+          '0%': { transform: 'scale(0.8)', opacity: '0' },
+          '50%': { transform: 'scale(1.1)' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
         },
       },
       backgroundImage: {

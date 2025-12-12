@@ -9,7 +9,66 @@ html, body, #root {
 }
 
 body {
-  background-color: #f8fafc;
-  color: #0f172a;
+  background-color: #F6F8F7; /* soft-ivory */
+  color: #183A3A; /* deep-slate */
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
+/* Luminous Calm Component Classes */
+.card-calm {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(24, 58, 58, 0.1);
+  transition: all 0.3s ease;
+}
+
+.card-calm:hover {
+  box-shadow: 0 4px 12px rgba(101, 230, 207, 0.15);
+}
+
+.btn-primary {
+  background: #65E6CF;
+  color: #183A3A;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: #23c4b0;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: white;
+  color: #183A3A;
+  border: 2px solid #E6ECEA;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  border-color: #65E6CF;
+  background: #F6F8F7;
+}
+
+.btn-soft {
+  background: #F6F8F7;
+  color: #183A3A;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-soft:hover {
+  background: #E6ECEA;
+}
