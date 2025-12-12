@@ -2,10 +2,11 @@
   "github": {
     "silent": true
   },
-  "buildCommand": "cd floally-mvp/frontend && npm install && npm run build",
+  "buildCommand": "cd floally-mvp/frontend && npm run build",
   "outputDirectory": "floally-mvp/frontend/dist",
   "installCommand": "cd floally-mvp/frontend && npm install",
-  "framework": "vite",
+  "devCommand": "cd floally-mvp/frontend && npm run dev",
+  "framework": null,
   "functions": {
     "api/**/*.js": {
       "runtime": "nodejs20.x"
