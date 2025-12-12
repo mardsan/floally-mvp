@@ -1,5 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, CheckCircle2, Inbox, Zap } from 'lucide-react';
+
+// Import icons with error handling
+let Sparkles, CheckCircle2, Inbox, Zap;
+try {
+  const icons = require('lucide-react');
+  Sparkles = icons.Sparkles;
+  CheckCircle2 = icons.CheckCircle2;
+  Inbox = icons.Inbox;
+  Zap = icons.Zap;
+} catch (error) {
+  console.error('Failed to load lucide-react icons:', error);
+  // Fallback to simple div icons
+  Sparkles = () => <div>✨</div>;
+  CheckCircle2 = () => <div>✓</div>;
+  Inbox = () => <div>📥</div>;
+  Zap = () => <div>⚡</div>;
+}
 
 /**
  * CalmDashboard - Luminous Calm Design Implementation
