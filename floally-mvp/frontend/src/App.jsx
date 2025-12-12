@@ -164,7 +164,7 @@ function App() {
     }
     
     if (!currentUser) {
-      return <AuthPage onAuthSuccess={handleAuthSuccess} />;
+      return <GoogleSignIn />;
     }
     
     // Use new Luminous Calm dashboard
@@ -191,9 +191,9 @@ function App() {
     return null;
   }
   
-  // If at root and not logged in, show auth
+  // If at root and not logged in, show Google sign in
   if (window.location.pathname === '/' && !checkingAuth && !currentUser) {
-    return <AuthPage onAuthSuccess={handleAuthSuccess} />;
+    return <GoogleSignIn />;
   }
   
   // Debug info
