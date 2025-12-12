@@ -2,5 +2,11 @@
   "buildCommand": "cd floally-mvp/frontend && npm install && npm run build",
   "outputDirectory": "floally-mvp/frontend/dist",
   "framework": "vite",
-  "installCommand": "cd floally-mvp/frontend && npm install"
+  "installCommand": "cd floally-mvp/frontend && npm install",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
