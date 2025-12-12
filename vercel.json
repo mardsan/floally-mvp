@@ -2,9 +2,25 @@
   "github": {
     "silent": true
   },
+  "buildCommand": "cd floally-mvp/frontend && npm install && npm run build",
+  "outputDirectory": "floally-mvp/frontend/dist",
+  "installCommand": "cd floally-mvp/frontend && npm install",
+  "framework": "vite",
   "functions": {
     "api/**/*.js": {
       "runtime": "nodejs20.x"
     }
-  }
+  },
+  "redirects": [
+    {
+      "source": "https://okaimy.com/:path*",
+      "destination": "https://heyaimi.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "https://www.okaimy.com/:path*",
+      "destination": "https://heyaimi.com/:path*",
+      "permanent": true
+    }
+  ]
 }
