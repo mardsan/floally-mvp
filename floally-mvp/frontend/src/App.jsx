@@ -116,6 +116,17 @@ function App() {
     return <LandingPage />;
   }
   
+  // Redirect root path to dashboard for logged-in users
+  if (window.location.pathname === '/' && currentUser) {
+    window.location.href = '/dashboard';
+    return null;
+  }
+  
+  // If at root and not logged in, show auth
+  if (window.location.pathname === '/' && !checkingAuth && !currentUser) {
+    return <AuthPage onAuthSuccess={handleAuthSuccess} />;
+  }
+  
   const [authenticated, setAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
