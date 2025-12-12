@@ -396,8 +396,8 @@ function LandingPage() {
           <p>© 2025 Hey Aimi. We respect your privacy. No spam, ever.</p>
           <p className="mt-2">
             Questions? Email us at{' '}
-            <a href="mailto:hello@okaimy.com" className="text-primary hover:text-primary-dark">
-              hello@okaimy.com
+            <a href="mailto:hello@heyaimi.ai" className="text-primary hover:text-primary-dark">
+              hello@heyaimi.ai
             </a>
           </p>
         </div>

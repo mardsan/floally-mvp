@@ -105,11 +105,9 @@ function App() {
   const urlParams = new URLSearchParams(window.location.search);
   const isOAuthCallback = urlParams.get('auth') === 'success';
   
-  const showLandingPage = !isOAuthCallback && (
-    window.location.pathname === '/waitlist' || 
-    window.location.hostname === 'okaimy.com' ||
-    window.location.hostname === 'www.okaimy.com'
-  );
+  // Only show landing page for explicit /waitlist path
+  // heyaimi.com and heyaimi.ai should go directly to the app
+  const showLandingPage = !isOAuthCallback && window.location.pathname === '/waitlist';
   
   // If landing page mode, render that and exit early
   if (showLandingPage) {
