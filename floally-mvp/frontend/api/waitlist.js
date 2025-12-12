@@ -20,7 +20,7 @@ async function getRedisClient() {
 }
 
 export default async function handler(req, res) {
-  // CORS headers for okaimy.com
+  // CORS headers for heyaimi.com
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -57,7 +57,7 @@ export default async function handler(req, res) {
       name,
       struggle,
       timestamp: timestamp || new Date().toISOString(),
-      source: 'okaimy.com',
+      source: 'heyaimi.com',
       ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
       userAgent: req.headers['user-agent'],
       signupId: `signup_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
@@ -90,7 +90,7 @@ export default async function handler(req, res) {
         message: `Welcome to the waitlist, ${name}!`,
         email: email,
         position: totalSignups,
-        note: `You're signup #${totalSignups} for early access to OkAimy!`
+        note: `You're signup #${totalSignups} for early access to Hey Aimi!`
       });
       
     } catch (kvError) {

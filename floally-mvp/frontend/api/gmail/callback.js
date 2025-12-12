@@ -41,7 +41,7 @@ export default async function handler(req, res) {
     
     // Always use production domain for OAuth redirect
     // This must match exactly what's in Google Cloud Console
-    const redirectUri = 'https://okaimy.com/api/gmail/callback';
+    const redirectUri = 'https://heyaimi.com/api/gmail/callback';
     
     if (!clientId || !clientSecret) {
       throw new Error('Google OAuth credentials not configured');

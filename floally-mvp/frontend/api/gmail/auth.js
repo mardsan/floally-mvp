@@ -18,7 +18,7 @@ export default async function handler(req, res) {
   
   // Always use production domain for OAuth redirect
   // This ensures consistent redirect URI that matches Google Cloud Console
-  const redirectUri = 'https://okaimy.com/api/gmail/callback';
+  const redirectUri = 'https://heyaimi.com/api/gmail/callback';
   
   if (!clientId) {
     return res.status(500).json({ 
