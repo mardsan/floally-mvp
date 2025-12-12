@@ -3,10 +3,10 @@
   "outputDirectory": "floally-mvp/frontend/dist",
   "framework": "vite",
   "installCommand": "cd floally-mvp/frontend && npm install",
-  "rewrites": [
+  "routes": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
