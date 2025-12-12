@@ -19,8 +19,8 @@ logging.basicConfig(level=logging.INFO)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Initialize database on startup"""
-    logger.info("🚀 Starting Hey Aimi API v1.3.1 - Nov 23, 2025")
-    logger.info("📅 Deployment: Mobile Responsive + Trusted Contacts")
+    logger.info("🚀 Starting Hey Aimi API v1.3.1 - Dec 12, 2025")
+    logger.info("📅 Deployment: Luminous Calm Design + Bug Fixes")
     
     # Initialize database tables
     database_url = os.getenv("DATABASE_URL")
