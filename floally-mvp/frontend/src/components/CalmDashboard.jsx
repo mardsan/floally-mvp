@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { HiMenu, HiX, HiFolder, HiUser, HiCog, HiLogout, HiClock, HiCalendar, HiLightningBolt } from 'react-icons/hi';
 import { FaBrain } from 'react-icons/fa';
 import toast, { Toaster } from 'react-hot-toast';
-import { gmail, calendar, ai, behavior, userProfile } from '../services/api';
+import { gmail, calendar, ai, behavior, userProfile, autonomous } from '../services/api';
 import AimiMemory from './AimiMemory';
 import ProjectsPage from './ProjectsPage';
 import ProfileHub from './ProfileHub';
@@ -31,6 +31,7 @@ export default function CalmDashboard({ user }) {
   const [showMessageDetail, setShowMessageDetail] = useState(false);
   const [userContext, setUserContext] = useState(null);
   const [senderStats, setSenderStats] = useState({});
+  const [autonomousActionsResults, setAutonomousActionsResults] = useState(null);
 
   const handleLogout = () => {
     // Clear any stored credentials and reload
@@ -127,17 +128,54 @@ export default function CalmDashboard({ user }) {
       setAiError(null);
       
       try {
-        // Inject user context and sender stats (Context Layers 2-3)
+        // STEP 1: Process autonomous actions FIRST if enabled
+        let processedMessages = messages;
+        let autonomousSummary = null;
+        
+        if (userContext?.settings?.ai_preferences?.enable_autonomous_actions) {
+          try {
+            console.log('🤖 Processing autonomous actions...');
+            const autonomousResponse = await autonomous.processInbox(
+              user.email,
+              messages,
+              userContext.settings
+            );
+            
+            setAutonomousActionsResults(autonomousResponse.data);
+            autonomousSummary = autonomousResponse.data.summary;
+            
+            // Filter out messages that were archived
+            const archivedIds = autonomousResponse.data.actions_taken
+              .filter(a => a.action_taken === 'archived')
+              .map(a => a.email_id);
+            
+            processedMessages = messages.filter(m => !archivedIds.includes(m.id));
+            
+            if (autonomousResponse.data.total_actioned > 0) {
+              toast.success(`✅ Handled ${autonomousResponse.data.total_actioned} emails automatically`, {
+                duration: 4000,
+                position: 'bottom-center',
+                style: { background: '#F6F8F7', color: '#183A3A' }
+              });
+            }
+          } catch (error) {
+            console.error('Autonomous actions failed:', error);
+            // Continue with standup even if autonomous actions fail
+          }
+        }
+        
+        // STEP 2: Inject user context and sender stats (Context Layers 2-3)
         const contextWithStats = userContext ? {
           role: userContext.role,
           priorities: userContext.priorities || [],
           communicationStyle: userContext.communication_style,
           vipSenders: userContext.vip_senders || [],
-          senderStats: senderStats // Pass sender importance scores
+          senderStats: senderStats, // Pass sender importance scores
+          autonomousActionsSummary: autonomousSummary // Pass what Aimi actually did
         } : {};
         
         const response = await ai.generateStandup({
-          messages: messages.slice(0, 5), // Top 5 messages
+          messages: processedMessages.slice(0, 5), // Top 5 remaining messages
           events: events,
           userContext: contextWithStats
         });

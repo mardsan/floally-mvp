@@ -90,4 +90,15 @@ export const insights = {
   getOverview: (userEmail) => api.get(`/api/insights/overview?user_email=${encodeURIComponent(userEmail)}`),
 };
 
+export const autonomous = {
+  processInbox: (userEmail, messages, userPreferences) => 
+    api.post('/api/autonomous/process-inbox', {
+      user_email: userEmail,
+      messages: messages,
+      user_preferences: userPreferences
+    }),
+  getActionsLog: (userEmail, days = 7) => 
+    api.get(`/api/autonomous/actions-log?user_email=${encodeURIComponent(userEmail)}&days=${days}`),
+};
+
 export default api;

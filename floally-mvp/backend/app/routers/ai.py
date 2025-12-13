@@ -54,12 +54,15 @@ async def generate_standup(request: StandupRequest):
             role = request.userContext.get('role', '')
             priorities = request.userContext.get('priorities', [])
             comm_style = request.userContext.get('communicationStyle', '')
+            autonomous_summary = request.userContext.get('autonomousActionsSummary', '')
             
             user_context_text = f"""
 User Profile:
 - Role: {role}
 - Top Priorities: {', '.join(priorities) if priorities else 'Not specified'}
 - Communication Preference: {format_comm_style(comm_style)}
+
+{f"Autonomous Actions Taken:\n{autonomous_summary}\n" if autonomous_summary else ""}
 """
         
         # Build context from messages and events
@@ -77,6 +80,7 @@ Generate a concise daily stand-up with clear AGENCY LABELS to build trust:
 
 1. "The One Thing" - most important focus for today (prioritize based on user's top priorities if known)
 2. 3-5 key items WITH HONEST AGENCY LABELS:
+   {"- ✅ HANDLED: What you've already done (ONLY if autonomous actions were taken above)" if request.userContext and request.userContext.get('autonomousActionsSummary') else ""}
    - 🟡 SUGGESTED: "I recommend..." (Aimi's suggestions based on analysis)
    - 🔵 YOUR CALL: "You'll want to decide..." (Needs user decision)
    - 👀 WATCHING: "I'm monitoring..." (Aimi is tracking this)
@@ -84,13 +88,13 @@ Generate a concise daily stand-up with clear AGENCY LABELS to build trust:
 4. Calendar overview: Brief summary of today's meetings
 
 CRITICAL INSTRUCTIONS:
-- DO NOT use ✅ HANDLED label - you haven't taken any autonomous actions yet
-- DO NOT claim you've "archived", "sent", "replied to", or "handled" anything
-- DO NOT say "I've already done X" - you're an analysis tool right now, not an autonomous agent
-- BE HONEST: You're providing recommendations and monitoring, not executing actions
+{"- You MAY use ✅ HANDLED label since autonomous actions were taken (see above)" if request.userContext and request.userContext.get('autonomousActionsSummary') else "- DO NOT use ✅ HANDLED label - you haven't taken any autonomous actions yet"}
+- DO NOT claim you've done things that aren't in the "Autonomous Actions Taken" section above
+- BE HONEST: Only report what actually happened
 - Focus on: What you've NOTICED, what you RECOMMEND, what they should DECIDE
 
 Use these exact prefixes:
+{"- ✅ HANDLED: Actions already completed automatically" if request.userContext and request.userContext.get('autonomousActionsSummary') else ""}
 - 🟡 SUGGESTED: Your intelligent recommendations based on message analysis
 - 🔵 YOUR CALL: Important items that need their personal attention
 - 👀 WATCHING: Items you're actively monitoring for changes
