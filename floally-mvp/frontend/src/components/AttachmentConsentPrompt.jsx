@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { AlertCircle, FileText, Shield, Check, Ban } from 'lucide-react';
+
+// Simple icon components using emoji (avoid lucide-react dependency issues)
+const AlertCircle = () => <span className="text-xl">⚠️</span>;
+const FileText = () => <span className="text-xl">📄</span>;
+const Shield = () => <span className="text-xl">🛡️</span>;
+const Check = () => <span className="text-xl">✓</span>;
+const Ban = () => <span className="text-xl">🚫</span>;
 
 /**
  * AttachmentConsentPrompt
