@@ -300,7 +300,11 @@ const InsightsTab = ({ data, userEmail }) => {
     );
   }
   
-  if (!data.insights && !data.learning_status) {
+  // Check if we have insights data (it's at data.insights from backend)
+  const insightsData = data.insights;
+  const profileContext = data.profile_context;
+  
+  if (!insightsData || insightsData.total_actions === 0) {
     return (
       <div className="text-center py-12">
         <div className="mb-6">
@@ -317,8 +321,6 @@ const InsightsTab = ({ data, userEmail }) => {
       </div>
     );
   }
-
-  const { insights: insightsData, profile_context } = data;
 
   return (
     <div className="space-y-6">
