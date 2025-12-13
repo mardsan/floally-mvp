@@ -24,13 +24,19 @@ export const auth = {
 };
 
 export const gmail = {
-  getMessages: (maxResults = 10, category = 'primary') => api.get(`/api/gmail/messages?max_results=${maxResults}&category=${category}`),
-  getProfile: () => api.get('/api/gmail/profile'),
-  markImportant: (emailId) => api.post(`/api/gmail/mark-important?email_id=${emailId}`),
-  markUnimportant: (emailId) => api.post(`/api/gmail/mark-unimportant?email_id=${emailId}`),
-  archive: (emailId) => api.post(`/api/gmail/archive?email_id=${emailId}`),
-  trash: (emailId) => api.post(`/api/gmail/trash?email_id=${emailId}`),
-  getUnsubscribeLink: (emailId) => api.get(`/api/gmail/unsubscribe-link?email_id=${emailId}`),
+  getMessages: (userEmail, maxResults = 10, category = 'primary') => 
+    api.get(`/api/gmail/messages?user_email=${encodeURIComponent(userEmail)}&max_results=${maxResults}&category=${category}`),
+  getProfile: (userEmail) => api.get(`/api/gmail/profile?user_email=${encodeURIComponent(userEmail)}`),
+  markImportant: (emailId, userEmail) => 
+    api.post(`/api/gmail/mark-important?email_id=${emailId}&user_email=${encodeURIComponent(userEmail)}`),
+  markUnimportant: (emailId, userEmail) => 
+    api.post(`/api/gmail/mark-unimportant?email_id=${emailId}&user_email=${encodeURIComponent(userEmail)}`),
+  archive: (emailId, userEmail) => 
+    api.post(`/api/gmail/archive?email_id=${emailId}&user_email=${encodeURIComponent(userEmail)}`),
+  trash: (emailId, userEmail) => 
+    api.post(`/api/gmail/trash?email_id=${emailId}&user_email=${encodeURIComponent(userEmail)}`),
+  getUnsubscribeLink: (emailId, userEmail) => 
+    api.get(`/api/gmail/unsubscribe-link?email_id=${emailId}&user_email=${encodeURIComponent(userEmail)}`),
 };
 
 export const calendar = {

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { HiMenu, HiX, HiFolder, HiUser, HiCog, HiLogout } from 'react-icons/hi';
 import { FaBrain } from 'react-icons/fa';
+import { gmail } from '../services/api';
 import AimiMemory from './AimiMemory';
 import ProjectsPage from './ProjectsPage';
 import ProfileHub from './ProfileHub';
@@ -13,6 +14,9 @@ import ProfileHub from './ProfileHub';
 export default function CalmDashboard({ user }) {
   const [showMenu, setShowMenu] = useState(false);
   const [currentView, setCurrentView] = useState('dashboard'); // 'dashboard', 'memory', 'profile', 'projects', etc.
+  const [messages, setMessages] = useState([]);
+  const [loadingMessages, setLoadingMessages] = useState(false);
+  const [messagesError, setMessagesError] = useState(null);
 
   const handleLogout = () => {
     // Clear any stored credentials and reload
@@ -23,6 +27,52 @@ export default function CalmDashboard({ user }) {
 
   // Get display name with fallbacks
   const displayName = user?.display_name || user?.name || user?.email?.split('@')[0] || 'friend';
+
+  // Fetch Gmail messages on mount
+  useEffect(() => {
+    const fetchMessages = async () => {
+      if (!user?.email) return;
+      
+      setLoadingMessages(true);
+      setMessagesError(null);
+      
+      try {
+        const response = await gmail.getMessages(user.email, 5, 'important'); // Get 5 most important messages
+        setMessages(response.data.messages || []);
+      } catch (error) {
+        console.error('Failed to fetch messages:', error);
+        setMessagesError(error.response?.data?.detail || 'Failed to load messages');
+      } finally {
+        setLoadingMessages(false);
+      }
+    };
+
+    if (currentView === 'dashboard') {
+      fetchMessages();
+    }
+  }, [user?.email, currentView]);
+
+  // Handle email actions
+  const handleArchive = async (emailId) => {
+    try {
+      await gmail.archive(emailId, user.email);
+      setMessages(messages.filter(msg => msg.id !== emailId));
+    } catch (error) {
+      console.error('Failed to archive:', error);
+    }
+  };
+
+  const handleMarkImportant = async (emailId) => {
+    try {
+      await gmail.markImportant(emailId, user.email);
+      // Update local state
+      setMessages(messages.map(msg => 
+        msg.id === emailId ? { ...msg, isImportant: true, isStarred: true } : msg
+      ));
+    } catch (error) {
+      console.error('Failed to mark important:', error);
+    }
+  };
 
   // Show different views
   if (currentView === 'memory') {
@@ -194,24 +244,82 @@ export default function CalmDashboard({ user }) {
 
             {/* Quick Actions Grid - Mobile-first responsive */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-8 sm:mb-10">
-              {/* Quick Approvals */}
+              {/* Quick Approvals - Now with real Gmail data */}
               <div className="bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-lg border border-[#3DC8F6]/20 p-6 sm:p-8 hover:shadow-xl hover:border-[#3DC8F6]/40 active:scale-[0.98] sm:active:scale-100 transition-all duration-300">
                 <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
                   <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-[#3DC8F6]/20 to-[#AE7BFF]/20 flex items-center justify-center flex-shrink-0">
                     <HiCog className="w-6 h-6 sm:w-7 sm:h-7 text-[#3DC8F6]" />
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <span className="text-[10px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] text-[#3DC8F6] font-semibold block">Quick Approvals</span>
-                    <h3 className="text-lg sm:text-xl font-light text-[#183A3A]">Things Waiting</h3>
+                    <h3 className="text-lg sm:text-xl font-light text-[#183A3A]">Important Messages</h3>
                   </div>
                 </div>
-                <div className="space-y-3 sm:space-y-4">
-                  <div className="p-4 rounded-xl bg-gradient-to-br from-[#F6F8F7] to-white border border-[#E6ECEA]">
-                    <p className="text-[#183A3A]/60 text-sm sm:text-base leading-relaxed">
-                      No items need your attention. Enjoy this moment of calm.
-                    </p>
+                
+                {/* Loading State */}
+                {loadingMessages && (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="w-8 h-8 border-3 border-[#3DC8F6] border-t-transparent rounded-full animate-spin"></div>
                   </div>
-                </div>
+                )}
+                
+                {/* Error State */}
+                {messagesError && (
+                  <div className="p-4 rounded-xl bg-red-50 border border-red-200">
+                    <p className="text-red-600 text-sm">{messagesError}</p>
+                    <p className="text-xs text-red-500 mt-2">Make sure you've connected your Gmail account.</p>
+                  </div>
+                )}
+                
+                {/* Messages List */}
+                {!loadingMessages && !messagesError && (
+                  <div className="space-y-3 sm:space-y-4 max-h-96 overflow-y-auto">
+                    {messages.length === 0 ? (
+                      <div className="p-4 rounded-xl bg-gradient-to-br from-[#F6F8F7] to-white border border-[#E6ECEA]">
+                        <p className="text-[#183A3A]/60 text-sm sm:text-base leading-relaxed">
+                          No important messages right now. Enjoy this moment of calm.
+                        </p>
+                      </div>
+                    ) : (
+                      messages.map((message) => (
+                        <div key={message.id} className="p-4 rounded-xl bg-gradient-to-br from-[#F6F8F7] to-white border border-[#E6ECEA] hover:border-[#3DC8F6]/30 transition-colors">
+                          <div className="flex items-start justify-between gap-2 mb-2">
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-[#183A3A] text-sm truncate">
+                                {message.from.split('<')[0].trim() || message.from}
+                              </p>
+                              <p className="text-xs text-[#183A3A]/60 mt-1 line-clamp-2">
+                                {message.subject}
+                              </p>
+                            </div>
+                            {message.unread && (
+                              <div className="w-2 h-2 rounded-full bg-[#3DC8F6] flex-shrink-0 mt-1"></div>
+                            )}
+                          </div>
+                          <p className="text-xs text-[#183A3A]/50 mb-3 line-clamp-2">
+                            {message.snippet}
+                          </p>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleArchive(message.id)}
+                              className="flex-1 px-3 py-1.5 text-xs bg-white border border-[#E6ECEA] text-[#183A3A] rounded-lg hover:bg-[#F6F8F7] active:bg-[#E6ECEA] transition-colors"
+                            >
+                              Archive
+                            </button>
+                            {!message.isImportant && (
+                              <button
+                                onClick={() => handleMarkImportant(message.id)}
+                                className="flex-1 px-3 py-1.5 text-xs bg-gradient-to-r from-[#65E6CF] to-[#3DC8F6] text-white rounded-lg hover:shadow-md active:scale-95 transition-all"
+                              >
+                                Star
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Save My Day */}
