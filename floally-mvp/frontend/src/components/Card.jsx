@@ -19,14 +19,14 @@ const Card = ({
   ...props 
 }) => {
   // Base styles
-  const baseStyles = 'rounded-xl transition-all duration-200';
+  const baseStyles = 'rounded-lg transition-all duration-200';
   
-  // Padding variants
+  // Padding variants - responsive
   const paddingStyles = {
     none: '',
-    sm: 'p-4',
-    md: 'p-6',
-    lg: 'p-8'
+    sm: 'p-3 md:p-4',
+    md: 'p-4 md:p-6',
+    lg: 'p-6 md:p-8'
   };
   
   // Variant styles using Hey Aimi design system

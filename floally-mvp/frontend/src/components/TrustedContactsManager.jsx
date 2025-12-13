@@ -150,8 +150,8 @@ export default function TrustedContactsManager({ userEmail }) {
   return (
     <div className="space-y-4 md:space-y-6">
       {/* Header */}
-      <Card variant="elevated">
-        <CardHeader className="flex flex-col sm:flex-row items-start justify-between gap-3 mb-4">
+      <Card variant="elevated" padding="sm">
+        <CardHeader className="flex flex-col sm:flex-row items-start justify-between gap-3 mb-3">
           <div className="flex-1 min-w-0">
             <CardTitle className="text-xl md:text-2xl mb-2">
               <Icon name="contacts" size="md" className="inline-block mr-2 text-primary" />
@@ -212,8 +212,8 @@ export default function TrustedContactsManager({ userEmail }) {
       </Card>
 
       {/* Filters */}
-      <Card variant="default">
-        <CardBody className="p-3 md:p-4">
+      <Card variant="default" padding="none">
+        <CardBody className="p-3">
           <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
             {/* Search */}
             <div className="flex-1 relative">
@@ -341,9 +341,9 @@ export default function TrustedContactsManager({ userEmail }) {
             </div>
 
             {/* Mobile Card View */}
-            <div className="md:hidden space-y-3 p-3">
+            <div className="md:hidden space-y-2 p-2">
               {filteredContacts.map((contact) => (
-                <Card key={contact.id} variant="bordered" className="hover:shadow-md transition-shadow">
+                <Card key={contact.id} variant="bordered" className="hover:shadow-md transition-shadow" padding="none">
                   <CardBody className="p-3">
                     {/* Contact Info */}
                     <div className="flex items-start gap-3 mb-3">

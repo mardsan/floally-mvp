@@ -223,7 +223,7 @@ const OverviewTab = ({ data, userProfile }) => {
   return (
     <div className="space-y-6">
       {/* User Info Card */}
-      <Card variant="gradient" padding="lg" className="border border-aimi-lumo-green-100">
+      <Card variant="gradient" padding="md" className="border border-aimi-lumo-green-100">
         <h2 className="text-2xl font-bold text-gray-800 mb-2">{user_info.email}</h2>
         {user_info.role && (
           <p className="text-lg text-gray-700 mb-4">
@@ -485,7 +485,7 @@ const IntegrationsTab = ({ data, userEmail }) => {
       {integrations.map((integration) => (
         <div 
           key={integration.id}
-          className={`p-4 sm:p-6 rounded-lg border-2 ${
+          className={`p-3 sm:p-4 md:p-6 rounded-lg border-2 ${
             integration.connected 
               ? 'bg-green-50 border-green-300' 
               : 'bg-gray-50 border-gray-200'
@@ -557,7 +557,7 @@ const SettingsTab = ({ userProfile, userEmail, onUpdate }) => {
       />
 
       {/* Additional Settings Sections */}
-      <div className="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
+      <div className="mt-6 md:mt-8 p-4 md:p-6 bg-gray-50 rounded-lg border border-gray-200">
         <h3 className="text-lg font-semibold text-gray-800 mb-4">Account Management</h3>
         <div className="space-y-3">
           <button className="w-full text-left px-4 py-3 bg-white rounded border border-gray-300 hover:border-teal-400 transition-colors">

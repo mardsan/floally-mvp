@@ -331,7 +331,7 @@ const AimySettings = ({ userProfile: initialUserProfile, aimeInsights, onEdit, o
 
         {/* Footer */}
         {!standalone && (
-          <div className="p-8 border-t" style={{borderColor: '#dafef4'}}>
+          <div className="p-4 md:p-6 border-t" style={{borderColor: '#dafef4'}}>
             <button
               onClick={onClose}
               className="w-full px-6 py-3 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-full font-semibold hover:from-teal-700 hover:to-emerald-700 transition-all shadow-md"
