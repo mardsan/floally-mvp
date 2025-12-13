@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import AimiMemory from './AimiMemory';
+import ProjectsPage from './ProjectsPage';
+import ProfileHub from './ProfileHub';
 
 /**
  * CalmDashboard - Luminous Calm Design Implementation
@@ -7,11 +9,17 @@ import AimiMemory from './AimiMemory';
  */
 export default function CalmDashboard({ user }) {
   const [showMenu, setShowMenu] = useState(false);
-  const [currentView, setCurrentView] = useState('dashboard'); // 'dashboard', 'memory', 'profile', etc.
+  const [currentView, setCurrentView] = useState('dashboard'); // 'dashboard', 'memory', 'profile', 'projects', etc.
 
   // Show different views
   if (currentView === 'memory') {
     return <AimiMemory user={user} onBack={() => setCurrentView('dashboard')} />;
+  }
+  if (currentView === 'projects') {
+    return <ProjectsPage user={user} onLogout={() => setCurrentView('dashboard')} />;
+  }
+  if (currentView === 'profile') {
+    return <ProfileHub user={user} onBack={() => setCurrentView('dashboard')} />;
   }
 
   return (
@@ -37,15 +45,25 @@ export default function CalmDashboard({ user }) {
             <div className="absolute top-16 right-0 w-56 bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-[#E6ECEA] overflow-hidden">
               <div className="py-2">
                 <button 
+                  onClick={() => { setCurrentView('projects'); setShowMenu(false); }}
+                  className="w-full px-6 py-3 text-left hover:bg-[#F6F8F7] transition-colors flex items-center gap-3 text-[#183A3A]"
+                >
+                  <span className="text-xl">📁</span>
+                  <span className="font-medium">Projects</span>
+                </button>
+                <button 
                   onClick={() => { setCurrentView('memory'); setShowMenu(false); }}
                   className="w-full px-6 py-3 text-left hover:bg-[#F6F8F7] transition-colors flex items-center gap-3 text-[#183A3A]"
                 >
                   <span className="text-xl">🧠</span>
                   <span className="font-medium">Aimi's Memory</span>
                 </button>
-                <button className="w-full px-6 py-3 text-left hover:bg-[#F6F8F7] transition-colors flex items-center gap-3 text-[#183A3A]">
+                <button 
+                  onClick={() => { setCurrentView('profile'); setShowMenu(false); }}
+                  className="w-full px-6 py-3 text-left hover:bg-[#F6F8F7] transition-colors flex items-center gap-3 text-[#183A3A]"
+                >
                   <span className="text-xl">👤</span>
-                  <span className="font-medium">Profile</span>
+                  <span className="font-medium">Profile Hub</span>
                 </button>
                 <button className="w-full px-6 py-3 text-left hover:bg-[#F6F8F7] transition-colors flex items-center gap-3 text-[#183A3A]">
                   <span className="text-xl">🔗</span>
@@ -71,7 +89,16 @@ export default function CalmDashboard({ user }) {
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-br from-[#65E6CF] to-[#3DC8F6] rounded-full blur-xl opacity-40 animate-pulse"></div>
               <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-[#65E6CF] to-[#3DC8F6] flex items-center justify-center shadow-2xl ring-4 ring-white/50">
-                <span className="text-4xl animate-breathe">✨</span>
+                <video 
+                  autoPlay 
+                  loop 
+                  muted 
+                  playsInline
+                  className="w-16 h-16 rounded-full object-cover"
+                >
+                  <source src="/aimi-video-loop-720-01.mp4" type="video/mp4" />
+                  <span className="text-4xl animate-breathe">✨</span>
+                </video>
               </div>
             </div>
           </div>

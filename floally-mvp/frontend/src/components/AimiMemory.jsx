@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+const API_BASE = import.meta.env.VITE_API_URL || 'https://floally-mvp-production.up.railway.app';
+
 /**
  * AimiMemory - Transparent AI understanding and user-editable context
  * Shows what Aimi knows, how she reasons, and allows users to correct/update her memory
@@ -9,23 +11,68 @@ export default function AimiMemory({ user, onBack }) {
   const [insights, setInsights] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-  // Mock data for now - will connect to API later
+  // Fetch real profile data
   useEffect(() => {
-    // Simulate API fetch
-    setTimeout(() => {
-      setProfile({
-        role: 'Creative Director',
-        company: 'Acme Design Co.',
-        priorities: ['Client work', 'Team collaboration', 'Creative focus'],
-        communication_style: 'warm_friendly',
-        decision_style: 'options_with_context',
-        work_hours: { start: '09:00', end: '18:00' }
+    const fetchProfile = async () => {
+      try {
+        const userEmail = user?.email || 'test@example.com';
+        
+        // Fetch profile
+        const profileRes = await fetch(`${API_BASE}/api/user/profile?user_email=${encodeURIComponent(userEmail)}`);
+        const profileData = await profileRes.json();
+        
+        // Fetch insights
+        const insightsRes = await fetch(`${API_BASE}/api/user/profile/insights?user_email=${encodeURIComponent(userEmail)}`);
+        const insightsData = await insightsRes.json();
+        
+        setProfile(profileData);
+        setInsights(insightsData.insight || "I'm still getting to know you! Complete onboarding to help me understand your preferences.");
+        setLoading(false);
+      } catch (error) {
+        console.error('Failed to fetch profile:', error);
+        // Fallback to mock data
+        setProfile({
+          role: 'Professional',
+          company: 'Your Company',
+          priorities: ['Getting started', 'Learning Hey Aimi'],
+          communication_style: 'warm_friendly',
+          decision_style: 'options_with_context',
+          work_hours: { start: '09:00', end: '18:00' }
+        });
+        setInsights("I'm still getting to know you! Let's set up your profile.");
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [user]);
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      const userEmail = user?.email || 'test@example.com';
+      const response = await fetch(`${API_BASE}/api/user/profile?user_email=${encodeURIComponent(userEmail)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(profile)
       });
-      setInsights("I understand that you're a Creative Director who values client work and team collaboration. You prefer warm, friendly communication and like to see options with detailed context when making decisions.");
-      setLoading(false);
-    }, 500);
-  }, []);
+      
+      if (response.ok) {
+        setIsEditing(false);
+        // Refresh insights
+        const insightsRes = await fetch(`${API_BASE}/api/user/profile/insights?user_email=${encodeURIComponent(userEmail)}`);
+        const insightsData = await insightsRes.json();
+        setInsights(insightsData.insight);
+      }
+    } catch (error) {
+      console.error('Failed to save profile:', error);
+      alert('Failed to save changes. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -94,10 +141,11 @@ export default function AimiMemory({ user, onBack }) {
               <h2 className="text-2xl font-light text-[#183A3A]">Your Profile</h2>
             </div>
             <button 
-              onClick={() => setIsEditing(!isEditing)}
-              className="px-4 py-2 bg-[#65E6CF]/10 text-[#183A3A] rounded-lg hover:bg-[#65E6CF]/20 transition-colors text-sm font-medium"
+              onClick={() => isEditing ? handleSave() : setIsEditing(true)}
+              disabled={saving}
+              className="px-4 py-2 bg-[#65E6CF]/10 text-[#183A3A] rounded-lg hover:bg-[#65E6CF]/20 transition-colors text-sm font-medium disabled:opacity-50"
             >
-              {isEditing ? 'Save Changes' : 'Edit'}
+              {saving ? 'Saving...' : isEditing ? 'Save Changes' : 'Edit'}
             </button>
           </div>
 
