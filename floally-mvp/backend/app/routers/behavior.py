@@ -1,12 +1,26 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
-from datetime import datetime
-from typing import Optional, Dict, Any
+from datetime import datetime, timedelta
+from typing import Optional, Dict, Any, List
 import json
 import os
 from pathlib import Path
+from sqlalchemy.orm import Session
+from sqlalchemy import desc, func
 
 router = APIRouter()
+
+# Try to import database dependencies, but don't fail if unavailable
+try:
+    from app.database import get_db
+    from app.models.user import BehaviorAction as DBBehaviorAction, SenderStats as DBSenderStats
+    DB_AVAILABLE = True
+except Exception as e:
+    print(f"Database not available: {e}")
+    DB_AVAILABLE = False
+    def get_db():
+        """Dummy function when database is not available"""
+        return None
 
 class BehaviorAction(BaseModel):
     user_email: str
@@ -135,9 +149,88 @@ def update_sender_stats(user_email: str, action: BehaviorAction):
     return stats[sender_key]
 
 @router.post("/log-action")
-async def log_action(action: BehaviorAction):
-    """Log a user action on an email for behavioral learning"""
+async def log_action(action: BehaviorAction, db: Session = Depends(get_db) if DB_AVAILABLE else None):
+    """Log a user action on an email for behavioral learning
+    
+    Supports both database (production) and file-based (dev) storage.
+    Falls back to file storage if database is unavailable.
+    """
     try:
+        # Try database storage first if available
+        if DB_AVAILABLE and db is not None:
+            try:
+                # Create database entry
+                db_action = DBBehaviorAction(
+                    user_email=action.user_email,
+                    action_type=action.action_type,
+                    entity_type="email",
+                    entity_id=action.email_id,
+                    metadata={
+                        "sender_email": action.sender_email,
+                        "sender_domain": action.sender_domain,
+                        "email_category": action.email_category,
+                        "has_unsubscribe": action.has_unsubscribe,
+                        "confidence_score": action.confidence_score
+                    }
+                )
+                db.add(db_action)
+                
+                # Update or create sender stats
+                sender_stat = db.query(DBSenderStats).filter(
+                    DBSenderStats.user_email == action.user_email,
+                    DBSenderStats.sender_email == action.sender_email
+                ).first()
+                
+                if not sender_stat:
+                    sender_stat = DBSenderStats(
+                        user_email=action.user_email,
+                        sender_email=action.sender_email,
+                        total_received=0,
+                        archived_count=0,
+                        starred_count=0,
+                        opened_count=0,
+                        importance_score=0.5
+                    )
+                    db.add(sender_stat)
+                
+                # Update counts
+                sender_stat.total_received += 1
+                if action.action_type in ["archive"]:
+                    sender_stat.archived_count += 1
+                elif action.action_type in ["important", "mark_important_feedback"]:
+                    sender_stat.starred_count += 1
+                elif action.action_type in ["open", "read"]:
+                    sender_stat.opened_count += 1
+                
+                # Recalculate importance score
+                # Formula: (starred * 2 + opened) / total_received
+                if sender_stat.total_received > 0:
+                    sender_stat.importance_score = min(1.0, 
+                        (sender_stat.starred_count * 2.0 + sender_stat.opened_count) / 
+                        (sender_stat.total_received * 2.0)
+                    )
+                
+                db.commit()
+                db.refresh(sender_stat)
+                
+                return {
+                    "success": True,
+                    "message": "Action logged successfully (database)",
+                    "storage": "database",
+                    "sender_stats": {
+                        "sender_email": sender_stat.sender_email,
+                        "importance_score": sender_stat.importance_score,
+                        "total_received": sender_stat.total_received,
+                        "starred_count": sender_stat.starred_count,
+                        "archived_count": sender_stat.archived_count,
+                        "opened_count": sender_stat.opened_count
+                    }
+                }
+            except Exception as db_error:
+                print(f"Database storage failed: {db_error}, falling back to file storage")
+                db.rollback()
+        
+        # Fallback to file-based storage
         # Load existing behavior log
         log = load_behavior_log(action.user_email)
         
@@ -166,7 +259,8 @@ async def log_action(action: BehaviorAction):
         
         return {
             "success": True,
-            "message": "Action logged successfully",
+            "message": "Action logged successfully (file storage)",
+            "storage": "file",
             "sender_stats": sender_stats
         }
     
@@ -276,3 +370,249 @@ async def get_behavioral_insights(user_email: str):
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to generate insights: {str(e)}")
+
+
+@router.post("/predict-action")
+async def predict_user_action(
+    user_email: str,
+    sender_email: str,
+    sender_domain: str,
+    email_category: str,
+    has_unsubscribe: bool,
+    db: Session = Depends(get_db) if DB_AVAILABLE else None
+):
+    """Predict what action user is likely to take on this email
+    
+    Returns confidence scores for different actions based on learned behavior.
+    Uses database if available, falls back to file storage.
+    """
+    try:
+        # Try database query first if available
+        if DB_AVAILABLE and db is not None:
+            try:
+                # Get sender stats
+                sender_stat = db.query(DBSenderStats).filter(
+                    DBSenderStats.user_email == user_email,
+                    DBSenderStats.sender_email == sender_email
+                ).first()
+                
+                # Get recent actions for this sender
+                recent_actions = db.query(DBBehaviorAction).filter(
+                    DBBehaviorAction.user_email == user_email,
+                    DBBehaviorAction.metadata['sender_email'].astext == sender_email,
+                    DBBehaviorAction.timestamp >= datetime.now() - timedelta(days=30)
+                ).order_by(desc(DBBehaviorAction.timestamp)).limit(20).all()
+                
+                if sender_stat and recent_actions:
+                    # Calculate action frequencies
+                    action_counts = {}
+                    for action in recent_actions:
+                        action_type = action.action_type
+                        action_counts[action_type] = action_counts.get(action_type, 0) + 1
+                    
+                    total_actions = len(recent_actions)
+                    
+                    # Calculate confidence for each action
+                    predictions = {
+                        "archive": action_counts.get("archive", 0) / total_actions if total_actions > 0 else 0.0,
+                        "important": action_counts.get("important", 0) / total_actions if total_actions > 0 else 0.0,
+                        "read": action_counts.get("read", 0) / total_actions if total_actions > 0 else 0.0,
+                        "ignore": action_counts.get("ignore", 0) / total_actions if total_actions > 0 else 0.0
+                    }
+                    
+                    # Use importance score to boost important prediction
+                    if sender_stat.importance_score > 0.7:
+                        predictions["important"] += 0.2
+                        predictions["read"] += 0.1
+                    elif sender_stat.importance_score < 0.3:
+                        predictions["archive"] += 0.2
+                        predictions["ignore"] += 0.1
+                    
+                    # Normalize predictions to sum to 1.0
+                    total_pred = sum(predictions.values())
+                    if total_pred > 0:
+                        predictions = {k: v/total_pred for k, v in predictions.items()}
+                    
+                    # Find most likely action
+                    suggested_action = max(predictions.items(), key=lambda x: x[1])
+                    
+                    return {
+                        "sender_email": sender_email,
+                        "importance_score": sender_stat.importance_score,
+                        "suggested_action": suggested_action[0],
+                        "confidence": suggested_action[1],
+                        "predictions": predictions,
+                        "data_points": total_actions,
+                        "storage": "database"
+                    }
+            except Exception as db_error:
+                print(f"Database prediction failed: {db_error}, falling back to file storage")
+        
+        # Fallback to file-based storage
+        stats = load_sender_stats(user_email)
+        log = load_behavior_log(user_email)
+        
+        sender_data = stats.get(sender_email)
+        
+        if not sender_data or not log:
+            # No data yet, return neutral prediction
+            return {
+                "sender_email": sender_email,
+                "importance_score": 0.5,
+                "suggested_action": "read",
+                "confidence": 0.3,
+                "predictions": {
+                    "archive": 0.25,
+                    "important": 0.25,
+                    "read": 0.3,
+                    "ignore": 0.2
+                },
+                "data_points": 0,
+                "message": "Not enough data yet - building your profile!",
+                "storage": "file"
+            }
+        
+        # Calculate predictions from file data
+        sender_actions = [
+            entry for entry in log 
+            if entry["sender_email"] == sender_email
+        ]
+        
+        if len(sender_actions) < 3:
+            # Not enough data for this sender specifically
+            return {
+                "sender_email": sender_email,
+                "importance_score": sender_data.get("importance_score", 0.5),
+                "suggested_action": "read",
+                "confidence": 0.4,
+                "predictions": {
+                    "archive": 0.2,
+                    "important": 0.3,
+                    "read": 0.4,
+                    "ignore": 0.1
+                },
+                "data_points": len(sender_actions),
+                "message": "Learning your preferences for this sender",
+                "storage": "file"
+            }
+        
+        # Calculate action frequencies
+        action_counts = {}
+        for action in sender_actions[-20:]:  # Last 20 actions
+            action_type = action["action_type"]
+            action_counts[action_type] = action_counts.get(action_type, 0) + 1
+        
+        total_actions = sum(action_counts.values())
+        
+        predictions = {
+            "archive": action_counts.get("archive", 0) / total_actions if total_actions > 0 else 0.0,
+            "important": action_counts.get("important", 0) / total_actions if total_actions > 0 else 0.0,
+            "read": action_counts.get("read", 0) / total_actions if total_actions > 0 else 0.0,
+            "ignore": action_counts.get("ignore", 0) / total_actions if total_actions > 0 else 0.0
+        }
+        
+        # Adjust based on importance score
+        importance_score = sender_data.get("importance_score", 0.5)
+        if importance_score > 0.7:
+            predictions["important"] += 0.2
+            predictions["read"] += 0.1
+        elif importance_score < 0.3:
+            predictions["archive"] += 0.2
+            predictions["ignore"] += 0.1
+        
+        # Normalize
+        total_pred = sum(predictions.values())
+        if total_pred > 0:
+            predictions = {k: v/total_pred for k, v in predictions.items()}
+        
+        suggested_action = max(predictions.items(), key=lambda x: x[1])
+        
+        return {
+            "sender_email": sender_email,
+            "importance_score": importance_score,
+            "suggested_action": suggested_action[0],
+            "confidence": suggested_action[1],
+            "predictions": predictions,
+            "data_points": total_actions,
+            "storage": "file"
+        }
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to predict action: {str(e)}")
+
+
+@router.get("/auto-archive-candidates")
+async def get_auto_archive_candidates(
+    user_email: str,
+    confidence_threshold: float = 0.7,
+    db: Session = Depends(get_db) if DB_AVAILABLE else None
+):
+    """Get list of senders that user consistently archives
+    
+    Returns senders where archive action confidence > threshold.
+    These are candidates for auto-archive rules (with user approval).
+    """
+    try:
+        candidates = []
+        
+        # Try database first if available
+        if DB_AVAILABLE and db is not None:
+            try:
+                # Get all sender stats with high archive rate
+                sender_stats = db.query(DBSenderStats).filter(
+                    DBSenderStats.user_email == user_email,
+                    DBSenderStats.total_received >= 5  # At least 5 emails
+                ).all()
+                
+                for stat in sender_stats:
+                    archive_rate = stat.archived_count / stat.total_received if stat.total_received > 0 else 0
+                    
+                    if archive_rate >= confidence_threshold:
+                        candidates.append({
+                            "sender_email": stat.sender_email,
+                            "archive_rate": round(archive_rate, 2),
+                            "total_emails": stat.total_received,
+                            "archived_count": stat.archived_count,
+                            "importance_score": stat.importance_score,
+                            "confidence": "high" if archive_rate >= 0.8 else "medium"
+                        })
+                
+                return {
+                    "candidates": sorted(candidates, key=lambda x: x["archive_rate"], reverse=True),
+                    "total_candidates": len(candidates),
+                    "threshold": confidence_threshold,
+                    "storage": "database"
+                }
+            except Exception as db_error:
+                print(f"Database query failed: {db_error}, falling back to file storage")
+        
+        # Fallback to file storage
+        stats = load_sender_stats(user_email)
+        
+        for sender_email, sender_data in stats.items():
+            total = sender_data.get("total_emails", 0)
+            archived = sender_data.get("archived", 0)
+            
+            if total >= 5:  # At least 5 emails
+                archive_rate = archived / total
+                
+                if archive_rate >= confidence_threshold:
+                    candidates.append({
+                        "sender_email": sender_email,
+                        "archive_rate": round(archive_rate, 2),
+                        "total_emails": total,
+                        "archived_count": archived,
+                        "importance_score": sender_data.get("importance_score", 0.0),
+                        "confidence": "high" if archive_rate >= 0.8 else "medium"
+                    })
+        
+        return {
+            "candidates": sorted(candidates, key=lambda x: x["archive_rate"], reverse=True),
+            "total_candidates": len(candidates),
+            "threshold": confidence_threshold,
+            "storage": "file"
+        }
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get auto-archive candidates: {str(e)}")
+

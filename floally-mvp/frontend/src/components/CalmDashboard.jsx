@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { HiMenu, HiX, HiFolder, HiUser, HiCog, HiLogout, HiClock, HiCalendar, HiLightningBolt } from 'react-icons/hi';
 import { FaBrain } from 'react-icons/fa';
-import { gmail, calendar, ai } from '../services/api';
+import { gmail, calendar, ai, behavior } from '../services/api';
 import AimiMemory from './AimiMemory';
 import ProjectsPage from './ProjectsPage';
 import ProfileHub from './ProfileHub';
@@ -110,11 +110,44 @@ export default function CalmDashboard({ user }) {
     }
   }, [user?.email, messages.length, events.length, currentView, loadingMessages, loadingEvents]);
 
+  // Track user action (behavior learning)
+  const trackAction = async (message, actionType) => {
+    try {
+      const senderEmail = message.from?.split('<')[1]?.replace('>', '') || message.from || 'unknown@example.com';
+      const senderDomain = senderEmail.split('@')[1] || 'unknown.com';
+      
+      await behavior.logAction({
+        user_email: user.email,
+        email_id: message.id,
+        sender_email: senderEmail,
+        sender_domain: senderDomain,
+        action_type: actionType,
+        email_category: message.category || 'primary',
+        has_unsubscribe: message.hasUnsubscribe || false,
+        confidence_score: 1.0,
+        metadata: {
+          subject: message.subject,
+          timestamp: new Date().toISOString()
+        }
+      });
+      console.log(`✅ Tracked ${actionType} for ${senderEmail}`);
+    } catch (error) {
+      console.error('Failed to track action:', error);
+      // Don't block the main action if tracking fails
+    }
+  };
+
   // Handle email actions
   const handleArchive = async (emailId) => {
     try {
+      const message = messages.find(msg => msg.id === emailId);
       await gmail.archive(emailId, user.email);
       setMessages(messages.filter(msg => msg.id !== emailId));
+      
+      // Track behavior
+      if (message) {
+        await trackAction(message, 'archive');
+      }
     } catch (error) {
       console.error('Failed to archive:', error);
     }
@@ -122,11 +155,17 @@ export default function CalmDashboard({ user }) {
 
   const handleMarkImportant = async (emailId) => {
     try {
+      const message = messages.find(msg => msg.id === emailId);
       await gmail.markImportant(emailId, user.email);
       // Update local state
       setMessages(messages.map(msg => 
         msg.id === emailId ? { ...msg, isImportant: true, isStarred: true } : msg
       ));
+      
+      // Track behavior
+      if (message) {
+        await trackAction(message, 'important');
+      }
     } catch (error) {
       console.error('Failed to mark important:', error);
     }

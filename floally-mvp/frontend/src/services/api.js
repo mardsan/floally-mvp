@@ -68,6 +68,9 @@ export const behavior = {
   },
   getBehaviorLog: (userEmail, limit = 100) => api.get(`/api/behavior/behavior-log?user_email=${userEmail}&limit=${limit}`),
   getInsights: (userEmail) => api.get(`/api/behavior/insights?user_email=${userEmail}`),
+  predictAction: (predictionData) => api.post('/api/behavior/predict-action', predictionData),
+  getAutoArchiveCandidates: (userEmail, threshold = 0.7) => 
+    api.get(`/api/behavior/auto-archive-candidates?user_email=${encodeURIComponent(userEmail)}&confidence_threshold=${threshold}`),
 };
 
 export const profile = {
