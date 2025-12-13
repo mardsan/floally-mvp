@@ -402,7 +402,7 @@ export default function CalmDashboard({ user }) {
                 onClick={() => setShowMenu(false)}
               />
               
-              <div className="fixed top-20 right-4 left-4 sm:absolute sm:top-16 sm:right-0 sm:left-auto w-auto sm:w-64 bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-[#E6ECEA] overflow-hidden">
+              <div className="fixed top-20 right-4 left-4 sm:absolute sm:top-16 sm:right-0 sm:left-auto w-auto sm:w-64 bg-white/95 backdrop-blur-md rounded-xl shadow-2xl border border-[#E6ECEA] overflow-hidden">
                 <div className="py-2">
                   <button 
                     onClick={() => { setCurrentView('projects'); setShowMenu(false); }}
@@ -475,7 +475,7 @@ export default function CalmDashboard({ user }) {
             </header>
 
             {/* Presence - Breathing indicator - Mobile optimized */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-xl border border-[#E6ECEA] p-8 sm:p-10 mb-8 sm:mb-10 text-center group hover:shadow-2xl hover:scale-[1.01] transition-all duration-300">
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-xl border border-[#E6ECEA] p-6 sm:p-8 mb-6 sm:mb-8 text-center group hover:shadow-2xl hover:scale-[1.01] transition-all duration-300">
               <div className="inline-block relative mb-4 sm:mb-6">
                 <div className="absolute inset-0 bg-gradient-to-br from-[#65E6CF]/20 to-[#3DC8F6]/20 rounded-full blur-2xl animate-pulse"></div>
                 <div className="relative text-5xl sm:text-6xl lg:text-7xl animate-breathe">
@@ -493,7 +493,7 @@ export default function CalmDashboard({ user }) {
                 <button
                   onClick={handleSaveMyDay}
                   disabled={loadingSaveDay}
-                  className="w-full bg-gradient-to-r from-[#FF7C72] via-[#FFC46B] to-[#65E6CF] hover:shadow-2xl active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed rounded-xl p-8 sm:p-10 transition-all duration-300 group">
+                  className="w-full bg-gradient-to-r from-[#FF7C72] via-[#FFC46B] to-[#65E6CF] hover:shadow-2xl active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed rounded-xl p-6 sm:p-8 transition-all duration-300 group">
                 >
                   <div className="flex flex-col items-center gap-3 sm:gap-4">
                     <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -697,13 +697,13 @@ export default function CalmDashboard({ user }) {
             </div>
 
             {/* The One Thing - Primary focus card - Responsive */}
-            <div className="relative mb-8 sm:mb-10 group">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#65E6CF]/20 to-[#3DC8F6]/20 rounded-2xl sm:rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="relative bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border-2 border-[#65E6CF]/30 p-6 sm:p-8 lg:p-10 hover:border-[#65E6CF]/50 transition-all duration-300">
-                <div className="flex items-start gap-4 sm:gap-6 mb-6 sm:mb-8">
+            <div className="relative mb-6 sm:mb-8 group">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#65E6CF]/20 to-[#3DC8F6]/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="relative bg-white/90 backdrop-blur-sm rounded-xl shadow-xl border-2 border-[#65E6CF]/30 p-4 sm:p-6 hover:border-[#65E6CF]/50 transition-all duration-300">
+                <div className="flex items-start gap-3 sm:gap-4 mb-4 sm:mb-6">
                   <div className="flex-shrink-0">
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#65E6CF]/20 to-[#3DC8F6]/20 flex items-center justify-center backdrop-blur-sm border border-[#65E6CF]/30">
-                      <HiFolder className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-[#65E6CF]" />
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-br from-[#65E6CF]/20 to-[#3DC8F6]/20 flex items-center justify-center backdrop-blur-sm border border-[#65E6CF]/30">
+                      <HiFolder className="w-5 h-5 sm:w-6 sm:h-6 text-[#65E6CF]" />
                     </div>
                   </div>
                   <div className="flex-1">
@@ -712,7 +712,7 @@ export default function CalmDashboard({ user }) {
                   </div>
                 </div>
                 
-                <div className="bg-gradient-to-br from-[#F6F8F7] to-white rounded-xl sm:rounded-2xl p-6 sm:p-8 border border-[#E6ECEA] mb-4 sm:mb-6">
+                <div className="bg-gradient-to-br from-[#F6F8F7] to-white rounded-lg p-4 sm:p-6 border border-[#E6ECEA] mb-3 sm:mb-4">
                   <h3 className="text-lg sm:text-xl lg:text-2xl font-medium text-[#183A3A] mb-3 sm:mb-4 leading-tight">
                     {oneThing ? oneThing : 'What matters most right now'}
                   </h3>
@@ -742,9 +742,9 @@ export default function CalmDashboard({ user }) {
             </div>
 
             {/* Quick Actions Grid - Mobile-first responsive */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-8 sm:mb-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
               {/* Quick Approvals - Now with real Gmail data */}
-              <div className="bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-lg border border-[#3DC8F6]/20 p-6 sm:p-8 hover:shadow-xl hover:border-[#3DC8F6]/40 active:scale-[0.98] sm:active:scale-100 transition-all duration-300">
+              <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-[#3DC8F6]/20 p-4 sm:p-6 hover:shadow-xl hover:border-[#3DC8F6]/40 active:scale-[0.98] sm:active:scale-100 transition-all duration-300">
                 <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
                   <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-[#3DC8F6]/20 to-[#AE7BFF]/20 flex items-center justify-center flex-shrink-0">
                     <HiCog className="w-6 h-6 sm:w-7 sm:h-7 text-[#3DC8F6]" />
@@ -850,9 +850,9 @@ export default function CalmDashboard({ user }) {
 
               {/* Today's Schedule - Calendar Events */}
               <div className="bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-lg border border-[#FFC46B]/20 p-6 sm:p-8 hover:shadow-xl hover:border-[#FFC46B]/40 active:scale-[0.98] sm:active:scale-100 transition-all duration-300">
-                <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-[#FFC46B]/20 to-[#FF7C72]/20 flex items-center justify-center flex-shrink-0">
-                    <HiCalendar className="w-6 h-6 sm:w-7 sm:h-7 text-[#FFC46B]" />
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-br from-[#FF7C72]/20 to-[#FFC46B]/20 flex items-center justify-center flex-shrink-0">
+                    <HiCalendar className="w-5 h-5 sm:w-6 sm:h-6 text-[#FF7C72]" />
                   </div>
                   <div className="flex-1">
                     <span className="text-[10px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] text-[#FFC46B] font-semibold block">Today's Schedule</span>
