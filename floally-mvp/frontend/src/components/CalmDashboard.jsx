@@ -333,7 +333,7 @@ export default function CalmDashboard({ user }) {
     return <AimiMemory user={user} onBack={() => setCurrentView('dashboard')} />;
   }
   if (currentView === 'projects') {
-    return <ProjectsPage user={user} onLogout={handleLogout} />;
+    return <ProjectsPage user={user} onLogout={handleLogout} onBack={() => setCurrentView('dashboard')} />;
   }
   if (currentView === 'profile') {
     return <ProfileHub user={user} onBack={() => setCurrentView('dashboard')} />;

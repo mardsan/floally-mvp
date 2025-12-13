@@ -93,10 +93,11 @@ export default function AimiMemory({ user, onBack }) {
         {/* Back button */}
         <button 
           onClick={onBack}
-          className="mb-8 px-4 py-2 text-[#183A3A]/60 hover:text-[#183A3A] transition-colors flex items-center gap-2"
+          className="mb-4 sm:mb-8 px-3 sm:px-4 py-2 text-[#183A3A]/60 hover:text-[#183A3A] transition-colors flex items-center gap-2 text-sm sm:text-base"
         >
-          <span className="text-xl">←</span>
-          <span>Back to Dashboard</span>
+          <span className="text-lg sm:text-xl">←</span>
+          <span className="hidden sm:inline">Back to Dashboard</span>
+          <span className="sm:hidden">Back</span>
         </button>
 
         {/* Header */}

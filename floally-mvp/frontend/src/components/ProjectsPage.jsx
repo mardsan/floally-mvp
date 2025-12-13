@@ -86,7 +86,7 @@ function GoalWithSubTasks({ goal, goalIndex, onToggleSubTask }) {
   );
 }
 
-export default function ProjectsPage({ user, onLogout }) {
+export default function ProjectsPage({ user, onLogout, onBack }) {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -309,7 +309,7 @@ export default function ProjectsPage({ user, onLogout }) {
             </div>
             <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
               <button
-                onClick={() => window.location.href = '/dashboard'}
+                onClick={onBack}
                 className="px-3 md:px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors text-sm md:text-base whitespace-nowrap"
               >
                 <span className="hidden sm:inline">← Back to Dashboard</span>
