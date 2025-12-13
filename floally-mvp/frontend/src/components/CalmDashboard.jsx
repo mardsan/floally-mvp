@@ -11,12 +11,22 @@ export default function CalmDashboard({ user }) {
   const [showMenu, setShowMenu] = useState(false);
   const [currentView, setCurrentView] = useState('dashboard'); // 'dashboard', 'memory', 'profile', 'projects', etc.
 
+  const handleLogout = () => {
+    // Clear any stored credentials and reload
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = '/';
+  };
+
+  // Get display name with fallbacks
+  const displayName = user?.display_name || user?.name || user?.email?.split('@')[0] || 'friend';
+
   // Show different views
   if (currentView === 'memory') {
     return <AimiMemory user={user} onBack={() => setCurrentView('dashboard')} />;
   }
   if (currentView === 'projects') {
-    return <ProjectsPage user={user} onLogout={() => setCurrentView('dashboard')} />;
+    return <ProjectsPage user={user} onLogout={handleLogout} />;
   }
   if (currentView === 'profile') {
     return <ProfileHub user={user} onBack={() => setCurrentView('dashboard')} />;
@@ -74,7 +84,10 @@ export default function CalmDashboard({ user }) {
                   <span className="font-medium">Settings</span>
                 </button>
                 <div className="border-t border-[#E6ECEA] my-2"></div>
-                <button className="w-full px-6 py-3 text-left hover:bg-[#F6F8F7] transition-colors flex items-center gap-3 text-[#183A3A]/60">
+                <button 
+                  onClick={handleLogout}
+                  className="w-full px-6 py-3 text-left hover:bg-red-50 transition-colors flex items-center gap-3 text-red-600"
+                >
                   <span className="text-xl">🚪</span>
                   <span className="font-medium">Logout</span>
                 </button>
@@ -106,7 +119,7 @@ export default function CalmDashboard({ user }) {
             Hey Aimi
           </h1>
           <p className="text-2xl text-[#183A3A]/60 font-light">
-            Welcome back, <span className="text-[#183A3A]/80 font-normal">{user?.name || user?.email || 'friend'}</span>
+            Welcome back, <span className="text-[#183A3A]/80 font-normal">{displayName}</span>
           </p>
         </header>
 
