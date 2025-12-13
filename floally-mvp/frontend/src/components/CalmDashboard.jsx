@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { HiMenu, HiX, HiFolder, HiUser, HiCog, HiLogout, HiClock, HiCalendar } from 'react-icons/hi';
+import { HiMenu, HiX, HiFolder, HiUser, HiCog, HiLogout, HiClock, HiCalendar, HiLightningBolt } from 'react-icons/hi';
 import { FaBrain } from 'react-icons/fa';
-import { gmail, calendar } from '../services/api';
+import { gmail, calendar, ai } from '../services/api';
 import AimiMemory from './AimiMemory';
 import ProjectsPage from './ProjectsPage';
 import ProfileHub from './ProfileHub';
@@ -20,6 +20,9 @@ export default function CalmDashboard({ user }) {
   const [events, setEvents] = useState([]);
   const [loadingEvents, setLoadingEvents] = useState(false);
   const [eventsError, setEventsError] = useState(null);
+  const [aiInsights, setAiInsights] = useState(null);
+  const [loadingAI, setLoadingAI] = useState(false);
+  const [aiError, setAiError] = useState(null);
 
   const handleLogout = () => {
     // Clear any stored credentials and reload
@@ -78,6 +81,34 @@ export default function CalmDashboard({ user }) {
       fetchEvents();
     }
   }, [user?.email, currentView]);
+
+  // Generate AI standup when messages and events are loaded
+  useEffect(() => {
+    const generateStandup = async () => {
+      if (!user?.email || messages.length === 0 || loadingMessages || loadingEvents) return;
+      
+      setLoadingAI(true);
+      setAiError(null);
+      
+      try {
+        const response = await ai.generateStandup({
+          messages: messages.slice(0, 5), // Top 5 messages
+          events: events,
+          userContext: {}
+        });
+        setAiInsights(response.data);
+      } catch (error) {
+        console.error('Failed to generate AI insights:', error);
+        setAiError(error.response?.data?.detail || 'Failed to generate insights');
+      } finally {
+        setLoadingAI(false);
+      }
+    };
+
+    if (currentView === 'dashboard' && messages.length > 0 && !loadingMessages && !loadingEvents) {
+      generateStandup();
+    }
+  }, [user?.email, messages.length, events.length, currentView, loadingMessages, loadingEvents]);
 
   // Handle email actions
   const handleArchive = async (emailId) => {
@@ -224,6 +255,70 @@ export default function CalmDashboard({ user }) {
               </div>
               <p className="text-2xl sm:text-3xl font-light text-[#183A3A] mb-2">Present</p>
               <p className="text-xs sm:text-sm text-[#183A3A]/50 tracking-wider uppercase px-4">You're here. Everything else can wait.</p>
+            </div>
+
+            {/* AI Insights - Aimi's Daily Standup */}
+            <div className="relative mb-8 sm:mb-10 group">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#AE7BFF]/20 to-[#65E6CF]/20 rounded-2xl sm:rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="relative bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border-2 border-[#AE7BFF]/30 p-6 sm:p-8 lg:p-10 hover:border-[#AE7BFF]/50 transition-all duration-300">
+                <div className="flex items-start gap-4 sm:gap-6 mb-6 sm:mb-8">
+                  <div className="flex-shrink-0">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#AE7BFF]/20 to-[#65E6CF]/20 flex items-center justify-center backdrop-blur-sm border border-[#AE7BFF]/30">
+                      <HiLightningBolt className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-[#AE7BFF]" />
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <span className="text-[10px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] text-[#AE7BFF] font-semibold block mb-1 sm:mb-2">Aimi's Daily Brief</span>
+                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-light text-[#183A3A]">Your Day at a Glance</h2>
+                  </div>
+                </div>
+                
+                {/* Loading State */}
+                {loadingAI && (
+                  <div className="flex items-center justify-center py-12">
+                    <div className="text-center">
+                      <div className="w-10 h-10 border-3 border-[#AE7BFF] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                      <p className="text-sm text-[#183A3A]/60">Aimi is analyzing your day...</p>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Error State */}
+                {aiError && !loadingAI && (
+                  <div className="p-4 rounded-xl bg-yellow-50 border border-yellow-200">
+                    <p className="text-yellow-700 text-sm">{aiError}</p>
+                    <p className="text-xs text-yellow-600 mt-2">AI insights temporarily unavailable. The rest of your dashboard still works!</p>
+                  </div>
+                )}
+                
+                {/* AI Insights Content */}
+                {!loadingAI && !aiError && aiInsights && (
+                  <div className="bg-gradient-to-br from-[#F6F8F7] to-white rounded-xl sm:rounded-2xl p-6 sm:p-8 border border-[#E6ECEA]">
+                    <div className="prose prose-sm sm:prose max-w-none">
+                      <div className="text-[#183A3A]/80 text-sm sm:text-base leading-relaxed whitespace-pre-wrap">
+                        {aiInsights.standup}
+                      </div>
+                    </div>
+                    
+                    {/* Usage Stats */}
+                    {aiInsights.usage && (
+                      <div className="mt-6 pt-4 border-t border-[#E6ECEA] flex items-center gap-2 text-xs text-[#183A3A]/40">
+                        <FaBrain className="w-3 h-3" />
+                        <span>Generated with {aiInsights.usage.output_tokens} tokens</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+                
+                {/* Default State - No data yet */}
+                {!loadingAI && !aiError && !aiInsights && (
+                  <div className="bg-gradient-to-br from-[#F6F8F7] to-white rounded-xl sm:rounded-2xl p-6 sm:p-8 border border-[#E6ECEA]">
+                    <p className="text-[#183A3A]/60 text-sm sm:text-base leading-relaxed text-center">
+                      Aimi will analyze your emails and calendar to create your daily brief...
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* The One Thing - Primary focus card - Responsive */}
