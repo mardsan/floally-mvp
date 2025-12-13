@@ -56,15 +56,25 @@ Today's Gmail messages ({len(request.messages)} total):
 Today's Calendar events ({len(request.events)} scheduled):
 {format_events(request.events)}
 
-Generate a concise daily stand-up with:
+Generate a concise daily stand-up with clear AGENCY LABELS to build trust:
+
 1. "The One Thing" - most important focus for today (prioritize based on user's top priorities if known)
-2. 3-5 key decisions/approvals needed (with confidence scores)
-3. What you'll handle autonomously
+2. 3-5 key decisions/approvals needed WITH AGENCY LABELS:
+   - ✅ HANDLED: "I've already..." (green - Aimi took action)
+   - 🟡 SUGGESTED: "I recommend..." (yellow - Aimi suggests)
+   - 🔵 YOUR CALL: "You'll want to decide..." (blue - needs user decision)
+3. What you'll watch: "I'm monitoring... and will alert you if..."
 4. Brief digest of what's already taken care of
+
+Use these exact prefixes for agency clarity:
+- ✅ HANDLED: (green) Actions you've already taken
+- 🟡 SUGGESTED: (yellow) Your recommendations
+- 🔵 YOUR CALL: (blue) Items needing their decision
+- 👀 WATCHING: (gray) Items you're monitoring
 
 Be warm, competent, and protective of their creative flow. You're their teammate, not just an assistant.
 {f"Match your tone to their preference: {format_comm_style(request.userContext.get('communicationStyle', ''))}." if request.userContext and request.userContext.get('communicationStyle') else ""}
-Keep the response concise and actionable.
+Keep the response concise and actionable. ALWAYS use the agency label prefixes.
 """
         
         message = client.messages.create(

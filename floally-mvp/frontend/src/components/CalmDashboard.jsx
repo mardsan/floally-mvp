@@ -334,14 +334,67 @@ export default function CalmDashboard({ user }) {
                 {!loadingAI && !aiError && aiInsights && (
                   <div className="bg-gradient-to-br from-[#F6F8F7] to-white rounded-xl sm:rounded-2xl p-6 sm:p-8 border border-[#E6ECEA]">
                     <div className="prose prose-sm sm:prose max-w-none">
-                      <div className="text-[#183A3A]/80 text-sm sm:text-base leading-relaxed whitespace-pre-wrap">
-                        {aiInsights.standup}
+                      <div className="text-[#183A3A]/80 text-sm sm:text-base leading-relaxed whitespace-pre-wrap space-y-2">
+                        {aiInsights.standup.split('\n').map((line, idx) => {
+                          // Parse agency labels and apply colors
+                          if (line.includes('✅ HANDLED:')) {
+                            return (
+                              <div key={idx} className="flex items-start gap-2 p-2 rounded-lg bg-green-50 border-l-4 border-green-500">
+                                <span className="text-green-600 font-semibold">✅</span>
+                                <span className="flex-1 text-green-800">{line.replace('✅ HANDLED:', '').trim()}</span>
+                              </div>
+                            );
+                          } else if (line.includes('🟡 SUGGESTED:')) {
+                            return (
+                              <div key={idx} className="flex items-start gap-2 p-2 rounded-lg bg-yellow-50 border-l-4 border-yellow-500">
+                                <span className="text-yellow-600 font-semibold">🟡</span>
+                                <span className="flex-1 text-yellow-800">{line.replace('🟡 SUGGESTED:', '').trim()}</span>
+                              </div>
+                            );
+                          } else if (line.includes('🔵 YOUR CALL:')) {
+                            return (
+                              <div key={idx} className="flex items-start gap-2 p-2 rounded-lg bg-blue-50 border-l-4 border-blue-500">
+                                <span className="text-blue-600 font-semibold">🔵</span>
+                                <span className="flex-1 text-blue-800">{line.replace('🔵 YOUR CALL:', '').trim()}</span>
+                              </div>
+                            );
+                          } else if (line.includes('👀 WATCHING:')) {
+                            return (
+                              <div key={idx} className="flex items-start gap-2 p-2 rounded-lg bg-gray-50 border-l-4 border-gray-400">
+                                <span className="text-gray-600 font-semibold">👀</span>
+                                <span className="flex-1 text-gray-700">{line.replace('👀 WATCHING:', '').trim()}</span>
+                              </div>
+                            );
+                          } else {
+                            // Regular line without agency label
+                            return line.trim() ? <p key={idx}>{line}</p> : <br key={idx} />;
+                          }
+                        })}
+                      </div>
+                    </div>
+                    
+                    {/* Agency Legend */}
+                    <div className="mt-6 pt-4 border-t border-[#E6ECEA]">
+                      <p className="text-xs text-[#183A3A]/40 mb-2 uppercase tracking-wider">Agency Labels:</p>
+                      <div className="flex flex-wrap gap-2">
+                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-green-50 border border-green-200 text-xs text-green-700">
+                          <span>✅</span> Handled by Aimi
+                        </span>
+                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-yellow-50 border border-yellow-200 text-xs text-yellow-700">
+                          <span>🟡</span> Suggested by Aimi
+                        </span>
+                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-blue-50 border border-blue-200 text-xs text-blue-700">
+                          <span>🔵</span> Needs your decision
+                        </span>
+                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-gray-50 border border-gray-200 text-xs text-gray-600">
+                          <span>👀</span> Aimi is watching
+                        </span>
                       </div>
                     </div>
                     
                     {/* Usage Stats */}
                     {aiInsights.usage && (
-                      <div className="mt-6 pt-4 border-t border-[#E6ECEA] flex items-center gap-2 text-xs text-[#183A3A]/40">
+                      <div className="mt-4 pt-4 border-t border-[#E6ECEA] flex items-center gap-2 text-xs text-[#183A3A]/40">
                         <FaBrain className="w-3 h-3" />
                         <span>Generated with {aiInsights.usage.output_tokens} tokens</span>
                       </div>
