@@ -40,8 +40,10 @@ export const gmail = {
 };
 
 export const calendar = {
-  getEvents: (days = 1) => api.get(`/api/calendar/events?days=${days}`),
-  getCalendars: () => api.get('/api/calendar/calendars'),
+  getEvents: (userEmail, days = 1) => 
+    api.get(`/api/calendar/events?user_email=${encodeURIComponent(userEmail)}&days=${days}`),
+  getCalendars: (userEmail) => 
+    api.get(`/api/calendar/calendars?user_email=${encodeURIComponent(userEmail)}`),
 };
 
 export const ai = {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { HiMenu, HiX, HiFolder, HiUser, HiCog, HiLogout } from 'react-icons/hi';
+import { HiMenu, HiX, HiFolder, HiUser, HiCog, HiLogout, HiClock, HiCalendar } from 'react-icons/hi';
 import { FaBrain } from 'react-icons/fa';
-import { gmail } from '../services/api';
+import { gmail, calendar } from '../services/api';
 import AimiMemory from './AimiMemory';
 import ProjectsPage from './ProjectsPage';
 import ProfileHub from './ProfileHub';
@@ -17,6 +17,9 @@ export default function CalmDashboard({ user }) {
   const [messages, setMessages] = useState([]);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [messagesError, setMessagesError] = useState(null);
+  const [events, setEvents] = useState([]);
+  const [loadingEvents, setLoadingEvents] = useState(false);
+  const [eventsError, setEventsError] = useState(null);
 
   const handleLogout = () => {
     // Clear any stored credentials and reload
@@ -49,6 +52,30 @@ export default function CalmDashboard({ user }) {
 
     if (currentView === 'dashboard') {
       fetchMessages();
+    }
+  }, [user?.email, currentView]);
+
+  // Fetch Calendar events on mount
+  useEffect(() => {
+    const fetchEvents = async () => {
+      if (!user?.email) return;
+      
+      setLoadingEvents(true);
+      setEventsError(null);
+      
+      try {
+        const response = await calendar.getEvents(user.email, 1); // Get today's events
+        setEvents(response.data.events || []);
+      } catch (error) {
+        console.error('Failed to fetch events:', error);
+        setEventsError(error.response?.data?.detail || 'Failed to load calendar');
+      } finally {
+        setLoadingEvents(false);
+      }
+    };
+
+    if (currentView === 'dashboard') {
+      fetchEvents();
     }
   }, [user?.email, currentView]);
 
@@ -322,25 +349,113 @@ export default function CalmDashboard({ user }) {
                 )}
               </div>
 
-              {/* Save My Day */}
+              {/* Today's Schedule - Calendar Events */}
               <div className="bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-lg border border-[#FFC46B]/20 p-6 sm:p-8 hover:shadow-xl hover:border-[#FFC46B]/40 active:scale-[0.98] sm:active:scale-100 transition-all duration-300">
                 <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
                   <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-[#FFC46B]/20 to-[#FF7C72]/20 flex items-center justify-center flex-shrink-0">
-                    <FaBrain className="w-6 h-6 sm:w-7 sm:h-7 text-[#FFC46B]" />
+                    <HiCalendar className="w-6 h-6 sm:w-7 sm:h-7 text-[#FFC46B]" />
                   </div>
-                  <div>
-                    <span className="text-[10px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] text-[#FFC46B] font-semibold block">Save My Day</span>
-                    <h3 className="text-lg sm:text-xl font-light text-[#183A3A]">AI Working</h3>
-                  </div>
-                </div>
-                <div className="space-y-3 sm:space-y-4">
-                  <div className="p-4 rounded-xl bg-gradient-to-br from-[#F6F8F7] to-white border border-[#E6ECEA] flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-[#AE7BFF] animate-pulse flex-shrink-0"></div>
-                    <p className="text-[#183A3A]/60 text-xs sm:text-sm flex-1">
-                      Aimi is analyzing your day and preparing suggestions
-                    </p>
+                  <div className="flex-1">
+                    <span className="text-[10px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] text-[#FFC46B] font-semibold block">Today's Schedule</span>
+                    <h3 className="text-lg sm:text-xl font-light text-[#183A3A]">Calendar Events</h3>
                   </div>
                 </div>
+                
+                {/* Loading State */}
+                {loadingEvents && (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="w-8 h-8 border-3 border-[#FFC46B] border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                )}
+                
+                {/* Error State */}
+                {eventsError && (
+                  <div className="p-4 rounded-xl bg-red-50 border border-red-200">
+                    <p className="text-red-600 text-sm">{eventsError}</p>
+                    <p className="text-xs text-red-500 mt-2">Make sure you've connected your Google Calendar.</p>
+                  </div>
+                )}
+                
+                {/* Events List */}
+                {!loadingEvents && !eventsError && (
+                  <div className="space-y-3 sm:space-y-4 max-h-96 overflow-y-auto">
+                    {events.length === 0 ? (
+                      <div className="p-4 rounded-xl bg-gradient-to-br from-[#F6F8F7] to-white border border-[#E6ECEA]">
+                        <p className="text-[#183A3A]/60 text-sm sm:text-base leading-relaxed">
+                          No events scheduled today. Perfect time for deep work.
+                        </p>
+                      </div>
+                    ) : (
+                      events.map((event) => {
+                        const startTime = new Date(event.start);
+                        const endTime = new Date(event.end);
+                        const now = new Date();
+                        const isUpcoming = startTime > now;
+                        const isHappening = startTime <= now && endTime >= now;
+                        const isPast = endTime < now;
+                        
+                        // Format time
+                        const formatTime = (date) => {
+                          return date.toLocaleTimeString('en-US', { 
+                            hour: 'numeric', 
+                            minute: '2-digit',
+                            hour12: true 
+                          });
+                        };
+                        
+                        // Check if all-day event
+                        const isAllDay = event.start.length === 10; // Date only format
+                        
+                        return (
+                          <div 
+                            key={event.id} 
+                            className={`p-4 rounded-xl bg-gradient-to-br from-[#F6F8F7] to-white border transition-colors ${
+                              isHappening 
+                                ? 'border-[#FFC46B] bg-[#FFC46B]/5' 
+                                : isPast 
+                                  ? 'border-[#E6ECEA] opacity-60' 
+                                  : 'border-[#E6ECEA] hover:border-[#FFC46B]/30'
+                            }`}
+                          >
+                            <div className="flex items-start gap-3 mb-2">
+                              <HiClock className={`w-4 h-4 mt-0.5 flex-shrink-0 ${
+                                isHappening ? 'text-[#FFC46B] animate-pulse' : 'text-[#183A3A]/40'
+                              }`} />
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-baseline gap-2 mb-1">
+                                  <p className="font-medium text-[#183A3A] text-sm">
+                                    {event.summary}
+                                  </p>
+                                  {isHappening && (
+                                    <span className="text-[10px] uppercase tracking-wider text-[#FFC46B] font-semibold">
+                                      Now
+                                    </span>
+                                  )}
+                                </div>
+                                <p className="text-xs text-[#183A3A]/60">
+                                  {isAllDay 
+                                    ? 'All day' 
+                                    : `${formatTime(startTime)} - ${formatTime(endTime)}`
+                                  }
+                                </p>
+                                {event.location && (
+                                  <p className="text-xs text-[#183A3A]/50 mt-1 truncate">
+                                    📍 {event.location}
+                                  </p>
+                                )}
+                                {event.attendees && event.attendees.length > 0 && (
+                                  <p className="text-xs text-[#183A3A]/50 mt-1">
+                                    👥 {event.attendees.length} {event.attendees.length === 1 ? 'person' : 'people'}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                )}
               </div>
             </div>
 
