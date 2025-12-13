@@ -12,6 +12,7 @@ class StandupRequest(BaseModel):
     messages: list
     events: list
     userContext: dict = None  # New: user profile context
+    enable_autonomous_actions: bool = False  # New: whether to process inbox autonomously first
 
 class EmailAnalysisRequest(BaseModel):
     messages: list
@@ -35,6 +36,17 @@ async def generate_standup(request: StandupRequest):
             raise HTTPException(status_code=500, detail="ANTHROPIC_API_KEY not configured")
         
         client = anthropic.Anthropic(api_key=api_key)
+        
+        # Optional: Process autonomous actions FIRST if enabled
+        autonomous_actions_summary = None
+        if request.enable_autonomous_actions and request.userContext:
+            try:
+                # This would call the autonomous_actions processor
+                # For now, we'll skip this to avoid complexity
+                # Future: integrate autonomous_actions.process_inbox_autonomously()
+                pass
+            except Exception as e:
+                print(f"Autonomous actions failed: {e}")
         
         # Build user context if available
         user_context_text = ""
