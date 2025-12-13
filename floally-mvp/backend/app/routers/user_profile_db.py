@@ -54,7 +54,19 @@ async def get_user_profile(user_email: str, db: Session = Depends(get_db)):
                 "decision_style": None,
                 "communication_style": None,
                 "unsubscribe_preference": None,
-                "work_hours": None
+                "work_hours": None,
+                "settings": None
+            }
+        
+        # Get user settings
+        settings = db.query(UserSettings).filter(UserSettings.user_id == user.id).first()
+        settings_dict = None
+        if settings:
+            settings_dict = {
+                "email_management": settings.email_management or {},
+                "ai_preferences": settings.ai_preferences or {},
+                "notification_preferences": settings.notification_preferences or {},
+                "privacy_settings": settings.privacy_settings or {}
             }
         
         # Return complete profile
@@ -72,7 +84,8 @@ async def get_user_profile(user_email: str, db: Session = Depends(get_db)):
             "timezone": profile.timezone,
             "language": profile.language,
             "onboarding_completed": profile.onboarding_completed,
-            "goals": profile.goals or []
+            "goals": profile.goals or [],
+            "settings": settings_dict
         }
     except Exception as e:
         # Fallback to file-based storage if database fails
@@ -174,7 +187,35 @@ async def update_user_profile(user_email: str, updates: Dict, db: Session = Depe
             if field in updates:
                 setattr(profile, field, updates[field])
         
+        # Handle settings update
+        if 'settings' in updates:
+            settings = db.query(UserSettings).filter(UserSettings.user_id == user.id).first()
+            if not settings:
+                settings = UserSettings(user_id=user.id)
+                db.add(settings)
+            
+            settings_data = updates['settings']
+            if 'email_management' in settings_data:
+                settings.email_management = settings_data['email_management']
+            if 'ai_preferences' in settings_data:
+                settings.ai_preferences = settings_data['ai_preferences']
+            if 'notification_preferences' in settings_data:
+                settings.notification_preferences = settings_data['notification_preferences']
+            if 'privacy_settings' in settings_data:
+                settings.privacy_settings = settings_data['privacy_settings']
+        
         db.commit()
+        
+        # Return complete profile with settings
+        settings = db.query(UserSettings).filter(UserSettings.user_id == user.id).first()
+        settings_dict = None
+        if settings:
+            settings_dict = {
+                "email_management": settings.email_management or {},
+                "ai_preferences": settings.ai_preferences or {},
+                "notification_preferences": settings.notification_preferences or {},
+                "privacy_settings": settings.privacy_settings or {}
+            }
         
         return {
             "success": True,
@@ -183,7 +224,8 @@ async def update_user_profile(user_email: str, updates: Dict, db: Session = Depe
                 "display_name": user.display_name,
                 "role": profile.role,
                 "priorities": profile.priorities,
-                "onboarding_completed": profile.onboarding_completed
+                "onboarding_completed": profile.onboarding_completed,
+                "settings": settings_dict
             }
         }
     except Exception as e:
@@ -408,4 +450,50 @@ async def save_delete_feedback(feedback: Dict, db: Session = Depends(get_db)):
         return {"success": True, "message": "Feedback received"}
     except Exception as e:
         print(f"❌ Error saving feedback: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/integrations")
+async def get_integrations(
+    user_email: str,
+    db: Session = Depends(get_db)
+):
+    """Get user's connected integrations/accounts"""
+    try:
+        print(f"📱 Getting integrations for: {user_email}")
+        
+        # Get user
+        user = db.query(User).filter(User.email == user_email).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        # Get connected accounts
+        accounts = db.query(ConnectedAccount).filter(ConnectedAccount.user_id == user.id).all()
+        
+        integrations = {
+            "gmail": False,
+            "calendar": False,
+            "connected_accounts": []
+        }
+        
+        for account in accounts:
+            if account.provider == "google":
+                # Check which scopes are available
+                scopes = account.scope.split() if account.scope else []
+                integrations["gmail"] = "https://www.googleapis.com/auth/gmail.modify" in scopes
+                integrations["calendar"] = "https://www.googleapis.com/auth/calendar.readonly" in scopes
+                
+                integrations["connected_accounts"].append({
+                    "id": account.id,
+                    "provider": account.provider,
+                    "email": account.provider_user_email,
+                    "connected_at": account.created_at.isoformat() if account.created_at else None,
+                    "scopes": scopes
+                })
+        
+        return integrations
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"❌ Error getting integrations: {e}")
         raise HTTPException(status_code=500, detail=str(e))

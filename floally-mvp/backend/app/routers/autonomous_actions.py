@@ -5,20 +5,21 @@ Performs automated email management based on user preferences and learned patter
 
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 import os
 import httpx
 
 from ..database import get_db
+from ..models.user import SenderStats, ConnectedAccount
 
 router = APIRouter()
 
 class AutonomousActionsRequest(BaseModel):
     user_email: str
-    messages: List[Dict]
-    user_preferences: Optional[Dict] = None
+    messages: List[Dict[str, Any]]
+    user_preferences: Optional[Dict[str, Any]] = None
 
 class ActionResult(BaseModel):
     email_id: str
@@ -50,7 +51,7 @@ async def process_inbox_autonomously(request: AutonomousActionsRequest, db: Sess
         user_prefs = request.user_preferences or {}
         
         # Get user's behavioral patterns from database
-        from ..models.behavior_action import SenderStats
+
         sender_stats_query = db.query(SenderStats).filter(
             SenderStats.user_email == request.user_email
         ).all()
@@ -89,8 +90,8 @@ async def process_inbox_autonomously(request: AutonomousActionsRequest, db: Sess
 
 
 async def _evaluate_message_for_action(
-    message: Dict,
-    sender_stats: Dict,
+    message: Dict[str, Any],
+    sender_stats: Dict[str, Any],
     auto_archive_promo: bool,
     user_email: str,
     db: Session
@@ -112,15 +113,14 @@ async def _evaluate_message_for_action(
     if auto_archive_promo and message.get('isPromotional', False):
         try:
             # Archive via Gmail API - remove INBOX label
-            from ..models.user import ConnectedAccount
             account = db.query(ConnectedAccount).filter(
                 ConnectedAccount.email == user_email,
                 ConnectedAccount.provider == 'google'
             ).first()
             
-            if not account or not account.access_token:
+            if not account or not account.access_token or account.access_token == '':
                 return ActionResult(
-                    email_id=email_id,
+                    email_id=email_id or 'unknown',
                     subject=subject,
                     action_taken="none",
                     reason="No Gmail access token available",
@@ -138,15 +138,15 @@ async def _evaluate_message_for_action(
                 
                 if response.status_code == 200:
                     return ActionResult(
-                        email_id=email_id,
-                        subject=subject,
+                        email_id=email_id or 'unknown',
+                        subject=subject or 'unknown',
                         action_taken="archived",
                         reason="Promotional email (auto-archive enabled)",
                         confidence=0.95
                     )
                 else:
                     return ActionResult(
-                        email_id=email_id,
+                        email_id=email_id or 'unknown',
                         subject=subject,
                         action_taken="none",
                         reason=f"Gmail API error: {response.status_code}",
@@ -155,8 +155,8 @@ async def _evaluate_message_for_action(
         except Exception as e:
             print(f"Failed to archive promotional email {email_id}: {e}")
             return ActionResult(
-                email_id=email_id,
-                subject=subject,
+                email_id=email_id or 'unknown',
+                subject=subject or 'unknown',
                 action_taken="none",
                 reason=f"Failed to archive: {str(e)}",
                 confidence=0.0
@@ -172,13 +172,12 @@ async def _evaluate_message_for_action(
             
             if archive_rate >= 0.8:  # User archives this sender 80%+ of the time
                 try:
-                    from ..models.user import ConnectedAccount
                     account = db.query(ConnectedAccount).filter(
                         ConnectedAccount.email == user_email,
                         ConnectedAccount.provider == 'google'
                     ).first()
                     
-                    if account and account.access_token:
+                    if account and account.access_token and account.access_token != '':
                         headers = {"Authorization": f"Bearer {account.access_token}"}
                         async with httpx.AsyncClient() as client:
                             response = await client.post(
@@ -189,7 +188,7 @@ async def _evaluate_message_for_action(
                             
                             if response.status_code == 200:
                                 return ActionResult(
-                                    email_id=email_id,
+                                    email_id=email_id or 'unknown',
                                     subject=subject,
                                     action_taken="archived",
                                     reason=f"You typically archive emails from this sender ({int(archive_rate * 100)}% archive rate)",
@@ -203,8 +202,8 @@ async def _evaluate_message_for_action(
         stats = sender_stats[sender_email]
         if stats.opened == 0 and stats.archived >= 3:
             return ActionResult(
-                email_id=email_id,
-                subject=subject,
+                email_id=email_id or 'unknown',
+                subject=subject or 'unknown',
                 action_taken="none",
                 reason=f"Unsubscribe candidate (never opened, archived {stats.archived} times)",
                 confidence=0.7
@@ -212,8 +211,7 @@ async def _evaluate_message_for_action(
     
     # No action taken
     return ActionResult(
-        email_id=email_id,
-        subject=subject,
+        email_id=email_id or 'unknown',
         action_taken="none",
         reason="No autonomous action rules matched",
         confidence=0.0
