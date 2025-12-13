@@ -77,11 +77,16 @@ const ProfileHub = ({ userEmail }) => {
         {/* Header - Hidden on mobile since modal already has title */}
         <div className="hidden sm:block mb-8 text-center">
           <div className="flex items-center justify-center mb-4">
-            <img 
-              src="/AiMy_LUMO_01.png" 
-              alt="Aimi" 
-              className="w-16 h-16 rounded-full mr-4 shadow-glow"
-            />
+            <video 
+              autoPlay 
+              loop 
+              muted 
+              playsInline
+              className="w-16 h-16 rounded-full mr-4 shadow-glow object-cover"
+            >
+              <source src="/Aimy_LUMO_v5.mp4" type="video/mp4" />
+              <img src="/AiMy_LUMO_01.png" alt="Aimi" className="w-16 h-16 rounded-full" />
+            </video>
             <div className="text-left">
               <h1 className="text-3xl font-bold text-gray-800">Profile Hub</h1>
               <p className="text-gray-700">Manage your Hey Aimi experience</p>
@@ -91,11 +96,16 @@ const ProfileHub = ({ userEmail }) => {
 
         {/* Mobile header - compact version */}
         <div className="sm:hidden mb-4 flex items-center gap-3 px-2">
-          <img 
-            src="/AiMy_LUMO_01.png" 
-            alt="Aimi" 
-            className="w-10 h-10 rounded-full shadow-glow"
-          />
+          <video 
+            autoPlay 
+            loop 
+            muted 
+            playsInline
+            className="w-10 h-10 rounded-full shadow-glow object-cover"
+          >
+            <source src="/Aimy_LUMO_v5.mp4" type="video/mp4" />
+            <img src="/AiMy_LUMO_01.png" alt="Aimi" className="w-10 h-10 rounded-full" />
+          </video>
           <p className="text-sm text-gray-700">Manage your Hey Aimi experience</p>
         </div>
 

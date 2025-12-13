@@ -513,15 +513,16 @@ const StandupDashboard = ({ user, userAvatar, userName, messages, events, userPr
           {/* Aimi Avatar & Header */}
           <div className="flex items-center gap-4 mb-6">
             <div className="w-16 h-16 rounded-full overflow-hidden ring-4 ring-teal-200 bg-white shadow-lg">
-              <img 
-                src="/AiMy_LUMO_01.png" 
-                alt="Aimi" 
+              <video 
+                autoPlay 
+                loop 
+                muted 
+                playsInline
                 className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                  e.target.parentElement.innerHTML = '<div class="w-full h-full bg-gradient-to-br from-teal-400 to-emerald-400 flex items-center justify-center text-white text-2xl font-bold">A</div>';
-                }}
-              />
+              >
+                <source src="/Aimy_LUMO_v5.mp4" type="video/mp4" />
+                <img src="/AiMy_LUMO_01.png" alt="Aimi" className="w-full h-full object-cover" />
+              </video>
             </div>
             <div>
               <h3 className="text-xl font-bold text-gray-800">Aimi's Work Today</h3>

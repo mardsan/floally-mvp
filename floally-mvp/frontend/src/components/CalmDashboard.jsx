@@ -109,7 +109,7 @@ export default function CalmDashboard({ user }) {
                   playsInline
                   className="w-16 h-16 rounded-full object-cover"
                 >
-                  <source src="/aimi-video-loop-720-01.mp4" type="video/mp4" />
+                  <source src="/Aimy_LUMO_v5.mp4" type="video/mp4" />
                   <span className="text-4xl animate-breathe">✨</span>
                 </video>
               </div>

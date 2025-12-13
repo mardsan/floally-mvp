@@ -34,15 +34,16 @@ const AimySettings = ({ userProfile, aimeInsights, onEdit, onClose, standalone =
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-full overflow-hidden shadow-md ring-2 ring-teal-100">
-                <img 
-                  src="/AiMy_LUMO_01.png" 
-                  alt="Aimi" 
+                <video 
+                  autoPlay 
+                  loop 
+                  muted 
+                  playsInline
                   className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                    e.target.parentElement.innerHTML = '<div class="w-full h-full bg-gradient-to-br from-teal-400 to-emerald-400 flex items-center justify-center text-2xl">⚙️</div>';
-                  }}
-                />
+                >
+                  <source src="/Aimy_LUMO_v5.mp4" type="video/mp4" />
+                  <img src="/AiMy_LUMO_01.png" alt="Aimi" className="w-full h-full object-cover" />
+                </video>
               </div>
               <div>
                 <h2 className="text-2xl font-bold text-slate-900">Aimi Settings</h2>
@@ -65,12 +66,16 @@ const AimySettings = ({ userProfile, aimeInsights, onEdit, onClose, standalone =
           <div className="bg-gradient-to-br from-teal-50 to-emerald-50 rounded-xl p-6 border" style={{borderColor: '#dafef4'}}>
             <div className="flex items-start gap-3 mb-3">
               <div className="w-10 h-10 rounded-full overflow-hidden shadow-sm ring-2 ring-white flex-shrink-0">
-                <img 
-                  src="/AiMy_LUMO_01.png" 
-                  alt="Aimi" 
+                <video 
+                  autoPlay 
+                  loop 
+                  muted 
+                  playsInline
                   className="w-full h-full object-cover"
-                  onError={(e) => e.target.style.display = 'none'}
-                />
+                >
+                  <source src="/Aimy_LUMO_v5.mp4" type="video/mp4" />
+                  <img src="/AiMy_LUMO_01.png" alt="Aimi" className="w-full h-full object-cover" />
+                </video>
               </div>
               <div className="flex-1">
                 <h3 className="font-semibold text-slate-900 mb-2">Aimi's Understanding</h3>
