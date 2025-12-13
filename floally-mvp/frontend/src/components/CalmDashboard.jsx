@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
+import AimiMemory from './AimiMemory';
 
 /**
  * CalmDashboard - Luminous Calm Design Implementation
  * Philosophy: Clarity through simplicity. Beauty through restraint.
  */
 export default function CalmDashboard({ user }) {
+  const [showMenu, setShowMenu] = useState(false);
+  const [currentView, setCurrentView] = useState('dashboard'); // 'dashboard', 'memory', 'profile', etc.
+
+  // Show different views
+  if (currentView === 'memory') {
+    return <AimiMemory user={user} onBack={() => setCurrentView('dashboard')} />;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#F6F8F7] via-white to-[#E6ECEA] relative overflow-hidden">
       {/* Ambient light effects */}
@@ -12,6 +21,49 @@ export default function CalmDashboard({ user }) {
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-radial from-[#3DC8F6]/10 to-transparent rounded-full blur-3xl"></div>
       
       <div className="max-w-5xl mx-auto px-8 py-16 relative z-10">
+        
+        {/* Settings Menu - Top Right */}
+        <div className="absolute top-8 right-8">
+          <button 
+            onClick={() => setShowMenu(!showMenu)}
+            className="w-12 h-12 rounded-full bg-white/80 backdrop-blur-sm border border-[#E6ECEA] shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center text-2xl"
+            aria-label="Settings menu"
+          >
+            ⚙️
+          </button>
+          
+          {/* Dropdown Menu */}
+          {showMenu && (
+            <div className="absolute top-16 right-0 w-56 bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-[#E6ECEA] overflow-hidden">
+              <div className="py-2">
+                <button 
+                  onClick={() => { setCurrentView('memory'); setShowMenu(false); }}
+                  className="w-full px-6 py-3 text-left hover:bg-[#F6F8F7] transition-colors flex items-center gap-3 text-[#183A3A]"
+                >
+                  <span className="text-xl">🧠</span>
+                  <span className="font-medium">Aimi's Memory</span>
+                </button>
+                <button className="w-full px-6 py-3 text-left hover:bg-[#F6F8F7] transition-colors flex items-center gap-3 text-[#183A3A]">
+                  <span className="text-xl">👤</span>
+                  <span className="font-medium">Profile</span>
+                </button>
+                <button className="w-full px-6 py-3 text-left hover:bg-[#F6F8F7] transition-colors flex items-center gap-3 text-[#183A3A]">
+                  <span className="text-xl">🔗</span>
+                  <span className="font-medium">Integrations</span>
+                </button>
+                <button className="w-full px-6 py-3 text-left hover:bg-[#F6F8F7] transition-colors flex items-center gap-3 text-[#183A3A]">
+                  <span className="text-xl">⚙️</span>
+                  <span className="font-medium">Settings</span>
+                </button>
+                <div className="border-t border-[#E6ECEA] my-2"></div>
+                <button className="w-full px-6 py-3 text-left hover:bg-[#F6F8F7] transition-colors flex items-center gap-3 text-[#183A3A]/60">
+                  <span className="text-xl">🚪</span>
+                  <span className="font-medium">Logout</span>
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
         
         {/* Header with elevated presence */}
         <header className="mb-20 text-center">
