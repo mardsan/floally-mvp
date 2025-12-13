@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { HiMenu, HiX, HiFolder, HiUser, HiCog, HiLogout, HiClock, HiCalendar, HiLightningBolt } from 'react-icons/hi';
 import { FaBrain } from 'react-icons/fa';
-import { gmail, calendar, ai, behavior } from '../services/api';
+import toast, { Toaster } from 'react-hot-toast';
+import { gmail, calendar, ai, behavior, userProfile } from '../services/api';
 import AimiMemory from './AimiMemory';
 import ProjectsPage from './ProjectsPage';
 import ProfileHub from './ProfileHub';
+import MessageDetailPopup from './MessageDetailPopup';
 
 /**
  * CalmDashboard - Luminous Calm Design Implementation
@@ -25,6 +27,10 @@ export default function CalmDashboard({ user }) {
   const [aiError, setAiError] = useState(null);
   const [loadingSaveDay, setLoadingSaveDay] = useState(false);
   const [saveDayResults, setSaveDayResults] = useState(null);
+  const [selectedMessage, setSelectedMessage] = useState(null);
+  const [showMessageDetail, setShowMessageDetail] = useState(false);
+  const [userContext, setUserContext] = useState(null);
+  const [senderStats, setSenderStats] = useState({});
 
   const handleLogout = () => {
     // Clear any stored credentials and reload
@@ -35,6 +41,34 @@ export default function CalmDashboard({ user }) {
 
   // Get display name with fallbacks
   const displayName = user?.display_name || user?.name || user?.email?.split('@')[0] || 'friend';
+
+  // Load user context and sender stats (Context Layers 2-3)
+  useEffect(() => {
+    const loadContext = async () => {
+      if (!user?.email) return;
+      
+      try {
+        // Load user profile context
+        const profileResponse = await userProfile.getProfile(user.email);
+        setUserContext(profileResponse.data);
+        console.log('✅ Loaded user context:', profileResponse.data);
+        
+        // Load sender stats
+        const statsResponse = await behavior.getSenderStats(user.email);
+        const statsMap = {};
+        statsResponse.data.forEach(stat => {
+          statsMap[stat.sender_email] = stat;
+        });
+        setSenderStats(statsMap);
+        console.log(`✅ Loaded sender stats for ${Object.keys(statsMap).length} senders`);
+      } catch (error) {
+        console.error('Failed to load context:', error);
+        // Continue without context - graceful degradation
+      }
+    };
+    
+    loadContext();
+  }, [user?.email]);
 
   // Fetch Gmail messages on mount
   useEffect(() => {
@@ -93,12 +127,22 @@ export default function CalmDashboard({ user }) {
       setAiError(null);
       
       try {
+        // Inject user context and sender stats (Context Layers 2-3)
+        const contextWithStats = userContext ? {
+          role: userContext.role,
+          priorities: userContext.priorities || [],
+          communicationStyle: userContext.communication_style,
+          vipSenders: userContext.vip_senders || [],
+          senderStats: senderStats // Pass sender importance scores
+        } : {};
+        
         const response = await ai.generateStandup({
           messages: messages.slice(0, 5), // Top 5 messages
           events: events,
-          userContext: {}
+          userContext: contextWithStats
         });
         setAiInsights(response.data);
+        console.log('✅ AI standup generated with context layers');
       } catch (error) {
         console.error('Failed to generate AI insights:', error);
         setAiError(error.response?.data?.detail || 'Failed to generate insights');
@@ -110,7 +154,7 @@ export default function CalmDashboard({ user }) {
     if (currentView === 'dashboard' && messages.length > 0 && !loadingMessages && !loadingEvents) {
       generateStandup();
     }
-  }, [user?.email, messages.length, events.length, currentView, loadingMessages, loadingEvents]);
+  }, [user?.email, messages.length, events.length, currentView, loadingMessages, loadingEvents, userContext, senderStats]);
 
   // Track user action (behavior learning)
   const trackAction = async (message, actionType) => {
@@ -150,8 +194,23 @@ export default function CalmDashboard({ user }) {
       if (message) {
         await trackAction(message, 'archive');
       }
+      
+      // Show success toast
+      toast.success('✅ Archived message', {
+        duration: 2000,
+        position: 'bottom-center',
+        style: {
+          background: '#F6F8F7',
+          color: '#183A3A',
+          border: '1px solid #E6ECEA'
+        }
+      });
     } catch (error) {
       console.error('Failed to archive:', error);
+      toast.error('Failed to archive message', {
+        duration: 3000,
+        position: 'bottom-center'
+      });
     }
   };
 
@@ -168,8 +227,23 @@ export default function CalmDashboard({ user }) {
       if (message) {
         await trackAction(message, 'important');
       }
+      
+      // Show success toast
+      toast.success('⭐ Marked as important', {
+        duration: 2000,
+        position: 'bottom-center',
+        style: {
+          background: '#F6F8F7',
+          color: '#183A3A',
+          border: '1px solid #E6ECEA'
+        }
+      });
     } catch (error) {
       console.error('Failed to mark important:', error);
+      toast.error('Failed to mark as important', {
+        duration: 3000,
+        position: 'bottom-center'
+      });
     }
   };
 
@@ -227,8 +301,39 @@ export default function CalmDashboard({ user }) {
     return <ProfileHub user={user} onBack={() => setCurrentView('dashboard')} />;
   }
 
+  // Extract "The One Thing" from AI standup
+  const extractOneThing = () => {
+    if (!aiInsights?.standup) return null;
+    
+    const lines = aiInsights.standup.split('\n');
+    const oneThingIndex = lines.findIndex(line => 
+      line.toLowerCase().includes('the one thing') || 
+      line.toLowerCase().includes('top priority') ||
+      line.toLowerCase().includes('most important')
+    );
+    
+    if (oneThingIndex === -1) return null;
+    
+    // Get the next few non-empty lines as the content
+    const content = [];
+    for (let i = oneThingIndex + 1; i < lines.length && content.length < 3; i++) {
+      const line = lines[i].trim();
+      if (line && !line.match(/^[✅🟡🔵👀]/)) {
+        content.push(line);
+      } else if (line.match(/^[✅🟡🔵👀]/)) {
+        break; // Stop at next agency label
+      }
+    }
+    
+    return content.join(' ').substring(0, 200);
+  };
+
+  const oneThing = extractOneThing();
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F6F8F7] via-white to-[#E6ECEA] relative overflow-hidden">
+    <>
+      <Toaster />
+      <div className="min-h-screen bg-gradient-to-br from-[#F6F8F7] via-white to-[#E6ECEA] relative overflow-hidden">
       {/* Ambient light effects */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-radial from-[#65E6CF]/10 to-transparent rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-radial from-[#3DC8F6]/10 to-transparent rounded-full blur-3xl"></div>
@@ -307,14 +412,14 @@ export default function CalmDashboard({ user }) {
             <header className="mb-12 sm:mb-16 lg:mb-20 text-center">
               <div className="mb-6 sm:mb-8 inline-block">
                 <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#65E6CF] to-[#3DC8F6] rounded-full blur-xl opacity-40 animate-pulse"></div>
-                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-[#65E6CF] to-[#3DC8F6] flex items-center justify-center shadow-2xl ring-4 ring-white/50">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#65E6CF] to-[#3DC8F6] rounded-full blur-2xl opacity-50 animate-pulse"></div>
+                  <div className="relative w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 rounded-full bg-gradient-to-br from-[#65E6CF] to-[#3DC8F6] flex items-center justify-center shadow-2xl ring-8 ring-white/50">
                     <video 
                       autoPlay 
                       loop 
                       muted 
                       playsInline
-                      className="w-12 h-12 sm:w-16 sm:h-16 rounded-full object-cover"
+                      className="w-20 h-20 sm:w-28 sm:h-28 lg:w-36 lg:h-36 rounded-full object-cover"
                     >
                       <source src="/Aimy_LUMO_v5.mp4" type="video/mp4" />
                     </video>
@@ -569,10 +674,12 @@ export default function CalmDashboard({ user }) {
                 
                 <div className="bg-gradient-to-br from-[#F6F8F7] to-white rounded-xl sm:rounded-2xl p-6 sm:p-8 border border-[#E6ECEA] mb-4 sm:mb-6">
                   <h3 className="text-lg sm:text-xl lg:text-2xl font-medium text-[#183A3A] mb-3 sm:mb-4 leading-tight">
-                    What matters most right now
+                    {oneThing ? oneThing : 'What matters most right now'}
                   </h3>
                   <p className="text-[#183A3A]/70 text-sm sm:text-base lg:text-lg leading-relaxed mb-4 sm:mb-6">
-                    Your most important work lives here. One clear intention. One meaningful action.
+                    {oneThing 
+                      ? 'Aimi analyzed your emails, calendar, and priorities to identify this as your most important focus.' 
+                      : 'Your most important work lives here. One clear intention. One meaningful action.'}
                   </p>
                   <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                     <button className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-[#65E6CF] to-[#3DC8F6] text-white rounded-xl font-medium hover:shadow-lg active:scale-95 sm:hover:scale-105 transition-all duration-300 shadow-md">
@@ -633,14 +740,34 @@ export default function CalmDashboard({ user }) {
                         </p>
                       </div>
                     ) : (
-                      messages.map((message) => (
-                        <div key={message.id} className="p-4 rounded-xl bg-gradient-to-br from-[#F6F8F7] to-white border border-[#E6ECEA] hover:border-[#3DC8F6]/30 transition-colors">
+                      messages.map((message) => {
+                        const senderEmail = message.from?.split('<')[1]?.replace('>', '') || message.from;
+                        const stats = senderStats[senderEmail];
+                        const isVIP = stats?.importance_score > 0.7;
+                        
+                        return (
+                        <div 
+                          key={message.id} 
+                          onClick={() => {
+                            setSelectedMessage(message);
+                            setShowMessageDetail(true);
+                            trackAction(message, 'open');
+                          }}
+                          className="p-4 rounded-xl bg-gradient-to-br from-[#F6F8F7] to-white border border-[#E6ECEA] hover:border-[#3DC8F6]/30 transition-colors cursor-pointer"
+                        >
                           <div className="flex items-start justify-between gap-2 mb-2">
                             <div className="flex-1 min-w-0">
-                              <p className="font-medium text-[#183A3A] text-sm truncate">
-                                {message.from.split('<')[0].trim() || message.from}
-                              </p>
-                              <p className="text-xs text-[#183A3A]/60 mt-1 line-clamp-2">
+                              <div className="flex items-center gap-2 mb-1">
+                                <p className="font-medium text-[#183A3A] text-sm truncate">
+                                  {message.from.split('<')[0].trim() || message.from}
+                                </p>
+                                {isVIP && (
+                                  <span className="px-1.5 py-0.5 text-[9px] uppercase tracking-wider bg-[#65E6CF]/20 text-[#65E6CF] rounded font-semibold flex-shrink-0">
+                                    VIP
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-xs text-[#183A3A]/60 line-clamp-2">
                                 {message.subject}
                               </p>
                             </div>
@@ -653,14 +780,20 @@ export default function CalmDashboard({ user }) {
                           </p>
                           <div className="flex gap-2">
                             <button
-                              onClick={() => handleArchive(message.id)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleArchive(message.id);
+                              }}
                               className="flex-1 px-3 py-1.5 text-xs bg-white border border-[#E6ECEA] text-[#183A3A] rounded-lg hover:bg-[#F6F8F7] active:bg-[#E6ECEA] transition-colors"
                             >
                               Archive
                             </button>
                             {!message.isImportant && (
                               <button
-                                onClick={() => handleMarkImportant(message.id)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleMarkImportant(message.id);
+                                }}
                                 className="flex-1 px-3 py-1.5 text-xs bg-gradient-to-r from-[#65E6CF] to-[#3DC8F6] text-white rounded-lg hover:shadow-md active:scale-95 transition-all"
                               >
                                 Star
@@ -668,7 +801,8 @@ export default function CalmDashboard({ user }) {
                             )}
                           </div>
                         </div>
-                      ))
+                        );
+                      })
                     )}
                   </div>
                 )}
@@ -795,6 +929,26 @@ export default function CalmDashboard({ user }) {
           </>
         )}
       </div>
-    </div>
+      </div>
+      
+      {/* Message Detail Popup */}
+      {showMessageDetail && selectedMessage && (
+        <MessageDetailPopup
+          message={selectedMessage}
+          user={user}
+          onClose={() => {
+            setShowMessageDetail(false);
+            setSelectedMessage(null);
+          }}
+          onFeedback={(feedback) => {
+            console.log('User feedback:', feedback);
+            toast.success('Thanks for your feedback!', {
+              duration: 2000,
+              position: 'bottom-center'
+            });
+          }}
+        />
+      )}
+    </>
   );
 }
