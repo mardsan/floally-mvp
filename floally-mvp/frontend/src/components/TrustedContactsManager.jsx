@@ -165,7 +165,7 @@ export default function TrustedContactsManager({ userEmail }) {
             variant="primary"
             size="sm"
             onClick={() => setShowAddModal(true)}
-            className="w-full sm:w-auto"
+            className="w-full sm:w-auto whitespace-nowrap px-3 py-2 text-sm"
           >
             + Add Contact
           </Button>
@@ -367,13 +367,13 @@ export default function TrustedContactsManager({ userEmail }) {
                     </div>
 
                     {/* Actions Row */}
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                       <label htmlFor={`trust-level-mobile-${contact.sender_email}`} className="sr-only">Trust level for {contact.sender_name || contact.sender_email}</label>
                       <select
                         id={`trust-level-mobile-${contact.sender_email}`}
                         value={contact.trust_level}
                         onChange={(e) => handleUpdateTrustLevel(contact.sender_email, e.target.value)}
-                        className="flex-1 px-2 py-1.5 border border-gray-300 rounded text-xs focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                        className="flex-1 px-2 py-2 border border-gray-300 rounded-lg text-xs focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                       >
                         <option value="trusted">✅ Trusted</option>
                         <option value="one_time">❓ Ask Each Time</option>
@@ -383,7 +383,7 @@ export default function TrustedContactsManager({ userEmail }) {
                         variant="danger"
                         size="sm"
                         onClick={() => handleRemoveContact(contact.sender_email)}
-                        className="text-xs px-3 py-1.5"
+                        className="text-xs px-3 py-2 whitespace-nowrap"
                       >
                         Remove
                       </Button>

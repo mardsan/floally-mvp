@@ -485,25 +485,25 @@ const IntegrationsTab = ({ data, userEmail }) => {
       {integrations.map((integration) => (
         <div 
           key={integration.id}
-          className={`p-6 rounded-lg border-2 ${
+          className={`p-4 sm:p-6 rounded-lg border-2 ${
             integration.connected 
               ? 'bg-green-50 border-green-300' 
               : 'bg-gray-50 border-gray-200'
           }`}
         >
-          <div className="flex items-start justify-between">
-            <div className="flex items-start">
-              <span className="text-4xl mr-4">{integration.icon}</span>
-              <div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-1">
+          <div className="flex flex-col sm:flex-row items-start gap-4">
+            <div className="flex items-start flex-1 min-w-0">
+              <span className="text-3xl sm:text-4xl mr-3 sm:mr-4 flex-shrink-0">{integration.icon}</span>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-1">
                   {integration.name}
                   {integration.comingSoon && (
-                    <span className="ml-2 text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">
+                    <span className="ml-2 text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">
                       Coming Soon
                     </span>
                   )}
                 </h3>
-                <p className="text-gray-700 mb-3">{integration.description}</p>
+                <p className="text-sm sm:text-base text-gray-700 mb-3">{integration.description}</p>
                 <div className="flex flex-wrap gap-2">
                   {integration.scopes.map((scope) => (
                     <span 
@@ -516,17 +516,17 @@ const IntegrationsTab = ({ data, userEmail }) => {
                 </div>
               </div>
             </div>
-            <div>
+            <div className="w-full sm:w-auto flex-shrink-0">
               {integration.connected ? (
                 <button 
-                  className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+                  className="w-full sm:w-auto px-3 sm:px-4 py-2 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50"
                   disabled={integration.id === 'gmail'} // Can't disconnect Gmail
                 >
                   {integration.id === 'gmail' ? 'Required' : 'Disconnect'}
                 </button>
               ) : (
                 <button 
-                  className="px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700 transition-colors"
+                  className="w-full sm:w-auto px-3 sm:px-4 py-2 text-sm bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors disabled:opacity-50"
                   disabled={integration.comingSoon}
                 >
                   {integration.comingSoon ? 'Coming Soon' : 'Connect'}

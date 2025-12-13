@@ -464,16 +464,18 @@ export default function CalmDashboard({ user }) {
                   </div>
                 </div>
               </div>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extralight text-[#183A3A] mb-3 sm:mb-4 tracking-tight leading-tight">
-                Hey Aimi
-              </h1>
+              <img 
+                src="/HeyAimi-logo.png" 
+                alt="Hey Aimi" 
+                className="h-12 sm:h-16 md:h-20 lg:h-24 mx-auto mb-3 sm:mb-4"
+              />
               <p className="text-lg sm:text-xl lg:text-2xl text-[#183A3A]/60 font-light px-4">
                 Welcome back, <span className="text-[#183A3A]/80 font-normal">{displayName}</span>
               </p>
             </header>
 
             {/* Presence - Breathing indicator - Mobile optimized */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-[#E6ECEA] p-8 sm:p-10 mb-8 sm:mb-10 text-center group hover:shadow-2xl hover:scale-[1.01] transition-all duration-300">
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-xl border border-[#E6ECEA] p-8 sm:p-10 mb-8 sm:mb-10 text-center group hover:shadow-2xl hover:scale-[1.01] transition-all duration-300">
               <div className="inline-block relative mb-4 sm:mb-6">
                 <div className="absolute inset-0 bg-gradient-to-br from-[#65E6CF]/20 to-[#3DC8F6]/20 rounded-full blur-2xl animate-pulse"></div>
                 <div className="relative text-5xl sm:text-6xl lg:text-7xl animate-breathe">
@@ -486,12 +488,12 @@ export default function CalmDashboard({ user }) {
 
             {/* Save My Day Button - Emotional Anchor */}
             <div className="relative mb-8 sm:mb-10">
-              <div className="absolute inset-0 bg-gradient-to-r from-[#FF7C72]/20 to-[#FFC46B]/20 rounded-2xl sm:rounded-3xl blur-2xl opacity-50"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-[#FF7C72]/20 to-[#FFC46B]/20 rounded-xl blur-2xl opacity-50"></div>
               <div className="relative">
                 <button
                   onClick={handleSaveMyDay}
                   disabled={loadingSaveDay}
-                  className="w-full bg-gradient-to-r from-[#FF7C72] via-[#FFC46B] to-[#65E6CF] hover:shadow-2xl active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed rounded-2xl sm:rounded-3xl p-8 sm:p-10 transition-all duration-300 group"
+                  className="w-full bg-gradient-to-r from-[#FF7C72] via-[#FFC46B] to-[#65E6CF] hover:shadow-2xl active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed rounded-xl p-8 sm:p-10 transition-all duration-300 group">
                 >
                   <div className="flex flex-col items-center gap-3 sm:gap-4">
                     <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform">
