@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { HiMenu, HiX, HiFolder, HiUser, HiCog, HiLogout } from 'react-icons/hi';
+import { FaBrain } from 'react-icons/fa';
 import AimiMemory from './AimiMemory';
 import ProjectsPage from './ProjectsPage';
 import ProfileHub from './ProfileHub';
@@ -6,6 +8,7 @@ import ProfileHub from './ProfileHub';
 /**
  * CalmDashboard - Luminous Calm Design Implementation
  * Philosophy: Clarity through simplicity. Beauty through restraint.
+ * Mobile-first responsive design with elegant icons.
  */
 export default function CalmDashboard({ user }) {
   const [showMenu, setShowMenu] = useState(false);
@@ -38,195 +41,211 @@ export default function CalmDashboard({ user }) {
       <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-radial from-[#65E6CF]/10 to-transparent rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-radial from-[#3DC8F6]/10 to-transparent rounded-full blur-3xl"></div>
       
-      <div className="max-w-5xl mx-auto px-8 py-16 relative z-10">
+      {/* Mobile-first container with responsive padding */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 relative z-10">
         
-        {/* Settings Menu - Top Right */}
-        <div className="absolute top-8 right-8">
+        {/* Mobile & Desktop Menu - Top Right with hamburger on mobile */}
+        <div className="fixed top-4 right-4 sm:absolute sm:top-8 sm:right-8 z-50">
           <button 
             onClick={() => setShowMenu(!showMenu)}
-            className="w-12 h-12 rounded-full bg-white/80 backdrop-blur-sm border border-[#E6ECEA] shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center text-2xl"
-            aria-label="Settings menu"
+            className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/90 backdrop-blur-md border border-[#E6ECEA] shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center"
+            aria-label={showMenu ? "Close menu" : "Open menu"}
           >
-            ⚙️
+            {showMenu ? (
+              <HiX className="w-6 h-6 text-[#183A3A]" />
+            ) : (
+              <HiMenu className="w-6 h-6 text-[#183A3A]" />
+            )}
           </button>
           
-          {/* Dropdown Menu */}
+          {/* Dropdown Menu - Mobile optimized */}
           {showMenu && (
-            <div className="absolute top-16 right-0 w-56 bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-[#E6ECEA] overflow-hidden">
-              <div className="py-2">
-                <button 
-                  onClick={() => { setCurrentView('projects'); setShowMenu(false); }}
-                  className="w-full px-6 py-3 text-left hover:bg-[#F6F8F7] transition-colors flex items-center gap-3 text-[#183A3A]"
-                >
-                  <span className="text-xl">📁</span>
-                  <span className="font-medium">Projects</span>
-                </button>
-                <button 
-                  onClick={() => { setCurrentView('memory'); setShowMenu(false); }}
-                  className="w-full px-6 py-3 text-left hover:bg-[#F6F8F7] transition-colors flex items-center gap-3 text-[#183A3A]"
-                >
-                  <span className="text-xl">🧠</span>
-                  <span className="font-medium">Aimi's Memory</span>
-                </button>
-                <button 
-                  onClick={() => { setCurrentView('profile'); setShowMenu(false); }}
-                  className="w-full px-6 py-3 text-left hover:bg-[#F6F8F7] transition-colors flex items-center gap-3 text-[#183A3A]"
-                >
-                  <span className="text-xl">👤</span>
-                  <span className="font-medium">Profile Hub</span>
-                </button>
-                <button className="w-full px-6 py-3 text-left hover:bg-[#F6F8F7] transition-colors flex items-center gap-3 text-[#183A3A]">
-                  <span className="text-xl">🔗</span>
-                  <span className="font-medium">Integrations</span>
-                </button>
-                <button className="w-full px-6 py-3 text-left hover:bg-[#F6F8F7] transition-colors flex items-center gap-3 text-[#183A3A]">
-                  <span className="text-xl">⚙️</span>
-                  <span className="font-medium">Settings</span>
-                </button>
-                <div className="border-t border-[#E6ECEA] my-2"></div>
-                <button 
-                  onClick={handleLogout}
-                  className="w-full px-6 py-3 text-left hover:bg-red-50 transition-colors flex items-center gap-3 text-red-600"
-                >
-                  <span className="text-xl">🚪</span>
-                  <span className="font-medium">Logout</span>
-                </button>
+            <>
+              {/* Mobile backdrop */}
+              <div 
+                className="fixed inset-0 bg-black/20 backdrop-blur-sm sm:hidden"
+                onClick={() => setShowMenu(false)}
+              />
+              
+              <div className="fixed top-20 right-4 left-4 sm:absolute sm:top-16 sm:right-0 sm:left-auto w-auto sm:w-64 bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-[#E6ECEA] overflow-hidden">
+                <div className="py-2">
+                  <button 
+                    onClick={() => { setCurrentView('projects'); setShowMenu(false); }}
+                    className="w-full px-4 sm:px-6 py-3 sm:py-3.5 text-left hover:bg-[#F6F8F7] active:bg-[#E6ECEA] transition-colors flex items-center gap-3 text-[#183A3A]"
+                  >
+                    <HiFolder className="w-5 h-5 flex-shrink-0" />
+                    <span className="font-medium">Projects</span>
+                  </button>
+                  <button 
+                    onClick={() => { setCurrentView('memory'); setShowMenu(false); }}
+                    className="w-full px-4 sm:px-6 py-3 sm:py-3.5 text-left hover:bg-[#F6F8F7] active:bg-[#E6ECEA] transition-colors flex items-center gap-3 text-[#183A3A]"
+                  >
+                    <FaBrain className="w-5 h-5 flex-shrink-0" />
+                    <span className="font-medium">Aimi's Memory</span>
+                  </button>
+                  <button 
+                    onClick={() => { setCurrentView('profile'); setShowMenu(false); }}
+                    className="w-full px-4 sm:px-6 py-3 sm:py-3.5 text-left hover:bg-[#F6F8F7] active:bg-[#E6ECEA] transition-colors flex items-center gap-3 text-[#183A3A]"
+                  >
+                    <HiUser className="w-5 h-5 flex-shrink-0" />
+                    <span className="font-medium">Profile Hub</span>
+                  </button>
+                  <button className="w-full px-4 sm:px-6 py-3 sm:py-3.5 text-left hover:bg-[#F6F8F7] active:bg-[#E6ECEA] transition-colors flex items-center gap-3 text-[#183A3A]/60">
+                    <HiCog className="w-5 h-5 flex-shrink-0" />
+                    <span className="font-medium">Settings</span>
+                  </button>
+                  <div className="border-t border-[#E6ECEA] my-2"></div>
+                  <button 
+                    onClick={handleLogout}
+                    className="w-full px-4 sm:px-6 py-3 sm:py-3.5 text-left hover:bg-red-50 active:bg-red-100 transition-colors flex items-center gap-3 text-red-600"
+                  >
+                    <HiLogout className="w-5 h-5 flex-shrink-0" />
+                    <span className="font-medium">Logout</span>
+                  </button>
+                </div>
               </div>
-            </div>
+            </>
           )}
         </div>
         
-        {/* Header with elevated presence */}
-        <header className="mb-20 text-center">
-          <div className="mb-8 inline-block">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#65E6CF] to-[#3DC8F6] rounded-full blur-xl opacity-40 animate-pulse"></div>
-              <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-[#65E6CF] to-[#3DC8F6] flex items-center justify-center shadow-2xl ring-4 ring-white/50">
-                <video 
-                  autoPlay 
-                  loop 
-                  muted 
-                  playsInline
-                  className="w-16 h-16 rounded-full object-cover"
-                >
-                  <source src="/Aimy_LUMO_v5.mp4" type="video/mp4" />
-                  <span className="text-4xl animate-breathe">✨</span>
-                </video>
-              </div>
-            </div>
-          </div>
-          <h1 className="text-6xl md:text-7xl font-extralight text-[#183A3A] mb-4 tracking-tight leading-tight">
-            Hey Aimi
-          </h1>
-          <p className="text-2xl text-[#183A3A]/60 font-light">
-            Welcome back, <span className="text-[#183A3A]/80 font-normal">{displayName}</span>
-          </p>
-        </header>
-
-        {/* Presence - Breathing indicator */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-[#E6ECEA] p-10 mb-10 text-center group hover:shadow-2xl hover:scale-[1.01] transition-all duration-300">
-          <div className="inline-block relative mb-6">
-            <div className="absolute inset-0 bg-gradient-to-br from-[#65E6CF]/20 to-[#3DC8F6]/20 rounded-full blur-2xl animate-pulse"></div>
-            <div className="relative text-7xl animate-breathe">✨</div>
-          </div>
-          <p className="text-3xl font-light text-[#183A3A] mb-2">Present</p>
-          <p className="text-sm text-[#183A3A]/50 tracking-wider uppercase">You're here. Everything else can wait.</p>
-        </div>
-
-        {/* The One Thing - Primary focus card */}
-        <div className="relative mb-10 group">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#65E6CF]/20 to-[#3DC8F6]/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-          <div className="relative bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl border-2 border-[#65E6CF]/30 p-10 hover:border-[#65E6CF]/50 transition-all duration-300">
-            <div className="flex items-start gap-6 mb-8">
-              <div className="flex-shrink-0">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#65E6CF]/20 to-[#3DC8F6]/20 flex items-center justify-center backdrop-blur-sm border border-[#65E6CF]/30">
-                  <span className="text-4xl">💚</span>
+        {/* Conditional View Rendering */}
+        {currentView === 'dashboard' && (
+          <>
+            {/* Header with elevated presence - Responsive */}
+            <header className="mb-12 sm:mb-16 lg:mb-20 text-center">
+              <div className="mb-6 sm:mb-8 inline-block">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#65E6CF] to-[#3DC8F6] rounded-full blur-xl opacity-40 animate-pulse"></div>
+                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-[#65E6CF] to-[#3DC8F6] flex items-center justify-center shadow-2xl ring-4 ring-white/50">
+                    <video 
+                      autoPlay 
+                      loop 
+                      muted 
+                      playsInline
+                      className="w-12 h-12 sm:w-16 sm:h-16 rounded-full object-cover"
+                    >
+                      <source src="/Aimy_LUMO_v5.mp4" type="video/mp4" />
+                    </video>
+                  </div>
                 </div>
               </div>
-              <div className="flex-1">
-                <span className="text-xs uppercase tracking-[0.2em] text-[#65E6CF] font-semibold block mb-2">The One Thing</span>
-                <h2 className="text-3xl font-light text-[#183A3A] mb-4">Your Single Focus</h2>
-              </div>
-            </div>
-            
-            <div className="bg-gradient-to-br from-[#F6F8F7] to-white rounded-2xl p-8 border border-[#E6ECEA] mb-6">
-              <h3 className="text-2xl font-medium text-[#183A3A] mb-4 leading-tight">
-                What matters most right now
-              </h3>
-              <p className="text-[#183A3A]/70 text-lg leading-relaxed mb-6">
-                Your most important work lives here. One clear intention. One meaningful action.
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extralight text-[#183A3A] mb-3 sm:mb-4 tracking-tight leading-tight">
+                Hey Aimi
+              </h1>
+              <p className="text-lg sm:text-xl lg:text-2xl text-[#183A3A]/60 font-light px-4">
+                Welcome back, <span className="text-[#183A3A]/80 font-normal">{displayName}</span>
               </p>
-              <div className="flex gap-4">
-                <button className="px-8 py-4 bg-gradient-to-r from-[#65E6CF] to-[#3DC8F6] text-white rounded-xl font-medium hover:shadow-lg hover:scale-105 transition-all duration-300 shadow-md">
-                  <span className="flex items-center gap-2">
-                    <span>✨</span>
-                    <span>Begin Focus</span>
-                  </span>
-                </button>
-                <button className="px-6 py-4 bg-white border-2 border-[#E6ECEA] text-[#183A3A] rounded-xl font-medium hover:border-[#65E6CF]/30 hover:bg-[#F6F8F7] transition-all duration-300">
-                  Schedule Later
-                </button>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-3 text-sm text-[#183A3A]/50">
-              <div className="w-2 h-2 rounded-full bg-[#65E6CF] animate-pulse"></div>
-              <span>Aimi is analyzing your priorities</span>
-            </div>
-          </div>
-        </div>
+            </header>
 
-        <div className="grid md:grid-cols-2 gap-8 mb-10">
-          {/* Quick Approvals */}
-          <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg border border-[#3DC8F6]/20 p-8 hover:shadow-xl hover:border-[#3DC8F6]/40 transition-all duration-300">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#3DC8F6]/20 to-[#AE7BFF]/20 flex items-center justify-center">
-                <span className="text-3xl">✓</span>
+            {/* Presence - Breathing indicator - Mobile optimized */}
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-[#E6ECEA] p-8 sm:p-10 mb-8 sm:mb-10 text-center group hover:shadow-2xl hover:scale-[1.01] transition-all duration-300">
+              <div className="inline-block relative mb-4 sm:mb-6">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#65E6CF]/20 to-[#3DC8F6]/20 rounded-full blur-2xl animate-pulse"></div>
+                <div className="relative text-5xl sm:text-6xl lg:text-7xl animate-breathe">
+                  <FaBrain className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 mx-auto text-[#65E6CF]" />
+                </div>
               </div>
-              <div>
-                <span className="text-xs uppercase tracking-[0.2em] text-[#3DC8F6] font-semibold block">Quick Approvals</span>
-                <h3 className="text-xl font-light text-[#183A3A]">Things Waiting</h3>
+              <p className="text-2xl sm:text-3xl font-light text-[#183A3A] mb-2">Present</p>
+              <p className="text-xs sm:text-sm text-[#183A3A]/50 tracking-wider uppercase px-4">You're here. Everything else can wait.</p>
+            </div>
+
+            {/* The One Thing - Primary focus card - Responsive */}
+            <div className="relative mb-8 sm:mb-10 group">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#65E6CF]/20 to-[#3DC8F6]/20 rounded-2xl sm:rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="relative bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border-2 border-[#65E6CF]/30 p-6 sm:p-8 lg:p-10 hover:border-[#65E6CF]/50 transition-all duration-300">
+                <div className="flex items-start gap-4 sm:gap-6 mb-6 sm:mb-8">
+                  <div className="flex-shrink-0">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#65E6CF]/20 to-[#3DC8F6]/20 flex items-center justify-center backdrop-blur-sm border border-[#65E6CF]/30">
+                      <HiFolder className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-[#65E6CF]" />
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <span className="text-[10px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] text-[#65E6CF] font-semibold block mb-1 sm:mb-2">The One Thing</span>
+                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-light text-[#183A3A] mb-2 sm:mb-4">Your Single Focus</h2>
+                  </div>
+                </div>
+                
+                <div className="bg-gradient-to-br from-[#F6F8F7] to-white rounded-xl sm:rounded-2xl p-6 sm:p-8 border border-[#E6ECEA] mb-4 sm:mb-6">
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-medium text-[#183A3A] mb-3 sm:mb-4 leading-tight">
+                    What matters most right now
+                  </h3>
+                  <p className="text-[#183A3A]/70 text-sm sm:text-base lg:text-lg leading-relaxed mb-4 sm:mb-6">
+                    Your most important work lives here. One clear intention. One meaningful action.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                    <button className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-[#65E6CF] to-[#3DC8F6] text-white rounded-xl font-medium hover:shadow-lg active:scale-95 sm:hover:scale-105 transition-all duration-300 shadow-md">
+                      <span className="flex items-center justify-center gap-2">
+                        <FaBrain className="w-5 h-5" />
+                        <span>Begin Focus</span>
+                      </span>
+                    </button>
+                    <button className="w-full sm:w-auto px-6 py-3 sm:py-4 bg-white border-2 border-[#E6ECEA] text-[#183A3A] rounded-xl font-medium hover:border-[#65E6CF]/30 hover:bg-[#F6F8F7] active:bg-[#E6ECEA] transition-all duration-300">
+                      Schedule Later
+                    </button>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-[#183A3A]/50">
+                  <div className="w-2 h-2 rounded-full bg-[#65E6CF] animate-pulse"></div>
+                  <span>Aimi is analyzing your priorities</span>
+                </div>
               </div>
             </div>
-            <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-gradient-to-br from-[#F6F8F7] to-white border border-[#E6ECEA]">
-                <p className="text-[#183A3A]/60 leading-relaxed">
-                  No items need your attention. Enjoy this moment of calm.
+
+            {/* Quick Actions Grid - Mobile-first responsive */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-8 sm:mb-10">
+              {/* Quick Approvals */}
+              <div className="bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-lg border border-[#3DC8F6]/20 p-6 sm:p-8 hover:shadow-xl hover:border-[#3DC8F6]/40 active:scale-[0.98] sm:active:scale-100 transition-all duration-300">
+                <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-[#3DC8F6]/20 to-[#AE7BFF]/20 flex items-center justify-center flex-shrink-0">
+                    <HiCog className="w-6 h-6 sm:w-7 sm:h-7 text-[#3DC8F6]" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] text-[#3DC8F6] font-semibold block">Quick Approvals</span>
+                    <h3 className="text-lg sm:text-xl font-light text-[#183A3A]">Things Waiting</h3>
+                  </div>
+                </div>
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="p-4 rounded-xl bg-gradient-to-br from-[#F6F8F7] to-white border border-[#E6ECEA]">
+                    <p className="text-[#183A3A]/60 text-sm sm:text-base leading-relaxed">
+                      No items need your attention. Enjoy this moment of calm.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Save My Day */}
+              <div className="bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-lg border border-[#FFC46B]/20 p-6 sm:p-8 hover:shadow-xl hover:border-[#FFC46B]/40 active:scale-[0.98] sm:active:scale-100 transition-all duration-300">
+                <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-[#FFC46B]/20 to-[#FF7C72]/20 flex items-center justify-center flex-shrink-0">
+                    <FaBrain className="w-6 h-6 sm:w-7 sm:h-7 text-[#FFC46B]" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] text-[#FFC46B] font-semibold block">Save My Day</span>
+                    <h3 className="text-lg sm:text-xl font-light text-[#183A3A]">AI Working</h3>
+                  </div>
+                </div>
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="p-4 rounded-xl bg-gradient-to-br from-[#F6F8F7] to-white border border-[#E6ECEA] flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full bg-[#AE7BFF] animate-pulse flex-shrink-0"></div>
+                    <p className="text-[#183A3A]/60 text-xs sm:text-sm flex-1">
+                      Aimi is analyzing your day and preparing suggestions
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Calm footer message - Responsive */}
+            <div className="text-center mt-12 sm:mt-16 lg:mt-20 py-8 sm:py-12">
+              <div className="inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-full bg-white/50 backdrop-blur-sm border border-[#E6ECEA]">
+                <p className="text-[#183A3A]/40 text-xs sm:text-sm tracking-wider uppercase font-light">
+                  Everything else can wait · Focus on what matters
                 </p>
               </div>
             </div>
-          </div>
-
-          {/* Save My Day */}
-          <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg border border-[#FFC46B]/20 p-8 hover:shadow-xl hover:border-[#FFC46B]/40 transition-all duration-300">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#FFC46B]/20 to-[#FF7C72]/20 flex items-center justify-center">
-                <span className="text-3xl">⚡</span>
-              </div>
-              <div>
-                <span className="text-xs uppercase tracking-[0.2em] text-[#FFC46B] font-semibold block">Save My Day</span>
-                <h3 className="text-xl font-light text-[#183A3A]">AI Working</h3>
-              </div>
-            </div>
-            <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-gradient-to-br from-[#F6F8F7] to-white border border-[#E6ECEA] flex items-center gap-3">
-                <div className="w-2 h-2 rounded-full bg-[#AE7BFF] animate-pulse"></div>
-                <p className="text-[#183A3A]/60 text-sm flex-1">
-                  Aimi is analyzing your day and preparing suggestions
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Calm footer message */}
-        <div className="text-center mt-20 py-12">
-          <div className="inline-block px-8 py-4 rounded-full bg-white/50 backdrop-blur-sm border border-[#E6ECEA]">
-            <p className="text-[#183A3A]/40 text-sm tracking-wider uppercase font-light">
-              Everything else can wait · Focus on what matters
-            </p>
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </div>
   );
