@@ -6,10 +6,13 @@ import Button from './Button';
 import Card from './Card';
 import Icon from './Icon';
 
-const ProfileHub = ({ userEmail }) => {
+const ProfileHub = ({ user, userEmail, onBack }) => {
   const [activeTab, setActiveTab] = useState('overview');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // Extract email from user object or use direct userEmail prop
+  const email = userEmail || user?.email;
   
   // Deployment marker - Nov 10 2025 - Design System Upgrade
   console.log('ProfileHub loaded - v0.1.1 with Design System');
@@ -24,8 +27,10 @@ const ProfileHub = ({ userEmail }) => {
   const [integrationsData, setIntegrationsData] = useState(null);
 
   useEffect(() => {
-    loadData();
-  }, [userEmail]);
+    if (email) {
+      loadData();
+    }
+  }, [email]);
 
   const loadData = async () => {
     try {
@@ -34,10 +39,10 @@ const ProfileHub = ({ userEmail }) => {
 
       // Load all data in parallel
       const [overview, behavioral, userProf, integrations] = await Promise.all([
-        insights.getOverview(userEmail).catch(() => ({ data: null })),
-        insights.getBehavioral(userEmail).catch(() => ({ data: null })),
-        userProfile.getProfile(userEmail).catch(() => ({ data: null })),
-        profile.getIntegrations(userEmail).catch(() => ({ data: {} })),
+        insights.getOverview(email).catch(() => ({ data: null })),
+        insights.getBehavioral(email).catch(() => ({ data: null })),
+        userProfile.getProfile(email).catch(() => ({ data: null })),
+        profile.getIntegrations(email).catch(() => ({ data: {} })),
       ]);
 
       setOverviewData(overview.data);
@@ -74,10 +79,19 @@ const ProfileHub = ({ userEmail }) => {
   return (
     <div className="min-h-full bg-gradient-to-br from-aimi-lumo-green-50 via-white to-aimi-glow-coral-50 py-4 sm:py-8 px-3 sm:px-4">
       <div className="max-w-6xl mx-auto">
-        {/* Header - Hidden on mobile since modal already has title */}
-        <div className="hidden sm:block mb-8 text-center">
-          <div className="flex items-center justify-center mb-4">
-            <video 
+        {/* Header with Back Button */}
+        <div className="mb-6 sm:mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <button
+              onClick={onBack}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:text-primary bg-white border border-gray-200 rounded-lg hover:border-primary transition-colors"
+            >
+              <span className="text-lg">←</span>
+              <span className="hidden sm:inline">Back to Dashboard</span>
+              <span className="sm:hidden">Back</span>
+            </button>
+            <div className="flex items-center gap-3">
+              <video 
               autoPlay 
               loop 
               muted 
@@ -85,28 +99,20 @@ const ProfileHub = ({ userEmail }) => {
               className="w-16 h-16 rounded-full mr-4 shadow-glow object-cover"
             >
               <source src="/Aimy_LUMO_v5.mp4" type="video/mp4" />
-              <img src="/AiMy_LUMO_01.png" alt="Aimi" className="w-16 h-16 rounded-full" />
+              <img src="/AiMy_LUMO_01.png" alt="Aimi" className="w-12 h-12 sm:w-16 sm:h-16 rounded-full" />
             </video>
-            <div className="text-left">
-              <h1 className="text-3xl font-bold text-gray-800">Profile Hub</h1>
-              <p className="text-gray-700">Manage your Hey Aimi experience</p>
+            <div className="text-left hidden sm:block">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Profile Hub</h1>
+              <p className="text-sm sm:text-base text-gray-700">Manage your Hey Aimi experience</p>
+            </div>
             </div>
           </div>
         </div>
 
-        {/* Mobile header - compact version */}
-        <div className="sm:hidden mb-4 flex items-center gap-3 px-2">
-          <video 
-            autoPlay 
-            loop 
-            muted 
-            playsInline
-            className="w-10 h-10 rounded-full shadow-glow object-cover"
-          >
-            <source src="/Aimy_LUMO_v5.mp4" type="video/mp4" />
-            <img src="/AiMy_LUMO_01.png" alt="Aimi" className="w-10 h-10 rounded-full" />
-          </video>
-          <p className="text-sm text-gray-700">Manage your Hey Aimi experience</p>
+        {/* Mobile header text moved below back button */}
+        <div className="sm:hidden mb-4 text-center">
+          <h2 className="text-lg font-bold text-gray-800">Profile Hub</h2>
+          <p className="text-sm text-gray-600">Manage your Hey Aimi experience</p>
         </div>
 
         {/* Tab Navigation */}
@@ -178,25 +184,25 @@ const ProfileHub = ({ userEmail }) => {
           {activeTab === 'insights' && (
             <InsightsTab 
               data={behavioralData}
-              userEmail={userEmail}
+              userEmail={email}
             />
           )}
 
           {activeTab === 'contacts' && (
-            <TrustedContactsManager userEmail={userEmail} />
+            <TrustedContactsManager userEmail={email} />
           )}
 
           {activeTab === 'integrations' && (
             <IntegrationsTab 
               data={integrationsData}
-              userEmail={userEmail}
+              userEmail={email}
             />
           )}
 
           {activeTab === 'settings' && (
             <SettingsTab 
               userProfile={userProfileData}
-              userEmail={userEmail}
+              userEmail={email}
               onUpdate={loadData}
             />
           )}
@@ -284,18 +290,30 @@ const InsightsTab = ({ data, userEmail }) => {
   
   if (!data) {
     return (
-      <div className="text-center py-8">
-        <p className="text-gray-500 mb-4">Loading insights...</p>
-        <p className="text-sm text-gray-400">Analyzing your behavior patterns</p>
+      <div className="text-center py-12">
+        <div className="mb-4">
+          <div className="text-4xl mb-3">📊</div>
+          <p className="text-gray-700 font-medium mb-2">Building your insights</p>
+          <p className="text-sm text-gray-500">Analyzing your behavior patterns...</p>
+        </div>
       </div>
     );
   }
   
-  if (!data.insights) {
+  if (!data.insights && !data.learning_status) {
     return (
-      <div className="text-center py-8">
-        <p className="text-gray-500 mb-4">Start using Hey Aimi to build your behavioral insights!</p>
-        <p className="text-sm text-gray-400">Take actions on emails, projects, and tasks to help Aimi learn your preferences.</p>
+      <div className="text-center py-12">
+        <div className="mb-6">
+          <div className="text-5xl mb-4">🌱</div>
+          <h3 className="text-xl font-semibold text-gray-800 mb-2">Start Building Your Insights</h3>
+          <p className="text-gray-600 mb-4 max-w-md mx-auto">
+            Take actions on emails, archive messages, and star important items to help Aimi learn your preferences.
+          </p>
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-teal-50 text-teal-700 rounded-lg text-sm">
+            <span>💡</span>
+            <span>Tip: Archive or star a few emails to get started</span>
+          </div>
+        </div>
       </div>
     );
   }
