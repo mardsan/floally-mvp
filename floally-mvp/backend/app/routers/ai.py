@@ -20,6 +20,11 @@ class EmailResponseRequest(BaseModel):
     email: dict
     user_context: str = ""
 
+class SaveMyDayRequest(BaseModel):
+    messages: list
+    events: list
+    userContext: dict
+
 @router.post("/standup")
 async def generate_standup(request: StandupRequest):
     """Generate daily stand-up using Claude (Aimi)"""
@@ -541,3 +546,129 @@ IMPORTANT:
             deadline = (current + timedelta(weeks=i+1)).strftime('%Y-%m-%d')
             goals_with_dates.append(GoalWithDate(goal=goal, deadline=deadline))
         return GoalDatesResponse(goals=goals_with_dates)
+
+
+@router.post("/save-my-day")
+async def save_my_day(request: SaveMyDayRequest):
+    """Emergency triage - simplify overwhelming day to top 3 priorities
+    
+    This is the emotional anchor that makes users feel 'Aimi's got my back'.
+    Uses behavior data + calendar + messages to intelligently defer low-priority items.
+    """
+    try:
+        api_key = os.getenv("ANTHROPIC_API_KEY")
+        if not api_key:
+            # Fallback to simple triage without AI
+            unread_count = sum(1 for m in request.messages if m.get('unread', False))
+            return {
+                "top_priorities": [
+                    {
+                        "title": "Review your urgent messages",
+                        "reason": f"You have {unread_count} unread messages"
+                    },
+                    {
+                        "title": "Check your calendar",
+                        "reason": f"{len(request.events)} events scheduled today"
+                    },
+                    {
+                        "title": "Take a deep breath",
+                        "reason": "One thing at a time. You've got this."
+                    }
+                ],
+                "can_wait": [m.get('subject', 'Email') for m in request.messages[3:6]],
+                "reassurance": "I'm here to help. Let's tackle these one by one. Everything else can wait."
+            }
+        
+        client = anthropic.Anthropic(api_key=api_key)
+        
+        # Build triage context
+        context = f"""
+You are Aimi, the user's trusted AI teammate. They just hit "Save My Day" - they're feeling overwhelmed.
+
+Your job: Be their calm, competent ally and simplify their day to what ACTUALLY matters.
+
+Today's situation:
+- {len(request.messages)} messages in inbox
+- {len(request.events)} calendar events
+- User: {request.userContext.get('displayName', 'User')}
+
+Messages overview:
+{format_messages(request.messages[:10])}
+
+Calendar events:
+{format_events(request.events)}
+
+TASK: Triage everything into:
+
+1. **TOP 3 PRIORITIES** - What absolutely must be done today:
+   - Be specific (reference actual emails/meetings)
+   - Explain WHY each matters
+   - Focus on impact, not urgency
+
+2. **CAN WAIT** - What can be deferred:
+   - 3-5 items that feel urgent but aren't
+   - Brief reason why they can wait
+
+3. **REASSURANCE** - Calm, confident message:
+   - "I've got your back"
+   - Specific action you'll take (monitor X, alert if Y)
+   - Confident, warm tone
+
+Return JSON:
+{{
+  "top_priorities": [
+    {{"title": "Specific action", "reason": "Why it matters"}},
+    ...3 items total
+  ],
+  "can_wait": ["Item 1", "Item 2", ...],
+  "reassurance": "Warm message with specific commitments"
+}}
+
+Remember: You're their teammate saving their day. Be specific, warm, and protective of their focus.
+"""
+        
+        message = client.messages.create(
+            model="claude-3-haiku-20240307",
+            max_tokens=1500,
+            messages=[{"role": "user", "content": context}]
+        )
+        
+        response_text = message.content[0].text
+        
+        # Clean JSON from response
+        if "```json" in response_text:
+            response_text = response_text.split('```json')[1].split('```')[0]
+        elif "```" in response_text:
+            response_text = response_text.split('```')[1].split('```')[0]
+        
+        triage_data = json.loads(response_text.strip())
+        
+        return triage_data
+        
+    except json.JSONDecodeError as e:
+        print(f"JSON decode error in save-my-day: {e}")
+        # Fallback
+        return {
+            "top_priorities": [
+                {
+                    "title": "Handle your most important messages",
+                    "reason": "Clear your urgent inbox items first"
+                },
+                {
+                    "title": "Prepare for today's meetings",
+                    "reason": "Stay on top of your calendar commitments"
+                },
+                {
+                    "title": "Take a mindful break",
+                    "reason": "You'll think clearer with a moment of calm"
+                }
+            ],
+            "can_wait": [m.get('subject', 'Email') for m in request.messages[3:6]],
+            "reassurance": "I'm monitoring everything. Focus on these three things, and I'll alert you if anything urgent comes up. You've got this. 💙"
+        }
+    except Exception as e:
+        print(f"Error in save-my-day: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+

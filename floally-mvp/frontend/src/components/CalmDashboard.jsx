@@ -23,6 +23,8 @@ export default function CalmDashboard({ user }) {
   const [aiInsights, setAiInsights] = useState(null);
   const [loadingAI, setLoadingAI] = useState(false);
   const [aiError, setAiError] = useState(null);
+  const [loadingSaveDay, setLoadingSaveDay] = useState(false);
+  const [saveDayResults, setSaveDayResults] = useState(null);
 
   const handleLogout = () => {
     // Clear any stored credentials and reload
@@ -171,6 +173,49 @@ export default function CalmDashboard({ user }) {
     }
   };
 
+  // Handle Save My Day - AI triage
+  const handleSaveMyDay = async () => {
+    try {
+      setLoadingSaveDay(true);
+      setSaveDayResults(null);
+      
+      // Use AI to triage messages and events
+      const response = await ai.saveMyDay({
+        messages: messages,
+        events: events,
+        userContext: {
+          displayName: displayName,
+          email: user.email
+        }
+      });
+      
+      setSaveDayResults(response.data);
+    } catch (error) {
+      console.error('Failed to save day:', error);
+      // Fallback to simple triage
+      setSaveDayResults({
+        top_priorities: [
+          {
+            title: "Review your urgent messages",
+            reason: `You have ${messages.filter(m => m.unread).length} unread messages`
+          },
+          {
+            title: "Check your calendar",
+            reason: `${events.length} events scheduled today`
+          },
+          {
+            title: "Take a deep breath",
+            reason: "One thing at a time. You've got this."
+          }
+        ],
+        can_wait: messages.slice(3).map(m => m.subject || "Email").slice(0, 3),
+        reassurance: "I'm here to help. Let's tackle these one by one. Everything else can wait."
+      });
+    } finally {
+      setLoadingSaveDay(false);
+    }
+  };
+
   // Show different views
   if (currentView === 'memory') {
     return <AimiMemory user={user} onBack={() => setCurrentView('dashboard')} />;
@@ -295,6 +340,99 @@ export default function CalmDashboard({ user }) {
               <p className="text-2xl sm:text-3xl font-light text-[#183A3A] mb-2">Present</p>
               <p className="text-xs sm:text-sm text-[#183A3A]/50 tracking-wider uppercase px-4">You're here. Everything else can wait.</p>
             </div>
+
+            {/* Save My Day Button - Emotional Anchor */}
+            <div className="relative mb-8 sm:mb-10">
+              <div className="absolute inset-0 bg-gradient-to-r from-[#FF7C72]/20 to-[#FFC46B]/20 rounded-2xl sm:rounded-3xl blur-2xl opacity-50"></div>
+              <div className="relative">
+                <button
+                  onClick={handleSaveMyDay}
+                  disabled={loadingSaveDay}
+                  className="w-full bg-gradient-to-r from-[#FF7C72] via-[#FFC46B] to-[#65E6CF] hover:shadow-2xl active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed rounded-2xl sm:rounded-3xl p-8 sm:p-10 transition-all duration-300 group"
+                >
+                  <div className="flex flex-col items-center gap-3 sm:gap-4">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform">
+                      {loadingSaveDay ? (
+                        <div className="w-8 h-8 border-3 border-white border-t-transparent rounded-full animate-spin"></div>
+                      ) : (
+                        <HiLightningBolt className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+                      )}
+                    </div>
+                    <div>
+                      <h3 className="text-2xl sm:text-3xl font-semibold text-white mb-2">
+                        {loadingSaveDay ? 'Triaging your day...' : 'Save My Day'}
+                      </h3>
+                      <p className="text-white/90 text-sm sm:text-base font-light">
+                        Feeling overwhelmed? Let Aimi simplify your priorities right now.
+                      </p>
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            {/* Save My Day Results */}
+            {saveDayResults && (
+              <div className="relative mb-8 sm:mb-10 group">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#65E6CF]/20 to-[#3DC8F6]/20 rounded-2xl sm:rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="relative bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border-2 border-[#65E6CF]/30 p-6 sm:p-8 lg:p-10">
+                  <div className="flex items-start justify-between mb-6">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-[#65E6CF]/20 to-[#3DC8F6]/20 flex items-center justify-center">
+                        <FaBrain className="w-6 h-6 sm:w-7 sm:h-7 text-[#65E6CF]" />
+                      </div>
+                      <div>
+                        <span className="text-[10px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] text-[#65E6CF] font-semibold block mb-1">Aimi's Triage</span>
+                        <h2 className="text-xl sm:text-2xl lg:text-3xl font-light text-[#183A3A]">Here's what actually matters</h2>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setSaveDayResults(null)}
+                      className="text-[#183A3A]/40 hover:text-[#183A3A] transition-colors"
+                    >
+                      <HiX className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  {/* Top 3 Priorities */}
+                  <div className="space-y-4 mb-6">
+                    <h3 className="text-sm uppercase tracking-wider text-[#183A3A]/60 font-semibold">Your Top 3 Today:</h3>
+                    {saveDayResults.top_priorities.map((priority, idx) => (
+                      <div key={idx} className="flex items-start gap-3 p-4 rounded-xl bg-gradient-to-br from-[#F6F8F7] to-white border border-[#E6ECEA]">
+                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-[#65E6CF] to-[#3DC8F6] flex items-center justify-center text-white font-semibold text-sm">
+                          {idx + 1}
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-[#183A3A] font-medium mb-1">{priority.title}</p>
+                          <p className="text-xs text-[#183A3A]/60">{priority.reason}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Can Wait */}
+                  {saveDayResults.can_wait && saveDayResults.can_wait.length > 0 && (
+                    <div className="mb-6">
+                      <h3 className="text-sm uppercase tracking-wider text-[#183A3A]/60 font-semibold mb-3">These can wait:</h3>
+                      <div className="space-y-2">
+                        {saveDayResults.can_wait.map((item, idx) => (
+                          <div key={idx} className="flex items-center gap-2 p-3 rounded-lg bg-[#F6F8F7]/50 border border-[#E6ECEA]">
+                            <span className="text-[#183A3A]/40 text-sm">{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Reassurance */}
+                  <div className="p-4 rounded-xl bg-gradient-to-r from-[#65E6CF]/10 to-[#3DC8F6]/10 border border-[#65E6CF]/20">
+                    <p className="text-[#183A3A]/80 text-sm leading-relaxed">
+                      {saveDayResults.reassurance || "I've got your back. Focus on these three things, and I'll monitor everything else. You've got this. 💙"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* AI Insights - Aimi's Daily Standup */}
             <div className="relative mb-8 sm:mb-10 group">
