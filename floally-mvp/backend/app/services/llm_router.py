@@ -78,7 +78,7 @@ class LLMRouter:
             "fast": {
                 "primary": {
                     "provider": "gemini",
-                    "model": "gemini-1.5-flash-latest",  # Updated to latest model name
+                    "model": "gemini-2.5-flash",  # Latest Gemini 2.5 (faster & better)
                     "max_tokens": 1000,
                     "temperature": 0.3,
                     "cost_per_1m_tokens": 0.075  # 50% cheaper than GPT-4o-mini!
@@ -126,7 +126,7 @@ class LLMRouter:
             "simple_generation": {
                 "primary": {
                     "provider": "gemini",
-                    "model": "gemini-1.5-flash-latest",  # Updated to latest model name
+                    "model": "gemini-2.5-flash",  # Latest Gemini 2.5 (faster & better)
                     "max_tokens": 1000,
                     "temperature": 0.7,
                     "cost_per_1m_tokens": 0.075  # Cheapest option!
