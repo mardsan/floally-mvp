@@ -16,6 +16,10 @@ from app.database import get_db
 from app.models.user import User, BehaviorAction, SenderStats
 from app.utils.google_auth import get_gmail_service
 from app.services.contextual_scoring import ContextualScorer
+from app.services.gmail_intelligence import (
+    GmailIntelligenceExtractor,
+    format_gmail_signals_for_context
+)
 
 router = APIRouter()
 
@@ -211,7 +215,11 @@ async def get_curated_messages(
                     if '@' in sender_email:
                         sender_domain = sender_email.split('@')[1]
                     
-                    # Categorize
+                    # Extract Gmail's built-in intelligence (Phase 1: Free AI signals!)
+                    gmail_extractor = GmailIntelligenceExtractor()
+                    gmail_signals = gmail_extractor.analyze_message(message)
+                    
+                    # Legacy category extraction (for backward compatibility)
                     is_primary = 'INBOX' in label_ids and not any(label.startswith('CATEGORY_') for label in label_ids if label != 'CATEGORY_PERSONAL')
                     is_promotional = 'CATEGORY_PROMOTIONS' in label_ids
                     is_social = 'CATEGORY_SOCIAL' in label_ids
@@ -221,27 +229,43 @@ async def get_curated_messages(
                     is_starred = 'STARRED' in label_ids
                     has_unsubscribe = 'List-Unsubscribe' in headers
                     
-                    # Use contextual scoring
-                    scorer = ContextualScorer(db)
                     subject = headers.get('Subject', 'No Subject')
                     snippet = message.get('snippet', '')
+                    cat = gmail_signals.get('gmail_category') or ('promotional' if is_promotional else 'social' if is_social else 'updates' if is_updates else 'forums' if is_forums else 'primary')
                     
-                    cat = 'promotional' if is_promotional else 'social' if is_social else 'updates' if is_updates else 'forums' if is_forums else 'primary'
-                    gmail_signals = {
-                        'is_starred': is_starred,
-                        'is_important': is_important,
-                        'category': cat,
-                        'has_unsubscribe_link': has_unsubscribe
-                    }
+                    # Check if Gmail signals are strong enough to skip expensive LLM analysis
+                    skip_llm = gmail_extractor.should_skip_llm_analysis(gmail_signals)
                     
-                    score_result = scorer.calculate_contextual_importance(
-                        user_id=str(user.id),
-                        sender_email=sender_email,
-                        sender_name=from_header,
-                        subject=subject,
-                        snippet=snippet,
-                        gmail_signals=gmail_signals
-                    )
+                    if skip_llm:
+                        # Use fast Gmail-only scoring (no LLM cost!)
+                        baseline_score = gmail_extractor.get_baseline_importance_score(gmail_signals)
+                        score_result = {
+                            'importance_score': int(baseline_score * 100),
+                            'reasoning': f"Gmail intelligence: {cat}, confidence: {gmail_signals['confidence']:.0%}",
+                            'sender_relationship': gmail_signals['sender_reputation'],
+                            'confidence': gmail_signals['confidence'],
+                            'suggested_action': 'archive' if gmail_signals['is_spam'] else 'read_later'
+                        }
+                        print(f"💰 Saved LLM cost: Using Gmail signals only (score: {baseline_score:.2f})")
+                    else:
+                        # Use contextual scoring with LLM for nuanced cases
+                        scorer = ContextualScorer(db)
+                        legacy_signals = {
+                            'is_starred': is_starred,
+                            'is_important': is_important,
+                            'category': cat,
+                            'has_unsubscribe_link': has_unsubscribe
+                        }
+                        
+                        score_result = scorer.calculate_contextual_importance(
+                            user_id=str(user.id),
+                            sender_email=sender_email,
+                            sender_name=from_header,
+                            subject=subject,
+                            snippet=snippet,
+                            gmail_signals=legacy_signals
+                        )
+                        print(f"🤖 Using LLM analysis for nuanced scoring")
                     
                     all_messages.append({
                         'id': message['id'],
