@@ -424,7 +424,7 @@ export default function CalmDashboard({ user }) {
                     className="w-full px-4 sm:px-6 py-3 sm:py-3.5 text-left hover:bg-[#F6F8F7] active:bg-[#E6ECEA] transition-colors flex items-center gap-3 text-[#183A3A]"
                   >
                     <FaBrain className="w-5 h-5 flex-shrink-0" />
-                    <span className="font-medium">Aimi's Memory</span>
+                    <span className="font-medium">Your Profile</span>
                   </button>
                   <button 
                     onClick={() => { setCurrentView('decisions'); setShowMenu(false); }}
@@ -438,7 +438,7 @@ export default function CalmDashboard({ user }) {
                     className="w-full px-4 sm:px-6 py-3 sm:py-3.5 text-left hover:bg-[#F6F8F7] active:bg-[#E6ECEA] transition-colors flex items-center gap-3 text-[#183A3A]"
                   >
                     <HiCubeTransparent className="w-5 h-5 flex-shrink-0" />
-                    <span className="font-medium">Memory Control</span>
+                    <span className="font-medium">Learned Patterns</span>
                   </button>
                   <button 
                     onClick={() => { setCurrentView('profile'); setShowMenu(false); }}
