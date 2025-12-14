@@ -109,7 +109,7 @@ class ContextualScorer:
         
         # Use Claude Sonnet for contextual reasoning
         response = self.anthropic_client.messages.create(
-            model="claude-3-5-sonnet-20241022",  # Upgraded from Haiku for reasoning
+            model="claude-sonnet-4-20250514",  # Latest Sonnet 4 (upgraded from 3.5)
             max_tokens=4000,
             temperature=0.3,  # Lower temperature for consistency
             messages=[{"role": "user", "content": prompt}]

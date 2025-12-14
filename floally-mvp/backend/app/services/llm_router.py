@@ -94,7 +94,7 @@ class LLMRouter:
             "reasoning": {
                 "primary": {
                     "provider": "anthropic",
-                    "model": "claude-3-5-sonnet-20241022",
+                    "model": "claude-sonnet-4-20250514",  # Latest Sonnet 4 model
                     "max_tokens": 4000,
                     "temperature": 0.3,
                     "cost_per_1m_tokens": 3.0
@@ -110,7 +110,7 @@ class LLMRouter:
             "strategic": {
                 "primary": {
                     "provider": "anthropic",
-                    "model": "claude-3-5-sonnet-20241022",
+                    "model": "claude-sonnet-4-20250514",  # Latest Sonnet 4 model
                     "max_tokens": 4000,
                     "temperature": 0.4,
                     "cost_per_1m_tokens": 3.0
@@ -423,7 +423,8 @@ class LLMRouter:
         """Calculate cost for Anthropic models"""
         costs = {
             "claude-3-haiku-20240307": {"input": 0.25, "output": 1.25},
-            "claude-3-5-sonnet-20241022": {"input": 3.0, "output": 15.0},
+            "claude-3-5-sonnet-20241022": {"input": 3.0, "output": 15.0},  # Deprecated
+            "claude-sonnet-4-20250514": {"input": 3.0, "output": 15.0},  # Latest
             "claude-3-opus-20240229": {"input": 15.0, "output": 75.0}
         }
         

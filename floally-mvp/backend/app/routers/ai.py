@@ -117,7 +117,7 @@ Keep the response concise and actionable. ALWAYS use the agency label prefixes.
 """
         
         message = client.messages.create(
-            model="claude-3-5-sonnet-20241022",  # Upgraded for context-aware reasoning
+            model="claude-sonnet-4-20250514",  # Latest Sonnet 4 for context-aware reasoning
             max_tokens=2000,
             temperature=0.3,
             messages=[{"role": "user", "content": context}]
@@ -202,7 +202,7 @@ IMPORTANT: Include the emailId field with the exact ID shown in parentheses for 
 """
         
         message = client.messages.create(
-            model="claude-3-5-sonnet-20241022",  # Upgraded for nuanced importance detection
+            model="claude-sonnet-4-20250514",  # Latest Sonnet 4 for nuanced importance detection
             max_tokens=3000,
             temperature=0.3,
             messages=[{"role": "user", "content": context}]
@@ -450,7 +450,7 @@ Guidelines:
 - Help creative professionals stay organized without overwhelming them"""
 
         response = client.messages.create(
-            model="claude-3-5-sonnet-20241022",  # Strategic planning needs reasoning
+            model="claude-sonnet-4-20250514",  # Latest Sonnet 4 for strategic planning
             max_tokens=2000,
             temperature=0.4,
             messages=[{
@@ -581,7 +581,7 @@ IMPORTANT:
 - Return goals in the same order as provided"""
 
         response = client.messages.create(
-            model="claude-3-5-sonnet-20241022",  # Part of strategic planning
+            model="claude-sonnet-4-20250514",  # Latest Sonnet 4 for strategic planning
             max_tokens=2000,
             temperature=0.4,
             messages=[{
@@ -697,7 +697,7 @@ Remember: You're their teammate saving their day. Be specific, warm, and protect
 """
         
         message = client.messages.create(
-            model="claude-3-5-sonnet-20241022",  # Critical moment - use best reasoning
+            model="claude-sonnet-4-20250514",  # Latest Sonnet 4 - critical moment
             max_tokens=1500,
             temperature=0.3,
             messages=[{"role": "user", "content": context}]
