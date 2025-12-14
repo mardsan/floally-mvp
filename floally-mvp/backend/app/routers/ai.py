@@ -71,23 +71,35 @@ You are Aimi, the user's calm and competent AI teammate, helping them plan their
 {user_context_text}
 
 Today's Gmail messages ({len(request.messages)} total):
-{format_messages(request.messages)}
+{format_messages_with_context(request.messages)}
 
 Today's Calendar events ({len(request.events)} scheduled):
 {format_events(request.events)}
 
 Generate a concise daily stand-up with clear AGENCY LABELS to build trust:
 
-1. "The One Thing" - most important focus for today (prioritize based on user's top priorities if known)
+1. "The One Thing" - most important focus for today (prioritize based on user's top priorities AND sender relationships)
+   - Consider: VIP contacts, messages needing replies, current priorities
+   - Focus on what matters MOST to this specific user
+   
 2. 3-5 key items WITH HONEST AGENCY LABELS:
    {"- ✅ HANDLED: What you've already done (ONLY if autonomous actions were taken above)" if request.userContext and request.userContext.get('autonomousActionsSummary') else ""}
-   - 🟡 SUGGESTED: "I recommend..." (Aimi's suggestions based on analysis)
-   - 🔵 YOUR CALL: "You'll want to decide..." (Needs user decision)
+   - 🟡 SUGGESTED: "I recommend..." (Aimi's suggestions based on sender relationships & message importance)
+   - 🔵 YOUR CALL: "You'll want to decide..." (Needs user decision - important contacts or complex situations)
    - 👀 WATCHING: "I'm monitoring..." (Aimi is tracking this)
+
 3. What you're monitoring: "I'm watching... and will alert you if..."
 4. Calendar overview: Brief summary of today's meetings
 
-CRITICAL INSTRUCTIONS:
+CRITICAL CONTEXT AWARENESS:
+- Each message includes senderRelationship (vip, important, occasional, noise, unknown)
+- Each message includes importanceReasoning explaining why score was assigned
+- Use this context to understand what truly matters to THIS user
+- VIP contacts should be prioritized over random senders
+- Messages from people they respond to frequently are more important than newsletters
+- Don't just look at keywords - understand the RELATIONSHIP
+
+CRITICAL HONESTY:
 {"- You MAY use ✅ HANDLED label since autonomous actions were taken (see above)" if request.userContext and request.userContext.get('autonomousActionsSummary') else "- DO NOT use ✅ HANDLED label - you haven't taken any autonomous actions yet"}
 - DO NOT claim you've done things that aren't in the "Autonomous Actions Taken" section above
 - BE HONEST: Only report what actually happened
@@ -268,13 +280,44 @@ Keep it brief and actionable. Write from a first-person perspective.
         raise HTTPException(status_code=500, detail=str(e))
 
 def format_messages(messages):
-    """Format messages for Claude"""
+    """Format messages for Claude (basic version - backward compatibility)"""
     if not messages:
         return "No new messages"
     return "\n".join([
         f"- From {m['from']}: {m['subject']}"
         for m in messages[:10]
     ])
+
+def format_messages_with_context(messages):
+    """Format messages with rich context (sender relationships, importance reasoning)"""
+    if not messages:
+        return "No new messages"
+    
+    formatted = []
+    for m in messages[:15]:  # Show top 15 most important
+        sender = m.get('from', 'Unknown')
+        subject = m.get('subject', 'No subject')
+        relationship = m.get('senderRelationship', 'unknown')
+        reasoning = m.get('importanceReasoning', '')
+        score = m.get('senderImportanceScore', 0.5)
+        
+        # Format with context
+        relationship_emoji = {
+            'vip': '⭐',
+            'important': '📌',
+            'occasional': '👤',
+            'noise': '📢',
+            'informational': 'ℹ️',
+            'unknown': '❓'
+        }.get(relationship, '')
+        
+        msg_line = f"- {relationship_emoji} From {sender}: {subject}"
+        if reasoning and relationship in ['vip', 'important', 'noise']:
+            msg_line += f"\n  Context: {reasoning}"
+        
+        formatted.append(msg_line)
+    
+    return "\n".join(formatted)
 
 def format_events(events):
     """Format events for Claude"""

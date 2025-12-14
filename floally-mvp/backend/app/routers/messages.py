@@ -15,6 +15,7 @@ import traceback
 from app.database import get_db
 from app.models.user import User, BehaviorAction, SenderStats
 from app.utils.google_auth import get_gmail_service
+from app.services.contextual_scoring import ContextualScorer
 
 router = APIRouter()
 
@@ -35,32 +36,17 @@ class DraftResponseRequest(BaseModel):
 
 
 def calculate_sender_importance(user_id: str, sender_email: str, sender_domain: str, db: Session) -> float:
-    """Calculate importance score for a sender based on user behavior"""
-    stats = db.query(SenderStats).filter(
-        SenderStats.user_id == user_id,
-        SenderStats.sender_email == sender_email
-    ).first()
-    
-    if not stats or stats.total_emails == 0:
-        return 0.5  # Neutral score for unknown senders
-    
-    # Calculate weighted importance
-    important_weight = stats.marked_important * 1.0
-    interesting_weight = stats.marked_interesting * 0.6
-    responded_weight = stats.responded * 0.8
-    negative_weight = (stats.marked_unimportant + stats.trashed + stats.archived) * -0.5
-    
-    total_interactions = stats.marked_important + stats.marked_interesting + stats.marked_unimportant + stats.responded + stats.archived + stats.trashed
-    
-    if total_interactions == 0:
-        return 0.5
-    
-    score = (important_weight + interesting_weight + responded_weight + negative_weight) / total_interactions
-    
-    # Normalize to 0-1 range
-    normalized_score = max(0.0, min(1.0, (score + 1) / 2))
-    
-    return normalized_score
+    """DEPRECATED: Use ContextualScorer for new code. Kept for backward compatibility."""
+    scorer = ContextualScorer(db)
+    result = scorer.calculate_contextual_importance(
+        user_id=user_id,
+        sender_email=sender_email,
+        sender_name=None,
+        subject="",
+        snippet="",
+        gmail_signals={}
+    )
+    return result["importance_score"] / 100.0  # Convert to 0-1 range
 
 
 async def ai_analyze_messages(messages: List[Dict], user_context: Dict) -> List[Dict]:
@@ -225,14 +211,6 @@ async def get_curated_messages(
                     if '@' in sender_email:
                         sender_domain = sender_email.split('@')[1]
                     
-                    # Calculate sender importance from behavior
-                    sender_importance = calculate_sender_importance(
-                        str(user.id), 
-                        sender_email, 
-                        sender_domain, 
-                        db
-                    )
-                    
                     # Categorize
                     is_primary = 'INBOX' in label_ids and not any(label.startswith('CATEGORY_') for label in label_ids if label != 'CATEGORY_PERSONAL')
                     is_promotional = 'CATEGORY_PROMOTIONS' in label_ids
@@ -243,15 +221,37 @@ async def get_curated_messages(
                     is_starred = 'STARRED' in label_ids
                     has_unsubscribe = 'List-Unsubscribe' in headers
                     
+                    # Use contextual scoring
+                    scorer = ContextualScorer(db)
+                    subject = headers.get('Subject', 'No Subject')
+                    snippet = message.get('snippet', '')
+                    
+                    cat = 'promotional' if is_promotional else 'social' if is_social else 'updates' if is_updates else 'forums' if is_forums else 'primary'
+                    gmail_signals = {
+                        'is_starred': is_starred,
+                        'is_important': is_important,
+                        'category': cat,
+                        'has_unsubscribe_link': has_unsubscribe
+                    }
+                    
+                    score_result = scorer.calculate_contextual_importance(
+                        user_id=str(user.id),
+                        sender_email=sender_email,
+                        sender_name=from_header,
+                        subject=subject,
+                        snippet=snippet,
+                        gmail_signals=gmail_signals
+                    )
+                    
                     all_messages.append({
                         'id': message['id'],
                         'threadId': message['threadId'],
                         'from': from_header,
                         'senderEmail': sender_email,
                         'senderDomain': sender_domain,
-                        'subject': headers.get('Subject', 'No Subject'),
+                        'subject': subject,
                         'date': headers.get('Date', ''),
-                        'snippet': message.get('snippet', ''),
+                        'snippet': snippet,
                         'unread': 'UNREAD' in label_ids,
                         'isPrimary': is_primary,
                         'isPromotional': is_promotional,
@@ -261,7 +261,11 @@ async def get_curated_messages(
                         'isImportant': is_important,
                         'isStarred': is_starred,
                         'hasUnsubscribeLink': has_unsubscribe,
-                        'senderImportanceScore': sender_importance,
+                        'senderImportanceScore': score_result['importance_score'] / 100.0,
+                        'importanceReasoning': score_result['reasoning'],
+                        'senderRelationship': score_result['sender_relationship'],
+                        'confidence': score_result['confidence'],
+                        'suggestedAction': score_result['suggested_action'],
                         'category': cat,
                         'labels': label_ids
                     })

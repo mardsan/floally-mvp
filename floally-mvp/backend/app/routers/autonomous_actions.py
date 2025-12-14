@@ -1,6 +1,7 @@
 """
 Autonomous Actions Module
 Performs automated email management based on user preferences and learned patterns.
+Enhanced with contextual intelligence.
 """
 
 from fastapi import APIRouter, HTTPException, Depends
@@ -12,7 +13,8 @@ import os
 import httpx
 
 from ..database import get_db
-from ..models.user import SenderStats, ConnectedAccount
+from ..models.user import SenderStats, ConnectedAccount, User
+from ..services.contextual_scoring import ContextualScorer
 
 router = APIRouter()
 
@@ -98,6 +100,7 @@ async def _evaluate_message_for_action(
 ) -> ActionResult:
     """
     Evaluate a single message and determine if autonomous action should be taken.
+    Now uses contextual scoring for more intelligent decisions.
     """
     email_id = message.get('id')
     subject = message.get('subject', 'No subject')
@@ -109,113 +112,144 @@ async def _evaluate_message_for_action(
     else:
         sender_email = from_addr
     
-    # Rule 1: Auto-archive promotional if user enabled it
+    # Get user for contextual scoring
+    user = db.query(User).filter(User.email == user_email).first()
+    if not user:
+        return ActionResult(
+            email_id=email_id or 'unknown',
+            subject=subject,
+            action_taken="none",
+            reason="User not found",
+            confidence=0.0
+        )
+    
+    # Use contextual scorer to understand importance
+    scorer = ContextualScorer(db)
+    gmail_signals = {
+        'is_starred': message.get('isStarred', False),
+        'is_important': message.get('isImportant', False),
+        'category': 'promotional' if message.get('isPromotional') else 'primary',
+        'has_unsubscribe_link': message.get('hasUnsubscribeLink', False)
+    }
+    
+    score_result = scorer.calculate_contextual_importance(
+        user_id=str(user.id),
+        sender_email=sender_email,
+        sender_name=from_addr,
+        subject=subject,
+        snippet=message.get('snippet', ''),
+        gmail_signals=gmail_signals
+    )
+    
+    # Extract relationship and score
+    relationship = score_result['sender_relationship']
+    importance_score = score_result['importance_score']
+    suggested_action = score_result['suggested_action']
+    confidence = score_result['confidence']
+    
+    # Enhanced Rule 1: Auto-archive promotional ONLY if low importance and enabled
     if auto_archive_promo and message.get('isPromotional', False):
-        try:
-            # Archive via Gmail API - remove INBOX label
-            account = db.query(ConnectedAccount).filter(
-                ConnectedAccount.email == user_email,
-                ConnectedAccount.provider == 'google'
-            ).first()
+        # Double-check: Is this actually noise? Don't archive if it might be important
+        if relationship in ['vip', 'important'] or importance_score > 40:
+            return ActionResult(
+                email_id=email_id or 'unknown',
+                subject=subject,
+                action_taken="none",
+                reason="Promotional but sender is important - keeping in inbox",
+                confidence=confidence
+            )
+        
+        # Safe to archive - low importance promotional
+        return await _archive_message(email_id, subject, user_email, db, 
+                                      "Low-importance promotional email", confidence)
+    
+    # Enhanced Rule 2: Auto-archive based on consistent learned pattern
+    if relationship == 'noise' and confidence > 0.7:
+        # User has shown consistent pattern of ignoring this sender
+        if suggested_action in ['auto_archive', 'archive_if_not_urgent']:
+            return await _archive_message(email_id, subject, user_email, db,
+                                          f"Consistent archive pattern ({int(confidence*100)}% confidence)", confidence)
+    
+    # Enhanced Rule 3: Flag unsubscribe candidates (consistent noise with unsubscribe link)
+    if (message.get('hasUnsubscribeLink') and 
+        relationship == 'noise' and 
+        importance_score < 20):
+        return ActionResult(
+            email_id=email_id or 'unknown',
+            subject=subject,
+            action_taken="none",
+            reason=f"Unsubscribe candidate - low importance newsletter you consistently ignore",
+            confidence=confidence
+        )
+    
+    # No action taken - message needs user review
+    return ActionResult(
+        email_id=email_id or 'unknown',
+        subject=subject,
+        action_taken="none",
+        reason="Message requires your review",
+        confidence=confidence
+    )
+
+
+async def _archive_message(
+    email_id: str, 
+    subject: str, 
+    user_email: str, 
+    db: Session,
+    reason: str,
+    confidence: float
+) -> ActionResult:
+    """Helper function to archive a message via Gmail API"""
+    try:
+        account = db.query(ConnectedAccount).filter(
+            ConnectedAccount.email == user_email,
+            ConnectedAccount.provider == 'google'
+        ).first()
+        
+        if not account or not account.access_token or account.access_token == '':
+            return ActionResult(
+                email_id=email_id or 'unknown',
+                subject=subject,
+                action_taken="none",
+                reason="No Gmail access token available",
+                confidence=0.0
+            )
+        
+        # Make API call to Gmail to remove INBOX label
+        headers = {"Authorization": f"Bearer {account.access_token}"}
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                f"https://gmail.googleapis.com/gmail/v1/users/me/messages/{email_id}/modify",
+                headers=headers,
+                json={"removeLabelIds": ["INBOX"]}
+            )
             
-            if not account or not account.access_token or account.access_token == '':
+            if response.status_code == 200:
+                return ActionResult(
+                    email_id=email_id or 'unknown',
+                    subject=subject,
+                    action_taken="archived",
+                    reason=reason,
+                    confidence=confidence
+                )
+            else:
                 return ActionResult(
                     email_id=email_id or 'unknown',
                     subject=subject,
                     action_taken="none",
-                    reason="No Gmail access token available",
+                    reason=f"Gmail API error: {response.status_code}",
                     confidence=0.0
                 )
-            
-            # Make API call to Gmail
-            headers = {"Authorization": f"Bearer {account.access_token}"}
-            async with httpx.AsyncClient() as client:
-                response = await client.post(
-                    f"https://gmail.googleapis.com/gmail/v1/users/me/messages/{email_id}/modify",
-                    headers=headers,
-                    json={"removeLabelIds": ["INBOX"]}
-                )
-                
-                if response.status_code == 200:
-                    return ActionResult(
-                        email_id=email_id or 'unknown',
-                        subject=subject or 'unknown',
-                        action_taken="archived",
-                        reason="Promotional email (auto-archive enabled)",
-                        confidence=0.95
-                    )
-                else:
-                    return ActionResult(
-                        email_id=email_id or 'unknown',
-                        subject=subject,
-                        action_taken="none",
-                        reason=f"Gmail API error: {response.status_code}",
-                        confidence=0.0
-                    )
-        except Exception as e:
-            print(f"Failed to archive promotional email {email_id}: {e}")
-            return ActionResult(
-                email_id=email_id or 'unknown',
-                subject=subject or 'unknown',
-                action_taken="none",
-                reason=f"Failed to archive: {str(e)}",
-                confidence=0.0
-            )
-    
-    # Rule 2: Auto-archive from senders user consistently archives
-    if sender_email in sender_stats:
-        stats = sender_stats[sender_email]
-        total_interactions = stats.opened + stats.archived + stats.starred
-        
-        if total_interactions >= 5:  # Need at least 5 interactions to be confident
-            archive_rate = stats.archived / total_interactions
-            
-            if archive_rate >= 0.8:  # User archives this sender 80%+ of the time
-                try:
-                    account = db.query(ConnectedAccount).filter(
-                        ConnectedAccount.email == user_email,
-                        ConnectedAccount.provider == 'google'
-                    ).first()
-                    
-                    if account and account.access_token and account.access_token != '':
-                        headers = {"Authorization": f"Bearer {account.access_token}"}
-                        async with httpx.AsyncClient() as client:
-                            response = await client.post(
-                                f"https://gmail.googleapis.com/gmail/v1/users/me/messages/{email_id}/modify",
-                                headers=headers,
-                                json={"removeLabelIds": ["INBOX"]}
-                            )
-                            
-                            if response.status_code == 200:
-                                return ActionResult(
-                                    email_id=email_id or 'unknown',
-                                    subject=subject,
-                                    action_taken="archived",
-                                    reason=f"You typically archive emails from this sender ({int(archive_rate * 100)}% archive rate)",
-                                    confidence=archive_rate
-                                )
-                except Exception as e:
-                    print(f"Failed to archive based on behavior {email_id}: {e}")
-    
-    # Rule 3: Identify unsubscribe candidates (but don't act automatically)
-    if sender_email in sender_stats:
-        stats = sender_stats[sender_email]
-        if stats.opened == 0 and stats.archived >= 3:
-            return ActionResult(
-                email_id=email_id or 'unknown',
-                subject=subject or 'unknown',
-                action_taken="none",
-                reason=f"Unsubscribe candidate (never opened, archived {stats.archived} times)",
-                confidence=0.7
-            )
-    
-    # No action taken
-    return ActionResult(
-        email_id=email_id or 'unknown',
-        action_taken="none",
-        reason="No autonomous action rules matched",
-        confidence=0.0
-    )
+    except Exception as e:
+        print(f"Failed to archive email {email_id}: {e}")
+        return ActionResult(
+            email_id=email_id or 'unknown',
+            subject=subject,
+            action_taken="none",
+            reason=f"Failed to archive: {str(e)}",
+            confidence=0.0
+        )
 
 
 def _generate_summary(actions: List[ActionResult], total_messages: int) -> str:
