@@ -88,10 +88,19 @@ const AimiMemoryControl = ({ user, onBack }) => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-soft-ivory">
-        <div className="text-center">
-          <div className="animate-pulse text-aimi-green text-4xl mb-4">🧠</div>
-          <p className="text-deep-slate">Loading Aimi's memories...</p>
+      <div className="min-h-screen bg-soft-ivory p-8">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-2 text-deep-slate hover:text-aimi-green transition-colors mb-6"
+        >
+          <HiArrowLeft className="w-5 h-5" />
+          <span>Back to Dashboard</span>
+        </button>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <div className="animate-pulse text-aimi-green text-4xl mb-4">🧠</div>
+            <p className="text-deep-slate">Loading learned patterns...</p>
+          </div>
         </div>
       </div>
     );

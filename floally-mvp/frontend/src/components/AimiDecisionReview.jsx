@@ -10,9 +10,10 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { HiArrowLeft } from 'react-icons/hi';
 import api from '../services/api';
 
-const AimiDecisionReview = () => {
+const AimiDecisionReview = ({ user, onBack }) => {
   const [decisions, setDecisions] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedDecision, setSelectedDecision] = useState(null);
@@ -83,10 +84,19 @@ const AimiDecisionReview = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-soft-ivory">
-        <div className="text-center">
-          <div className="animate-pulse text-aimi-green text-4xl mb-4">✨</div>
-          <p className="text-deep-slate">Loading Aimi's decisions...</p>
+      <div className="min-h-screen bg-soft-ivory p-8">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-2 text-deep-slate hover:text-aimi-green transition-colors mb-6"
+        >
+          <HiArrowLeft className="w-5 h-5" />
+          <span>Back to Dashboard</span>
+        </button>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <div className="animate-pulse text-aimi-green text-4xl mb-4">✨</div>
+            <p className="text-deep-slate">Loading Aimi's decisions...</p>
+          </div>
         </div>
       </div>
     );
@@ -95,8 +105,19 @@ const AimiDecisionReview = () => {
   if (!decisions) {
     return (
       <div className="min-h-screen bg-soft-ivory p-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <p className="text-deep-slate">No decisions to review right now.</p>
+        <div className="max-w-4xl mx-auto">
+          <button
+            onClick={onBack}
+            className="flex items-center gap-2 text-deep-slate hover:text-aimi-green transition-colors mb-6"
+          >
+            <HiArrowLeft className="w-5 h-5" />
+            <span>Back to Dashboard</span>
+          </button>
+          <div className="text-center bg-white rounded-2xl p-12 shadow-sm">
+            <div className="text-6xl mb-4">✨</div>
+            <p className="text-2xl font-semibold text-deep-slate mb-2">All caught up!</p>
+            <p className="text-deep-slate/70">No decisions need your review right now. Aimi is learning from your patterns.</p>
+          </div>
         </div>
       </div>
     );
@@ -107,13 +128,22 @@ const AimiDecisionReview = () => {
   return (
     <div className="min-h-screen bg-soft-ivory p-8">
       <div className="max-w-6xl mx-auto">
+        {/* Back Button */}
+        <button
+          onClick={onBack}
+          className="flex items-center gap-2 text-deep-slate hover:text-aimi-green transition-colors mb-6"
+        >
+          <HiArrowLeft className="w-5 h-5" />
+          <span>Back to Dashboard</span>
+        </button>
+        
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-semibold text-deep-slate mb-2">
-            Aimi's Decisions
+            Review Decisions
           </h1>
           <p className="text-lg text-deep-slate/70">
-            Review what Aimi is doing with your emails. Your feedback helps Aimi learn.
+            See what Aimi is doing with your emails. Your feedback helps Aimi learn.
           </p>
         </div>
 
