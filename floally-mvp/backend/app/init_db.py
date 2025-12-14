@@ -30,6 +30,8 @@ def init_database():
             Project
         )
         from app.models.trusted_sender import TrustedSender
+        from app.services.filter_intelligence import FilterIntelligenceCache
+        from app.services.contact_intelligence import ContactIntelligenceCache
         
         # Check what tables currently exist
         inspector = inspect(engine)

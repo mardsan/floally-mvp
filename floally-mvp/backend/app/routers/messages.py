@@ -20,6 +20,7 @@ from app.services.gmail_intelligence import (
     GmailIntelligenceExtractor,
     format_gmail_signals_for_context
 )
+from app.services.filter_intelligence import UserFilterIntelligence
 
 router = APIRouter()
 
@@ -219,45 +220,65 @@ async def get_curated_messages(
                     gmail_extractor = GmailIntelligenceExtractor()
                     gmail_signals = gmail_extractor.analyze_message(message)
                     
-                    # Legacy category extraction (for backward compatibility)
-                    is_primary = 'INBOX' in label_ids and not any(label.startswith('CATEGORY_') for label in label_ids if label != 'CATEGORY_PERSONAL')
-                    is_promotional = 'CATEGORY_PROMOTIONS' in label_ids
-                    is_social = 'CATEGORY_SOCIAL' in label_ids
-                    is_updates = 'CATEGORY_UPDATES' in label_ids
-                    is_forums = 'CATEGORY_FORUMS' in label_ids
-                    is_important = 'IMPORTANT' in label_ids
-                    is_starred = 'STARRED' in label_ids
-                    has_unsubscribe = 'List-Unsubscribe' in headers
+                    # Phase 2: Check user's explicit filter rules
+                    filter_intel_service = UserFilterIntelligence(db)
+                    filter_intel = filter_intel_service.get_filter_intelligence(service, user.email)
+                    filter_check = filter_intel_service.check_sender_priority(
+                        filter_intel, sender_email, sender_domain
+                    )
                     
-                    subject = headers.get('Subject', 'No Subject')
-                    snippet = message.get('snippet', '')
-                    cat = gmail_signals.get('gmail_category') or ('promotional' if is_promotional else 'social' if is_social else 'updates' if is_updates else 'forums' if is_forums else 'primary')
-                    
-                    # Check if Gmail signals are strong enough to skip expensive LLM analysis
-                    skip_llm = gmail_extractor.should_skip_llm_analysis(gmail_signals)
-                    
-                    if skip_llm:
-                        # Use fast Gmail-only scoring (no LLM cost!)
-                        baseline_score = gmail_extractor.get_baseline_importance_score(gmail_signals)
+                    # If user has EXPLICIT filter rule, respect it immediately
+                    if filter_check.get('skip_llm') and filter_check.get('explicit_priority'):
+                        baseline_score = filter_check['importance_score']
                         score_result = {
                             'importance_score': int(baseline_score * 100),
-                            'reasoning': f"Gmail intelligence: {cat}, confidence: {gmail_signals['confidence']:.0%}",
-                            'sender_relationship': gmail_signals['sender_reputation'],
-                            'confidence': gmail_signals['confidence'],
-                            'suggested_action': 'archive' if gmail_signals['is_spam'] else 'read_later'
+                            'reasoning': filter_check['reasoning'],
+                            'sender_relationship': filter_check['explicit_priority'],
+                            'confidence': 1.0,  # User's explicit rule = 100% confidence
+                            'suggested_action': 'archive' if filter_check['explicit_priority'] == 'low' else 'read'
                         }
-                        print(f"💰 Saved LLM cost: Using Gmail signals only (score: {baseline_score:.2f})")
+                        print(f"🎯 User filter rule matched: {filter_check['reasoning']}")
+                        print(f"💰 Saved LLM cost: Using explicit user preference (score: {baseline_score:.2f})")
                     else:
-                        # Use contextual scoring with LLM for nuanced cases
-                        scorer = ContextualScorer(db)
-                        legacy_signals = {
-                            'is_starred': is_starred,
-                            'is_important': is_important,
-                            'category': cat,
-                            'has_unsubscribe_link': has_unsubscribe
-                        }
+                        # Legacy category extraction (for backward compatibility)
+                        is_primary = 'INBOX' in label_ids and not any(label.startswith('CATEGORY_') for label in label_ids if label != 'CATEGORY_PERSONAL')
+                        is_promotional = 'CATEGORY_PROMOTIONS' in label_ids
+                        is_social = 'CATEGORY_SOCIAL' in label_ids
+                        is_updates = 'CATEGORY_UPDATES' in label_ids
+                        is_forums = 'CATEGORY_FORUMS' in label_ids
+                        is_important = 'IMPORTANT' in label_ids
+                        is_starred = 'STARRED' in label_ids
+                        has_unsubscribe = 'List-Unsubscribe' in headers
                         
-                        score_result = scorer.calculate_contextual_importance(
+                        subject = headers.get('Subject', 'No Subject')
+                        snippet = message.get('snippet', '')
+                        cat = gmail_signals.get('gmail_category') or ('promotional' if is_promotional else 'social' if is_social else 'updates' if is_updates else 'forums' if is_forums else 'primary')
+                        
+                        # Check if Gmail signals are strong enough to skip expensive LLM analysis
+                        skip_llm = gmail_extractor.should_skip_llm_analysis(gmail_signals)
+                        
+                        if skip_llm:
+                            # Use fast Gmail-only scoring (no LLM cost!)
+                            baseline_score = gmail_extractor.get_baseline_importance_score(gmail_signals)
+                            score_result = {
+                                'importance_score': int(baseline_score * 100),
+                                'reasoning': f"Gmail intelligence: {cat}, confidence: {gmail_signals['confidence']:.0%}",
+                                'sender_relationship': gmail_signals['sender_reputation'],
+                                'confidence': gmail_signals['confidence'],
+                                'suggested_action': 'archive' if gmail_signals['is_spam'] else 'read_later'
+                            }
+                            print(f"💰 Saved LLM cost: Using Gmail signals only (score: {baseline_score:.2f})")
+                        else:
+                            # Use contextual scoring with LLM for nuanced cases
+                            scorer = ContextualScorer(db)
+                            legacy_signals = {
+                                'is_starred': is_starred,
+                                'is_important': is_important,
+                                'category': cat,
+                                'has_unsubscribe_link': has_unsubscribe
+                            }
+                            
+                            score_result = scorer.calculate_contextual_importance(
                             user_id=str(user.id),
                             sender_email=sender_email,
                             sender_name=from_header,

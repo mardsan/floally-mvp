@@ -147,12 +147,15 @@ class GmailIntelligenceExtractor:
             score = category_scores[signals["gmail_category"]]
         
         # Priority signals boost
+        # Gmail's IMPORTANT label uses ML trained on billions of emails - trust it!
         if signals["gmail_importance"]:
-            score += 0.2
+            score = max(score, 0.8)  # IMPORTANT = minimum 80% importance
+            logger.info(f"Gmail IMPORTANT label detected - boosting to minimum 0.8")
         if signals["is_starred"]:
-            score += 0.15
+            score = max(score, 0.85)  # User-starred = minimum 85% importance
+            logger.info(f"User-starred message - boosting to minimum 0.85")
         if signals["gmail_priority"]:
-            score += 0.1
+            score += 0.1  # Additional priority inbox boost
         
         # Thread size indicates engagement
         if signals["thread_size"] > 5:
