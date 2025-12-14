@@ -32,6 +32,7 @@ def init_database():
         from app.models.trusted_sender import TrustedSender
         from app.services.filter_intelligence import FilterIntelligenceCache
         from app.services.contact_intelligence import ContactIntelligenceCache
+        from app.services.decision_transparency import AimiDecision
         
         # Check what tables currently exist
         inspector = inspect(engine)
