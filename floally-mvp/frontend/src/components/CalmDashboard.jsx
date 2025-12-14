@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { HiMenu, HiX, HiFolder, HiUser, HiCog, HiLogout, HiClock, HiCalendar, HiLightningBolt } from 'react-icons/hi';
+import { HiMenu, HiX, HiFolder, HiUser, HiCog, HiLogout, HiClock, HiCalendar, HiLightningBolt, HiCheckCircle, HiCubeTransparent } from 'react-icons/hi';
 import { FaBrain } from 'react-icons/fa';
 import toast, { Toaster } from 'react-hot-toast';
 import { gmail, calendar, ai, behavior, userProfile, autonomous } from '../services/api';
 import AimiMemory from './AimiMemory';
+import AimiDecisionReview from './AimiDecisionReview';
+import AimiMemoryControl from './AimiMemoryControl';
 import ProjectsPage from './ProjectsPage';
 import ProfileHub from './ProfileHub';
 import MessageDetailPopup from './MessageDetailPopup';
@@ -329,6 +331,12 @@ export default function CalmDashboard({ user }) {
   };
 
   // Show different views
+  if (currentView === 'decisions') {
+    return <AimiDecisionReview user={user} onBack={() => setCurrentView('dashboard')} />;
+  }
+  if (currentView === 'memory-control') {
+    return <AimiMemoryControl user={user} onBack={() => setCurrentView('dashboard')} />;
+  }
   if (currentView === 'memory') {
     return <AimiMemory user={user} onBack={() => setCurrentView('dashboard')} />;
   }
@@ -417,6 +425,20 @@ export default function CalmDashboard({ user }) {
                   >
                     <FaBrain className="w-5 h-5 flex-shrink-0" />
                     <span className="font-medium">Aimi's Memory</span>
+                  </button>
+                  <button 
+                    onClick={() => { setCurrentView('decisions'); setShowMenu(false); }}
+                    className="w-full px-4 sm:px-6 py-3 sm:py-3.5 text-left hover:bg-[#F6F8F7] active:bg-[#E6ECEA] transition-colors flex items-center gap-3 text-[#183A3A]"
+                  >
+                    <HiCheckCircle className="w-5 h-5 flex-shrink-0" />
+                    <span className="font-medium">Review Decisions</span>
+                  </button>
+                  <button 
+                    onClick={() => { setCurrentView('memory-control'); setShowMenu(false); }}
+                    className="w-full px-4 sm:px-6 py-3 sm:py-3.5 text-left hover:bg-[#F6F8F7] active:bg-[#E6ECEA] transition-colors flex items-center gap-3 text-[#183A3A]"
+                  >
+                    <HiCubeTransparent className="w-5 h-5 flex-shrink-0" />
+                    <span className="font-medium">Memory Control</span>
                   </button>
                   <button 
                     onClick={() => { setCurrentView('profile'); setShowMenu(false); }}
