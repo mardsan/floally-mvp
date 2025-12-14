@@ -244,20 +244,21 @@ async def get_curated_messages(
                         print(f"🎯 User filter rule matched: {filter_check['reasoning']}")
                         print(f"💰 Saved LLM cost: Using explicit user preference (score: {baseline_score:.2f})")
                         
-                        # Record decision for transparency
-                        try:
-                            decision_service = DecisionTransparencyService(db)
-                            decision_service.record_decision(
-                                user_email=user.email,
-                                message_id=message['id'],
-                                decision_type=DecisionType.IMPORTANCE_SCORING,
-                                decision_data={'importance_score': score_result['importance_score']},
-                                reasoning=score_result['reasoning'],
-                                confidence=score_result['confidence'],
-                                context_snapshot={'source': 'user_filter', 'filter_check': filter_check}
-                            )
-                        except Exception as decision_error:
-                            print(f"⚠️ Failed to record decision: {decision_error}")
+                        # Record decision for transparency (only if database configured)
+                        if os.getenv('DATABASE_URL'):
+                            try:
+                                decision_service = DecisionTransparencyService(db)
+                                decision_service.record_decision(
+                                    user_email=user.email,
+                                    message_id=message['id'],
+                                    decision_type=DecisionType.IMPORTANCE_SCORING,
+                                    decision_data={'importance_score': score_result['importance_score']},
+                                    reasoning=score_result['reasoning'],
+                                    confidence=score_result['confidence'],
+                                    context_snapshot={'source': 'user_filter', 'filter_check': filter_check}
+                                )
+                            except Exception as decision_error:
+                                print(f"⚠️ Failed to record decision: {decision_error}")
                     else:
                         # Legacy category extraction (for backward compatibility)
                         is_primary = 'INBOX' in label_ids and not any(label.startswith('CATEGORY_') for label in label_ids if label != 'CATEGORY_PERSONAL')
@@ -288,20 +289,21 @@ async def get_curated_messages(
                             }
                             print(f"💰 Saved LLM cost: Using Gmail signals only (score: {baseline_score:.2f})")
                             
-                            # Record decision for transparency
-                            try:
-                                decision_service = DecisionTransparencyService(db)
-                                decision_service.record_decision(
-                                    user_email=user.email,
-                                    message_id=message['id'],
-                                    decision_type=DecisionType.IMPORTANCE_SCORING,
-                                    decision_data={'importance_score': score_result['importance_score']},
-                                    reasoning=score_result['reasoning'],
-                                    confidence=score_result['confidence'],
-                                    context_snapshot={'source': 'gmail_intelligence', 'signals': gmail_signals}
-                                )
-                            except Exception as decision_error:
-                                print(f"⚠️ Failed to record decision: {decision_error}")
+                            # Record decision for transparency (only if database configured)
+                            if os.getenv('DATABASE_URL'):
+                                try:
+                                    decision_service = DecisionTransparencyService(db)
+                                    decision_service.record_decision(
+                                        user_email=user.email,
+                                        message_id=message['id'],
+                                        decision_type=DecisionType.IMPORTANCE_SCORING,
+                                        decision_data={'importance_score': score_result['importance_score']},
+                                        reasoning=score_result['reasoning'],
+                                        confidence=score_result['confidence'],
+                                        context_snapshot={'source': 'gmail_intelligence', 'signals': gmail_signals}
+                                    )
+                                except Exception as decision_error:
+                                    print(f"⚠️ Failed to record decision: {decision_error}")
                         else:
                             # Use contextual scoring with LLM for nuanced cases
                             scorer = ContextualScorer(db)
@@ -322,21 +324,22 @@ async def get_curated_messages(
                         )
                         print(f"🤖 Using LLM analysis for nuanced scoring")
                         
-                        # Record decision for transparency
-                        try:
-                            decision_service = DecisionTransparencyService(db)
-                            decision_service.record_decision(
-                                user_email=user.email,
-                                message_id=message['id'],
-                                decision_type=DecisionType.IMPORTANCE_SCORING,
-                                decision_data={'importance_score': score_result['importance_score']},
-                                reasoning=score_result['reasoning'],
-                                confidence=score_result.get('confidence', 0.7),
-                                context_snapshot={'source': 'llm_contextual', 'subject': subject[:100]},
-                                ai_model='claude-sonnet-4'
-                            )
-                        except Exception as decision_error:
-                            print(f"⚠️ Failed to record decision: {decision_error}")
+                        # Record decision for transparency (only if database configured)
+                        if os.getenv('DATABASE_URL'):
+                            try:
+                                decision_service = DecisionTransparencyService(db)
+                                decision_service.record_decision(
+                                    user_email=user.email,
+                                    message_id=message['id'],
+                                    decision_type=DecisionType.IMPORTANCE_SCORING,
+                                    decision_data={'importance_score': score_result['importance_score']},
+                                    reasoning=score_result['reasoning'],
+                                    confidence=score_result.get('confidence', 0.7),
+                                    context_snapshot={'source': 'llm_contextual', 'subject': subject[:100]},
+                                    ai_model='claude-sonnet-4'
+                                )
+                            except Exception as decision_error:
+                                print(f"⚠️ Failed to record decision: {decision_error}")
                     
                     all_messages.append({
                         'id': message['id'],
